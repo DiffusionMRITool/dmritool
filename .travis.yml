@@ -22,12 +22,16 @@ install:
   - mkdir SlicerExecutionModel-build 
   - cd SlicerExecutionModel-build 
   - cmake ../SlicerExecutionModel
-  - cmake --build .
+  - make -j 4
   - cd ..
 
 script:
   - mkdir _build
   - cd _build
   - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=ON -DDMRITOOL_WRAP_MATLAB=OFF  ..
-  - cmake --build .
+  - make 
+
+after_script:
+  - export PATH=$(pwd)/bin:${PATH}
+  - make test
 

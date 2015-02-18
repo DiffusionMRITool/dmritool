@@ -15,12 +15,12 @@ add_clp_application(SphereTessellator SphereTessellator ${ITK_LIBRARIES})
 #  COMMENT "Generating gradient files in ${DMRITOOL_BINARY_DIR}/Directions/"
 #  )
 
-add_clp_application(SHCoefficientsToSphericalFunctionSamples SHCoefficientsToSphericalFunctionSamples ${ITK_LIBRARIES} ${GSL_LIBRARIES})
+add_clp_application(SHCoefficientsToSphericalFunctionSamples SHCoefficientsToSphericalFunctionSamples ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_clp_application(SHCoefficientsToGFA SHCoefficientsToGFA ${ITK_LIBRARIES} )
 add_clp_application(ODFNormalization ODFNormalization ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 
 add_clp_application(SphericalPolarFourierImaging SphericalPolarFourierImaging ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES} ${GUROBI_LIBRARIES})
-add_clp_application(MeanDiffusivityEstimator MeanDiffusivityEstimator ${ITK_LIBRARIES} ${GSL_LIBRARIES})
+add_clp_application(MeanDiffusivityEstimator MeanDiffusivityEstimator ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_clp_application(SPFToProfileConverter SPFToProfileConverter ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_clp_application(SPFToODFConverter SPFToODFConverter ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_clp_application(SPFToScalarMapConverter SPFToScalarMapConverter ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
