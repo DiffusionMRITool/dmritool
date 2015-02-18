@@ -1,0 +1,21 @@
+#
+# This file sets up include directories, link directories, and
+# compiler settings for a project to use DMRITOOL.  It should not be
+# included directly, but rather through the DMRITOOL_USE_FILE setting
+# obtained from DMRITOOLConfig.cmake.
+#
+if(DMRITOOL_USE_FILE_INCLUDED)
+  return()
+endif()
+set(DMRITOOL_USE_FILE_INCLUDED 1)
+
+# Update CMAKE_MODULE_PATH so includes work.
+list(APPEND CMAKE_MODULE_PATH ${DMRITOOL_CMAKE_DIR})
+
+
+# Add include directories needed to use DMRITOOL.
+include_directories(BEFORE ${DMRITOOL_INCLUDE_DIRS})
+
+# Add link directories needed to use DMRITOOL.
+link_directories(${DMRITOOL_LIBRARY_DIRS})
+

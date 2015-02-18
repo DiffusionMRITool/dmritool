@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Diffusion Models</category>
+  <title>Normalize ODF (VectorImage)</title>
+  <description>Normalize ODF (VectorImage) represented by SH basis or uniform spherical samples.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+  
+    <image>
+      <name>_InputFile</name>
+      <label>Input File</label>
+      <description>Input image file.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Input output file.</description>
+      <index>1</index>
+      <channel>input</channel>
+    </image>
+    
+    <string-enumeration>
+      <name>_Type</name>
+      <label>Input parameter</label>
+      <description>Type of input ODF. SH: spherical harmonic coefficients. SAMPLE: uniform spherical samples.</description>
+      <default>SH</default>
+      <element>SH</element>
+      <element>SAMPLE</element>
+      <longflag>type</longflag>
+    </string-enumeration>
+    
+    
+  </parameters>
+   
+</executable>
+
+
+

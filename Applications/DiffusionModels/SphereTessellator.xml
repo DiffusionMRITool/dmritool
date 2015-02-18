@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Tessellator</category>
+  <title>Spherical Tessellator</title>
+  <description>Tessellation of a sphere via subdivision of basic polyhedrons.</description>
+  
+  <documentation-url>http://www.unc.edu/~ptyap</documentation-url>
+  
+  <contributor>Pew-Thian Yap (ptyap@med.unc.edu)</contributor>
+  <acknowledgements/>
+  
+  <license>http://www.unc.edu/~ptyap</license>
+  
+  <parameters>
+  
+    <file>
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Output file.</description>
+      <index>1</index>
+      <channel>output</channel>
+    </file>
+    
+    <string-enumeration>
+      <name>_BasicShape</name>
+      <label>Basic Shape</label>
+      <longflag>--basicshape</longflag>
+      <description>Basic shape.</description>
+      <default>ICOSAHEDRON</default>
+      <element>TETRAHEDRON</element>
+      <element>OCTAHEDRON</element>
+      <element>ICOSAHEDRON</element>
+    </string-enumeration>
+    
+    <integer>
+      <name>_Order</name>
+      <label>Tessellation Order</label>
+      <description>Tessellation order.</description>
+      <longflag>--tessorder</longflag>
+      <default>3</default>
+    </integer>
+    
+    <boolean>
+      <name>_NumberOfDirections</name>
+      <default>true</default>
+      <label>Number of Directions</label>
+      <description>Include number of directions in output file.</description>
+      <longflag>--numdirections</longflag>
+    </boolean>
+    
+    <boolean>
+      <name>_Cell</name>
+      <default>false</default>
+      <label>Cell</label>
+      <description>Include cell information in output file. Overrided by --hemisphere.</description>
+      <longflag>--cell</longflag>
+    </boolean>
+    
+    <boolean>
+      <name>_Hemisphere</name>
+      <default>false</default>
+      <label>Hemisphere</label>
+      <description>Retain only the directions in one hemisphere.</description>
+      <longflag>--hemisphere</longflag>
+    </boolean>
+    
+  </parameters>
+   
+</executable>

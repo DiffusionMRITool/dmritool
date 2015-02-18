@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Shredder</category>
+  <title>DWI Multiple Shell Splitter</title>
+  <description>Split mutiple shell DWI data into several single shell data.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+  
+    <image type="scalar">
+    <name>_InputFile</name>
+    <label>Input File</label>
+    <description>Input DWI data file.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </image>
+
+    <file>
+    <name>_BValueFile</name>
+    <label>b-Value File</label>
+    <description>b-Value file.</description>
+    <index>1</index>
+    <channel>input</channel>
+    </file>
+
+    <image type="scalar">>
+    <name>_OutputFile</name>
+    <label>Output File</label>
+    <description>Output split DWI data file for each shell.</description>
+    <index>2</index>
+    <channel>output</channel>
+    </image>
+    
+    <image type="scalar">>
+    <name>_Mask</name>
+    <longflag>--mask</longflag>
+    <label>Mask File</label>
+    <description>Mask file.</description>
+    <channel>input</channel>
+    </image>
+
+    <file>
+    <name>_GradientFile</name>
+    <longflag>--ingrad</longflag>
+    <label>Gradient File</label>
+    <description>Gradient file.</description>
+    <channel>input</channel>
+    </file>
+
+    <file>
+    <name>_OutputGradientFile</name>
+    <longflag>--outgrad</longflag>
+    <label>Output Gradient File</label>
+    <description>Output Gradient file for each shell.</description>
+    <channel>output</channel>
+    </file>
+    
+    <file>
+    <name>_OutputBValueFile</name>
+    <longflag>--outb</longflag>
+    <label>Output b-Value file in each shell</label>
+    <description>Output b-Value file.</description>
+    <channel>output</channel>
+    </file>
+
+    <image type="scalar">>
+    <name>_B0OutputFile</name>
+    <longflag>--outb0</longflag>
+    <label>B0 Output File</label>
+    <description>Output (averaged) b0 image file. If no given, b0 image is put as the first volume of each each.</description>
+    <channel>output</channel>
+    </image>
+    
+    <boolean>
+    <name>_B0Normalization</name>
+    <label>B0 Normalization</label>
+    <description>Normalization with respect to the non-diffusion-weighted reference image.</description>
+    <longflag>--b0normalization</longflag>
+    <default>true</default>
+    </boolean>
+    
+    <boolean>
+    <name>_Setb0InEachShell</name>
+    <label>Set b0 image into each shell</label>
+    <description>Set b0 image into each shell.</description>
+    <longflag>--b0InEachShell</longflag>
+    <default>true</default>
+    <channel>input</channel>
+    </boolean> 
+    
+    <float>
+    <name>_Threshold</name>
+    <label>Thrshold for b values</label>
+    <description>Threshold to determine b values for each shell</description>
+    <longflag>--threshold</longflag>
+    <default>2.0</default>
+    </float> 
+    
+    <boolean>
+    <name>_Verbose</name>
+    <label>Verbosity</label>
+    <description>Verbose output.</description>
+    <flag>-v</flag>
+    <default>false</default>
+    </boolean> 
+    
+  </parameters>
+   
+</executable>

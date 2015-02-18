@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Diffusion Models</category>
+  <title>Convert SPF coefficients to ODFs (represented by SH basis).</title>
+  <description>Estimate EAP/ODF using SPFI</description>
+
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+
+  <parameters>
+    <label>I/O</label>
+    <description>Input/Output Parameters</description>
+    
+    
+    <image type="vector">
+      <name>_InputSPFFile</name>
+      <description>Input Image File represented by SPF basis.</description>
+      <index>0</index>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputFile</name>
+      <description>Output Image File (EAP profile) represented by SH basis.</description>
+      <index>1</index>
+    </image>
+    
+  </parameters>
+
+  <parameters>
+    
+    <integer>
+      <name>_SHRank</name>
+      <label>SH Rank</label>
+      <description>Rank for SH basis.</description>
+      <longflag>sh</longflag>
+      <default>4</default>
+    </integer>
+    
+    <integer>
+      <name>_RadialRank</name>
+      <label>Radial Rank</label>
+      <description>Rank for radial basis.</description>
+      <longflag>ra</longflag>
+      <default>1</default>
+    </integer>
+    
+    <integer-enumeration>
+      <name>_ODFOrder</name>
+      <description>ODF order. 2 for ODF with solid angle, 0 for Tuch ODF. -1 for ODF estimated based on Funk-Radon transform.</description>
+      <default>2</default>
+      <element>0</element>
+      <element>2</element>
+      <element>-1</element>
+      <longflag>odfOrder</longflag>
+    </integer-enumeration>
+    
+    <float>
+      <name>_BMax</name>
+      <default>-1.0</default>
+      <description>Maximal b value for disk integral. If it is -1, it is a plan integral.</description>
+      <longflag>bMax</longflag>
+    </float>
+    
+    <float>
+      <name>_Scale</name>
+      <default>-1.0</default>
+      <description>Scale for SPF basis. If it is negative, the default value based on typical MD is used.</description>
+      <longflag>scale</longflag>
+    </float>
+    
+    <image>
+      <name>_MDImageFile</name>
+      <label></label>
+      <description>Mean diffusivity Image for adaptive scale.</description>
+      <longflag>mdImage</longflag>
+    </image>
+    
+    <image>
+      <name>_MaskFile</name>
+      <label>Mask File</label>
+      <description>Mask file.</description>
+      <longflag>mask</longflag>
+    </image>
+
+    <integer>
+      <name>_NumberOfThreads</name>
+      <description>Number of threads. If it not positive, then the default number for multiple threads is used.</description>
+      <longflag>nt</longflag>
+      <default>-1</default>
+    </integer>
+    
+    <float>
+      <name>_Tau</name>
+      <default>ONE_OVER_4_PI_2</default>
+      <description>Tau value. The default is calculated based on 4*pi*pi*tau=1. </description>
+      <longflag>tau</longflag>
+    </float>
+    
+    <float>
+      <name>_MD0</name>
+      <default>0.7e-3</default>
+      <description>Typical MD value.</description>
+      <longflag>md0</longflag>
+    </float>
+    
+
+    <boolean>
+      <name>_Debug</name>
+      <label>Debug</label>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+
+</executable>
+
+
+
+

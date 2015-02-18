@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Test</category>
+  <title>Test the Spherical Harmonic Basis</title>
+  <description>Test the Spherical Harmonic Basis.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    <file>
+    <name>_dataOrientationsFile</name>
+    <label>Data Orientations File</label>
+    <description>Text file that contains the gradient orientations of the data</description>
+    <index>0</index>
+    <channel>input</channel>
+    </file>
+    
+    <integer>
+    <name>_maxOrder</name>
+    <default>4</default>
+    <label>Maximum Order (rank)</label>
+    <description>Maximum order (rank)</description>
+    <flag>r</flag>
+    <longflag>--maxorder</longflag> 
+    </integer>
+
+    <boolean>
+    <name>_verbose</name>
+    <label>verbose</label>
+    <flag>v</flag>
+    <description>verbose</description>
+    <longflag>--verbose</longflag>
+    <default>false</default>
+    </boolean>
+                
+  </parameters>
+   
+</executable>

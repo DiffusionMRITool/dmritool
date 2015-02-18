@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Image Information</category>
+  <title>Image Information</title>
+  <description>Display image information.</description>
+  
+  <documentation-url>http://www.unc.edu/~ptyap</documentation-url>
+  
+  <contributor>Pew-Thian Yap (ptyap@med.unc.edu)</contributor>
+  <acknowledgements/>
+  
+  <license>http://www.unc.edu/~ptyap</license>
+  
+  <parameters>
+  
+    <image>
+    <name>_InputFile</name>
+    <label>Input File</label>
+    <description>Input file.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </image>
+    
+    <integer>
+    <name>_ImageDimension</name>
+    <label>Image Dimension</label>
+    <description>Image dimension.</description>
+    <longflag>--dimension</longflag>
+    <default>0</default>
+    </integer> 
+    
+    <integer>
+    <name>_ImageSpacing</name>
+    <label>Image Spacing</label>
+    <description>Image spacing.</description>
+    <longflag>--spacing</longflag>
+    <default>0</default>
+    </integer>
+
+    <boolean>
+    <name>_ComponentType</name>
+    <label>Component Type</label>
+    <description>Component type.</description>
+    <longflag>--componenttype</longflag>
+    <default>true</default>
+    </boolean>
+
+    <boolean>
+    <name>_PixelType</name>
+    <label>Pixel Type</label>
+    <description>Pixel type.</description>
+    <longflag>--pixeltype</longflag>
+    <default>true</default>
+    </boolean>
+
+    <boolean>
+    <name>_NumberOfComponentsPerVoxel</name>
+    <label>NumberOfComponentsPerVoxel</label>
+    <description>Number of components per voxel.</description>
+    <longflag>--components</longflag>
+    <default>true</default>
+    </boolean>
+ 
+    <boolean>
+    <name>_ImageSizeInBytes</name>
+    <label>Image Size in Bytes</label>
+    <description>Image size in bytes.</description>
+    <longflag>--sizeinbytes</longflag>
+    <default>true</default>
+    </boolean>
+    
+    <boolean>
+    <name>_ImageSizeInComponents</name>
+    <label>Image Size in Components</label>
+    <description>Image size in components.</description>
+    <longflag>--sizeincomponents</longflag>
+    <default>true</default>
+    </boolean>
+
+    <boolean>
+    <name>_ImageSizeInPixels</name>
+    <label>Image Size in Pixels</label>
+    <description>Image size in pixels.</description>
+    <longflag>--sizeinpixels</longflag>
+    <default>true</default>
+    </boolean>
+    
+    <boolean>
+    <name>_Origin</name>
+    <label>Image Origin</label>
+    <description>Image origin.</description>
+    <longflag>--origin</longflag>
+    <default>true</default>
+    </boolean>
+
+    <boolean>
+    <name>_MetaData</name>
+    <label>Meta Data</label>
+    <description>Meta data.</description>
+    <longflag>--metadata</longflag>
+    <default>true</default>
+    </boolean>
+
+    <boolean>
+    <name>_Gradients</name>
+    <label>Gradient Directions</label>
+    <description>Gradient directions.</description>
+    <longflag>--gradients</longflag>
+    <default>true</default>
+    </boolean>
+  
+    <boolean>
+    <name>_DiffusionWeighting</name>
+    <label>Diffusion Weighting</label>
+    <description>Diffusion weighting (b-value).</description>
+    <longflag>--bvalue</longflag>
+    <default>true</default>
+    </boolean>
+  
+    <boolean>
+    <name>_DiffusionWeightings</name>
+    <label>Diffusion Weightings</label>
+    <description>Diffusion weightings (b-values).</description>
+    <longflag>--bvalues</longflag>
+    <default>true</default>
+    </boolean>
+    
+    <boolean>
+    <name>_Print</name>
+    <description>Print values in image</description>
+    <longflag>--print</longflag>
+    <default>false</default>
+    </boolean>
+    
+  </parameters>
+   
+</executable>

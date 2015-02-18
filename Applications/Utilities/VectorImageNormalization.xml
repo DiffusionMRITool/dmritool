@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>VectorImage Operator</category>
+  <title>Normalize Vector Image</title>
+  <description>Normalize each voxel in a VectorImage or SparseVectorImage.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+  
+    <image type="vector">
+      <name>_InputFile</name>
+      <label>Input File</label>
+      <description>Input image file.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Input output file.</description>
+      <index>1</index>
+      <channel>input</channel>
+    </image>
+    
+    
+    <string-enumeration>
+      <name>_NormalizationType</name>
+      <label>Normalization Type</label>
+      <description>Type of normalization.</description>
+      <default>NONE</default>
+      <element>SUM</element>
+      <element>L1NORM</element>
+      <element>L2NORM</element>
+      <longflag>type</longflag>
+    </string-enumeration>
+    
+  </parameters>
+   
+</executable>
+

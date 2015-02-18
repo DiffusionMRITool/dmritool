@@ -1,0 +1,15 @@
+NDims = 3
+DimSize = 4 4 1
+ElementSpacing = 2 2 2
+Scale = 1
+RicianNoiseSigma = 0
+BackgroundScale = 1
+
+ModelType = SYMMETRICAL_TENSOR_IN_SPHERICAL_COORDS
+
+DiffusionParameters = 1 1 0 90 45 0.0015 0.0003 0.5 90 -45 0.0015 0.0003 0.5
+DiffusionParameters = 2 2 0 90 45 0.0015 0.0003 1
+
+BackgroundDiffusionParameters = 0 0 0.0007 0.0007 1
+
+

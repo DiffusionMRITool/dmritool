@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Diffusion Models</category>
+  <title>Spherical Harmonic coefficients To GFA</title>
+  <description>calculate GFA from SH coefficients.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    <image type="vector">
+      <name>_InputSHFile</name>
+      <description>Input image file where each voxel contains a vector of SH coefficients.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+
+    <image type="vector">
+      <name>_OutputFile</name>
+      <description>Output image file where each voxel contains a scalar GFA.</description>
+      <index>1</index>
+      <channel>input</channel>
+    </image>
+
+    <boolean>
+    <name>_Debug</name>
+    <label>debug</label>
+    <description>debug</description>
+    <longflag>--debug</longflag>
+    <default>false</default>
+    </boolean>
+                
+  </parameters>
+   
+</executable>
+
+

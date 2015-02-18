@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Simulator</category>
+  <title>DWI Simulator</title>
+  <description>Simulate DWI data.</description>
+  
+  <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    
+    <file>
+      <name>_ParameterFile</name>
+      <label>Input DWI Parameter File</label>
+      <description>Text file that contains the diffusion parameters.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </file>
+    
+    <image type="vector">
+      <name>_OutputDWIFile</name>
+      <label>Output DWI File</label>
+      <description>Vector image that will contain the DWI field.</description>
+      <longflag>outdwi</longflag>
+      <channel>output</channel>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputODFFile</name>
+      <label>Output ODF File</label>
+      <description>Vector image that will contain the ODF field.</description>
+      <longflag>outodf</longflag>
+      <channel>output</channel>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputEAPFile</name>
+      <label>Output EAP File</label>
+      <description>Vector image that will contain the EAP field.</description>
+      <longflag>outeap</longflag>
+      <channel>output</channel>
+    </image>
+
+    <image type="vector">
+      <name>_OutputPeakFile</name>
+      <label>Output Peak File</label>
+      <description>Vector image that will contain the ground truch of peaks.</description>
+      <longflag>outpeak</longflag>
+      <channel>output</channel>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputRTOFile</name>
+      <label>Output RTO File</label>
+      <description>Scalar image that will contain the return-to-origin (RTO) probability map.</description>
+      <longflag>outrto</longflag>
+      <channel>output</channel>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputMSDFile</name>
+      <label>Output MSD File</label>
+      <description>Scalar image that will contain the mean squared displacement (MSD) probability map.</description>
+      <longflag>outmsd</longflag>
+      <channel>output</channel>
+    </image>
+    
+    <string-enumeration>
+      <name>_PeakType</name>
+      <label>Peak Type</label>
+      <longflag>--peaktype</longflag>
+      <description>Peak Type. XYZV: peak direction vector (x,y,z) + peak magnitude v; XYZ: peak direction vector; NXYZV: number of peaks + peak direction vectors + peak magnitudes; NXYZ: number of peaks + peak direction vectors.
+      </description>
+      <default>XYZV</default>
+      <element>XYZV</element>
+      <element>XYZ</element>
+      <element>NXYZV</element>
+      <element>NXYZ</element>
+    </string-enumeration>
+    
+    <integer>
+      <name>_MaxNumberOfPeaks</name>
+      <default>4</default>
+      <label>Maximal number of peaks.</label>
+      <description>Maximal number of peaks for output peak file.</description>
+      <longflag>peaks</longflag>
+    </integer>
+    
+    <image type="vector">
+      <name>_B0File</name>
+      <label>Output B0 File</label>
+      <description>Output B0 image.</description>
+      <longflag>--outb0</longflag>
+      <channel>output</channel>
+    </image>
+    
+    <file>
+      <name>_QSpaceOrientations</name>
+      <label>Q-Orientation File</label>
+      <description>Text file that contains the gradient orientations of the data.</description>
+      <channel>input</channel>
+      <longflag>--qorientations</longflag>
+    </file>
+    
+    <file>
+      <name>_BFile</name>
+      <label>B-Value File</label>
+      <description>Text file that contains the B values. The number of entries should be consistent with the orientations specified with --qgradient. Conflicts with --bvalues.</description>
+      <channel>input</channel>
+      <longflag>--bfile</longflag>
+    </file>
+    
+    <double-vector>
+      <name>_BValues</name>
+      <label>B Values</label>
+      <description>B values for different shells. Each shell uses the same orientations specified with --qgradients. Conflicts with --bfile.</description>
+      <longflag>--bvalues</longflag>
+    </double-vector>
+    
+    <file>
+      <name>_RSpaceOrientations</name>
+      <label>R-Orientation File</label>
+      <description>Text file that contains the orientations for sampling in the R-space.</description>
+      <longflag>--rorientations</longflag>
+    </file>
+    
+    <file>
+      <name>_RFile</name>
+      <label>R-Value File</label>
+      <description>Text file that contains the R values. The number of entries should be consistent with the orientations specified with --rgradients.</description>
+      <longflag>--rfile</longflag>
+    </file>
+    
+    <double-vector>
+      <name>_RValues</name>
+      <label>R Values</label>
+      <description>R values for different shells. Each shell uses the same orientations specified with --rgradients. Conflicts with --rfile.</description>
+      <longflag>--rvalues</longflag>
+    </double-vector>
+    
+    <double-vector>
+      <name>_CylinderParameters</name>
+      <label>Parameters in cylinder model</label>
+      <description>Parameters in clinder model. (Length,radius,diffusivity)</description>
+      <longflag>--cylinderparams</longflag>
+      <default>5.0,0.005,2.02e-3</default>
+    </double-vector>
+    
+    <double-vector>
+      <name>_BackgroundDiffusionParameters</name>
+      <label>Background Diffusion Parameters</label>
+      <description>Background diffusion parameters; override parameters in parameter file</description>
+      <longflag>--bgdiffusionparams</longflag>
+    </double-vector>
+    
+    <float>
+      <name>_NoiseSigma</name>
+      <default>0.0</default>
+      <label>Rician Noise Sigma</label>
+      <description>Noise level (overrides parameter file value). Conflicts with --snr.</description>
+      <longflag>--noisesigma</longflag>
+    </float>
+    
+    <float>
+      <name>_SNR</name>
+      <default>0</default>
+      <label>Signal-to-Noise Ratio</label>
+      <description>Signal-to-Noise Ratio (overrides parameter file value). Conflicts with --noisesigma.</description>
+      <longflag>--snr</longflag>
+    </float>
+    
+    <float>
+      <name>_Tau</name>
+      <default>ONE_OVER_4_PI_2</default>
+      <label>Diffusion Time</label>
+      <description>Used for calculating q values from b values. The default value is set so that 4*pi^2*tau=1.</description>
+      <longflag>--tau</longflag>
+    </float>
+    
+    <string-enumeration>
+      <name>_OutputDWIType</name>
+      <label>Output DWI Type</label>
+      <description>Output DWI type. 4D: only 4D dwi image. 4DALL: one 4D dwi image (with all b values), gradient file and b values in a txt file. EACHSHELL: several 4D DWI images (with different b values), gradient file and b values in a txt file</description>
+      <default>4DALL</default>
+      <element>4D</element>
+      <element>4DALL</element>
+      <element>EACHSHELL</element>
+      <longflag>--outputdwitype</longflag>
+    </string-enumeration>
+    
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+  
+</executable>

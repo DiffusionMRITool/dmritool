@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Diffusion Models</category>
+  <title>SPFI</title>
+  <description>Estimate EAP/ODF using SPFI</description>
+
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+
+  <parameters>
+    <label>I/O</label>
+    <description>Input/Output Parameters</description>
+    
+    <file>
+      <name>_InputFile</name>
+      <description>Text file that contains b values, gradient orientations, and DWI images.</description>
+      <index>0</index>
+    </file>
+    
+    <image type="vector">
+      <name>_OutputEAPProfileFile</name>
+      <description>Output Image File (EAP profile) represented by SH basis.</description>
+      <longflag>eapProfile</longflag>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputODFFile</name>
+      <description>Output Image File (ODF) represented by SH basis.</description>
+      <longflag>odf</longflag>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputSPFFile</name>
+      <description>Output Image File (SPF coefficients) with basis coefficients.</description>
+      <longflag>signal</longflag>
+    </image>
+  </parameters>
+
+  <parameters>
+    
+    <integer>
+      <name>_SHRank</name>
+      <description>Rank for SH basis.</description>
+      <longflag>sh</longflag>
+      <default>4</default>
+    </integer>
+    
+    <integer>
+      <name>_RadialRank</name>
+      <description>Rank for radial basis.</description>
+      <longflag>ra</longflag>
+      <default>1</default>
+    </integer>
+    
+    <float>
+      <name>_LambdaSpherical</name>
+      <default>0.0</default>
+      <description>Regularization lambda for spherical part.</description>
+      <longflag>lambdaSH</longflag>
+    </float>
+    
+    <float>
+      <name>_LambdaRadial</name>
+      <default>0.0</default>
+      <description>Regularization lambda for radial part.</description>
+      <longflag>lambdaRA</longflag>
+    </float>
+    
+    <integer>
+      <name>_ODFOrder</name>
+      <description>Order for the ODF output.</description>
+      <longflag>odfOrder</longflag>
+      <default>2</default>
+    </integer>
+    
+    <float>
+      <name>_Radius</name>
+      <default>0.015</default>
+      <description>Radius for EAP profile.</description>
+      <longflag>radius</longflag>
+    </float>
+    
+    <float>
+      <name>_Scale</name>
+      <default>-1.0</default>
+      <description>Scale for SPF basis. If it is negative, the default value based on typical MD is used.</description>
+      <longflag>scale</longflag>
+    </float>
+    
+    <image>
+      <name>_MDImageFile</name>
+      <description>Mean diffusivity Image for adaptive scale.</description>
+      <longflag>mdImage</longflag>
+    </image>
+    
+    <string-enumeration>
+      <name>_EstimationType</name>
+      <description>Type of solver. \
+        LS means least square. \
+        L1_2 means Laplace-Beltrami weight (two regularization parameters lambdaSH and lambdaRA); \
+        L1_DL only use lambdaL1, because the learned dictionary corresponses the regularization matrix.</description>
+      <default>LS</default>
+      <element>LS</element>
+      <element>L1_2</element>
+      <element>L1_DL</element>
+      <longflag>estimation</longflag>
+    </string-enumeration>
+
+    <string-enumeration>
+      <name>_SolverType</name>
+      <description>Type of L1 solver. Use different L1 solver. \
+        FISTA_LS: FISTA using least square initialization. \
+        SPAMS: use spams' weighted lasso solver. </description>
+      <default>SPAMS</default>
+      <element>FISTA_LS</element>
+      <element>SPAMS</element>
+      <longflag>solver</longflag>
+    </string-enumeration>
+    
+    <integer>
+      <name>_MaxIter</name>
+      <default>1000</default>
+      <description>Maximal number of iteration in L1 FISTA. </description>
+      <longflag>maxIter</longflag>
+    </integer>
+    
+    <float>
+      <name>_MinChange</name>
+      <default>0.0001</default>
+      <description>Minimal change percentage of the cost function and variable for l1 oprimization. </description>
+      <longflag>minChange</longflag>
+    </float>
+    
+    <float>
+      <name>_LambdaL1</name>
+      <default>1e-5</default>
+      <description>Regularization parameter for L1 optimization.</description>
+      <longflag>lambdaL1</longflag>
+    </float>
+
+    <image>
+      <name>_MaskFile</name>
+      <description>Mask file.</description>
+      <longflag>mask</longflag>
+    </image>
+    
+    <float>
+      <name>_Tau</name>
+      <default>ONE_OVER_4_PI_2</default>
+      <description>Tau value. The default is calculated based on 4*pi*pi*tau=1. </description>
+      <longflag>tau</longflag>
+    </float>
+    
+    <float>
+      <name>_MD0</name>
+      <default>0.7e-3</default>
+      <description>Typical mean diffusivity (MD) value.</description>
+      <longflag>md0</longflag>
+    </float>
+    
+    
+    <integer>
+      <name>_NumberOfThreads</name>
+      <description>Number of threads. If it not positive, then the default number for multiple threads is used.</description>
+      <longflag>nt</longflag>
+      <default>-1</default>
+    </integer>
+
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+
+</executable>
+
+

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Converter</category>
+  <title>Mesh From Image with Spherical Samples</title>
+  <description>Create a mesh from spherical samples using tessellation.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+  
+    <image>
+    <name>_InputFile</name>
+    <label>Input File</label>
+    <description>Input file.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </image>
+
+    <file>
+    <name>_OutputFile</name>
+    <label>Output File</label>
+    <description>Output file.</description>
+    <index>1</index>
+    <channel>output</channel>
+    </file>
+    
+    <file>
+      <name>_OrientationsFile</name>
+      <description>text file which contains orientations for spherical samples. \
+        It is from a tessellation in whole sphere or a hemisphere. \
+      The sample order can be different from stored tessellation. </description>
+      <index>2</index>
+    </file>
+ 
+    <boolean>
+    <name>_RemoveNegativeValues</name>
+    <label>Remove Negative Values</label>
+    <description>Remove negative values if set.</description>
+    <longflag>removenegative</longflag>
+    <default>false</default>
+    </boolean>
+
+    <string-enumeration>
+    <name>_Normalization</name>
+    <label>Normalization</label>
+      <description>Perform normalization after removing negative values (if set); NONE: No normalization; MIN_MAX: Min-max normalization; UNIT_MAX: Unit maximum; UNIT_INTEGRATION: Unit integration.
+      </description>
+    <longflag>--normalize</longflag>
+    <default>NONE</default>
+    <element>NONE</element>
+    <element>MIN_MAX</element>
+    <element>UNIT_MAX</element>
+    <element>UNIT_INTEGRAL</element>
+    </string-enumeration>
+
+    <float>
+    <name>_Pow</name>
+    <label>Pow</label>
+    <description>Power factor.</description>
+    <longflag>pow</longflag>
+    <default>1.0</default>
+    </float>
+    
+    <integer-vector>
+      <name>_BoxView</name>
+      <label>views</label>
+      <description>only generate mesh from a given box (x0,x1,y0,y1,z0,z1).</description>
+      <longflag>--box</longflag>
+      <default>-1,-1,-1,-1,-1,-1</default>
+    </integer-vector>
+
+    <float>
+    <name>_Scale</name>
+    <label>Scale</label>
+    <description>Scale factor.</description>
+    <longflag>scale</longflag>
+    <default>1.0</default>
+    </float>
+
+    <integer>
+    <name>_TessellationOrder</name>
+    <label>Tessellation Order</label>
+    <description>Tessellation order.</description>
+    <longflag>tessorder</longflag>
+    <default>4</default>
+    </integer>
+
+    <string-enumeration>
+    <name>_BasicShape</name>
+    <label>Basic Shape</label>
+    <description>Basic shape for subdivision.</description>
+    <default>ICOSAHEDRON</default>
+    <element>TETRAHEDRON</element>
+    <element>OCTAHEDRON</element>
+    <element>ICOSAHEDRON</element>
+    <longflag>--basicshape</longflag>
+    </string-enumeration> 
+
+    <string-enumeration>
+    <name>_ColorScheme</name>
+    <label>Color Scheme</label>
+    <description>Color scheme.</description>
+    <default>DIRECTION</default>
+    <element>DIRECTION</element>
+    <element>MAGNITUDE</element>
+    <longflag>colorscheme</longflag>
+    </string-enumeration> 
+    
+    <boolean>
+      <name>_SingleThread</name>
+      <description>Use single thread.</description>
+      <longflag>st</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+    
+  </parameters>
+   
+</executable>
+

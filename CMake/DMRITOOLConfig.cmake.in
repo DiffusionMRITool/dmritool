@@ -1,0 +1,35 @@
+#-----------------------------------------------------------------------------
+#
+# DMRITOOLConfig.cmake - 
+# DMRITOOL CMake configuration file for external projects.
+#
+# This file is configured by DMRITOOL and used by the UseDMRITOOL.cmake module
+# to load DMRITOOL's settings for an external project.
+
+# # The DMRITOOL source tree.
+# SET(DMRITOOL_SOURCE_DIR "@PROJECT_SOURCE_DIRECTORIES@")
+
+# SET(DMRITOOL_BINARY_DIR "@PROJECT_BINARY_DIRECTORIES@")
+
+# The DMRITOOL include file directories.
+SET(DMRITOOL_INCLUDE_DIRS "@DMRITOOL_INCLUDE_DIRECTORIES@")
+
+# The DMRITOOL library directories.
+# Includes DMRITOOL libs directory and OTHER libs directories
+SET(DMRITOOL_LIBRARY_DIRS "@DMRITOOL_LIBRARY_DIRECTORIES@")
+
+# This includes all libraries that DMRITOOL generates.
+# SET(DMRITOOL_LIBRARIES "@DMRITOOL_LIBRARIES@")
+
+# The location of the UseDMRITOOL.cmake file.
+SET(DMRITOOL_USE_FILE "@DMRITOOL_USE_FILE@")
+
+
+SET(DMRITOOL_SETTINGS_DIR "${DMRITOOL_SETTINGS_DIRECTORY}")
+
+SET(DMRITOOL_USE_GUROBI "@DMRITOOL_USE_GUROBI@")
+SET(DMRITOOL_USE_OPENMP "@DMRITOOL_USE_OPENMP@")
+SET(DMRITOOL_USE_MKL "@DMRITOOL_USE_MKL@")
+SET(DMRITOOL_USE_FASTLAPACK "@DMRITOOL_USE_FASTLAPACK@")
+
+

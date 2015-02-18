@@ -1,0 +1,87 @@
+/**
+ *       @file  DMRITOOLConfigure.h.in
+ *      @brief  
+ *
+ *
+ *     @author  Dr. Jian Cheng (JC), jian.cheng.1983@gmail.com
+ *
+ *   @internal
+ *     Created  10-31-2012
+ *    Revision  1.0
+ *    Compiler  gcc/g++
+ *     Company  IDEA@UNC-CH
+ *   Copyright  Copyright (c) 2012, Jian Cheng
+ *
+ * =====================================================================================
+ */  
+
+#ifndef __DMRITOOLConfigure_h
+#define __DMRITOOLConfigure_h
+
+#include <string>
+
+#cmakedefine DMRITOOL_USE_OPENMP
+#cmakedefine DMRITOOL_USE_MKL
+#cmakedefine DMRITOOL_USE_FASTLAPACK 
+#cmakedefine DMRITOOL_USE_GUROBI
+
+#define DMRITOOL_VERSION_MAJOR @DMRITOOL_VERSION_MAJOR@
+#define DMRITOOL_VERSION_MINOR @DMRITOOL_VERSION_MINOR@
+#define DMRITOOL_VERSION_PATCH @DMRITOOL_VERSION_PATCH@
+#define DMRITOOL_VERSION_STRING "@DMRITOOL_VERSION_STRING@"
+
+/** the stored gradient file generated from Spherical Tessellation (order=1)  */
+#define Path_GradientsT1 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/Tessellation/directions_t1.txt"
+/** the stored gradient file generated from Spherical Tessellation (order=2)  */
+#define Path_GradientsT2 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/Tessellation/directions_t2.txt"
+/** the stored gradient file generated from Spherical Tessellation (order=3)  */
+#define Path_GradientsT3 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/Tessellation/directions_t3.txt"
+/** the stored gradient file generated from Spherical Tessellation (order=4)  */
+#define Path_GradientsT4 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/Tessellation/directions_t4.txt"
+/** the stored gradient file generated from Spherical Tessellation (order=5)  */
+#define Path_GradientsT5 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/Tessellation/directions_t5.txt"
+/** the stored gradient file generated from Spherical Tessellation (order=6)  */
+#define Path_GradientsT6 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/Tessellation/directions_t6.txt"
+/** the stored gradient file generated from Spherical Tessellation (order=7)  */
+#define Path_GradientsT7 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/Tessellation/directions_t7.txt"
+
+/** The table of integration of triple SH basis (real, thesis), genegrated by print_sh_integration  */
+#define Path_SH3Integral_HDR "@DMRITOOL_SETTINGS_DIRECTORY@/Data/PreComputedTables/sh3integral.hdr"
+
+/** The learned SPF dictionary, sh=8, ra=4, K=250 atoms  */
+#define Path_LearnedSPFDictionary_SH8_RA4_K250 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/PreComputedTables/SPFDictionary_sh8_ra4_eps0.0001_iter10000_online_iso2_k250_md5_fa10_mdiso10x321.txt"
+#define Path_LearnedSPFEnergy_SH8_RA4_K250 "@DMRITOOL_SETTINGS_DIRECTORY@/Data/PreComputedTables/SPFEnergy_sh8_ra4_eps0.0001_iter10000_online_iso2_k250_md5_fa10_mdiso10x321.txt"
+
+#define Path_GradientsElectricRepulsion "@DMRITOOL_SETTINGS_DIRECTORY@/Data/ElectricRepulsion"
+
+namespace utl 
+{
+
+/** The table of integration of triple SH basis (real, thesis), genegrated by print_sh_integration  */
+const static std::string SH3Itegralhdr = std::string(Path_SH3Integral_HDR);
+
+/** The learned SPF dictionary, sh=8, ra=4 , K=250 atoms */
+const static std::string LearnedSPFDictionary_SH8_RA4_K250 = std::string(Path_LearnedSPFDictionary_SH8_RA4_K250);
+const static std::string LearnedSPFEnergy_SH8_RA4_K250 = std::string(Path_LearnedSPFEnergy_SH8_RA4_K250);
+
+/** gradients file for tess=1 with 6 directions  */
+const static std::string DirectionsT1 = std::string(Path_GradientsT1);
+/** gradients file for tess=2 with 21 directions  */
+const static std::string DirectionsT2 = std::string(Path_GradientsT2);
+/** gradients file for tess=3 with 81 directions  */
+const static std::string DirectionsT3 = std::string(Path_GradientsT3);
+/** gradients file for tess=4 with 321 directions  */
+const static std::string DirectionsT4 = std::string(Path_GradientsT4);
+/** gradients file for tess=5 with 1281 directions  */
+const static std::string DirectionsT5 = std::string(Path_GradientsT5);
+/** gradients file for tess=6 with 5121 directions  */
+const static std::string DirectionsT6 = std::string(Path_GradientsT6);
+/** gradients file for tess=7 with 20481 directions  */
+const static std::string DirectionsT7 = std::string(Path_GradientsT7);
+
+/** path for the Elec gradients from CAMINO  */
+const static std::string GradientsElec = std::string(Path_GradientsElectricRepulsion);
+
+}
+
+#endif 

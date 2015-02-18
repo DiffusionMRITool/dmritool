@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Noise Generator</category>
+  <title>Noise Generator</title>
+  <description>Add noise to a set of DWI data.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  <acknowledgements/>
+  
+  <parameters>
+    
+    <image type="vector">
+      <name>_InputFile</name>
+      <label>Input DWI File</label>
+      <description>Vector image that contains the DWI data.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputFile</name>
+      <label>Output DWI File</label>
+      <description>Vector image that will contain the DWI data with noise.</description>
+      <index>1</index>
+      <channel>output</channel>
+    </image>
+    
+    <image>
+      <name>_b0File</name>
+      <label>Input b0 File</label>
+      <description>3D image that contains DWI data S(0) with b=0. If it is not set, we assume S(0)=1.</description>
+      <longflag>--b0</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_maskFile</name>
+      <label>Input mask File</label>
+      <description>3D mask image.</description>
+      <longflag>--mask</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <string-enumeration>
+      <name>_Noisetype</name>
+      <label>Noise Type</label>
+      <description>Noise type.</description>
+      <default>RICIAN</default>
+      <element>GAUSSIAN</element>
+      <element>RICIAN</element>
+      <longflag>--noisetype</longflag>
+    </string-enumeration>
+    
+    <float>
+      <name>_NoiseSigma</name>
+      <label>Noise Sigma</label>
+      <description>Sigma value denoting noise level.</description>
+      <longflag>--noisesigma</longflag>
+    </float>
+    
+    <float>
+      <name>_SNR</name>
+      <label>Noise SNR</label>
+      <description>Sigma is defined as 1/SNR. </description>
+      <longflag>--snr</longflag>
+    </float>
+    
+  </parameters>
+  
+</executable>

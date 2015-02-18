@@ -1,0 +1,1 @@
+../Data/Tessellation/directions_t3.txt

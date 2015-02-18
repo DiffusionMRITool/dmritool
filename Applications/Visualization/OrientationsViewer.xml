@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  
+  <category>Viewer</category>
+  <title>Orientations Viewer</title>
+  <description>Orientations viewer.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  
+  <parameters>
+    
+    <file multiple="true">
+      <name>_OrientationFile</name>
+      <description>Input Orientation File.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </file>
+    
+    <boolean>
+      <name>_NoSymmetricPoints</name>
+      <description>False: add both input points and their antipodal symmetric points. True: only add input points. </description>
+      <longflag>--nosym</longflag>
+      <default>false</default>
+    </boolean>
+
+    <float-vector>
+      <name>_BackgroundColor</name>
+      <description>background color for the window</description>
+      <longflag>bg</longflag>
+      <default>0,0,0</default>
+    </float-vector> 
+    
+    <float-vector>
+      <name>_Color</name>
+      <description>color for each shell</description>
+      <longflag>color</longflag>
+      <default>1,1,1</default>
+    </float-vector> 
+    
+    <float-vector>
+      <name>_OpacityMesh</name>
+      <description>Opacity of the Delaunary mesh.</description>
+      <longflag>opaMesh</longflag>
+      <default>1.0</default>
+    </float-vector> 
+    
+    <float-vector>
+      <name>_OpacitySphere</name>
+      <description>Opacity of the sphere.</description>
+      <longflag>opaSphere</longflag>
+      <default>0.5</default>
+    </float-vector> 
+    
+    <float-vector>
+      <name>_Radius</name>
+      <description>radius of the sphere.</description>
+      <longflag>radius</longflag>
+      <default>1.0</default>
+    </float-vector> 
+    
+    <file multiple="true">
+      <name>_RadiusFile</name>
+      <description>Input radius File. One radius for one point.</description>
+      <longflag>radiusFile</longflag>
+      <channel>input</channel>
+    </file>
+    
+    <float>
+      <name>_VertexPointSize</name>
+      <description>size of vertex for points. </description>
+      <longflag>sizeVertex</longflag>
+      <default>5</default>
+    </float> 
+    
+    <float>
+      <name>_SpherePointSize</name>
+      <description>radius of sphere for points. </description>
+      <longflag>radiusSphere</longflag>
+      <default>0.04</default>
+    </float> 
+    
+    <string-enumeration>
+      <name>_PointType</name>
+      <description>Type of points. Vertex or sphere.</description>
+      <default>SPHERE</default>
+      <element>VERTEX</element>
+      <element>SPHERE</element>
+      <longflag>pointType</longflag>
+    </string-enumeration>
+    
+    <boolean>
+      <name>_NoPoints</name>
+      <description>True: do not show points.</description>
+      <longflag>--nopoints</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Mesh</name>
+      <description>True: show Delaunary mesh.</description>
+      <longflag>--mesh</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Sphere</name>
+      <description>True: show sphere.</description>
+      <longflag>--sphere</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_OnlyCombined</name>
+      <description>True: only show the combined shell from multiple shells.</description>
+      <longflag>--combine</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <float-vector>
+      <name>_Window</name>
+      <description>window size.</description>
+      <longflag>window</longflag>
+      <default>500,500</default>
+    </float-vector> 
+    
+  </parameters>
+  
+</executable>
+

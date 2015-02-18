@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Test</category>
+  <title>DWI IO Preprocess</title>
+  <description>Read DWI images, gradients, b values, and output the formal normalized formalt in a configuration file.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+
+    <file>
+    <name>_InputFile</name>
+    <label>DWI Configuration File</label>
+    <description>Text file that contains b values, gradient orientations, and DWI images</description>
+    <index>0</index>
+    <channel>input</channel>
+    </file>
+    
+    <file>
+    <name>_OutputFile</name>
+    <label>DWI output Configuration File</label>
+    <description>Text file that contains b values, gradient orientations, and DWI images</description>
+    <index>1</index>
+    <channel>output</channel>
+    </file>
+
+    <string>
+      <name>_BFile</name>
+      <description>Output b file</description>
+      <longflag>ob</longflag>
+    </string>
+    
+    <string>
+      <name>_GradFile</name>
+      <description>Output grad file</description>
+      <longflag>ograd</longflag>
+    </string>
+    
+    <string>
+      <name>_B0ImageFile</name>
+      <description>Output b0 Image file</description>
+      <longflag>ob0Image</longflag>
+    </string>
+
+    <string>
+      <name>_DWIFile</name>
+      <description>Comma separated list of iterations must have the same number of elements as learning rate</description>
+      <longflag>odwi</longflag>
+    </string>
+    
+    <image>
+      <name>_MaskFile</name>
+      <label>Mask File</label>
+      <description>Mask file.</description>
+      <longflag>--mask</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <boolean>
+      <name>_IsVectorImage</name>
+      <description>If it is set, the DWI images are VectorImage</description>
+      <longflag>--isVectorImage</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_NoNormalizeDWI</name>
+      <description>If set, do not normalize DWI based on b0 image</description>
+      <longflag>--noNormalize</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_OutputEachShell</name>
+      <description>If set, output DWI in each shell</description>
+      <longflag>--oEachShell</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <float>
+      <name>_BThreshold</name>
+      <default>15.0</default>
+      <description>If it is set, b values whose distance is smallter the threshold will be considered in the same shell.</description>
+      <longflag>bThreshold</longflag>
+    </float>
+    
+    <boolean>
+      <name>_Warn</name>
+      <label>Warn</label>
+      <description>If it is set, show waning information when reading zero values in DWI data</description>
+      <longflag>--warn</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_Debug</name>
+      <label>Debug</label>
+      <description>debug</description>
+      <longflag>--debug</longflag>
+      <default>false</default>
+    </boolean>
+                
+  </parameters>
+   
+</executable>
+

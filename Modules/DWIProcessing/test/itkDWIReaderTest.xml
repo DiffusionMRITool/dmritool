@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Test</category>
+  <title>Test DWI Reader</title>
+  <description>Test DWI Reader</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+
+    <file>
+    <name>_InputFile</name>
+    <label>DWI Configuration File</label>
+    <description>Text file that contains b values, gradient orientations, and DWI images</description>
+    <index>0</index>
+    <channel>input</channel>
+    </file>
+    
+    <file>
+    <name>_OutputFile</name>
+    <label>DWI output Configuration File</label>
+    <description>Text file that contains b values, gradient orientations, and DWI images</description>
+    <flag>o</flag>
+    <channel>output</channel>
+    </file>
+    
+    <image>
+      <name>_MaskFile</name>
+      <label>Mask File</label>
+      <description>Mask file.</description>
+      <longflag>--mask</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_B0File</name>
+      <description>B0 image file.</description>
+      <longflag>--b0</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <boolean>
+      <name>_IsVectorImage</name>
+      <description>If it is set, the DWI images are VectorImage</description>
+      <longflag>--isVectorImage</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_NoNormalizeDWI</name>
+      <description>If set, do not normalize DWI based on b0 image</description>
+      <longflag>--noNormalize</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Print</name>
+      <description>If set, print values in every voxel</description>
+      <longflag>--print</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_OutputEachShell</name>
+      <description>If set, output DWI in each shell</description>
+      <longflag>--oEachShell</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_Debug</name>
+      <label>Debug</label>
+      <description>debug</description>
+      <longflag>--debug</longflag>
+      <default>false</default>
+    </boolean>
+                
+  </parameters>
+   
+</executable>

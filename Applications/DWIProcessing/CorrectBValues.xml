@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>DWI Processing</category>
+  <title>Correct b values</title>
+  <description>group similar b values into several shells.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    
+    <file>
+      <name>_InputFile</name>
+      <label>Input File with b values</label>
+      <description>Text file that contains b values.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </file>
+    
+    <image type="vector">
+      <name>_OutputFile</name>
+      <label>Output B File</label>
+      <description>Output file with b values.</description>
+      <index>1</index>
+      <channel>output</channel>
+    </image>
+    
+    <float>
+      <name>_BThreshold</name>
+      <default>15</default>
+      <description>b values whose distance is smallter the threshold will be considered in the same shell.</description>
+      <flag>t</flag>
+    </float>
+    
+    <!-- <boolean> -->
+    <!--   <name>_Debug</name> -->
+    <!--   <label>Debug</label> -->
+    <!--   <description>debug</description> -->
+    <!--   <longflag>debug</longflag> -->
+    <!--   <default>false</default> -->
+    <!-- </boolean> -->
+    
+  </parameters>
+  
+</executable>
+
