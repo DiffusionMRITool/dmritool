@@ -248,14 +248,14 @@ TEST(utlVNLBlas, MultiThreads_ITK)
   // multi-thread itk
     {
     itk::MultiThreader::Pointer threader = itk::MultiThreader::New();
-    int numberOfThreads = 8;
+    int numberOfThreads = 3;
     std::vector<MatrixPointer> matVec(numberOfThreads+3);
     for ( int i = 0; i < matVec.size(); i += 1 ) 
       matVec[i] = MatrixPointer(new MatrixType());
     *matVec[numberOfThreads] = mat1;
     *matVec[numberOfThreads+1] = mat2;
 
-    threader->SetGlobalMaximumNumberOfThreads(numberOfThreads+10);
+    threader->SetGlobalMaximumNumberOfThreads(numberOfThreads+1);
     threader->SetNumberOfThreads(numberOfThreads);
     threader->SetSingleMethod(__ThreadedMethod, &matVec);
     threader->SingleMethodExecute();
@@ -264,14 +264,14 @@ TEST(utlVNLBlas, MultiThreads_ITK)
     }
     {
     itk::MultiThreader::Pointer threader = itk::MultiThreader::New();
-    int numberOfThreads = 8;
+    int numberOfThreads = 3;
     std::vector<UtlMatrixPointer> matVec(numberOfThreads+3);
     for ( int i = 0; i < matVec.size(); i += 1 ) 
       matVec[i] = UtlMatrixPointer(new UtlMatrixType());
     *matVec[numberOfThreads] = mat1Utl;
     *matVec[numberOfThreads+1] = mat2Utl;
 
-    threader->SetGlobalMaximumNumberOfThreads(numberOfThreads+10);
+    threader->SetGlobalMaximumNumberOfThreads(numberOfThreads+1);
     threader->SetNumberOfThreads(numberOfThreads);
     threader->SetSingleMethod(__ThreadedMethod2, &matVec);
     threader->SingleMethodExecute();
