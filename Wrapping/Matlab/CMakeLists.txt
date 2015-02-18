@@ -40,6 +40,7 @@ else()
   ## LAPACK - required by spams
   find_package(LAPACK REQUIRED)
   set(LAPACK_LIBRARIES "${LAPACK_LIBRARIES};${OpenBLAS_LIBRARY};-llapacke")
+  set(BLAS_LIBRARIES ${OpenBLAS_LIBRARY} ${LAPACK_LIBRARIES})
 endif()
 set(BLAS_FOUND TRUE)
 add_definitions(-DUSE_BLAS_LIB=1)

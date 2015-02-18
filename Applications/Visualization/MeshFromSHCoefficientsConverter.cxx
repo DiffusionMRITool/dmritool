@@ -17,6 +17,7 @@
 #include "MeshFromSHCoefficientsConverterCLP.h"
 #include "vtkPolyDataWriter.h"
 #include "utl.h"
+#include "utlVTKMacro.h"
 
 
 int
@@ -83,7 +84,7 @@ main(int argc, char *argv[])
   std::cout << "Writing file: " << _OutputFile << std::endl;
   vtkSmartPointer<vtkPolyDataWriter> polyDataWriter = vtkSmartPointer<vtkPolyDataWriter>::New();
   polyDataWriter->SetFileName(_OutputFile.c_str());
-  polyDataWriter->SetInputData(mesh);
+  vtkSetInputData(polyDataWriter, mesh);
   polyDataWriter->Write();
 
   return EXIT_SUCCESS;

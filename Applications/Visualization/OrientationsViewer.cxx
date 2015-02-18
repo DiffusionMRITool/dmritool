@@ -39,6 +39,7 @@
 #include "itkSamplingScheme3D.h"
 #include "utl.h"
 
+#include "utlVTKMacro.h"
 
 
 /**
@@ -215,18 +216,18 @@ main ( int argc, char *argv[] )
         {
         glyph3D[i] = vtkSmartPointer<vtkGlyph3D>::New();
         glyph3D[i]->SetSourceConnection(sphereSourceTemp->GetOutputPort());
-        glyph3D[i]->SetInputData(polydata[i]);
+        vtkSetInputData(glyph3D[i], polydata[i]);
         glyph3D[i]->Update();
         pointsMapper[i] = vtkSmartPointer<vtkPolyDataMapper>::New();
-        pointsMapper[i]->SetInputData(glyph3D[i]->GetOutput());
+        vtkSetInputData(pointsMapper[i], glyph3D[i]->GetOutput());
         }
       else if (_PointType=="VERTEX")
         {
         vertexGlyphFilter[i] = vtkSmartPointer<vtkVertexGlyphFilter>::New();
-        vertexGlyphFilter[i]->SetInputData(polydata[i]);
+        vtkSetInputData(vertexGlyphFilter[i], polydata[i]);
         vertexGlyphFilter[i]->Update();
         pointsMapper[i] = vtkSmartPointer<vtkPolyDataMapper>::New();
-        pointsMapper[i]->SetInputData(vertexGlyphFilter[i]->GetOutput());
+        vtkSetInputData(pointsMapper[i], vertexGlyphFilter[i]->GetOutput());
         }
 
 
@@ -252,7 +253,7 @@ main ( int argc, char *argv[] )
     if (_Mesh && !_OnlyCombined)
       {
       delaunay3D[i] = vtkSmartPointer<vtkDelaunay3D>::New();
-      delaunay3D[i]->SetInputData (polydata[i]);
+      vtkSetInputData(delaunay3D[i], polydata[i]);
       delaunay3D[i]->SetTolerance(1e-8);
       delaunay3D[i]->SetOffset(10);
       delaunay3D[i]->Update();
@@ -304,22 +305,22 @@ main ( int argc, char *argv[] )
         {
         glyph3D.back() = vtkSmartPointer<vtkGlyph3D>::New();
         glyph3D.back()->SetSourceConnection(sphereSourceTemp->GetOutputPort());
-        glyph3D.back()->SetInputData(polydata.back());
+        vtkSetInputData(glyph3D.back(), polydata.back());
         glyph3D.back()->Update();
         // polydata2->ShallowCopy(glyph3D.back()->GetOutput());
 //        glyph3D.back()->GetOutput()->GetPointData()->SetScalars(colors);
         pointsMapper.back() = vtkSmartPointer<vtkPolyDataMapper>::New();
-        pointsMapper.back()->SetInputData(glyph3D.back()->GetOutput());
+        vtkSetInputData(pointsMapper.back(), glyph3D.back()->GetOutput());
         }
       else if (_PointType=="VERTEX")
         {
         vertexGlyphFilter.back() = vtkSmartPointer<vtkVertexGlyphFilter>::New();
-        vertexGlyphFilter.back()->SetInputData(polydata.back());
+        vtkSetInputData(vertexGlyphFilter.back(), polydata.back());
         vertexGlyphFilter.back()->Update();
         // polydata2->ShallowCopy(vertexGlyphFilter.back()->GetOutput());
 //        vertexGlyphFilter.back()->GetOutput()->GetPointData()->SetScalars(colors);
         pointsMapper.back() = vtkSmartPointer<vtkPolyDataMapper>::New();
-        pointsMapper.back()->SetInputData(vertexGlyphFilter.back()->GetOutput());
+        vtkSetInputData(pointsMapper.back(), vertexGlyphFilter.back()->GetOutput());
         }
 
       pointsMapper.back()->ScalarVisibilityOn();
@@ -330,7 +331,7 @@ main ( int argc, char *argv[] )
       // polydata2->GetPointData()->SetScalars(colors);
 
       // pointsMapper.back() = vtkSmartPointer<vtkPolyDataMapper>::New();
-      // pointsMapper.back()->SetInputData(polydata2);
+      // vtkSetInputData(pointsMapper.back(), polydata2);
 
       pointsActor.back() = vtkSmartPointer<vtkLODActor>::New();
       pointsActor.back()->SetMapper(pointsMapper.back());
@@ -343,7 +344,7 @@ main ( int argc, char *argv[] )
     if (_Mesh)
       {
       delaunay3D.back() = vtkSmartPointer<vtkDelaunay3D>::New();
-      delaunay3D.back()->SetInputData (polydata.back());
+      vtkSetInputData(delaunay3D.back(), polydata.back());
       delaunay3D.back()->SetTolerance(1e-8);
       delaunay3D.back()->SetOffset(10);
       delaunay3D.back()->Update();
