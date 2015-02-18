@@ -1,0 +1,33 @@
+language: cpp
+
+compiler:
+  - gcc
+
+before_install:
+  - sudo add-apt-repository --yes ppa:jamie-snape/tubetk
+  - sudo add-apt-repository --yes ppa:kalakris/cmake
+  - sudo add-apt-repository --yes ppa:staticfloat/julia-deps 
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -qq
+  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
+  - g++ --version
+  - sudo apt-get install -qq libinsighttoolkit-dev libvtk-dev cmake libqt4-dev qt4-qmake
+  - sudo apt-get install -qq gsl-bin libgsl0-dev 
+  - sudo apt-get install -qq libopenblas-dev libopenblas-base liblapacke-dev 
+
+
+install:
+  - git clone https://github.com/Slicer/SlicerExecutionModel.git 
+  - mkdir SlicerExecutionModel-build 
+  - cd SlicerExecutionModel-build 
+  - cmake ../SlicerExecutionModel
+  - cmake --build .
+  - cd ..
+
+script:
+  - mkdir _build
+  - cd _build
+  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=ON -DDMRITOOL_WRAP_MATLAB=OFF  ..
+  - cmake --build .
+
