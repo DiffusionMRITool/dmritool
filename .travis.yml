@@ -14,7 +14,7 @@ before_install:
   - g++ --version
   - sudo apt-get install -qq libinsighttoolkit-dev libvtk-dev cmake libqt4-dev qt4-qmake
   - sudo apt-get install -qq gsl-bin libgsl0-dev 
-  - sudo apt-get install -qq libopenblas-dev libopenblas-base liblapacke-dev 
+  - sudo apt-get install -qq libopenblas-dev libopenblas-base liblapack-dev liblapacke-dev 
 
 
 install:
@@ -26,10 +26,11 @@ install:
   - cd ..
 
 script:
-  - mkdir _build
-  - cd _build
+  - mkdir build
+  - cd build
   - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=ON -DDMRITOOL_WRAP_MATLAB=OFF  ..
-  - make 
+  - make SphericalPolarFourierImaging 
+  - make -j 4
 
 after_script:
   - export PATH=$(pwd)/bin:${PATH}

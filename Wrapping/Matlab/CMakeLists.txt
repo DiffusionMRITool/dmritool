@@ -30,17 +30,18 @@ if(DMRITOOL_USE_MKL)
   find_package(MKL REQUIRED)
   add_definitions(-DUTL_USE_MKL)
   set(LAPACK_FOUND TRUE)
-  set(BLAS_FOUND TRUE)
   set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
   set(BLAS_LIBRARIES ${MKL_LIBRARIES})
 else()
   ## BLAS - required by spams
-  find_package(BLAS REQUIRED)
+  find_package(OpenBLAS REQUIRED)
+  set(BLAS_LIBRARIES ${OpenBLAS_LIBRARY})
 
   ## LAPACK - required by spams
   find_package(LAPACK REQUIRED)
-  set(LAPACK_LIBRARIES "${LAPACK_LIBRARIES};-llapacke")
+  set(LAPACK_LIBRARIES "${LAPACK_LIBRARIES};${OpenBLAS_LIBRARY};-llapacke")
 endif()
+set(BLAS_FOUND TRUE)
 add_definitions(-DUSE_BLAS_LIB=1)
 
 if (DMRITOOL_USE_FASTLAPACK)
@@ -62,11 +63,6 @@ if(DMRITOOL_USE_OPENMP)
   add_definitions(-DUTL_USE_OPENMP)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
-
-if (DMRITOOL_USE_GUROBI)
-  find_package(GUROBI)
-  include_directories(${GUROBI_INCLUDE_DIR})
 endif()
 
 

@@ -137,11 +137,15 @@ set(LAPACK95_LIBRARIES)
 
 
 if(LAPACK_FIND_QUIETLY OR NOT LAPACK_FIND_REQUIRED)
-  find_package(BLAS)
+  find_package(OpenBLAS)
 else()
-  find_package(BLAS REQUIRED)
+  find_package(OpenBLAS REQUIRED)
 endif()
 
+if (OpenBLAS_FOUND)
+  set(BLAS_FOUND TRUE)
+  set(BLAS_LIBRARIES ${OpenBLAS_LIBRARY})
+endif()
 
 if(BLAS_FOUND)
   set(LAPACK_LINKER_FLAGS ${BLAS_LINKER_FLAGS})

@@ -68,19 +68,20 @@ if (DMRITOOL_USE_MKL)
   message("MKL_LIBRARIES=${MKL_LIBRARIES}")
   add_definitions(-DUTL_USE_MKL)
   set(LAPACK_FOUND TRUE)
-  set(BLAS_FOUND TRUE)
   set(LAPACK_LIBRARIES ${MKL_LIBRARIES})
   set(BLAS_LIBRARIES ${MKL_LIBRARIES})
 else()
   ## BLAS - required by utl::NDArray, spams
-  find_package(BLAS REQUIRED)
+  find_package(OpenBLAS REQUIRED)
 
   ## LAPACK - required by utl::NDArray, spams
   find_package(LAPACK REQUIRED)
   set(LAPACK_LIBRARIES "${LAPACK_LIBRARIES};-llapacke")
+  set(BLAS_LIBRARIES ${OpenBLAS_LIBRARY} ${LAPACK_LIBRARIES})
   message("BLAS_LIBRARIES=${BLAS_LIBRARIES}")
   message("LAPACK_LIBRARIES=${LAPACK_LIBRARIES}")
 endif()
+set(BLAS_FOUND TRUE)
 
 set(DMRITOOL_USE_FASTLAPACK ON)
 add_definitions(-DUTL_USE_FASTLAPACK)
