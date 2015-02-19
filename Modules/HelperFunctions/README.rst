@@ -18,8 +18,7 @@ Build
 -  MKL_ once was free for `non-commercial usage <https://software.intel.com/en-us/non-commercial-software-development>`__ 
    in linux, which includes functions of blas and lapack. 
    However now it is not free. 
--  Without MKL_, OpenBlas_ can be
-   a good alternative for blas and lapack.
+-  Without MKL_, OpenBlas_ + Lapack_ can be a good alternative. 
 -  If OpenBlas_ is used for multi-thread applications, please make sure
    that you build OpenBlas_ correctly or set related environment variables. 
    See `FAQ of openblas <https://github.com/xianyi/OpenBLAS/wiki/faq#multi-threaded>`__.
@@ -27,7 +26,11 @@ Build
 
    ::
 
-       make USE_THREAD=0 USE_OPENMP=1 cc=/usr/lib64/ccache/gcc  FC=gfortran  
+       git clone https://github.com/xianyi/OpenBLAS.git
+       cd OpenBlas
+       git checkout v0.2.13
+       make BINARY=64 USE_THREAD=0 USE_OPENMP=1 cc=gcc  FC=gfortran  
+       make install
 
 utl::NDArray
 ============
@@ -94,9 +97,11 @@ File structure and dependency
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlVNLIO.h                     | std, vnl, blas, lapack, (mkl optional)      | conversion between ``utl::NDArray`` and ``vnl_vector``, ``vnl_matrix``                                                                                                    |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| utlITKMacro.h                  | itk                                         | macros for itk                                                                                                                                                            |
+| utlITKMacro.h                  | itk                                         | macros for itk_                                                                                                                                                           |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlITK.h                       | itk                                         | functions for itk                                                                                                                                                         |
++--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| utlVTKMacro.h                  | vtk                                         | macros for vtk_                                                                                                                                                           |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utl.h                          | std, itk, blas, lapack, gsl, (mkl optional) | useful functions for dmritool_                                                                                                                                            |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

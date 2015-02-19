@@ -166,6 +166,7 @@ Here we just use ``DWIPreprocess`` to normalize the DWI data using the baseline 
 
 :: 
 
+  echo b_raw.txt grad_raw.txt dwi_c88.nii.gz > data_c88_raw.txt
   DWIPreprocess data_c88_raw.txt  data_c88_normalize.txt --oEachShell --bThreshold 15 --mask mask_c88.nii.gz  --odwi dwi_c88_normalize.nii.gz  --ograd grad_normalize.txt --ob0Image dwi_c88_b0.nii.gz 
 
 * The b values in the HCP data all larger than 0. There is no exact ``b=0``. Thus we consider b values smaller than the ``bThreshold`` as ``b=0``. 

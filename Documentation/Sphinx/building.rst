@@ -6,30 +6,38 @@ Building
    :depth: 2
    :local:
 
+.. image:: https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master
+    :target: https://travis-ci.org/DiffusionMRITool/dmritool
+.. image:: https://readthedocs.org/projects/dmritool/badge/?version=latest
+    :target: https://readthedocs.org/projects/dmritool/?badge=latest
+    :alt: Documentation Status             
+
+
 Dependent Packages
 ==================
 
 Required Packages
 -----------------
 
--  `CMake <http://www.cmake.org>`__ (Version 2.8 or newer)
+-  CMake_ (Version 2.8 or newer)
+-  GCC_ (4.6 or newer)
 -  `Insight Toolkit`_ (ITK, version 4 or newer)
 -  `Visualization Toolkit`_ (VTK, version 6 or newer)
--  `SlicerExecutionModel`_ (GenerateCLP, for command line interface):
--  `MKL`_ or `OpenBLAS`_ (at least one is required)
+-  SlicerExecutionModel_ (GenerateCLP, for command line interface):
+-  `OpenBLAS`_ + Lapack_ or MKL_ (at least one is required)
 -  `GNU Scientific Library`_ (GSL, for special functions)
 
 Optional Packages
 -----------------
 
--  `Qt`_: needed for building ``QTApplications``.
--  `Doxygen`_: needed when building doxygen documents.
+-  Qt_: needed for building ``QTApplications``.
+-  Doxygen_: needed when building doxygen documents.
 
 Third Party Packages (included in dmritool)
 -------------------------------------------
 
--  `GTest`_: GTest can be automatically downloaded and built when building tests.
--  `SPAMS`_: included in ``ThirdParty/Spams``
+-  GTest_: GTest can be automatically downloaded and built when building tests.
+-  SPAMS_: included in ``ThirdParty/Spams``
 
 Build Souce Code
 ================
@@ -37,22 +45,27 @@ Build Souce Code
 Linux and Mac
 --------------
 
-1. build/install GSL_, VTK_, ITK_, Qt_ (optional), Doxygen_ (optional).
-2. build/install MKL_ or OpenBlas_.
+1. build/install CMake_, GCC_, Git_, SVN_, GSL_, VTK_, ITK_, Qt_ (optional), Doxygen_ (optional).
+2. build/install OpenBlas_ + Lapack_ or MKL_ .
 
    MKL_ was free for non-commercial usage in linux. However now the 
    `free download link <https://software.intel.com/en-us/non-commercial-software-development>`__
    seems dead forever. 
-   OpenBlas_ is always free and easy to use. 
+   OpenBlas_ and Lapack_ are always free and easy to use. 
 
-   If you want to use OpenBlas_, please make sure that you build OpenBlas_ correctly
-   or set related environment variables. 
+   If you choose OpenBlas_ + Lapack_, you can use them from system repositories. 
+   In this case, you need to set environment variables correctly. 
    See `FAQ of OpenBlas <https://github.com/xianyi/OpenBLAS/wiki/faq#multi-threaded>`__.
-   Please make sure set ``USE_THREAD=0 USE_OPENMP=1`` when building OpenBlas_. 
+   ::
+
+        export OPENBLAS_NUM_THREADS=1
+    
+   We suggest that you build OpenBlas_ from its source codes. 
    Suggested building command for OpenBlas_ used in dmritool_ is: ::
 
         git clone https://github.com/xianyi/OpenBLAS.git
         cd OpenBlas
+        git checkout v0.2.13
         make BINARY=64 USE_THREAD=0 USE_OPENMP=1 cc=gcc  FC=gfortran  
         make install
 
@@ -66,15 +79,21 @@ Linux and Mac
 
 4. build DMRITOOL_ source ::
 
+       git clone https://github.com/DiffusionMRITool/dmritool
        mkdir dmritool-build
        cd dmritool-build
-       ccmake DIRECTORY_OF_DMRITOOL_SOURCE
+       ccmake ../dmritool
        make
 
   -  When building DMRITOOL_ with ``ccmake``, ``GenerateCLP_DIR`` needs to be set as ``SlicerExecutionModel-build/GenerateCLP``.
-  -  The code uses OpenBlas_ if ``DMRITOOL_USE_MKL`` is set off, it uses MKL_ if ``DMRITOOL_USE_MKL`` is ``ON``.
-  -  If you want to build matlab_ mex files, please set ``DMRITOOL_WRAP_MATLAB`` ``ON``.
-  -  GTest_ is needed when ``BUILD_TESTING`` is set ``ON`` for tests. We suggest you set it ``ON``
+  -  The code uses OpenBlas_ + Lapack_ if ``DMRITOOL_USE_MKL`` is set ``OFF``, it uses MKL_ if ``DMRITOOL_USE_MKL`` is ``ON``.
+  -  If ``DMRITOOL_USE_FASTLAPACK=ON``, then the codes use fast versions for SVD and eigen-decomposition, 
+     but it may have errors for openblas_. 
+     You can check whether ``utlVNLLapackGTest`` and ``utlVNLBlasGTest`` can successfully pass. 
+     If these two tests do not passed, you may need to build OpenBlas_ manually or build DMRITOOL_ with ``DMRITOOL_USE_FASTLAPACK=OFF``
+  -  If you want to build matlab_ mex files, please set ``DMRITOOL_WRAP_MATLAB=ON``.
+  -  If ``BUILD_TESTING`` is set ``ON``, some tests based on GTest_ will be built. 
+     We suggest you set it ``ON``. GTest_ will be automatically downloaded and built if you do not have it in system. 
   -  Qt_ is needed if ``BUILD_QT_APPLICATIONS`` is set ``ON``.
   -  ``VERBOSITY_LEVEL`` is used for debug. The default value is 0. 
      If you set it as 1, the routines can provide more logging information and perform more condition checking, 
@@ -88,9 +107,10 @@ Linux and Mac
   - Set ``BUILD_TESTING`` ``ON`` to build tests. 
   - Make sure all tests are successfully passed. Otherwise the routines may not run correctly.  
 
+
 6. build doxygen_ document (optional) ::
 
-       make doxygen
+      make doxygen
 
 7. Set environments. 
 

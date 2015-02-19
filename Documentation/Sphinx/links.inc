@@ -17,6 +17,9 @@
 
 .. Tools
 .. _matlab: http://www.mathworks.com
+.. _GCC: https://gcc.gnu.org/
+.. _Git: http://git-scm.com/
+.. _SVN: https://subversion.apache.org/
 .. _VTK: http://www.vtk.org/
 .. _`Visualization Toolkit`: http://www.vtk.org/
 .. _ITK: http://www.itk.org/
@@ -28,6 +31,7 @@
 .. _SlicerExecutionModel: https://github.com/Slicer/SlicerExecutionModel
 .. _MKL: https://software.intel.com/en-us/intel-mkl
 .. _OpenBLAS: https://github.com/xianyi/OpenBLAS
+.. _Lapack: https://www.netlib.org/lapack/
 .. _Qt: http://www.qt-project.org
 .. _GTest: https://code.google.com/p/googletest/
 .. _vtkviewer:  https://github.com/HalCanary/vtkviewer

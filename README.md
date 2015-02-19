@@ -1,6 +1,9 @@
 DMRITOOL 
 =========
 
+[![Build Status](https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master)](https://travis-ci.org/DiffusionMRITool/dmritool)
+[![Documentation Status](https://readthedocs.org/projects/dmritool/badge/?version=latest)](https://readthedocs.org/projects/dmritool/?badge=latest)
+
 Introduction
 ============
 
