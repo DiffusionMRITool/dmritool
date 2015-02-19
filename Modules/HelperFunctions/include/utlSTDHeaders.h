@@ -18,6 +18,13 @@
 #ifndef __utlSTDHeaders_h
 #define __utlSTDHeaders_h
 
+/** http://stackoverflow.com/questions/23414270/c-complex-and-complex-h-in-the-same-file  */
+extern "C" {
+#include <complex.h>
+#undef complex
+}
+#include <complex>
+
 
 #include <tr1/memory>
 #define utl_shared_ptr std::tr1::shared_ptr

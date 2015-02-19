@@ -9,13 +9,13 @@ before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo add-apt-repository --yes ppa:staticfloat/julia-deps 
   - sudo apt-get update -qq
-  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   - sudo apt-get install -qq libinsighttoolkit-dev libvtk-dev cmake 
   - sudo apt-get install -qq gsl-bin libgsl0-dev 
   - sudo apt-get install -qq liblapack-dev liblapacke-dev 
   - sudo apt-get install -qq libopenblas-dev 
 
+  # - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
+  # - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
   # - sudo apt-get install -qq libqt4-dev qt4-qmake
 
 install:
