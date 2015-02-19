@@ -398,7 +398,7 @@ TEST(utlVNLBlas, GetRow)
     {
     std::vector<int> indexVec;
     for ( int i = 0; i < N; ++i ) 
-      indexVec.push_back(utl::RandomInt(0,300));
+      indexVec.push_back(utl::RandomInt(0,200));
 
     utl::Tic(std::cout<<"vnl get_row time: \n");
     for ( int i = 0; i < N; ++i ) 
@@ -428,7 +428,7 @@ TEST(utlVNLBlas, GetColumn)
     {
     std::vector<int> indexVec;
     for ( int i = 0; i < N; ++i ) 
-      indexVec.push_back(utl::RandomInt(0,300));
+      indexVec.push_back(utl::RandomInt(0,200));
 
     utl::Tic(std::cout<<"vnl get_column time: \n");
     for ( int i = 0; i < N; ++i ) 

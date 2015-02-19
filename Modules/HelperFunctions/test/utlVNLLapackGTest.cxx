@@ -450,7 +450,7 @@ TEST(utlVNLLapack, MultiThreads_ITK)
   // NOTE: need to build openblas with "USE_THREAD=0" or set "export OMP_NUM_THREADS=1" and export OMP_NUM_THREADS=1"
     {
     itk::MultiThreader::Pointer threader = itk::MultiThreader::New();
-    int numberOfThreads = 8;
+    int numberOfThreads = 3;
     std::vector<MatrixPointer> matVec(2*numberOfThreads+2);
     for ( int i = 0; i < matVec.size(); i += 1 ) 
       matVec[i] = MatrixPointer(new MatrixType());
@@ -460,7 +460,7 @@ TEST(utlVNLLapack, MultiThreads_ITK)
     inv0 = utl::GetVnlSymmericMatrixPInverse(matrixRandomSym,1e-10);
     inv1 = utl::GetVnlMatrixPInverse(matrixRandomNonSym,1e-10);
 
-    threader->SetGlobalMaximumNumberOfThreads(numberOfThreads+10);
+    threader->SetGlobalMaximumNumberOfThreads(numberOfThreads+1);
     threader->SetNumberOfThreads(numberOfThreads);
     threader->SetSingleMethod(__ThreadedMethod, &matVec);
     threader->SingleMethodExecute();

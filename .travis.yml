@@ -26,8 +26,6 @@ install:
   - make -j 4
   - cd ..
 
-  - 
-
 script:
   - mkdir build
   - cd build
