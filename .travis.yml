@@ -6,8 +6,8 @@ compiler:
 before_install:
   - sudo add-apt-repository --yes ppa:jamie-snape/tubetk
   - sudo add-apt-repository --yes ppa:kalakris/cmake
-  - sudo add-apt-repository --yes ppa:staticfloat/julia-deps 
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo add-apt-repository --yes ppa:staticfloat/julia-deps 
   - sudo apt-get update -qq
   - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
   - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8" CC="gcc-4.8"; fi
@@ -16,7 +16,7 @@ before_install:
   - sudo apt-get install -qq liblapack-dev liblapacke-dev 
   - sudo apt-get install -qq libopenblas-dev 
 
- # -  sudo apt-get install -qq libqt4-dev qt4-qmake
+  # - sudo apt-get install -qq libqt4-dev qt4-qmake
 
 install:
   - git clone https://github.com/Slicer/SlicerExecutionModel.git 
@@ -29,16 +29,27 @@ install:
 script:
   - mkdir build
   - cd build
-  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF  ..
+
+  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_FASTLAPACK=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF  ..
   - export OPENBLAS_NUM_THREADS=1 && export OMP_NUM_THREADS=1 
-  - make gtest_test 
+  - make -j 2 gtest_test SphericalPolarFourierImaging 
   - make -j 3 utlVNLBlasGTest utlVNLLapackGTest utlNDArrayGTest
   - cd ./Modules/HelperFunctions/test/
   - ./utlVNLBlasGTest
   - ./utlVNLLapackGTest 
   - ./utlNDArrayGTest 
   - cd ../../..
-  - make SphericalPolarFourierImaging 
+  
+  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_FASTLAPACK=ON -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF  ..
+  - export OPENBLAS_NUM_THREADS=1 && export OMP_NUM_THREADS=1 
+  - make -j 2 gtest_test SphericalPolarFourierImaging 
+  - make -j 3 utlVNLBlasGTest utlVNLLapackGTest utlNDArrayGTest
+  - cd ./Modules/HelperFunctions/test/
+  - ./utlVNLBlasGTest
+  - ./utlVNLLapackGTest 
+  - ./utlNDArrayGTest 
+  - cd ../../..
+
   - make -j 4
 
 after_script:
