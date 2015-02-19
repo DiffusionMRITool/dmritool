@@ -83,7 +83,7 @@ set(BLAS_FOUND TRUE)
 message("BLAS_LIBRARIES=${BLAS_LIBRARIES}")
 message("LAPACK_LIBRARIES=${LAPACK_LIBRARIES}")
 
-option(DMRITOOL_USE_FASTLAPACK "Use fast version of LAPACK routines, it needs to build openblas manually, or use MKL." ON)
+option(DMRITOOL_USE_FASTLAPACK "Use fast version of LAPACK routines, it needs to build openblas manually, or use MKL." OFF)
 if (DMRITOOL_USE_FASTLAPACK)
   set(DMRITOOL_USE_FASTLAPACK ON)
   add_definitions(-DUTL_USE_FASTLAPACK)
