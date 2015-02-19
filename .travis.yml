@@ -35,25 +35,10 @@ script:
   - make -j 2 gtest_test SphericalPolarFourierImaging 
   - make -j 3 utlVNLBlasGTest utlVNLLapackGTest utlNDArrayGTest
   - cd ./Modules/HelperFunctions/test/
-  - ./utlVNLBlasGTest
-  - ./utlVNLLapackGTest 
-  - ./utlNDArrayGTest 
+  - ./utlVNLBlasGTest && ./utlVNLLapackGTest && ./utlNDArrayGTest 
   - cd ../../..
-  
-  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_FASTLAPACK=ON -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF  ..
-  - export OPENBLAS_NUM_THREADS=1 && export OMP_NUM_THREADS=1 
-  - make -j 2 gtest_test SphericalPolarFourierImaging 
-  - make -j 3 utlVNLBlasGTest utlVNLLapackGTest utlNDArrayGTest
-  - cd ./Modules/HelperFunctions/test/
-  - ./utlVNLBlasGTest
-  - ./utlVNLLapackGTest 
-  - ./utlNDArrayGTest 
-  - cd ../../..
-
   - make -j 4
 
 after_script:
-  - export PATH=$(pwd)/bin:${PATH}
-  - echo $PATH
-  - ctest -V
+  - ctest -VV
 
