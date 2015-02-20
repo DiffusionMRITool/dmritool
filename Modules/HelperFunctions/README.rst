@@ -5,7 +5,9 @@ UTL HelperFunctions
 UTL Module
 ==========
 
-This module contains some helper functions, logging macros, debug macros, and a N-dimensional array with MKL_, OpenBlas_ and OpenMP_ support.
+This module contains some helper functions, logging macros, debug macros, 
+and a N-dimensional array class implemented using `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__ 
+with support for MKL_, OpenBlas_ Lapack_ and OpenMP_.
 
 Although OOP is good, sometimes functional style of programming is more
 attractive, and classes are too heavy for some specific tasks, e.g.
@@ -14,6 +16,11 @@ container object. Thus we prefer using some small functions for those tasks.
 
 Build
 =====
+
+UTL module has only header files and can be used separately based on the different dependencies. 
+See :ref:`file dependency <dependency>`. 
+
+To build codes using ``utl::NDArray``, you need to have MKL_ or OpenBlas_ + Lapack_.
 
 -  MKL_ once was free for `non-commercial usage <https://software.intel.com/en-us/non-commercial-software-development>`__ 
    in linux, which includes functions of blas and lapack. 
@@ -36,15 +43,17 @@ utl::NDArray
 ============
 
 -  ``utl::NDArray<T,N>`` is an N-dimensional array based on `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__.
--  ``utl::NDArray<T,1>`` and ``utl::NDArray<T,2>`` are more efficient than ``vnl_vector<T>``and ``vnl_matrix<T>`` because
+-  ``utl::NDArray<T,1>`` and ``utl::NDArray<T,2>`` are more efficient than ``vnl_vector<T>`` and ``vnl_matrix<T>`` because
 
-  * they are implemented based on openblas_ or mkl_.
+  * they are implemented based on openblas_, lapack_ or mkl_.
   * they use expression template to avoid temporary copies.
 
 - You can run ``utlVNLBlasGTest`` and ``utlVNLLapackGTest`` to compare efficiency of ``utl::NDArray`` and ``vnl_vector``, ``vnl_matrix``.
 
 File structure and dependency
 =============================
+
+.. _dependency:
 
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | Files                          | Dependency                                  | Description                                                                                                                                                               |

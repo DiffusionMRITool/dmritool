@@ -58,8 +58,9 @@ To obtain the ground truth of MSD map, RTO map, you can use::
 
 You can also add noise to the noise-free dwi data. ::
 
-  DWINoiseGenerator dwi.nii.gz  dwi_noise.nii.gz --snr 25
+  DWINoiseGenerator dwi_b1000.nii.gz  dwi_b1000_noise.nii.gz --snr 25
 
+``--snr 25`` means variance of the noise is ``S(0)/25``, if b0 image is not set by ``--b0``, then ``S(0)=1`` is the default value. 
 
 
 .. include:: links.inc

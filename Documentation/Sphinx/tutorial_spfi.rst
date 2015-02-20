@@ -61,8 +61,8 @@ Reconstruction of SPF coefficients using DL-SPFI (with the default scale) ::
 We use a **generalized high order tensor (GHOT)** model to estimate the mean diffusivity [ChengThesis2012]_. 
 Then use DL-SPFI with adaptive scale for adaptive dictionary [Cheng2013]_. ::
 
-  MeanDiffusivityEstimator dwi.txt D_data_sh4_ra1.nii.gz --sh 4 --ra 1
-  SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-7  --mdImage D_data_sh4_ra1.nii.gz
+  MeanDiffusivityEstimator dwi.txt D_sh4_ra1.nii.gz --sh 4 --ra 1
+  SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-7  --mdImage D_sh4_ra1.nii.gz
 
 .. Note:: You **cannot** use different ranks from SH rank 8 and radial rank 4 for **DL-SPFI**, because the dictionary is learned using rank ``(8,4)``. 
 
@@ -73,9 +73,9 @@ Without using learned dictionary, you can try L1-SPFI which uses least squares w
 
 ::
   
-  SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --lambdaSH 1e-9 --lambdaRA 1e-9 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_2 --mdImage D_data_sh4_ra1.nii.gz
+  SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --lambdaSH 1e-9 --lambdaRA 1e-9 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_2 --mdImage D_sh4_ra1.nii.gz
 
-* Without ``--mdImage D_data_sh4_ra1.nii.gz`` uses default scale for all voxels.  
+* Without ``--mdImage D_sh4_ra1.nii.gz`` uses default scale for all voxels.  
 * You can try different ranks, and different regularizations ``lambdaSH`` and ``lambdaRA`` around :math:`1e-8`.
 
 L2-SPFI reconstruction
@@ -85,9 +85,9 @@ Besides DL-SPFI and L1-SPFI, you can also try L2-SPFI which uses least squares w
 
 ::
   
-  SphericalPolarFourierImaging dwi.txt --sh 6 --ra 2 --lambdaSH 1e-9 --lambdaRA 1e-9 --signal signalSPF.nii.gz --radius 0.015 --estimation LS --mdImage D_data_sh4_ra1.nii.gz
+  SphericalPolarFourierImaging dwi.txt --sh 6 --ra 2 --lambdaSH 1e-9 --lambdaRA 1e-9 --signal signalSPF.nii.gz --radius 0.015 --estimation LS --mdImage D_sh4_ra1.nii.gz
 
-* Without ``--mdImage D_data_sh4_ra1.nii.gz``, it uses the default scale for all voxels based on the default mean diffusivity.  
+* Without ``--mdImage D_sh4_ra1.nii.gz``, it uses the default scale for all voxels based on the default mean diffusivity.  
 * You can try different ranks, and different regularizations ``lambdaSH`` and ``lambdaRA`` around :math:`1e-8`.
 * You may need to use lower ranks in L2-SPFI than L1-SPFI and DL-SPFI. 
 
@@ -110,8 +110,8 @@ But please set the scale in SPF basis correctly based the mean diffusivity used 
 
 * Analytically obtain EAP profiles and ODFs (using adaptive scale based on adaptive mean diffusivity) ::
 
-    SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier --mdImage D_data_sh4_ra1.nii.gz
-    SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4 --mdImage D_data_sh4_ra1.nii.gz
+    SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier --mdImage D_sh4_ra1.nii.gz
+    SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
 * Visualization of EAP profiles and ODFs ::
   
@@ -137,7 +137,7 @@ See [Wu2007]_, [Cheng2010a]_, [ChengThesis2012]_.
 * **Propagator Fractional Anisotropy (PFA)** is a generalization of FA for non-Gaussian EAP. 
   It is defined as the normalized L2 distance between the EAP to its nearest EAP. See [ChengThesis2012]_.  :: 
     
-    SPFToScalarMapConverter signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+    SPFToScalarMapConverter signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
 * From the above estimated EAP profiles and ODFs, you can also generate **generalized FA (GFA)**. See [Tuch2004]_. ::
 
@@ -154,7 +154,7 @@ HCP data
 We downloaded a preprocessed subject data (ID: 100307) from `HCP data <http://www.humanconnectome.org/documentation/Q3/>`__. 
 The data has three shells with b values of 1000, 2000, 3000 s/mm^2, 90 samples per shell. 
 It also contains 18 volumes with ``b=0``, thus totally it has 288 volumes. 
-Considering the data is big ``(145 174 145 288)``, we crop only one slice for this tutorial. 
+Considering the data size is big ``(145, 174, 145, 288)``, we cropped only one slice for this tutorial. 
 You can download it from `this link <https://www.dropbox.com/s/ct8hsbn8wfp1diw/HCP_100307_c88.zip?dl=0>`__
 
 
