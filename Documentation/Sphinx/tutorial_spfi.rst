@@ -64,7 +64,7 @@ Then use DL-SPFI with adaptive scale for adaptive dictionary [Cheng2013]_. ::
   MeanDiffusivityEstimator dwi.txt D_sh4_ra1.nii.gz --sh 4 --ra 1
   SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-7  --mdImage D_sh4_ra1.nii.gz
 
-.. Note:: You **cannot** use different ranks from SH rank 8 and radial rank 4 for **DL-SPFI**, because the dictionary is learned using rank ``(8,4)``. 
+.. Note:: You **cannot** use different ranks from SH rank 8 and radial rank 4 for **DL-SPFI**, because the used dictionary was learned using rank ``(8,4)``. 
 
 L1-SPFI reconstruction
 ***********************
@@ -239,9 +239,9 @@ Here are pictures for the scalar maps I got by ``fslview`` in FSL_.
    `Model-free and Analytical EAP Reconstruction via Spherical Polar Fourier Diffusion MRI <https://hal.inria.fr/inria-00496932/document>`__, 
    13th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI'10), Beijing, September 20-24, 2010
 .. [Cheng2010b] Jian Cheng, Aurobrata Ghosh, Rachid Deriche, Tianzi Jiang, 
-   `Model-free and Analytical EAP Reconstruction via Spherical Polar Fourier Diffusion MRI <https://hal.archives-ouvertes.fr/inria-00496932/document>`__, 
+   `Model-free, regularized, fast, and robust analytical orientation distribution function estimation <https://hal.archives-ouvertes.fr/docs/00/49/69/29/PDF/ODF_MICCAI2010.pdf>`__, 
    13th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI'10), Beijing, September 20-24, 2010
-.. [Cheng2011]  Jian Cheng, Aurobrata Ghosh, Rachid Deriche, Tianzi Jiang, 
+.. [Cheng2011]  Jian Cheng, Sylvain Merlet, Emmanuel Caruyer, Aurobrata Ghosh, Rachid Deriche, Tianzi Jiang, 
    `Compressive Sensing Ensemble Average Propagator Estimation via L1 Spherical Polar Fourier Imaging  <http://hal.cirad.fr/inria-00615434/document>`__, 
    MICCAI Workshop on Computational Diffusion MRI (CDMRI'11), Toronto, Canada, September, 2011
 .. [ChengThesis2012] Jian Cheng, Estimation and Processing of Ensemble Average Propagator and Its Features in Diffusion MRI, Universite Nice Sophia Antipolis, 2012 

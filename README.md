@@ -18,10 +18,10 @@ DMRITOOL mainly focus on:
 
 * Spherically uniform sampling scheme design for single or multiple shells. 
 
-Documentation
+Website
 =============
 
-Please check the [documentation](http://dmritool.readthedocs.org/en/latest/index.html).
+Please check the [DMRITOOL website](http://dmritool.readthedocs.org/en/latest/index.html) for documentation and more information.
 
 
 Building

@@ -31,7 +31,7 @@ VectorImage
 
 In DMRITOOL_, we mainly use VectorImage format e.g. `ITK::VectorImage\<double,3\> <http://www.itk.org/Doxygen/html/classitk_1_1VectorImage.html>`__ for data processing. 
 In this format, the values for the same voxel is stored continuously in memory. 
-We can still nifti format to store it, but the 
+We can still nifti format to store it.  
 We use this format because it is more efficient for processing 4D image data. 
 See `this example <http://www.itk.org/Doxygen44/html/itkVectorImageTest_8cxx-example.html>`__. 
 
