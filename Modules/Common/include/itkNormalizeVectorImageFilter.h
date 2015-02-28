@@ -92,8 +92,10 @@ public:
           output[k] = A[k] / norm;      
         }
       else
+        {
         for ( unsigned int k=0; k < vectorSize; k++ )
           output[k] = 0;      
+        }
       }
     else
       {

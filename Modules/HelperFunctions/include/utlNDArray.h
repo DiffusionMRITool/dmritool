@@ -80,6 +80,14 @@ DotProduct ( const NDArray<T,Dim>& v1, const NDArray<T,Dim>& v2 )
   return InnerProduct(v1, v2);
 }
 
+template< typename T, unsigned int Dim >
+std::ostream & 
+operator<<(std::ostream & os, const NDArray<T,Dim> & arr)
+{
+  arr.Print(os<< "utl::NDArray<T,Dim>" );
+  return os;
+}
+
 /**
  *   \class   NDArray
  *   \brief   NDArray is a N-Dimensional array class (row-major, c version)

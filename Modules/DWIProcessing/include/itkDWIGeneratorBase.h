@@ -35,7 +35,7 @@ namespace itk
  *  \author  Jian Cheng (jian.cheng.1983@gmail.com)
  *
  */
-template <class TOutputImage, class TScalarImage=Image<float,3> >
+template <class TOutputImage, class TScalarImage=Image<double,3> >
 class ITK_EXPORT DWIGeneratorBase : public ImageSource<TOutputImage>
 {
 public:
@@ -157,43 +157,36 @@ public:
   /** Get B0Image */
   ScalarImageType* GetB0Image()
   {
-    ScalarImageType* ptr = static_cast<ScalarImageType*>(this->GetOutputs()[1].GetPointer());
-    return ptr;    
+    return  dynamic_cast< ScalarImageType* >(this->ProcessObject::GetOutput(1) );
   }
   
   OutputImageType* GetDWIImage()
   {
-    OutputImageType* ptr = static_cast<OutputImageType*>(this->GetOutputs()[0].GetPointer());
-    return ptr;    
+    return  dynamic_cast< OutputImageType* >(this->ProcessObject::GetOutput(0) );
   }
   
   OutputImageType* GetODFImage()
   {
-    OutputImageType* ptr = static_cast<OutputImageType*>(this->GetOutputs()[2].GetPointer());
-    return ptr;    
+    return  dynamic_cast< OutputImageType* >(this->ProcessObject::GetOutput(2) );
   }
   
   OutputImageType* GetEAPImage()
   {
-    OutputImageType* ptr = static_cast<OutputImageType*>(this->GetOutputs()[3].GetPointer());
-    return ptr;    
+    return  dynamic_cast< OutputImageType* >(this->ProcessObject::GetOutput(3) );
   }
   
   OutputImageType* GetPeakImage()
   {
-    OutputImageType* ptr = static_cast<OutputImageType*>(this->GetOutputs()[4].GetPointer());
-    return ptr;    
+    return  dynamic_cast< OutputImageType* >(this->ProcessObject::GetOutput(4) );
   }
   
   ScalarImageType* GetRTOImage()
   {
-    ScalarImageType* ptr = static_cast<ScalarImageType*>(this->GetOutputs()[5].GetPointer());
-    return ptr;    
+    return  dynamic_cast< ScalarImageType* >(this->ProcessObject::GetOutput(5) );
   }
   ScalarImageType* GetMSDImage()
   {
-    ScalarImageType* ptr = static_cast<ScalarImageType*>(this->GetOutputs()[6].GetPointer());
-    return ptr;    
+    return  dynamic_cast< ScalarImageType* >(this->ProcessObject::GetOutput(6) );
   }
 
 protected:

@@ -170,12 +170,20 @@ public:
   NDArray() : Superclass()
   {}
 
-  explicit NDArray(const SizeType size) : Superclass() 
-  {
-  SizeType shape[1];
-  shape[0]=size;
-  __utl_ndarray_alloc_blah(shape);
+#define __NDArray_vector_constructor(intType)             \
+  explicit NDArray(const intType size) : Superclass()     \
+  {                                                       \
+  SizeType shape[1];                                      \
+  shape[0]=size;                                          \
+  __utl_ndarray_alloc_blah(shape);                        \
   }
+
+__NDArray_vector_constructor(unsigned int)
+__NDArray_vector_constructor(int)
+__NDArray_vector_constructor(std::size_t)
+__NDArray_vector_constructor(long)
+
+#undef __NDArray_vector_constructor
 
   NDArray(const NDArray<T,1>& vec) : Superclass(vec)
   {
@@ -241,7 +249,7 @@ public:
     Superclass::CopyData(data, shape);
     }
 
-  UTL_ALWAYS_INLINE bool ReSize(const SizeType size)
+  inline bool ReSize(const SizeType size)
     {
     SizeType shape[1];
     shape[0]=size;

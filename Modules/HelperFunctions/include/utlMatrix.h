@@ -428,7 +428,7 @@ public:
   UTL_ALWAYS_INLINE SizeType Columns() const {return this->m_Shape[1];}
   UTL_ALWAYS_INLINE SizeType Cols() const {return this->m_Shape[1];}
   
-  UTL_ALWAYS_INLINE bool ReSize(const SizeType rows, const SizeType cols)
+  inline bool ReSize(const SizeType rows, const SizeType cols)
     {
     SizeType shape[2];
     shape[0]=rows, shape[1]=cols;
@@ -824,6 +824,7 @@ std::ostream &
 operator<<(std::ostream & os, const NDArray< T,2 > & arr)
 {
   utl::PrintUtlMatrix(arr, "utl::NDArray<T,2>", " ", os);
+  return os;
 }
 
 template <class T>
