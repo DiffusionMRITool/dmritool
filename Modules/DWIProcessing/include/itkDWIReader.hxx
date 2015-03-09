@@ -35,7 +35,6 @@ DWIReader<TPixelType, VImageDimension>
   m_NormalizeDWI = true;
   // m_DWIWithB0 = false;
   m_IsInput4DImage = true;
-  m_UseRelativePath = true;
   m_CorrectDWIValues = true;
   m_ShowWarnings = true;
 
@@ -113,12 +112,12 @@ DWIReader<TPixelType, VImageDimension>
     // utlPrintVar1(true, i);
     utlGlobalException(stringMatrix[i].size()!=3 && stringMatrix[i].size()!=4, "wrong size of configuration file");
       
-    dataStr = m_UseRelativePath ? dwiPath+stringMatrix[i][2] : stringMatrix[i][2];
-    gradStr = m_UseRelativePath ? dwiPath+stringMatrix[i][1] : stringMatrix[i][1];
+    dataStr = utl::IsFileExist(stringMatrix[i][2]) ? stringMatrix[i][2] : dwiPath+stringMatrix[i][2] ;
+    gradStr = utl::IsFileExist(stringMatrix[i][1]) ? stringMatrix[i][1] : dwiPath+stringMatrix[i][1] ;
 
     if (i==0)
       {
-      dataStr0 = m_UseRelativePath ? dwiPath+stringMatrix[i][2] : stringMatrix[i][2];
+      dataStr0 = utl::IsFileExist(stringMatrix[i][2]) ? stringMatrix[i][2] : dwiPath+stringMatrix[i][2];
       utlGlobalException( !IsImageEmpty(m_MaskImage) && !itk::VerifyImageSize<MaskImageType>(m_MaskImage, dataStr0, true), "wrong size of m_MaskImage and DWI file " << stringMatrix[i][2] << ". Inconsistent information!");
       utlGlobalException( !IsImageEmpty(m_B0Image) && !itk::VerifyImageSize<MaskImageType>(m_B0Image, dataStr0, true), "wrong size of b0Image and DWI file " << stringMatrix[i][2] << ". Inconsistent information! m_B0Image="<<m_B0Image);
       m_IsInput4DImage = DetermineIsInput4DImage(dataStr0);
@@ -130,7 +129,7 @@ DWIReader<TPixelType, VImageDimension>
 
     if (stringMatrix[i].size()==4)
       {
-      indexStr = m_UseRelativePath ? dwiPath+stringMatrix[i][3] : stringMatrix[i][3];
+      indexStr = utl::IsFileExist(stringMatrix[i][3]) ? stringMatrix[i][3] : dwiPath+stringMatrix[i][3];
       std::vector<int> tmpVec; 
       utl::ReadVector(indexStr,tmpVec);
       selectIndexVec.push_back(tmpVec);
@@ -245,7 +244,7 @@ DWIReader<TPixelType, VImageDimension>
     if (stringMatrix.size()==1)
       std::cout << "loading the " << i+1 << "th DWI data from total " << stringMatrix.size() << " DWI data" << std::endl;
     std::cout << ossStr[i] << std::endl << std::flush;
-    dataStr = m_UseRelativePath ? dwiPath+stringMatrix[i][2] : stringMatrix[i][2];
+    dataStr = utl::IsFileExist(stringMatrix[i][2]) ? stringMatrix[i][2] : dwiPath+stringMatrix[i][2];
 
     // b vector, gradients
     // utl::PrintVector(bVec[i], "bVec[i]");
@@ -599,7 +598,7 @@ DWIReader<TPixelType, VImageDimension>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
-  PrintVar4(true, m_IsInput4DImage, m_NormalizeDWI, m_UseRelativePath, m_CorrectDWIValues, os<<indent );
+  PrintVar3(true, m_IsInput4DImage, m_NormalizeDWI, m_CorrectDWIValues, os<<indent );
   PrintVar1(true, m_ConfigurationFile, os<<indent);
   os << indent << "m_SamplingSchemeQSpace = " << m_SamplingSchemeQSpace << std::endl << std::flush;
   if (!IsImageEmpty(m_MaskImage))

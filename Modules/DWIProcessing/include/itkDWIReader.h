@@ -130,11 +130,6 @@ public:
   itkGetMacro(IsInput4DImage, bool);
   itkBooleanMacro(IsInput4DImage);
   
-  /** If set on, relative paths are used in configuration file  */
-  itkSetMacro(UseRelativePath, bool);
-  itkGetMacro(UseRelativePath, bool);
-  itkBooleanMacro(UseRelativePath);
-  
   /** If set on, correct values  */
   itkSetMacro(CorrectDWIValues, bool);
   itkGetMacro(CorrectDWIValues, bool);
@@ -195,7 +190,6 @@ private:
   bool m_NormalizeDWI;
   // bool m_DWIWithB0;
   bool m_IsInput4DImage;
-  bool m_UseRelativePath;
   bool m_CorrectDWIValues;
 
   std::string m_ConfigurationFile;
