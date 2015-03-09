@@ -13,7 +13,7 @@ Some wonderful contributors:
 
 
 People who are interested in diffusion MRI methodology are welcome to join the development team. 
-We can collaborate via `github <https://github.com/>`__. 
+We can collaborate via `github <https://github.com/DiffusionMRITool/dmritool>`__. 
 
 
 

@@ -16,13 +16,13 @@ The version v0.1.1 is released.
 It is mainly a bug-fix release to make the building process better. 
 
 * We now use the dmritool-discussion_ mailing list by `nitrc <http://www.nitrc.org/projects/dmritool>`__. 
-* The doxygen documentation can be found in the `github page <http://diffusionmritool.github.io/dmritool_doxygen>`__ 
+* The doxygen documentation can be found in the `github page <http://diffusionmritool.github.io/dmritool_doxygen>`__. 
 
 DMRITOOL is now open source (02-18-2015)
 =========================================
 
 DMRITOOL_ is released as an open source toolbox. 
-The source code is in `github <https://github.com/DiffusionMRITool/dmritool>`__ and the documentation is in `readthedoc <http://dmritool.readthedocs.org/>`__.
+The source code is in `github <https://github.com/DiffusionMRITool/dmritool>`__ and the documentation is in `readthedocs <http://dmritool.readthedocs.org/>`__.
 
 The fist release (v0.1) includes:
 

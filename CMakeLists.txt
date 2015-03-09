@@ -13,6 +13,7 @@ include(ProjectCMakeFunctions)
 
 set(DMRITOOL_VERSION_MAJOR "0")
 set(DMRITOOL_VERSION_MINOR "1")
+set(DMRITOOL_VERSION_PATCH "1")
 
 set(DMRITOOL_SETTINGS_DIRECTORY "$ENV{HOME}/.dmritool")
 

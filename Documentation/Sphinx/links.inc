@@ -1,7 +1,7 @@
 
 .. _DMRITOOL: http://dmritool.readthedocs.org/en/latest/index.html 
 .. _`DMRITOOL doxygen documentation`: http://diffusionmritool.github.io/dmritool_doxygen
-.. _`dmritool-discussion`:  http://www.nitrc.org/mailman/listinfo/mrtrix-discussion
+.. _`dmritool-discussion`:  http://www.nitrc.org/mailman/listinfo/dmritool-discussion
 
 .. Licenses
 .. _GPL: http://www.gnu.org/licenses/gpl.html
