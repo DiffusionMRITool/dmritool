@@ -6,8 +6,8 @@ UTL Module
 ==========
 
 This module contains some helper functions, logging macros, debug macros, 
-and a N-dimensional array class implemented using `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__ 
-with support for MKL_, OpenBlas_ Lapack_ and OpenMP_.
+and an N-dimensional array class implemented using `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__ 
+with support for MKL_, OpenBlas_, Lapack_ and OpenMP_.
 
 Although OOP is good, sometimes functional style of programming is more
 attractive, and classes are too heavy for some specific tasks, e.g.

@@ -24,7 +24,7 @@ FSL_ uses this way.
 When we use ITK_ to read this image format, we need to use `itk::Image\<double,4\> <http://www.itk.org/Doxygen/html/classitk_1_1Image.html>`__
 
 In nifti format, a multi-volume image with size ``(64,64,20,120)`` is stored as ``dim[8] = 4 64 64 20 120 1 1 1``, where a scalar value is stored in each 4D voxel. 
-See `dim description <http://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/dim.html>`__
+See `dim description <http://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/dim.html>`__.
 
 VectorImage
 -----------
@@ -36,7 +36,7 @@ We use this format because it is more efficient for processing 4D image data.
 See `this example <http://www.itk.org/Doxygen44/html/itkVectorImageTest_8cxx-example.html>`__. 
 
 In nifti format, a vectorimage with size ``(64,64,20,120)`` is stored as ``dim[8] = 5 64 64 20 1 120 1 1``, where a 120 dimensional vector is stored in each 3D voxel. 
-See `dim description <http://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/dim.html>`__
+See `dim description <http://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fields/nifti1fields_pages/dim.html>`__.
 
 
 Conversion between multi-volume image and VectorImage

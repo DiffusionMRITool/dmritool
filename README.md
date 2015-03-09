@@ -1,5 +1,5 @@
 DMRITOOL 
-=========
+========
 
 [![Build Status](https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master)](https://travis-ci.org/DiffusionMRITool/dmritool)
 [![Documentation Status](https://readthedocs.org/projects/dmritool/badge/?version=latest)](https://readthedocs.org/projects/dmritool/?badge=latest)
@@ -18,11 +18,18 @@ DMRITOOL mainly focus on:
 
 * Spherically uniform sampling scheme design for single or multiple shells. 
 
+
 Website
-=============
+=======
 
 Please check the [DMRITOOL website](http://dmritool.readthedocs.org/en/latest/index.html) for documentation and more information.
 
+Download
+========
+
+You can download the latest source codes from [github](https://github.com/DiffusionMRITool/dmritool):
+
+    git clone https://github.com/DiffusionMRITool/dmritool
 
 Building
 ========
@@ -44,8 +51,8 @@ DMRITOOL is/was supported by the following research groups:
 
 * [Section on Tissue Biophysics and Biomimetics (STBB)](http://stbb.nichd.nih.gov/index.html), [National Institutes of Health](http://www.nih.gov/)
 * [MIND Lab](http://www.unc.edu/~ptyap/index.html), [IDEA Group](https://www.med.unc.edu/bric/ideagroup), [University of North Carolina at Chapel Hill](http://www.unc.edu/)
-* [Athena project team](https://team.inria.fr/athena/), [INRIA](https://team.inria.fr/athena/)
-* [Brainnetome group](http://www.brainnetome.org/en/), [Institute of Automation, Chinese Academy of Sciences](http://english.ia.cas.cn/)
+* [Athena project team](https://team.inria.fr/athena/), [INRIA](http://www.inria.fr/)
+* [Brainnetome center](http://www.brainnetome.org/en/), [Institute of Automation, Chinese Academy of Sciences](http://english.ia.cas.cn/)
 
 License
 =======

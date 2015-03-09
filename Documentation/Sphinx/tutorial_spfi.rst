@@ -48,6 +48,8 @@ See :ref:`the tutorial on DWI data simulation <DWISimulator>`.
 DL-SPFI reconstruction
 ***********************
 
+.. _DL_SPFI:
+
 Reconstruction of SPF coefficients using DL-SPFI (with the default scale) ::
 
   SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-7
@@ -100,7 +102,7 @@ Analytical reconstruction of EAP and ODF
 SPFI has analytical relationship between SPF coefficients and EAP profiles, ODFs. 
 See [Cheng2010a]_ and [Cheng2010b]_.
 You can use different methods (L2-SPFI, L1-SPFI or DL-SPFI) to reconstruct SPF coefficients, 
-then you always can efficiently obtain the EAP profiles and ODFs efficiently from the SPF coefficients. 
+then you always can efficiently obtain the EAP profiles and ODFs from the SPF coefficients. 
 But please set the scale in SPF basis correctly based the mean diffusivity used in SPF coefficients reconstruction, also set the ranks correctly. 
 
 * Analytically obtain EAP profiles and ODFs (using default scale based on default mean diffusivity) ::

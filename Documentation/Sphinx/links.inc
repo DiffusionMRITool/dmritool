@@ -1,5 +1,7 @@
 
 .. _DMRITOOL: http://dmritool.readthedocs.org/en/latest/index.html 
+.. _`DMRITOOL doxygen documentation`: http://diffusionmritool.github.io/dmritool_doxygen
+.. _`dmritool-discussion`:  http://www.nitrc.org/mailman/listinfo/mrtrix-discussion
 
 .. Licenses
 .. _GPL: http://www.gnu.org/licenses/gpl.html
@@ -9,7 +11,7 @@
 .. _`National Institutes of Health`: http://www.nih.gov/
 .. _`Athena project team`: https://team.inria.fr/athena/
 .. _INRIA: https:/inria.fr/
-.. _`Brainnetome group`: http://www.brainnetome.org/en/
+.. _`Brainnetome center`: http://www.brainnetome.org/en/
 .. _`Institute of Automation, Chinese Academy of Sciences`: http://english.ia.cas.cn/
 .. _`MIND Lab`: http://www.unc.edu/~ptyap/index.html
 .. _`IDEA Group`: https://www.med.unc.edu/bric/ideagroup

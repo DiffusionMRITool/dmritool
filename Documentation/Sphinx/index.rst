@@ -4,6 +4,7 @@ DMRITOOL's documentation
 
 .. image:: https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master
     :target: https://travis-ci.org/DiffusionMRITool/dmritool
+    :alt: travis-ci Status             
 
 
 .. image:: https://readthedocs.org/projects/dmritool/badge/?version=latest
@@ -22,12 +23,12 @@ You can also use the released mex executables in matlab_.
 
 With DMRITOOL_, you can: 
 
-* reconstruction/estimation of diffusion data, including diffusion weighted signal, 
+* perform reconstruction/estimation of diffusion data, including diffusion weighted signal, 
   ensemble average propagator (EAP), diffusion orientation distribution function (dODF), 
   and some meaningful scalar maps, etc.
 * generate spherically uniform sampling scheme design for single or multiple shells (will be in the future version).
 * perform diffusion MRI data simulation.  
-* visualization of spherical function field (e.g. dODF field, EAP profile field)
+* visualize spherical function field (e.g. dODF field, EAP profile field)
 
 
 Citations will help us support the continued development of DMRITOOL_.
@@ -35,7 +36,7 @@ If you use the methods and codes released in DMRITOOL_, please cite the
 related references. See `citation page <citation.html>`__.
 
 Download
-=========
+========
 
 You can download the latest source codes from `github <https://github.com/DiffusionMRITool/dmritool>`__::
 
@@ -49,28 +50,32 @@ DMRITOOL_ is/was supported by the following research groups:
 *  `Section on Tissue Biophysics and Biomimetics (STBB)`_, `National Institutes of Health`_
 *  `MIND Lab`_, `IDEA Group`_, `University of North Carolina at Chapel Hill`_
 *  `Athena project team`_, INRIA_
-*  `Brainnetome group`_, `Institute of Automation, Chinese Academy of Sciences`_
+*  `Brainnetome center`_, `Institute of Automation, Chinese Academy of Sciences`_
 
 
-Users Documents
-===============
+Users Documentation
+===================
 
 .. toctree::
    :maxdepth: 2
 
+   news
+   support
    building
    userguide
    tutorials
    citation
    license
 
-Development Documents
-=====================
+
+Developers Documentation
+========================
 
 .. toctree::
    :maxdepth: 2
 
    developers
+   doxygen
    codemodules
 
 
