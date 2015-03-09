@@ -35,10 +35,10 @@ main (int argc, char const* argv[])
   itk::TimeProbe clock;
   
   // Input and Output Image Types
-  typedef itk::VectorImage<float, 3> ImageType;
+  typedef itk::VectorImage<double, 3> ImageType;
   
-  typedef itk::Image<float, 3> MaskImageType;
-  typedef itk::Image<float, 3> B0ImageType;
+  typedef itk::Image<double, 3> MaskImageType;
+  typedef itk::Image<double, 3> B0ImageType;
 
   ImageType::Pointer dwi;
   ImageType::Pointer dwiNoise;
@@ -48,7 +48,7 @@ main (int argc, char const* argv[])
   typedef itk::AddNoiseToDWIImageFilter<ImageType, B0ImageType, MaskImageType> AddNoiseFilterType;
   AddNoiseFilterType::Pointer addNoiseFilter = AddNoiseFilterType::New();
 
-  itk::ReadImage<ImageType>(_InputFile, dwi);
+  itk::ReadVectorImage<double>(_InputFile, dwi);
   // utlPrintVar1(true, dwi->GetSpacing());
   addNoiseFilter->SetInput(dwi);
   if (_b0FileArg.isSet())
