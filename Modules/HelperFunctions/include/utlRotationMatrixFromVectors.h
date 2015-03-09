@@ -144,7 +144,10 @@ RotationMatrixFromVectors(const VectorType& from, const VectorType& to, MatrixTy
     to_unit[i] /= norm_to;
     }
   RotationMatrixFromUnitNormVectors<VectorType, MatrixType>(from_unit,to_unit, mat); 
-  mat *= norm_to/norm_from;
+  double factor = norm_to/norm_from;
+  for ( int i = 0; i < 3; ++i ) 
+    for ( int j = 0; j < 3; ++j ) 
+      mat(i,j) *= factor;
 }
 
 // /*

@@ -22,7 +22,6 @@
 #include "itkSphericalPolarFourierGenerator.h"
 
 #include <gsl/gsl_sf_expint.h>
-#include <gsl/gsl_sf_hyperg.h>
 #include "utl.h"
 #include "itkSphericalHarmonicsGenerator.h"
 #include "itkSpecialFunctionGenerator.h"
@@ -159,13 +158,14 @@ SphericalPolarFourierRadialGenerator<PreciseType>
         double a = double(i+0.5*m_L+1.5); 
         double b = double(m_L+1.5);
         double c = double(-2*M_PI*M_PI*rr*rr);
-        // std::cout << "(a,b,c)=("<<a<<","<<b<<","<<c<<")" << std::endl;
+        // utlPrintVar3(true, a,b,c);
         // integral += coef_laguerre[i]* first_C; 
         // NOTE: when c is small, 1F1=1 
         if (-1.0*c>1e-7)
-          integral += coef_laguerre[i]* first_C *gsl_sf_hyperg_1F1(a, b, c);
+          integral += coef_laguerre[i]* first_C *utl::Hyperg1F1(a, b, c);
         else
           integral += coef_laguerre[i]* first_C;
+        // utlPrintVar4(true, a,b,c, utl::Hyperg1F1(a, b, c));
         // std::cout << "integral = " << integral << std::endl;
         }
       PreciseType result = sign * first_temp * integral;

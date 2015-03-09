@@ -719,7 +719,7 @@ SamplingScheme3D<TPixelType>
     for ( int i = 0; i < GetNumberOfShells(); i += 1 ) 
       {
       os << indent << "shell " << i << " : "; 
-      utl::PrintVector((*m_IndicesInShells)[i]);
+      utl::PrintVector((*m_IndicesInShells)[i], "indexVector", " ", os<<indent );
       }
     }
   os << indent << "m_RadiusThresholdSingleShell = " <<  m_RadiusThresholdSingleShell << std::endl << std::flush;

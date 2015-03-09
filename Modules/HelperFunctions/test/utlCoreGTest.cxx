@@ -16,8 +16,8 @@
  */
 
 
-#include "utlCore.h"
 #include "gtest/gtest.h"
+#include "utlCore.h"
 
 
 TEST(UtlCore, ZeroPad)

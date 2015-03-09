@@ -26,6 +26,13 @@
 namespace utl
 {
 
+/** Confluent hypergeometric function. 
+*
+* NOTE: std::tr1::conf_hyperg is better than gsl_sf_hyperg_1F1, considering gsl_sf_hyperg_1F1 has some potential underflow problems
+* */
+inline double 
+Hyperg1F1(double a, double b, double x); 
+
 
 /** lagurre polynomial \f$ L_n^a(x) \f$ */
 template < class T >
@@ -69,10 +76,12 @@ BesselJa(const double a, const double x);
 *
 *  Reference: "Efficient and accurate rotation of finite spherical harmonics expansions", 
 *  Journal of Computational Physics 231 (2012) 243–250 
+*
+*  use itk::SphericalHarmonicCoefficientsRotation for multi-thread programming
 */
 template<class T> 
 NDArray<T,1>
-GetRotatedSHCoefficient(const NDArray<T,1>& shInput, const NDArray<T,2>& rotationMatrix);
+GetRotatedSHCoefficients(const NDArray<T,1>& shInput, const NDArray<T,2>& rotationMatrix);
 
 /**
  * \brief  get the SH coefficients from the symmetric tensor with eigenvalues (e1,e2,e2), e1>e2, and (theta,phi) is the angular direction of the e1 axis.
@@ -90,16 +99,6 @@ template < class T >
 std::vector< std::vector<T> >
 GetSymmetricTensorSHCoefDerivative(const T b, const T e1, const T e2, const int lMax, const T theta=0, const T phi=0 );
 
-
-/** get the legendre coefficient vector of \f$ \exp(-a\times x^2) \f$, 
- * i.e.\f$ \exp(-a\times x^2) = \sum_{l=0}^{lMax} A_l(a) P_l(x) \f$  */
-inline double
-GetExpLegendreCoef(const double a, const int l );
-
-/** get the derivative \f$\frac{\partial A_l(a)}{\partial a}\f$ of the legendre coefficient vector of \f$ \exp(-a\times x^2) \f$, 
- * i.e.\f$ \exp(-a\times x^2) = \sum_{l=0}^{lMax} A_l(a) P_l(x) \f$  */
-inline double
-GetExpLegendreCoefDerivative(const double a, const int l );
 
 }
 

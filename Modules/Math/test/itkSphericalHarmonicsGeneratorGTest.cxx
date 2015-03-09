@@ -30,6 +30,8 @@ TEST(itkSphericalHarmonicsGenerator, ComplexSH)
   
   EXPECT_NEAR(0.125613008425, std::real(SHGenerator::ComplexSH(4,3, -M_PI/3.0, M_PI/5.0)), 1e-8); 
   EXPECT_NEAR(-0.386597088084, std::imag(SHGenerator::ComplexSH(4,3, -M_PI/3.0, M_PI/5.0)), 1e-8); 
+  EXPECT_NEAR(0.125613008425, std::real(SHGenerator::ComplexSH(4,3, M_PI/3.0, M_PI/5.0)), 1e-8); 
+  EXPECT_NEAR(-0.386597088084, std::imag(SHGenerator::ComplexSH(4,3, M_PI/3.0, M_PI/5.0)), 1e-8); 
 }
 
 TEST(itkSphericalHarmonicsGenerator, RealSH)
@@ -63,10 +65,14 @@ TEST(itkSphericalHarmonicsGenerator, ComplexTripleIntegration)
   __itkSphericalHarmonicsGenerator_ComplexTripleIntegration(2,1,5,-3,M_PI/3.0,M_PI/5.0);
   __itkSphericalHarmonicsGenerator_ComplexTripleIntegration(0,0,0,0,M_PI/3.0,M_PI/5.0);
 
-  int l1 = utl::RandomInt(0,20), l2 = utl::RandomInt(0,20);
-  int m1 = utl::RandomInt(-l1,l1), m2 = utl::RandomInt(-l2,l2);
-  double theta = utl::Random<double>(0,M_PI), phi=utl::Random<double>(0, 2*M_PI);
-  __itkSphericalHarmonicsGenerator_ComplexTripleIntegration(l1,m1,l2,m2,theta,phi);
+  int N = 10;
+  for ( int i = 0; i < N; ++i ) 
+    {
+    int l1 = utl::RandomInt(0,20), l2 = utl::RandomInt(0,20);
+    int m1 = utl::RandomInt(-l1,l1), m2 = utl::RandomInt(-l2,l2);
+    double theta = utl::Random<double>(0,M_PI), phi=utl::Random<double>(0, 2*M_PI);
+    __itkSphericalHarmonicsGenerator_ComplexTripleIntegration(l1,m1,l2,m2,theta,phi);
+    }
 }
 
 #define __itkSphericalHarmonicsGenerator_RealTripleIntegration(l1,m1,l2,m2,theta,phi)                                 \
@@ -89,9 +95,13 @@ TEST(itkSphericalHarmonicsGenerator, RealTripleIntegration)
   __itkSphericalHarmonicsGenerator_RealTripleIntegration(6,-5,8,7,-M_PI/3.0,M_PI/5.0);
   __itkSphericalHarmonicsGenerator_RealTripleIntegration(0,0,0,0,M_PI/3.0,M_PI/5.0);
 
-  int l1 = utl::RandomInt(0,10)*2, l2 = utl::RandomInt(0,10)*2;
-  int m1 = utl::RandomInt(-l1,l1), m2 = utl::RandomInt(-l2,l2);
-  double theta = utl::Random<double>(0,M_PI), phi=utl::Random<double>(0, 2*M_PI);
-  __itkSphericalHarmonicsGenerator_RealTripleIntegration(l1,m1,l2,m2,theta,phi);
+  int N = 10;
+  for ( int i = 0; i < N; ++i ) 
+    {
+    int l1 = utl::RandomInt(0,10)*2, l2 = utl::RandomInt(0,10)*2;
+    int m1 = utl::RandomInt(-l1,l1), m2 = utl::RandomInt(-l2,l2);
+    double theta = utl::Random<double>(0,M_PI), phi=utl::Random<double>(0, 2*M_PI);
+    __itkSphericalHarmonicsGenerator_RealTripleIntegration(l1,m1,l2,m2,theta,phi);
+    }
 }
 

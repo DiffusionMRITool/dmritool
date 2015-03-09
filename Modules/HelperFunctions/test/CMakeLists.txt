@@ -1,6 +1,7 @@
 
 add_test_application(utlVNLBlasTest utlVNLBlasTest ${BLAS_LIBRARIES} ${ITK_LIBRARIES} )
 
+add_gtest_application(utlDMRIGtest utlDMRIGTest ${BLAS_LIBRARIES})
 add_gtest_application(utlCoreGtest utlCoreGTest)
 add_gtest_application(utlCoreMKLGtest utlCoreMKLGTest ${MKL_LIBRARIES} ${ITK_LIBRARIES})
 add_gtest_application(utlGtest utlGTest ${ITK_LIBRARIES} ${GSL_LIBRARIES})

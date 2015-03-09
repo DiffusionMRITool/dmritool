@@ -19,6 +19,9 @@
 
 #include "gtest/gtest.h"
 
+#define EXPECT_NEAR_RELATIVE(val1, val2, eps) \
+  EXPECT_NEAR(val1,val2, eps*std::fabs(val2))
+
 #define EXPECT_NEAR_VECTOR(vec1, vec2, N, eps) \
   for ( int i = 0; i < N; i += 1 ) \
     EXPECT_NEAR((vec1)[i], (vec2)[i], eps) << "index = " << i;

@@ -51,6 +51,17 @@ TEST(utlMath, PowHalfInteger)
     }
 }
 
+TEST(utlMath, PowInteger)
+{
+  double eps=1e-12;
+  double val = utl::Random<double>(-2.0,2.0);
+  for ( double p = -10; p < 10; p += 1 ) 
+    {
+      EXPECT_NEAR( std::pow(val,p), utl::PowInteger(val,p), eps*std::fabs(std::pow(val,p))) 
+        << "val = " << val << ", p = " << p << ", std::pow(val,p) = " << std::pow(val,p) <<", utl::PowInteger(val,p) =" << utl::PowHalfInteger(val,p);
+    }
+}
+
 template <class T>
 void 
 test ( const std::vector<T>& data, const double val )
@@ -76,7 +87,7 @@ test ( const std::vector<T>& data, const double val )
       }
     utl::Toc();
     }
-  EXPECT_NEAR(sum1, sum2, std::fabs(sum1)*1e-15);
+  EXPECT_NEAR(sum1, sum2, std::fabs(sum1)*1e-10);
 }
 
 
@@ -107,3 +118,37 @@ TEST(utlMath, ExpNegtiveLUT)
   EXPECT_NEAR(std::exp(-1e-5), utl::ExpNegtiveLUT(1e-5,distMax,precision), eps);
   EXPECT_NEAR(std::exp(-34), utl::ExpNegtiveLUT(34,distMax,precision), eps);
 }
+
+TEST(utlMath, PolynomialRoot)
+{
+  std::vector<std::complex<double> > root; 
+  {
+  // order 2
+  std::vector<double> coef(3);
+  for ( int i = 0; i < 3; ++i ) 
+    coef[i] = utl::Random<double>(-3.0,3.0);
+  root = utl::PolynomialRoot(coef);
+  for ( int i = 0; i < root.size(); ++i ) 
+    {
+    std::complex<double> re, a=root[i];
+    re = coef[0]+ coef[1]*a + coef[2]*a*a;
+    EXPECT_NEAR(re.real(), 0.0, 1e-8);
+    EXPECT_NEAR(re.imag(), 0.0, 1e-8);
+    }
+  }
+  {
+  // order 3
+  std::vector<double> coef(4);
+  for ( int i = 0; i < 4; ++i ) 
+    coef[i] = utl::Random<double>(-3.0,3.0);
+  root = utl::PolynomialRoot(coef);
+  for ( int i = 0; i < root.size(); ++i ) 
+    {
+    std::complex<double> re, a=root[i];
+    re = coef[0]+ coef[1]*a + coef[2]*a*a + coef[3]*a*a*a;
+    EXPECT_NEAR(re.real(), 0.0, 1e-8);
+    EXPECT_NEAR(re.imag(), 0.0, 1e-8);
+    }
+  }
+}
+

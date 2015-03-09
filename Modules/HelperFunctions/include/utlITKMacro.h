@@ -74,6 +74,10 @@
       }                                                    \
     }
 
+#define itkSetGetMacro(name, type)   \
+  itkSetMacro(name, type);           \
+  itkGetMacro(name, type);
+
 #define itkSetGetBooleanMacro(name)  \
   itkSetMacro(name,bool);            \
   itkGetMacro(name,bool);            \

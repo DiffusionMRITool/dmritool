@@ -72,17 +72,13 @@ GetIndexSHlm(const int j)
   
   if (j==0)
     return lm;
-  for ( int l = 0; l <= 30; l += 2 ) 
-    {
-    if ( (l+1)*(l+2)/2 < j+1 )
-      continue;
-    int residual = j+1 - (l-1)*(l)/2;
-    lm[0] = l;
-    lm[1] = residual-1 - l;
-    return lm;
-    }
-  
-  utlAssert(false,"j is too large, j="<< j << ", (l,m)=("<< lm[0]<<","<<lm[1]<<")");
+
+  int l = std::ceil(0.5*(std::sqrt(9.+8.*j)-3.0));
+  if (utl::IsOdd(l))
+    l+=1;
+  int residual = j+1 - (l-1)*l/2;
+  lm[0] = l;
+  lm[1] = residual-1 - l;
 
   return lm;
 }

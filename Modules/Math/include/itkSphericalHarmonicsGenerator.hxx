@@ -85,12 +85,12 @@ SphericalHarmonicsGenerator<PreciseType>
   if(m > 0) 
     {
     cplx = ComplexSH(l, m, theta, phi);
-    return std::sqrt(2.0)*imag(cplx);
+    return std::sqrt(2.0)*std::imag(cplx);
     }
   else if( m == 0 )
     {
     cplx = ComplexSH(l, m, theta, phi);
-    return real(cplx);
+    return std::real(cplx);
     }
   else  
     {
@@ -98,7 +98,7 @@ SphericalHarmonicsGenerator<PreciseType>
     PreciseType sign = utl::IsEven(m)? 1.0 : -1.0;
     // utlPrintVar5(true, l, m, utl::IsEven(m), m%2, -m%2);
     cplx = sign * ComplexSH(l, m, theta, phi);
-    return std::sqrt(2.0)*real(cplx);
+    return std::sqrt(2.0)*std::real(cplx);
     }
 }
 
@@ -250,11 +250,11 @@ SphericalHarmonicsGenerator<PreciseType>
 ::RealDerivativeOfTheta ( const int l, const int m, const double theta, const double phi)
 {
   if (m==0)
-    return real(ComplexDerivativeOfTheta(l,m,theta,phi));
+    return std::real(ComplexDerivativeOfTheta(l,m,theta,phi));
   else if (m>0)
-    return std::sqrt(2.0) * imag(ComplexDerivativeOfTheta(l,m,theta,phi));
+    return std::sqrt(2.0) * std::imag(ComplexDerivativeOfTheta(l,m,theta,phi));
   else 
-    return std::sqrt(2.0) * real(ComplexDerivativeOfTheta(l,-m,theta,phi));
+    return std::sqrt(2.0) * std::real(ComplexDerivativeOfTheta(l,-m,theta,phi));
 }
 
 template < class PreciseType >
@@ -263,11 +263,11 @@ SphericalHarmonicsGenerator<PreciseType>
 ::RealDerivativeOfPhi ( const int l, const int m, const double theta, const double phi)
 {
   if (m==0)
-    return real(ComplexDerivativeOfPhi(l,m,theta,phi));
+    return std::real(ComplexDerivativeOfPhi(l,m,theta,phi));
   else if (m>0)
-    return std::sqrt(2.0) * imag(ComplexDerivativeOfPhi(l,m,theta,phi));
+    return std::sqrt(2.0) * std::imag(ComplexDerivativeOfPhi(l,m,theta,phi));
   else 
-    return std::sqrt(2.0) * real(ComplexDerivativeOfPhi(l,-m,theta,phi));
+    return std::sqrt(2.0) * std::real(ComplexDerivativeOfPhi(l,-m,theta,phi));
 }
 
 }

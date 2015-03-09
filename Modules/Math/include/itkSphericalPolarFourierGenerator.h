@@ -51,7 +51,7 @@ public:
   itkTypeMacro(SphericalPolarFourierRadialGenerator, Object);
 
   typedef enum {
-  SPF, //=0
+  SPF=0, //=0
   DSPF,  // =1
   SHORE // =2
   } SPFType;
