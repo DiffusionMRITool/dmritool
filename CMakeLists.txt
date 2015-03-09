@@ -39,16 +39,18 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     "MinSizeRel" "RelWithDebInfo")
 endif()
 
+find_package(GenerateCLP REQUIRED)
+include(${GenerateCLP_USE_FILE})
 
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
+set(VTK_LIBRARIES_back ${VTK_LIBRARIES})
 
 find_package(ITK 4 REQUIRED)
 include(${ITK_USE_FILE})
 
-find_package(GenerateCLP REQUIRED)
-include(${GenerateCLP_USE_FILE})
-
+set(VTK_LIBRARIES ${VTK_LIBRARIES_back})
+set(ITK_FOUND TRUE)
 
 find_path(MKL_INCLUDE_DIR mkl_cblas.h 
   /opt/intel/mkl/*/include
