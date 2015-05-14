@@ -34,7 +34,7 @@ namespace itk
  *   \brief Sampling scheme in q-space 
  *
  *   \class   SamplingScheme3D
- *   \brief   this class describes sampling in Q space or R space. 
+ *   \brief   this class describes sampling in a 3D space (Q space or R space). 
  *
  *   The sampling can be single shell sampling or multiple shell sampling, 
  *   which is determined by m_IndicesInShells. 
@@ -143,12 +143,13 @@ public:
   void Clear();
 
   /** generate sampling scheme from random points in sphere  */
-  void GenerateFromRandomPoints(std::vector<int> numberOfPoints);
+  void GenerateFromRandomPoints(const std::vector<int>& numberOfPoints);
 
   /** Nx3 gradient file, each row is a point in S^2, catesian format  */
   void ReadOrientationFile(const std::string gradFile, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, 
       const int flipx=DIRECTION_NOFLIP, const int flipy=DIRECTION_NOFLIP, const int flipz=DIRECTION_NOFLIP, const bool need_normalize=true);
   
+  /** Read a list of gradient files. Each file contains gradients for a single shell.   */
   void ReadOrientationFileList(const std::vector<std::string>& gradFileVec, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, 
       const int flipx=DIRECTION_NOFLIP, const int flipy=DIRECTION_NOFLIP, const int flipz=DIRECTION_NOFLIP, const bool need_normalize=true);
 
@@ -157,11 +158,11 @@ public:
   virtual void CorrectRadiusValues();
 
   /** push_back a new orientation  */
-  void AppendOrientation(const double x, const double y, const double z);
+  void AppendOrientation(const double x, const double y, const double z, const int shell=-1);
   /** push_back a new orientation  */
-  void AppendOrientation(const PointType& point);
+  void AppendOrientation(const PointType& point, const int shell=-1);
   /** push_back a new orientation and a radius value  */
-  void AppendOrientationAndRadiusValue(const double x, const double y, const double z, const double radius);
+  void AppendOrientationAndRadiusValue(const double x, const double y, const double z, const double radius, const int shell=-1);
   
   PointType GetOrientation(unsigned int index)
     {
@@ -184,6 +185,8 @@ public:
   STDVectorType CalculateMinDistance(const bool isSymmetric=true) const;
   /** calculate the minimum distance for all points in a single shell.  */
   STDVectorType CalculateMinDistanceInShell(const unsigned int shellIndex, const bool isSymmetric=true) const;
+
+  void GetNumbers(int& numberUniqueSamples, int& numberAntipodalSamples, int& numberRepeatedSamples ) const;
 
   /** calculate electrostatic energy  */
   double CalculateElectrostaticEnergy(const double order=2.0, const bool isNormalize=true, const bool countHalf=true ) const;

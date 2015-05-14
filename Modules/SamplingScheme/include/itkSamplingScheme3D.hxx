@@ -231,8 +231,8 @@ SamplingScheme3D<TPixelType>
 
   // NOTE: shared_ptr is thread safe, if the data is read only, thus do not need to copy the data block. 
   // NOTE: when changing members in m_SamplingScheme3D, use new to generate another pointer for SmartPointer.
-  rval->m_RadiusVector = m_RadiusVector;
-  rval->m_IndicesInShells = m_IndicesInShells;
+  *rval->m_RadiusVector = *m_RadiusVector;
+  *rval->m_IndicesInShells = *m_IndicesInShells;
   rval->m_OrientationsCartesian = m_OrientationsCartesian;
   rval->m_OrientationsSpherical = m_OrientationsSpherical;
   return loPtr;
@@ -388,7 +388,7 @@ SamplingScheme3D<TPixelType>
 template < class TPixelType >
 void
 SamplingScheme3D<TPixelType>
-::GenerateFromRandomPoints ( std::vector<int> numberOfPoints )
+::GenerateFromRandomPoints ( const std::vector<int>& numberOfPoints )
 {
   Clear();
   int ii=0;
@@ -411,34 +411,52 @@ SamplingScheme3D<TPixelType>
 template <class TPixelType>
 void
 SamplingScheme3D<TPixelType>
-::AppendOrientation(const double x, const double y, const double z)
+::AppendOrientation(const double x, const double y, const double z, const int shell)
 {
   PointType point;
   point[0]=x;  point[1]=y;  point[2]=z;
-  AppendOrientation(point);
+  AppendOrientation(point, shell);
 }
 
 template <class TPixelType>
 void
 SamplingScheme3D<TPixelType>
-::AppendOrientation(const PointType& point)
+::AppendOrientation(const PointType& point, const int shell)
 {
   this->push_back(point);
   m_OrientationsSpherical=MatrixPointer(new MatrixType());
   m_OrientationsCartesian=MatrixPointer(new MatrixType());
-  m_IndicesInShells=Index2DVectorPointer(new Index2DVectorType());
+  utlException(shell<-1, "shell should be more than -1");
+  int num = GetNumberOfSamples();
+  if (shell>=0)
+    {
+    if (m_IndicesInShells->size()>shell)
+      (*m_IndicesInShells)[shell].push_back(num);
+    if (m_IndicesInShells->size()==shell)
+      {
+      IndexVectorType indexVec;
+      indexVec.push_back(num);
+      m_IndicesInShells->push_back(indexVec);
+      }
+    utlSAException(m_IndicesInShells->size()<shell)(m_IndicesInShells->size())(shell).msg("wrong shell index");
+    }
+  else
+    {
+    utlSAException(m_IndicesInShells->size()>1)(m_IndicesInShells->size()).msg("need to set shell index, because there are more than 1 shell");
+    if (m_IndicesInShells->size()==1)
+      (*m_IndicesInShells)[0].push_back(num);
+    }
   this->Modified();
 }
 
 template <class TPixelType>
 void
 SamplingScheme3D<TPixelType>
-::AppendOrientationAndRadiusValue(const double x, const double y, const double z, const double radius)
+::AppendOrientationAndRadiusValue(const double x, const double y, const double z, const double radius, const int shell)
 {
   PointType point;
   point[0]=x;  point[1]=y;  point[2]=z;
-  AppendOrientation(point);
-  this->push_back(point);
+  AppendOrientation(point, shell);
   m_RadiusVector->push_back(radius);
   this->Modified();
 }
@@ -612,6 +630,39 @@ SamplingScheme3D<TPixelType>
     angleVec.push_back(angle);
     }
   return angleVec;
+}
+
+template <class TPixelType>
+void
+SamplingScheme3D<TPixelType>
+::GetNumbers(int& numberUniqueSamples, int& numberAntipodalSamples, int& numberRepeatedSamples ) const
+{
+  double xi, yi, zi, xj, yj, zj;
+  unsigned int num = GetNumberOfSamples();
+  numberUniqueSamples=0, numberAntipodalSamples=0, numberRepeatedSamples=0;
+  for(unsigned int i = 0; i < num; ++i) 
+    {
+    xi = (*this)[i][0];
+    yi = (*this)[i][1];
+    zi = (*this)[i][2];
+    bool isUnique=true;
+    for ( unsigned int j = 0;  j < i; ++j ) 
+      {
+      xj = (*this)[j][0];
+      yj = (*this)[j][1];
+      zj = (*this)[j][2];
+      double resultSame = (xi-xj)*(xi-xj) + (yi-yj)*(yi-yj) + (zi-zj)*(zi-zj);
+      double resultAntipodal = (xi+xj)*(xi+xj) + (yi+yj)*(yi+yj) + (zi+zj)*(zi+zj);
+      if (resultSame<1e-8 || resultAntipodal<1e-8)
+        isUnique=false;
+      if (resultSame<1e-8)
+        numberRepeatedSamples++;
+      if (resultAntipodal<1e-8)
+        numberAntipodalSamples++;
+      }
+    if (isUnique)
+      numberUniqueSamples++;
+    }
 }
 
 template <class TPixelType>

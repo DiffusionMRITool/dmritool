@@ -22,6 +22,12 @@
 #include <cstdlib>
 #include <string>
 #include <cstring>
+#include "utlCoreMacro.h"
+
+#if UTL_OS==1
+#include <unistd.h>
+#endif
+
 
 /** 
  * small but powerful CMD parser, borrowed from CImg, http://cimg.sourceforge.net/ 
@@ -63,11 +69,6 @@ namespace utl
 inline const char* 
 utlOption(const char *const name,const unsigned int argc,char **argv,const char *const defaut, const char *const usage=NULL) 
 {
-  static const char t_normal[9]  = {0x1b,'[','0',';','0',';','0','m','\0'};
-  static const char t_red[11]    = {0x1b,'[','4',';','3','1',';','5','9','m','\0'};
-  static const char t_bold[5]    = {0x1b,'[','1','m','\0'};
-  static const char t_purple[11] = {0x1b,'[','0',';','3','5',';','5','9','m','\0'};
-
   static bool first=true, visu=false;
   const char *res = NULL;
   if (first) 
@@ -85,7 +86,7 @@ utlOption(const char *const name,const unsigned int argc,char **argv,const char 
       {
       std::string argv0Str(argv[0]);
       unsigned found = argv0Str.find_last_of("/\\");
-      std::fprintf(stderr,"\n %s%s%s",t_red, argv0Str.substr(0,found).c_str(),t_normal);
+      std::fprintf(stderr,"\n %s",utl::GetColoredString(argv0Str.substr(0,found), COLOR_RED).c_str());
       std::fprintf(stderr," : %s",usage);
       std::fprintf(stderr," (%s, %s)\n\n",__DATE__,__TIME__);
       }
@@ -104,7 +105,8 @@ utlOption(const char *const name,const unsigned int argc,char **argv,const char 
     else 
       res = defaut;
     if (visu && usage) 
-      std::fprintf(stderr,"    %s%-8s%s = %-12s : %s%s%s\n", t_bold,name,t_normal,res?res:"NULL",t_purple,usage,t_normal);
+      std::fprintf(stderr,"    %-8s = %-12s : %s\n", utl::GetColoredString(std::string(name),COLOR_BOLD).c_str(),res?res:"NULL",
+              utl::GetColoredString(std::string(usage),COLOR_PURPLE).c_str());
     }
   return res;
 }

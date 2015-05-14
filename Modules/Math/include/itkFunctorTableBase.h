@@ -92,7 +92,7 @@ public:
     return false;
     }
 
-  // NOTE: virtual function is a little bit slower. Thus it is not efficient if a virtual function is called too many times 
+  /**  \note virtual function is a little bit slower. Thus it is not efficient if a virtual function is called too many times   */
   FunctorValueType GetFunctionValue ( const ParametersType& param)
     {
     return m_Functor(param);

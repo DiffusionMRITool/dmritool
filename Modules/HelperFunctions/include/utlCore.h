@@ -20,6 +20,7 @@
 
 
 #include "utlCoreMacro.h"
+#include "utlSmartAssert.h"
 
 // Include OS-specific headers.
 #if UTL_OS==1

@@ -83,10 +83,14 @@
 #include <cstdio>
 #include <cstdlib>
 #include <iostream>
+#include <string>
+
+#if UTL_OS==1
+#include <unistd.h>
+#endif
+
 
 #include "utlSmartAssert.h"
-
-
 
 
 /**
@@ -99,6 +103,74 @@
 #else
 #define utlAbort(expout) do { std::cerr << expout <<"\n" << std::flush; abort(); } while(0)
 #endif
+
+enum {
+  COLOR_NORMAL=0,
+  COLOR_BOLD,
+  COLOR_BLACK,
+  COLOR_WHITE,
+  COLOR_PURPLE,
+  COLOR_RED,
+  COLOR_GREEN,
+  COLOR_YELLOW,
+  COLOR_BLUE,
+  COLOR_CYAN
+};
+
+namespace utl
+{
+
+inline std::string 
+GetColoredString(const std::string& str, const int color)
+{
+#if UTL_OS==1
+  static const std::string t_normal("\033[0;0;0m");
+  static const std::string t_black("\033[0;30;59m");
+  static const std::string t_white("\033[0;37;59m");
+  static const std::string t_bold("\033[1m");
+  static const std::string t_red("\033[1;31;59m");
+  static const std::string t_green("\033[0;32;59m");
+  static const std::string t_yellow("\033[0;33;59m");
+  static const std::string t_blue("\033[0;34;59m");
+  static const std::string t_purple("\033[0;35;59m");
+  static const std::string t_cyan("\033[0;36;59m");
+  bool isTerminal = isatty(fileno(stdout)) != 0;
+#else
+  static const bool isTerminal = false;
+#endif
+
+  if (!isTerminal)
+    return str;
+
+  switch ( color )
+    {
+    case COLOR_RED : return t_red+str+t_normal;
+    case COLOR_BOLD :  return t_bold+str+t_normal;
+    case COLOR_PURPLE :   return t_purple+str+t_normal;
+    case COLOR_GREEN :   return t_green+str+t_normal;
+    case COLOR_YELLOW :   return t_yellow+str+t_normal;
+    case COLOR_CYAN :   return t_cyan+str+t_normal;
+    case COLOR_BLUE :   return t_blue+str+t_normal;
+    case COLOR_BLACK :   return t_black+str+t_normal;
+    case COLOR_WHITE :   return t_white+str+t_normal;
+    default :  return t_normal+str+t_normal;
+    }
+}
+
+}
+
+
+// #define __UTL_ERROR_STRING  utl::GetColoredString("Error", COLOR_RED)
+// #define __UTL_WARNING_STRING  utl::GetColoredString("Warning", COLOR_RED)
+// #define __UTL_DEBUG_STRING  utl::GetColoredString("Debug", COLOR_RED)
+// #define __UTL_BOLD(str) utl::GetColoredString(str, COLOR_BOLD)
+// #define __UTL_EXPSTR(str) utl::GetColoredString(str, COLOR_GREEN)
+
+#define __UTL_ERROR_STRING  "Error"
+#define __UTL_WARNING_STRING  "Warning"
+#define __UTL_DEBUG_STRING  "Debug"
+#define __UTL_BOLD(str) str
+#define __UTL_EXPSTR(str) str
 
 /**
  * \brief  macros which are used for debug 
@@ -127,26 +199,26 @@
     if ( (expr) ) ; \
     else ::smart_assert::make_assert(#expr).error().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_assert).SMART_ASSERT_A \
 
-#define utlGlobalException(cond,expout)                                                                   \
-do                                                                                                        \
-{                                                                                                         \
-  if ((cond))                                                                                             \
-    { std::cerr << "\nError: " << __utlConditionSucceedPrint(cond) << expout << "\n" << std::flush;       \
-    utlAbort(""); }                                                                                       \
+#define utlGlobalException(cond,expout)                                                                                      \
+do                                                                                                                           \
+{                                                                                                                            \
+  if ((cond))                                                                                                                \
+    { std::cerr << "\n"<<__UTL_ERROR_STRING<<": " << __utlConditionSucceedPrint(cond) << expout << "\n" << std::flush;       \
+    utlAbort(""); }                                                                                                          \
 } while (0)                                                                                               
 
-#define utlGlobalAssert(cond,expout)                                                                     \
-do                                                                                                       \
-{                                                                                                        \
-  if (!(cond))                                                                                           \
-    { std::cerr << "\nError: " << __utlConditionFailPrint(cond) << expout << "\n" << std::flush;         \
-    utlAbort(""); }                                                                                      \
+#define utlGlobalAssert(cond,expout)                                                                                         \
+do                                                                                                                           \
+{                                                                                                                            \
+  if (!(cond))                                                                                                               \
+    { std::cerr << "\n"<<__UTL_ERROR_STRING<<": " << __utlConditionFailPrint(cond) << expout << "\n" << std::flush;          \
+    utlAbort(""); }                                                                                                          \
 } while (0)
 
-#define utlOSGlobalWarning(cond,expout,os)                                                               \
-do                                                                                                       \
-{  if ((cond))                                                                                           \
-    { os << "\nWarning: "<< __utlConditionSucceedPrint(cond) <<  expout << "\n" << std::flush;   }       \
+#define utlOSGlobalWarning(cond,expout,os)                                                                                   \
+do                                                                                                                           \
+{  if ((cond))                                                                                                               \
+    { os << "\n"<<__UTL_WARNING_STRING<<": "<< __utlConditionSucceedPrint(cond) <<  expout << "\n" << std::flush;   }        \
 } while(0)
 
 #define utlGlobalWarning(cond,expout)                         utlOSGlobalWarning(cond,expout,std::cout)               
@@ -254,18 +326,18 @@ do                                                                              
 #define utlOSWarning(cond,expout,os) utlOSGlobalWarning(cond,expout,os)
 #define utlWarning(cond,expout)      utlGlobalWarning(cond,expout)
 
-#define utlDebug(cond,expout)                                                                              \
-do                                                                                                         \
-{  if ((cond))                                                                                             \
-    { std::cerr << "\nDebug: " << __utlConditionSucceedPrint(cond) << expout << "\n" << std::flush; }      \
+#define utlDebug(cond,expout)                                                                                                \
+do                                                                                                                           \
+{  if ((cond))                                                                                                               \
+    { std::cerr << "\n"<<__UTL_DEBUG_STRING<<": " << __utlConditionSucceedPrint(cond) << expout << "\n" << std::flush; }     \
 } while(0)
 
-#define utlOSShowPosition(cond,os)                                                                        \
-do                                                                                                        \
-{  if ((cond))                                                                                            \
-    { os << "\nWork Flow Position: In File: " <<__FILE__<< ", Line: " << __LINE__ << "\n"                 \
-    << "Function: " << __utl_LOCATION__ << "\n" << std::flush;                                            \
-    }                                                                                                     \
+#define utlOSShowPosition(cond,os)                                                                                             \
+do                                                                                                                             \
+{  if ((cond))                                                                                                                 \
+    { os << "\n"<<"Work Flow"<<": In File: " <<__FILE__<< ", Line: " << __LINE__ << "\n"                                       \
+    << "Function: " << __utl_LOCATION__ << "\n" << std::flush;                                                                 \
+    }                                                                                                                          \
 } while(0)
 
 #define utlShowPosition(cond)   utlOSShowPosition(cond,std::cout)                                                                     

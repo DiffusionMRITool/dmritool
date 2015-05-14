@@ -622,12 +622,13 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
   /** set m_Data from data, the ownership is in data. */
   void SetData( T* const data, const ShapeType& shape )
     {
+    utlException(data==m_Data, "cannot set itself. Please use ReShape() for change the shape");
     Clear();
     m_Data = data;
+    m_IsShared = true;
     for ( int i = 0; i < Dimension; ++i ) 
       m_Shape[i] = shape[i];
     ComputeOffSetTable();
-    m_IsShared = true;
     }
 
   /** copy m_Data from data  */
@@ -1028,7 +1029,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     }
 
   ValueType InnerProduct(const NDArrayBase<T,Dim>& vec) const
-    { utl::InnerProduct(*this, vec); }
+    { return utl::InnerProduct(*this, vec); }
 
   void 
   Print(std::ostream & os, const char* separate=" ") const
