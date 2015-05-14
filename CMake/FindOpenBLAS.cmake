@@ -8,7 +8,7 @@
 SET(OpenBLAS_NAMES ${OpenBLAS_NAMES} openblas)
 FIND_LIBRARY(OpenBLAS_LIBRARY
   NAMES ${OpenBLAS_NAMES}
-  PATHS /lib64 /lib /usr/lib64 /usr/lib /usr/local/lib64 /usr/local/lib /usr/lib/openblas-base /usr/local/lib/openblas-base
+  PATHS /opt/OpenBLAS/lib /usr/local/lib64 /usr/local/lib/openblas-base /lib64 /usr/lib64 /lib /usr/lib /usr/local/lib /usr/lib/openblas-base
   )
 
 IF (OpenBLAS_LIBRARY)

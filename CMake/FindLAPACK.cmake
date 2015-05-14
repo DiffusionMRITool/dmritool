@@ -48,6 +48,12 @@ endif ()
 set(LAPACK_FOUND FALSE)
 set(LAPACK95_FOUND FALSE)
 
+FIND_LIBRARY(LAPACK_lapacke_LIBRARY
+  NAMES lapacke
+  PATHS /lib64 /usr/lib64 /usr/local/lib64 /lib /usr/lib /usr/local/lib /opt/local/lib64 /opt/local/lib
+  )
+mark_as_advanced(${LAPACK_lapacke_LIBRARY})
+
 # TODO: move this stuff to separate module
 
 macro(Check_Lapack_Libraries LIBRARIES _prefix _name _flags _list _blas _threads)
@@ -222,6 +228,9 @@ if (BLA_VENDOR STREQUAL "Generic" OR
     )
   endif ()
 endif ()
+if (LAPACK_lapack_LIBRARY)
+  set(LAPACK_LIBRARIES ${LAPACK_lapack_LIBRARY})
+endif()
 #intel lapack
 if (BLA_VENDOR MATCHES "Intel*" OR BLA_VENDOR STREQUAL "All")
   if (NOT WIN32)
@@ -338,3 +347,5 @@ else()
 endif()
 
 set(CMAKE_FIND_LIBRARY_SUFFIXES ${_lapack_ORIG_CMAKE_FIND_LIBRARY_SUFFIXES})
+
+set(LAPACK_LIBRARIES ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARY})
