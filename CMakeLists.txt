@@ -15,6 +15,14 @@ set(DMRITOOL_VERSION_MAJOR "0")
 set(DMRITOOL_VERSION_MINOR "1")
 set(DMRITOOL_VERSION_PATCH "1")
 
+option(BUILD_STATIC_EXECUTABLES "Build static executables" OFF)
+if(BUILD_STATIC_EXECUTABLES)
+  set(CMAKE_FIND_LIBRARY_SUFFIXES .a)
+  set(BLA_STATIC TRUE)
+else(BUILD_STATIC_EXECUTABLES)
+  option(BUILD_SHARED_LIBS "Build shared libs" ON)
+endif(BUILD_STATIC_EXECUTABLES)
+
 set(DMRITOOL_SETTINGS_DIRECTORY "$ENV{HOME}/.dmritool")
 
 if(NOT VERBOSITY_LEVEL)
@@ -29,7 +37,6 @@ add_definitions(-DUTL_VERBOSITY=${VERBOSITY_LEVEL})
 #set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
 
 option(BUILD_DOXYGEN_DOCUMENTATION "Build doxygen documentation" OFF)
-option(BUILD_SHARED_LIBS "Build shared libs" ON)
 
 # Set a default build type if none was specified
 if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
@@ -40,15 +47,15 @@ if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
     "MinSizeRel" "RelWithDebInfo")
 endif()
 
-find_package(GenerateCLP REQUIRED)
-include(${GenerateCLP_USE_FILE})
-
 find_package(VTK REQUIRED)
 include(${VTK_USE_FILE})
 set(VTK_LIBRARIES_back ${VTK_LIBRARIES})
 
 find_package(ITK 4 REQUIRED)
 include(${ITK_USE_FILE})
+
+find_package(GenerateCLP REQUIRED)
+include(${GenerateCLP_USE_FILE})
 
 set(VTK_LIBRARIES ${VTK_LIBRARIES_back})
 set(ITK_FOUND TRUE)
@@ -78,13 +85,19 @@ else()
 
   ## LAPACK - required by utl::NDArray, spams
   find_package(LAPACK REQUIRED)
-  set(LAPACK_LIBRARIES "${LAPACK_LIBRARIES};-llapacke")
+  set(LAPACK_LIBRARIES "${LAPACK_LIBRARIES}")
   set(BLAS_LIBRARIES ${OpenBLAS_LIBRARY} ${LAPACK_LIBRARIES})
 endif()
 set(LAPACK_FOUND TRUE)
 set(BLAS_FOUND TRUE)
+if (BUILD_STATIC_EXECUTABLES)
+  set(BLAS_LIBRARIES "${BLAS_LIBRARIES};-lgfortran")
+endif()
 message("BLAS_LIBRARIES=${BLAS_LIBRARIES}")
 message("LAPACK_LIBRARIES=${LAPACK_LIBRARIES}")
+
+# message("ITK_LIBRARIES=${ITK_LIBRARIES}")
+# message("VTK_LIBRARIES=${VTK_LIBRARIES}")
 
 option(DMRITOOL_USE_FASTLAPACK "Use fast version of LAPACK routines, it needs to build openblas manually, or use MKL." OFF)
 if (DMRITOOL_USE_FASTLAPACK)
