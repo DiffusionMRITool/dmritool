@@ -4,6 +4,7 @@ function(add_clp_test_application appName mainFile)
 
   add_executable(${appName} ${mainFile}.cxx)  
   target_link_libraries(${appName} ${ARGN})
+  add_dependencies(${buildalltests} ${appName})
 endfunction(add_clp_test_application)
 
 
@@ -36,12 +37,14 @@ endfunction(add_application)
 function(add_test_application appName mainFile)
   add_executable(${appName} ${mainFile}.cxx)
   target_link_libraries(${appName} ${ARGN})
+  add_dependencies(${buildalltests} ${appName})
 endfunction(add_test_application)
 
 function(add_gtest_application appName mainFile)
   include_directories(${GTEST_INCLUDE_DIRS})
   add_executable(${appName} ${mainFile}.cxx)
   add_dependencies(${appName} googletest)
+  add_dependencies(${buildalltests} ${appName})
 
   if(NOT WIN32)
     target_link_libraries(${appName}

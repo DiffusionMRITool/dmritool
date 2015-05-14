@@ -120,6 +120,8 @@ configure_file(${DMRITOOL_SOURCE_DIR}/CMake/DMRITOOLConfigure.h.in ${DMRITOOL_BI
 ## BUILD_TESTING
 option(BUILD_TESTING "Build tests" ON)
 if (BUILD_TESTING)
+  set(buildalltests "alltests")
+  add_custom_target(${buildalltests}) 
   enable_testing()
   include(CTest)
 endif()
