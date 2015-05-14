@@ -275,12 +275,14 @@ if(BUILD_DOXYGEN_DOCUMENTATION)
     if(LINK_EXTERNAL_DOXYGEN)
       include(ExternalDoxygenTAG)
       add_custom_target(doxygen 
-        COMMAND ${DOXYGEN} ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/doxygen.config
+        COMMAND sed -e 's/PROJECT_NUMBER.*=.*\\>/PROJECT_NUMBER = '$$\( cd ${DMRITOOL_SOURCE_DIR} && git describe --abbrev=8 --always\)'/' ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/doxygen.config | doxygen -
+        # COMMAND ${DOXYGEN} ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/doxygen.config
         DEPENDS ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/InsightDoxygen.tag ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/vtkNightlyDoc.tag
         )
     else()
       add_custom_target(doxygen 
-        COMMAND ${DOXYGEN} ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/doxygen.config
+        COMMAND sed -e 's/PROJECT_NUMBER.*=.*\\>/PROJECT_NUMBER = '$$\( cd ${DMRITOOL_SOURCE_DIR} && git describe --abbrev=8 --always\)'/' ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/doxygen.config | doxygen -
+        # COMMAND ${DOXYGEN} ${DMRITOOL_DOXYGEN_OUTPUT_DIR}/doxygen.config
         )
     endif()
   endif(DOXYGEN_FOUND)

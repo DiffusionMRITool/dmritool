@@ -77,7 +77,7 @@ Without using learned dictionary, you can try L1-SPFI which uses least squares w
   
   SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --lambdaSH 1e-9 --lambdaRA 1e-9 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_2 --mdImage D_sh4_ra1.nii.gz
 
-* Without ``--mdImage D_sh4_ra1.nii.gz`` uses default scale for all voxels.  
+* Without ``--mdImage D_sh4_ra1.nii.gz``, it uses default scale for all voxels.  
 * You can try different ranks, and different regularizations ``lambdaSH`` and ``lambdaRA`` around :math:`1e-8`.
 
 L2-SPFI reconstruction

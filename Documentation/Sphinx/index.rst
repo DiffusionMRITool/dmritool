@@ -60,10 +60,10 @@ Users Documentation
    :maxdepth: 2
 
    news
-   support
    building
-   userguide
    tutorials
+   userguide
+   support
    citation
    license
 
