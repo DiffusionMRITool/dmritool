@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
   <category>Diffusion Models</category>
-  <title>Convert SPF coefficients to ODFs (represented by SH basis).</title>
-  <description>Convert SPF coefficients to ODFs (represented by SH basis).</description>
+  <title>Convert SPF coefficients to ODFs (represented by SH basis or discrete samples).</title>
+  <description>Convert SPF coefficients to ODFs (represented by SH basis or discrete samples).</description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 
@@ -19,7 +19,7 @@
     
     <image type="vector">
       <name>_OutputFile</name>
-      <description>Output Image File (EAP profile) represented by SH basis.</description>
+      <description>Output Image File (ODF).</description>
       <index>1</index>
     </image>
     

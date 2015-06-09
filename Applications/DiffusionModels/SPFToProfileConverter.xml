@@ -19,7 +19,7 @@
     
     <image type="vector">
       <name>_OutputFile</name>
-      <description>Output Image File (EAP profile) represented by SH basis.</description>
+      <description>Output Image File (DWI/EAP profile).</description>
       <index>1</index>
     </image>
     
