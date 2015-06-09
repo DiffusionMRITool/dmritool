@@ -26,3 +26,4 @@ SphereTessellator
 MeshFromSHCoefficientsConverter
 MeshFromSphericalFunctionTessellatedSamples
 OrientationsViewer
+vtkviewer

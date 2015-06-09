@@ -32,11 +32,12 @@ static void makeShortcut(
 }
 
 int main(int argc, char ** argv) {
-  if (argc == 1)
+  if (argc == 1 || (argc==2 && (argv[1]==std::string("-h") || argv[1]==std::string("--help"))) )
     {
-    std::cerr
+    std::cout
+      << "\nDescription: visualize vtk files.\n" 
       << "\nUseage:  \n  " << argv[0]
-      << " FILE [MORE FILES...]\n"
+      << " FILE [MORE FILES...]\n\n"
       "Supported File Formats:\n"
       "  *.vtk - VTK Legacy File\n"
       "  *.vtp - VTK Polygonal Data File\n"
@@ -53,10 +54,10 @@ int main(int argc, char ** argv) {
       "  'ctrl-r' - toggle rotation\n"
       "  'ctrl-s' - toggle stereo mode\n"
       "  'ctrl-t' - change stereo type\n"
-      "  'ctrl-p' - screenshot\n"
+      "  'ctrl-p' - screenshot\n\n"
       "More Info:\n"
       "  https://github.com/HalCanary/vtkviewer\n\n";
-    return 1;
+    return 0;
     }
 
   QApplication app(argc, argv);

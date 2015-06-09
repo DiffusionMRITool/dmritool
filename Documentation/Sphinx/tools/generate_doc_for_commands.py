@@ -21,18 +21,18 @@ def generate_cmdhelp(cmds, outfolder):
             cmd_help_lines = cmd_help.split('\n');
             description_found = False
             for line in cmd_help_lines:
-                if not line:
+                if not line and not description_found:
                     continue
                 if re.search(r"Description:", line):
                     description_found = True
-                    cmd_help_desciption = line[16:]
+                    cmd_help_desciption = line[line.find('Description:')+13:]
                 else:
                     if description_found:
-                        if re.search(r"Author", line):
+                        if line:
+                            cmd_help_desciption = cmd_help_desciption + line
+                        else:
                             cmd_descriptions.append(cmd_help_desciption)
                             break
-                        else:
-                            cmd_help_desciption = cmd_help_desciption + line
 
     return cmd_descriptions
 
