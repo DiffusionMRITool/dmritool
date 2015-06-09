@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Diffusion Models</category>
+  <title>SH Coefficients of DWI Signal in DTI With Symmetric Tensor</title>
+  <description>Compute SH coefficients of DWI signal in DTI with symmetric tensor (along z-axis).</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    
+    <string>
+      <name>_OutputFile</name>
+      <default></default>
+      <label>output file</label>
+      <description>Output SH coefficients into the file. If not set, output to screen.</description>
+      <longflag>output</longflag>
+    </string>
+  
+    <float-vector>
+      <name>_EigenValues</name>
+      <default></default>
+      <label>Tensor EigenValues</label>
+      <description>Two eigenvalues for symmetric tensor.</description>
+      <longflag>eigenvalues</longflag>
+    </float-vector>
+    
+    <float-vector>
+      <name>_FAMD</name>
+      <default></default>
+      <label>Tensor FA and MD</label>
+      <description>FA and Mean Diffusivity (MD) for symmetric tensor.</description>
+      <longflag>famd</longflag>
+    </float-vector>
+    
+    <float-vector>
+      <name>_BValues</name>
+      <default></default>
+      <label>B value</label>
+      <description>B value.</description>
+      <longflag>bvalues</longflag>
+    </float-vector>
+    
+    <integer>
+      <name>_SHOrder</name>
+      <default>8</default>
+      <label>SH order</label>
+      <description>SH order.</description>
+      <longflag>sh</longflag>
+    </integer>
+
+    <boolean>
+      <name>_OutputAllCoefficients</name>
+      <description>If it is set, output all coefficients including zeros for c_{l,m}, m!=0. If not set, output only c_{l,0}</description>
+      <longflag>allsh</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_NoB</name>
+      <description>If it is set, only print SH coefficients without b values. </description>
+      <longflag>nob</longflag>
+      <default>false</default>
+    </boolean>
+    
+  </parameters>
+   
+</executable>
+
+
+
+
