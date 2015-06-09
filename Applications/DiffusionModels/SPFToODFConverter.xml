@@ -2,7 +2,7 @@
 <executable>
   <category>Diffusion Models</category>
   <title>Convert SPF coefficients to ODFs (represented by SH basis).</title>
-  <description>Estimate EAP/ODF using SPFI</description>
+  <description>Convert SPF coefficients to ODFs (represented by SH basis).</description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 

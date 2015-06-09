@@ -2,7 +2,7 @@
 <executable>
   <category>Diffusion Models</category>
   <title>Convert SPF coefficients to RTO map.</title>
-  <description>Estimate RTO map using SPFI</description>
+  <description>Estimate scalar maps using SPFI</description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 

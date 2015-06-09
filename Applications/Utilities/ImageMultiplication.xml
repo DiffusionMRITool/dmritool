@@ -2,7 +2,7 @@
 <executable>
   <category>Image Operator</category>
   <title>Multiply a scale value to Image</title>
-  <description>Normalize each voxel in a 3D vector image or 4D image.</description>
+  <description>Scale each voxel in a 3D vector image or 4D image.</description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   

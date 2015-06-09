@@ -2,7 +2,7 @@
 <executable>
   <category>Diffusion Models</category>
   <title>SPFI</title>
-  <description>Estimate EAP/ODF using SPFI</description>
+  <description>SPFI: estimate SPF coefficients from DWI signals</description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 

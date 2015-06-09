@@ -2,7 +2,7 @@
 <executable>
   <category>Converter</category>
   <title>Mesh From SH Coefficients Converter</title>
-  <description>Create mesh from spherical harmonics coefficients for visualization.</description>
+  <description>Create a mesh from spherical harmonics coefficients for visualization.</description>
   
   <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   
