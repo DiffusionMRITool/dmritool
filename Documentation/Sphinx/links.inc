@@ -10,7 +10,7 @@
 .. _`Section on Tissue Biophysics and Biomimetics (STBB)`: http://stbb.nichd.nih.gov/index.html
 .. _`National Institutes of Health`: http://www.nih.gov/
 .. _`Athena project team`: https://team.inria.fr/athena/
-.. _INRIA: https:/inria.fr/
+.. _INRIA: https://www.inria.fr/en/
 .. _`Brainnetome center`: http://www.brainnetome.org/en/
 .. _`Institute of Automation, Chinese Academy of Sciences`: http://english.ia.cas.cn/
 .. _`MIND Lab`: http://www.unc.edu/~ptyap/index.html
@@ -48,5 +48,9 @@
 .. _CAMINO: http://cmic.cs.ucl.ac.uk/camino/
 .. _paraview: http://www.paraview.org/
 
+
+.. |br| raw:: html
+
+   <br />
 
 .. vim:syntax=rst

@@ -157,10 +157,13 @@ The following table explains the parameters in the configuration file
 Visualization of spherical function field
 ==========================================
 
+Generate vtk files 
+------------------ 
+
 Both ODFs and EAP profile are spherical function fields, where in each voxel there is a spherical function (e.g. ODF, EAP profile with a fixed radius). 
 The spherical function field can be represented using uniform samples of spherical functions or the Spherical Harmonics (SH) coefficients of spherical functions. 
 We provides some routines to generate mesh files (.vtk format) from the SH coefficients or spherical function samples. 
-Then these vtk files can be visualized in paraview_ or using the routine ``vtkviewer``
+Then these vtk files can be visualized in paraview_ or using the routine ``vtkviewer``. 
 
 +-------------------------------------------------+-----------------------------------------------------------+
 | ``MeshFromSphericalFunctionTessellatedSamples`` | generate mesh from uniform samples of spherical functions |
@@ -169,6 +172,23 @@ Then these vtk files can be visualized in paraview_ or using the routine ``vtkvi
 +-------------------------------------------------+-----------------------------------------------------------+
 | ``vtkviewer``                                   | visualize generated mesh file                             |
 +-------------------------------------------------+-----------------------------------------------------------+
+
+Visualization using Paraview
+----------------------------
+
+When using paraview_, it is possible to visualize these generated vtk files with a scalar map, e.g. the GFA map, as the background. 
+Paraview_ originally can visualize vtk files.
+For the GFA map which is in nifti format, paraview can also visualize it when the ``AnalyzeNiftiIO`` plugin is enabled.
+You can enable it by clicking ``Tools`` -> ``Manage Plugins`` -> ``AnalyzeNiftiIO``.  
+
+Note that it supports ``.nii`` file, but not ``.nii.gz`` file, and you may need to set the origin manually in paraview such that
+the gfa map can be visualized in the same coordinate as the EAP profile in vtk format.
+
+* In the ``properties`` panel, when you click ``toggle advanced properties``, it shows ``Translation`` and ``Scale``.
+* By setting ``translation``, you can translate the image map to different position.
+* By setting ``scale``, you scale the axis. If you set ``(-1,1,1)`` for scale, it reverses the x-axis.
+
+You can also enable other useful plugins for paraview, e.g. ``quadview``.
  
 
 
