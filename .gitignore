@@ -1,4 +1,6 @@
 
-Examples/temp
 build
 _build
+
+Examples/temp
+Documentation/Sphinx/commands/

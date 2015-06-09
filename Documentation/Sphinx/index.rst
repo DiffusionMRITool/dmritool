@@ -63,10 +63,10 @@ Users Documentation
    building
    tutorials
    userguide
+   commands/commandlist
    support
    citation
    license
-
 
 Developers Documentation
 ========================
