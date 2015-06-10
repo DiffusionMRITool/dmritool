@@ -23,6 +23,8 @@
 #include "utlMKL.h"
 #endif
 
+/** @addtogroup utlHelperFunctions
+@{ */
 namespace utl
 {
 
@@ -275,5 +277,6 @@ vAbs( int n,  T* vecIn, T* vecOut)
 
 }
 
+/** @}  */
 
 #endif 

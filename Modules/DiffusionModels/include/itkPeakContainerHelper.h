@@ -41,6 +41,7 @@ typedef enum
  *   \class   PeakContainerHelper
  *   \brief   a VariableLengthVector to contain peaks with different storing types
  *
+ *   \ingroup DiffusionModels
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 class PeakContainerHelper

@@ -103,6 +103,7 @@ ScalarMapFromSPFImageFilter<TInputImage,TOutputImage>
   typename TInputImage::PixelType inputPixel;
   typename TInputImage::IndexType inputIndex;
   typename TOutputImage::PixelType outputPixel;
+  ScalarImagePointer scaleImage = this->GetScaleImage();
   
   unsigned int inputDim = inputPtr->GetNumberOfComponentsPerPixel();
   inputPixel.SetSize(inputDim);
@@ -124,8 +125,8 @@ ScalarMapFromSPFImageFilter<TInputImage,TOutputImage>
         if (this->GetDebug())
           std::cout << "index = " << inputIndex << std::endl << std::flush;
 
-        if (!IsImageEmpty(this->m_ScaleImage))
-          scale = this->m_ScaleImage->GetPixel(inputIndex);
+        if (!IsImageEmpty(scaleImage))
+          scale = scaleImage->GetPixel(inputIndex);
 
         if (m_MapType==RTO)
           {

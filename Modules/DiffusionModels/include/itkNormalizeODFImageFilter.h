@@ -24,6 +24,7 @@ namespace itk
 {
 namespace Functor
 {
+/** \ingroup DiffusionModels  */
 template <class TInput, class TOutput>
 class ODFNormlizeFunctor
 {

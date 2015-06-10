@@ -29,6 +29,7 @@ namespace itk
  *   \class   SphericalPolarFourierImageFilter
  *   \brief   estimate the coefficients in SPF model
  *
+ *   \ingroup DiffusionModels
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template < class TInputImage, class TOutputImage >

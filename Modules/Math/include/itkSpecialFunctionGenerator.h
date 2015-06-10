@@ -25,6 +25,8 @@
 
 namespace utl
 {
+/** @addtogroup Math
+@{ */
 
 /** Confluent hypergeometric function. 
 *
@@ -99,6 +101,7 @@ template < class T >
 std::vector< std::vector<T> >
 GetSymmetricTensorSHCoefDerivative(const T b, const T e1, const T e2, const int lMax, const T theta=0, const T phi=0 );
 
+    /** @} */
 
 }
 

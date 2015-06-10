@@ -35,6 +35,9 @@
 namespace itk 
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 template <class T>
 void
 PrintVariableLengthVector(const VariableLengthVector<T>vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
@@ -719,6 +722,7 @@ VnlMatrixToPointsContainer ( const vnl_matrix<VnlValueType>& matrix, PointsConta
     }
 }
 
+    /** @} */
 
 }
 

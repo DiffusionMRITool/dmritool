@@ -27,6 +27,9 @@
 namespace utl 
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 template <class T>
 vnl_matrix<T> 
 SphericalToCartesian ( const vnl_matrix<T>& in )
@@ -383,6 +386,8 @@ IsMatrixSymmetric ( const vnl_matrix<T>& mat, const double eps=1e-10 )
     }
   return true;
 }
+
+    /** @} */
 
 }
 

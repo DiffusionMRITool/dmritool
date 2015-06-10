@@ -27,6 +27,12 @@ namespace itk {
 
 namespace Functor {
 
+/** \defgroup Math
+* \brief math related functions and classes. */
+
+/** @addtogroup Math
+@{ */
+
 /** Arithmetic functors which use m_Argument. */
 #define __FunctorOneArgumentRight(Name, Op)                             \
 template< class TInput, class TArgument=TInput, class TOutput=TInput >  \
@@ -232,6 +238,8 @@ private:
   TArgument m_Argument1;
   TArgument m_Argument2;
 };
+
+    /** @} */
 
 } // end namespace Functor
 

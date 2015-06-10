@@ -25,6 +25,9 @@
 namespace utl
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 template <class T>
 void 
 VnlMatrixToUtlMatrix( const vnl_matrix<T>& mat, utl::NDArray<T,2>& matUtl )
@@ -74,6 +77,7 @@ UtlVectorToVnlVector( const NDArray<T,1>& vec )
   return result;
 }
 
+    /** @} */
 }
 
 #endif 

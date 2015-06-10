@@ -38,6 +38,7 @@ namespace itk
  *   \class   DiffusionModelEstimationImageFilter
  *   \brief   base filter for estimation of diffusion models
  *
+ *   \ingroup DiffusionModels
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template < class TInputImage, class TOutputImage >

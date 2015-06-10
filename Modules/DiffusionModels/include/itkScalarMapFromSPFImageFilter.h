@@ -22,6 +22,7 @@ namespace itk
  *   \class   ScalarMapFromSPFImageFilter
  *   \brief   calculate ODFs from SPF coefficients
  *
+ *   \ingroup DiffusionModels
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template < class TInputImage, class TOutputImage=Image<double,3> >

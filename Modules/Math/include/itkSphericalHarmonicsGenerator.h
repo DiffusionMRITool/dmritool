@@ -44,6 +44,7 @@ namespace itk
  *  \f]
  *  where \f$ y_l^m(\theta,\phi)\f$ is the complex SH basis 
  *
+ *  \ingroup Math
  *  \author Jian Cheng
  *
  */

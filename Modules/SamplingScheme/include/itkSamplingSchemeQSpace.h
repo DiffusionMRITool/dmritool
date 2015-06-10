@@ -32,7 +32,7 @@ namespace itk
  *   which is determined by m_IndicesInShells. 
  *
  *   \author  Jian Cheng  
- *   \ingroup DWISamplingScheme
+ *   \ingroup SamplingScheme
  */
 template<class TPixelType = double> 
 class ITK_EXPORT SamplingSchemeQSpace : public SamplingScheme3D<TPixelType>

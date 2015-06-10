@@ -20,6 +20,9 @@ http://jgt.akpeters.com/papers/MollerHughes99/code.html
 namespace utl
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 /** 
  *  A function for creating a rotation matrix that rotates a vector called
  *  "from" into another vector called "to".
@@ -257,6 +260,8 @@ RotationMatrixFromVectors(const VectorType& from, const VectorType& to, MatrixTy
 // #endif
 //   }
 // }
+
+    /** @} */
 
 }
 

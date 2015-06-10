@@ -11,6 +11,9 @@
 #ifndef __utlVTKMacro_h
 #define __utlVTKMacro_h
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 #if VTK_MAJOR_VERSION <= 5
   #define vtkSetInputData(x,y) do { (x)->SetInput(y); } while (0) 
   #define vtkAddInputData(x,y) do { (x)->AddInput(y); } while (0)
@@ -19,5 +22,6 @@
   #define vtkAddInputData(x,y) do { (x)->AddInputData(y); } while(0)
 #endif
 
+    /** @} */
 
 #endif 

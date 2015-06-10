@@ -29,6 +29,9 @@
 namespace utl 
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 /**
  * \brief MatrixCopy. A := alpha * op(A)  
  *
@@ -240,6 +243,7 @@ GetColumn(const vnl_matrix<T>& mat, const int index, vnl_vector<T>& v1)
 }
 
 
+    /** @} */
 
 }
 

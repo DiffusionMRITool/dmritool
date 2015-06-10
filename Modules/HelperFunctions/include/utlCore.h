@@ -55,6 +55,13 @@
 
 namespace utl 
 {
+/** \defgroup utlHelperFunctions
+*  \brief helper functions 
+*  */
+
+
+/** @addtogroup utlHelperFunctions
+@{ */
 
 //! Return the value of a system timer, with a millisecond precision.
 /**
@@ -1705,6 +1712,7 @@ ReadMatrix ( const std::string file, TMatrixType& matrix )
     }
   return;
 }
+    /** @} */
 
 }
 

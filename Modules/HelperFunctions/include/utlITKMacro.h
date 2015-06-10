@@ -20,6 +20,10 @@
 
 #include "itkMacro.h"
 
+
+/** @addtogroup utlHelperFunctions
+@{ */
+
 #define itkSetNoConstMacro(name, type)                      \
   virtual void Set##name (type _arg)                        \
     {                                                       \
@@ -101,6 +105,8 @@ do                                                                              
       utlOSShowPosition(cond, std::cout);                                                                              \
     }                                                                                                                  \
 } while(0)
+
+    /** @} */
 
 #endif 
 

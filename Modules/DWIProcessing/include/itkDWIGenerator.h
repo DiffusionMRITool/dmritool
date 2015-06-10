@@ -23,6 +23,8 @@ namespace itk
 /** \class DWIGenerator
  *  \brief Generate DWI data based on provided parameter file.
  *
+ *  \ingroup DWIProcessing
+ *  \author  Pew-Thian Yap, Jian Cheng
  */
 template <class TOutputImage, class TScalarImage=Image<float,3> >
 class ITK_EXPORT DWIGenerator : public DWIGeneratorBase<TOutputImage, TScalarImage>

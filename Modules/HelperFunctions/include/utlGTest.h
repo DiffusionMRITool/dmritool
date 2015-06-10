@@ -19,6 +19,8 @@
 
 #include "gtest/gtest.h"
 
+/** @addtogroup utlHelperFunctions
+@{ */
 #define EXPECT_NEAR_RELATIVE(val1, val2, eps) \
   EXPECT_NEAR(val1,val2, eps*std::fabs(val2))
 
@@ -47,4 +49,5 @@
   EXPECT_EQ((mat1).Cols(), (mat2).Cols()); \
   EXPECT_NEAR_MATRIX(mat1, mat2, (mat1).Rows(), (mat1).Cols(), eps);
 
+    /** @} */
 #endif 

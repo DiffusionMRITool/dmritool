@@ -30,7 +30,7 @@ namespace itk
  * (http://www.cs.unc.edu/~jon/sphere.html)
  *
  * \author Pew-Thian Yap, UNC-CH
- * \ingroup DWISamplingScheme
+ * \ingroup SamplingScheme Visualization DiffusionModels
  */
 
 template <typename TElement = double>

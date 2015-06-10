@@ -27,6 +27,7 @@ namespace itk
  *   \class   AddNoiseToDWIImageFilter
  *   \brief   add noise to DWI data
  *
+ *   \ingroup DWIProcessing
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template< typename TInputImage, typename TB0Image=Image<double,3>,

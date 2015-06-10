@@ -24,6 +24,10 @@
 
 namespace itk
 {
+/** 
+ *   \defgroup DiffusionModels
+ *   \brief Diffusion models used in diffusion data reconstruction
+* */
 
 /**
  *   \class  DiffusionTensor
@@ -38,6 +42,8 @@ namespace itk
  *    \end{array} 
  *   \f]
  *
+ *
+ *   \ingroup DiffusionModels
  *   \author Jian Cheng
  */
 template< class TPrecision >

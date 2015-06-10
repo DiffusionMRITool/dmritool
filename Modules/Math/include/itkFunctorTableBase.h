@@ -29,6 +29,7 @@ namespace itk
  *   \class   FunctorTableBase
  *   \brief   use FunctorTableBase to accelerate evaluation of functions.
  *
+ *   \ingroup Math
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template < class TFunctor, class TParameters, class TFunctorValue  >

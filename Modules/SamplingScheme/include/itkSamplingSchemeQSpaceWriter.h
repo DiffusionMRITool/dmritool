@@ -28,7 +28,7 @@ namespace itk
  *   \brief   write orientations and b values (single/multiple shells) into text files
  *
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
- *   \ingroup DWISamplingScheme
+ *   \ingroup SamplingScheme
  */
 template <class TSamplingType>
 class ITK_EXPORT SamplingSchemeQSpaceWriter : public LightProcessObject

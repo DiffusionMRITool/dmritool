@@ -27,11 +27,12 @@
 
 namespace itk
 {
+/** 
+*   \defgroup OptimizationSolver
+*   \brief Solvers for optimization problems
+* */
 
 /**
- *   \defgroup OptimizationSolver
- *   \brief Solvers for optimization problems
- *
  *   \class   SolverBase
  *   \brief   Base class for some optimization solvers using primal-dual updates
  *

@@ -18,6 +18,9 @@
 #ifndef __utlSTDHeaders_h
 #define __utlSTDHeaders_h
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 /** http://stackoverflow.com/questions/23414270/c-complex-and-complex-h-in-the-same-file  */
 extern "C" {
 #include <complex.h>
@@ -31,5 +34,6 @@ extern "C" {
 #include <tr1/unordered_map>
 #define utl_unordered_map std::tr1::unordered_map
 
+    /** @} */
 
 #endif 

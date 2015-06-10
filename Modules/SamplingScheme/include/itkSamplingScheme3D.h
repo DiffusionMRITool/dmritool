@@ -28,11 +28,12 @@
 
 namespace itk
 {
+/** 
+*   \defgroup SamplingScheme
+*   \brief Sampling scheme in q-space 
+* */
 
 /**
- *   \defgroup DWISamplingScheme
- *   \brief Sampling scheme in q-space 
- *
  *   \class   SamplingScheme3D
  *   \brief   this class describes sampling in a 3D space (Q space or R space). 
  *
@@ -40,7 +41,7 @@ namespace itk
  *   which is determined by m_IndicesInShells. 
  *
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
- *   \ingroup DWISamplingScheme
+ *   \ingroup SamplingScheme
  */
 template< class TPixelType=double >
 class ITK_EXPORT SamplingScheme3D : public VectorContainer<IdentifierType, Point< TPixelType, 3 > > 

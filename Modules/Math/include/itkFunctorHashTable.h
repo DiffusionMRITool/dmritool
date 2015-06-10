@@ -27,6 +27,7 @@ namespace itk
  *   \class   FunctorHashTable
  *   \brief   use FunctorHashTable to accelerate evaluation of functions.
  *
+ *   \ingroup Math
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template < class TFunctor, class TParameters, class TFunctorValue = double, class THash=std::tr1::hash<TParameters> >

@@ -26,6 +26,9 @@
 namespace utl
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 /** in-place copy or transpose  */
 template <class T> inline void 
 mkl_imatcopy(const char ordering, const char trans, const int rows, const int cols, const T alpha, T* A, const int lda, const int ldb);
@@ -56,6 +59,7 @@ mkl_omatcopy<float>(const char ordering, const char trans, const int rows, const
   mkl_somatcopy(ordering,trans,rows,cols,alpha,A,lda,B,ldb);
 }
 
+    /** @} */
 
 }
 

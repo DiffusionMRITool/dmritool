@@ -24,7 +24,13 @@
 namespace itk
 {
 
-
+/**
+ *   \class   DiffusionModelGenerator
+ *   \brief   generate ground truth DWI/EAP/ODF ets from a given model
+ *
+ *   \ingroup DiffusionModels
+ *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
+ */
 template<class PreciseType = double> 
 class ITK_EXPORT DiffusionModelGenerator : public Object
 {

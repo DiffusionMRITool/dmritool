@@ -44,8 +44,8 @@ namespace itk
 /** \class MeshFromImageImageFilter
  * \brief Compute mesh from SH coefficients.
  *
- *
- * \author  Jian Cheng,  UNC-CH
+ * \ingroup Visualization
+ * \author  Jian Cheng (jian.cheng.1983@gmail.com)
  *
  */
 template < class TInputImage, class TOutputMesh=vtkPolyData>

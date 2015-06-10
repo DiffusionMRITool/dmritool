@@ -24,8 +24,11 @@
 namespace utl
 {
 
+/** @ingroup utlHelperFunctions Math
+@{ */
+
 /**
- * \brief  BesselJPrimeZeros in Mathematica, the k-th solution of J'_m(x)=0
+ *  BesselJPrimeZeros in Mathematica, the k-th solution of J'_m(x)=0
  */
 const static double BesselJPrimeZerosTable[] = 
   {
@@ -717,6 +720,7 @@ InverseSmallMatrix ( const TMatrixType& mat, TMatrixType& result, const int row 
     }
 }
 
+    /** @} */
 }
 
 

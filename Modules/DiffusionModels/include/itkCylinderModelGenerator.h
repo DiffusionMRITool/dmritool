@@ -34,6 +34,7 @@ namespace itk
  *   Reference: 
  *   Resolution of complex tissue microarchitecture using the diffusion orientation transform (DOT), Evren Ozarslan, NeuroImage 2006
  *    
+ * \ingroup DiffusionModels
  *
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */

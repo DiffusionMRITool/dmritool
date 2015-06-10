@@ -28,7 +28,7 @@ namespace itk
 /** \class MeshFromDiscreteFiberODFImageFilter
  * \brief Compute mesh from discrete fiber ODF represented by a set of basis functions.
  *
- *
+ * \ingroup Visualization
  * \author  Jian Cheng (jian.cheng.1983@gmail.com)
  *
  */

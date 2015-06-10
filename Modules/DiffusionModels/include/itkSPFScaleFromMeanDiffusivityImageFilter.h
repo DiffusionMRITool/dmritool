@@ -34,7 +34,7 @@ namespace itk
  *
  * \author Jian Cheng, jian.cheng.1983@gmail.com
  *
- * \ingroup IntensityImageFilters  Multithreaded
+ * \ingroup IntensityImageFilters  Multithreaded DiffusionModels
  * \sa UnaryFunctorImageFilter
  */
 namespace Functor {  

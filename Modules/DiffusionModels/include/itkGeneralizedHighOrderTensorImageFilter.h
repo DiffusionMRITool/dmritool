@@ -28,6 +28,7 @@ namespace itk
  *   \class   GeneralizedHighOrderTensorImageFilter
  *   \brief   estimate the coefficients in GHOT model, which is used for md image estimation
  *
+ *   \ingroup DiffusionModels
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template < class TInputImage, class TOutputImage=TInputImage >

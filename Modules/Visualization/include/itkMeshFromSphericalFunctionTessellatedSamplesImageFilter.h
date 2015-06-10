@@ -26,6 +26,7 @@ namespace itk
 /** \class MeshFromSphericalFunctionTessellatedSamplesImageFilter
  * \brief Compute mesh from SH coefficients.
  *
+ * \ingroup Visualization
  * \author  Jian Cheng (jian.cheng.1983@gmail.com)
  */
 template < class TInputImage, class TOutputMesh=vtkPolyData>

@@ -27,6 +27,9 @@
 namespace utl
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 /**
  * \brief syev_VnlMatrix 
  *  eigen-decomposition for symmetric matrix.
@@ -355,6 +358,7 @@ GetEqualityConstraintProjection ( const vnl_matrix<T>& Aeq, const vnl_vector<T>&
 
   ProductVnlMv( tmp2, beq, projVector);
 }
+    /** @} */
 
 }
 

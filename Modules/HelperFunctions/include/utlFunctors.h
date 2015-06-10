@@ -17,6 +17,8 @@
 namespace utl
 {
 
+/** @addtogroup utlHelperFunctions
+@{ */
 template<typename T>
 struct Maximum
 {
@@ -39,6 +41,7 @@ struct Absolute
       { return std::abs(a); }
 };
 
+    /** @} */
 
 }
 

@@ -28,10 +28,15 @@
 
 namespace itk
 {
+
+/** @defgroup DWIProcessing
+ \brief simulation and processing of DWI
+ */
   
 /** \class DWIGeneratorBase
  *  \brief Generate DWI data based on provided parameter file.
  *
+ *  \ingroup DWIProcessing
  *  \author  Jian Cheng (jian.cheng.1983@gmail.com)
  *
  */

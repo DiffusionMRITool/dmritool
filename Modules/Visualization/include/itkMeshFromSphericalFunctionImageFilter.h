@@ -27,6 +27,7 @@ namespace itk
 /** \class MeshFromSphericalFunctionImageFilter
  * \brief Compute mesh from general spherical function.
  *
+ * \ingroup Visualization
  * \author  Jian Cheng (jian.cheng.1983@gmail.com)
  *
  */

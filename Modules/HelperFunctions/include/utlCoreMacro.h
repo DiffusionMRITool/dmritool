@@ -18,6 +18,8 @@
 #ifndef __utlCoreMacro_h
 #define __utlCoreMacro_h
 
+/** @addtogroup utlHelperFunctions
+@{ */
 // Detect/configure OS variables.
 //
 // Define 'UTL_OS' to: '0' for an unknown OS (will try to minize library dependencies).
@@ -391,5 +393,6 @@ do                                                                              
 #endif
 
 
+    /** @} */
 
 #endif 

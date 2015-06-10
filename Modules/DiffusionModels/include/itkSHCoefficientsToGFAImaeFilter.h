@@ -21,6 +21,7 @@ namespace itk
  * \brief In each vxoel, calculate gfa from SH coefficients.
  *
  * \ingroup IntensityImageFilters  Multithreaded
+ * \ingroup DiffusionModels
  * \sa UnaryFunctorImageFilter
  */
 namespace Functor

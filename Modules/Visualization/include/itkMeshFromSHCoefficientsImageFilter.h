@@ -22,7 +22,7 @@ namespace itk
 /** \class MeshFromSHCoefficientsImageFilter
  * \brief Compute mesh from SH coefficients.
  *
- *
+ * \ingroup Visualization
  * \author  Pew-Thian Yap, Jian Cheng,  UNC-CH
  *
  */

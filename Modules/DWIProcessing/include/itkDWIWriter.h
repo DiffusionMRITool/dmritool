@@ -53,6 +53,7 @@ namespace itk
  * b.txt and grad.txt, dwi.nii.gz should have the same dimension
  *
  *
+ *   \ingroup DWIProcessing
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template <class TPixelType, unsigned int VImageDimension = 3 >

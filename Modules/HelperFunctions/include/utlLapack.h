@@ -18,6 +18,9 @@
 #ifndef __utlLapack_h
 #define __utlLapack_h
 
+/** @addtogroup utlHelperFunctions
+@{ */
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -224,6 +227,7 @@ lange<float>(int matrix_order, char norm, int m, int n, const float* A, int LDA)
 { return LAPACKE_slange(matrix_order,norm,m,n,A,LDA); }
 
 
+    /** @} */
 }
 
 #endif 

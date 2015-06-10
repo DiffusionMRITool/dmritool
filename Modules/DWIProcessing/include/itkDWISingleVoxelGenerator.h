@@ -28,6 +28,8 @@ namespace itk
  *  \brief Generate DWI data with the same diffusion parameter set for all voxels.
  *    If random mode is used, the diffusion parameters are randomly rotated
  *
+ *   \ingroup DWIProcessing
+ *   \author  Jian Cheng (jian.cheng.1983@gmail.com)
  */
 template <class TOutputImage, class TScalarImage=Image<float,3> >
 class ITK_EXPORT DWISingleVoxelGenerator : public DWIGeneratorBase<TOutputImage, TScalarImage>

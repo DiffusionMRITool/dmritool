@@ -32,6 +32,7 @@ namespace itk
 /**
  *   \class   SphericalPolarFourierRadialGenerator
  *   \brief   radial part of general SPF basis
+ *   \ingroup Math
  *   \author  Jian Cheng  
  */
 template<class PreciseType = double> 
@@ -100,6 +101,7 @@ private :
 /**
  *   \class   SphericalPolarFourierGenerator
  *   \brief   general SPF basis in radial part, SH basis in spherical part
+ *   \ingroup Math
  *   \author  Jian Cheng  
  */
 template<class PreciseType = double> 

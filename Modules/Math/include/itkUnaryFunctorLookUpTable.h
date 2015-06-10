@@ -27,6 +27,7 @@ namespace itk
  *   \class   UnaryFunctorLookUpTable
  *   \brief   use UnaryFunctorLookUpTable to accelerate evaluation of functions.
  *
+ *   \ingroup Math
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
 template < class TFunctor >

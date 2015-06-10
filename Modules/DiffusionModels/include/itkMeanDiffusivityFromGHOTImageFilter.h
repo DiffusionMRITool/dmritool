@@ -15,13 +15,24 @@
  * =====================================================================================
  */
 
+#ifndef __itkMeanDiffusivityFromGHOTImageFilter_h
+#define __itkMeanDiffusivityFromGHOTImageFilter_h
+
 #include "itkUnaryFunctorImageFilter.h"
 #include "itkNumericTraits.h"
+#include "utlCoreMacro.h"
 
 namespace itk
 {  
 namespace Functor {  
   
+/**
+ *   \class  MeanDiffusivityFromGHOTCoefficients 
+ *   \brief   MD value from GHOT coefficients
+ *
+ *   \ingroup DiffusionModels
+ *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
+ */
 template< class TInput, class TOutput>
 class MeanDiffusivityFromGHOTCoefficients
 {
@@ -62,7 +73,7 @@ public:
  *
  * \author Jian Cheng, jian.cheng.1983@gmail.com
  *
- * \ingroup IntensityImageFilters  Multithreaded
+ * \ingroup IntensityImageFilters  Multithreaded DiffusionModels
  * \sa UnaryFunctorImageFilter
  */
 template <class TInputImage, class TOutputImage>
@@ -139,3 +150,5 @@ private:
 
 } // end namespace itk
 
+
+#endif 

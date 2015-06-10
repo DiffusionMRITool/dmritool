@@ -14,6 +14,8 @@
 #include "utlMatrix.h"
 #include "utlSTDHeaders.h"
 
+/** @addtogroup utlHelperFunctions
+@{ */
 
 enum {
   CARTESIAN_TO_CARTESIAN=0,
@@ -286,5 +288,6 @@ RGBToIndex(double R, double G, double B, double &index)
 
 }
 
+    /** @} */
 
 #endif 
