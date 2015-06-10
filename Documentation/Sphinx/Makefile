@@ -6,6 +6,7 @@ SPHINXOPTS    =
 SPHINXBUILD   = sphinx-build
 PAPER         =
 BUILDDIR      = _build
+CMDDIR        = commands
 
 # Internal variables.
 PAPEROPT_a4     = -D latex_paper_size=a4
@@ -19,7 +20,7 @@ I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 help:
 	@echo "Please use \`make <target>' where <target> is one of"
 	@echo "  html       to make standalone HTML files"
-	@echo "  rst        to generate rst files used for other building processes"
+	@echo "  rst        to generate rst files used for other building processes. Build it first."
 	@echo "  dirhtml    to make HTML files named index.html in directories"
 	@echo "  singlehtml to make a single large HTML file"
 	@echo "  pickle     to make pickle files"
@@ -40,11 +41,13 @@ help:
 	@echo "  doctest    to run all doctests embedded in the documentation (if enabled)"
 
 clean:
-	rm -rf $(BUILDDIR)/html/* $(BUILDDIR)/latex
-	rm -rf commands/*
+	rm -rf $(BUILDDIR)/html/* $(BUILDDIR)/doctrees $(BUILDDIR)/latex
+
+cleanall: clean
+	rm -rf $(CMDDIR)/*
 
 cmd:
-	python tools/generate_doc_for_commands.py commands 
+	python tools/generate_doc_for_commands.py $(CMDDIR) 
 
 rst: cmd
 

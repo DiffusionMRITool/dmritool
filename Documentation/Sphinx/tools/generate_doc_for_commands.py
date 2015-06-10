@@ -104,22 +104,24 @@ Command List
 
 """)
 
-    rstfile.write(r"""
-.. toctree::
-   :maxdepth: 1
-   :hidden:
-
-""")
-
-    for cmds in apps:
-        for cmd in cmds:
-            rstfile.write(''.join(['   ', cmd, '\n']))
 
     rstfile.write('\n\n')
 
     for app_category, cmds in zip(app_categories, apps):
 
         rstfile.write(''.join([app_category, "\n", len(app_category)*"=", "\n\n"]))
+        rstfile.write(r"""
+.. toctree::
+   :maxdepth: 1
+   :hidden:
+
+""")
+
+        for cmd in cmds:
+            rstfile.write(''.join(['   ', cmd, '\n']))
+
+        rstfile.write('\n\n')
+
         rstfile.write(r"""
 .. csv-table::
    :header: Command, Description
