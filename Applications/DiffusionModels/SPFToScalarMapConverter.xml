@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
   <category>Diffusion Models</category>
-  <title>Convert SPF coefficients to RTO map.</title>
+  <title>Convert SPF coefficients to scalar maps.</title>
   <description>Estimate scalar maps using SPFI</description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
@@ -19,7 +19,7 @@
     
     <image type="vector">
       <name>_OutputFile</name>
-      <description>Output Image File (RTO map).</description>
+      <description>Output Image File (scalar map).</description>
       <index>1</index>
     </image>
     
