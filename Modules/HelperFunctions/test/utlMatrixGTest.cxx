@@ -17,7 +17,10 @@
 #include "utlGTest.h"
 #include "utlNDArray.h"
 #include "utlVNL.h"
+#include <vnl/algo/vnl_determinant.h>
 #include <vnl/algo/vnl_svd.h>
+#include "utlMath.h"
+
 
 typedef utl::NDArray<double,1> UtlVectorType;
 typedef utl::NDArray<double,2> UtlMatrixType;
@@ -217,7 +220,7 @@ TEST(utlMatrix, SetGetRowColumn)
     EXPECT_NEAR_MATRIX(mat2, mat2Utl, Rows, Cols, 1e-10);
     vec2 = mat2.get_column(2);
     mat2Utl.GetColumn(2,vec2Utl);
-    EXPECT_NEAR_VECTOR(vec2, vec2Utl, Cols, 1e-10);
+    EXPECT_NEAR_VECTOR(vec2, vec2Utl, Rows, 1e-10);
     }
     {
     std::vector<int> indexVec(2);
@@ -284,3 +287,28 @@ TEST(utlMatrix, Norms)
     EXPECT_NEAR(norm, normUtl, std::fabs(norm)*1e-10);
     }
 }
+
+TEST(utlMatrix, Det_Inv_smallMatrix)
+{
+  int N=4;
+  for ( int n = 1; n <= N; ++n ) 
+    {
+    vnl_vector<double> vec0 = __GenerateRandomVector<double>(n*n, -2.0, 2.0);
+    vnl_matrix<double> mat0(vec0.data_block(), n,n);
+    UtlMatrixType mat0Utl(vec0.data_block(),n,n);
+
+    double norm = vnl_determinant(mat0);
+    double normUtl = mat0Utl.Determinant();
+    EXPECT_NEAR(norm, normUtl, std::fabs(norm)*1e-8);
+    normUtl = utl::DeterminantSmallMatrix(mat0Utl, n);
+    EXPECT_NEAR(norm, normUtl, std::fabs(norm)*1e-8);
+
+    vnl_matrix<double> mat0_inv = utl::GetVnlMatrixPInverse(mat0,1e-10);
+    UtlMatrixType mat0Utl_inv(n,n);
+    mat0Utl.InverseMatrix(mat0Utl_inv, 1e-10);
+    EXPECT_NEAR_MATRIX(mat0_inv, mat0Utl_inv, n, n, 1e-10);
+    }
+}
+
+
+

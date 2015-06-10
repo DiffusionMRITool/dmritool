@@ -87,10 +87,113 @@ DiffusionTensor<TPrecision>
   EigenVectorsMatrixType vectors;
   this->ComputeEigenAnalysis(values, vectors);
 
-  vnl_diag_matrix<TPrecision> vnl_eigenValues(NDimension);
+  eigenValues.set_size(NDimension);
   for ( int i = 0; i < NDimension; i += 1 ) 
     eigenValues[i] = values[i];
   eigenVectors = vectors.GetVnlMatrix().transpose();
+}
+
+template<class TPrecision>
+template<class TArrayType, class TMatrixType >
+void
+DiffusionTensor<TPrecision>
+::GetEigenValuesVectorsAnalytic(TArrayType& eigenValues, TMatrixType& eigenVectors) const
+{
+  if (IsDiagonal(1e-10))
+    {
+    for ( int i = 0; i < 3; ++i ) 
+      {
+      eigenValues[i] = (*this)(i,i);
+      eigenVectors(i,i) = 1.0;
+      for ( int j = 0; j < 3; ++j ) 
+        {
+        if (i!=j)
+          eigenVectors(i,j) = 0.0;
+        }
+      }
+
+    // sort three values in ascending order
+    if (eigenValues[0]>eigenValues[1])
+      {
+      std::swap(eigenValues[0], eigenValues[1]);
+      for ( int i = 0; i < 3; ++i ) 
+        std::swap(eigenVectors(i,0), eigenVectors(i,1));
+      }
+    if (eigenValues[1]>eigenValues[2])
+      {
+      std::swap(eigenValues[1], eigenValues[2]);
+      for ( int i = 0; i < 3; ++i ) 
+        std::swap(eigenVectors(i,1), eigenVectors(i,2));
+      }
+    if (eigenValues[0]>eigenValues[1])
+      {
+      std::swap(eigenValues[0], eigenValues[1]);
+      for ( int i = 0; i < 3; ++i ) 
+        std::swap(eigenVectors(i,0), eigenVectors(i,1));
+      }
+    return;
+    }
+
+  std::vector<double> detCoef(4);
+  std::vector<std::complex<double> > lambdaVec;
+
+  const TPrecision* p = this->GetDataPointer();
+  detCoef[0] = p[2]*p[2]*p[3] - 2.0*p[1]*p[2]*p[4] + p[0]*p[4]*p[4] + p[1]*p[1]*p[5] - p[0]*p[3]*p[5];
+  detCoef[1] = -p[1]*p[1] - p[2]*p[2] + p[0]*p[3] - p[4]*p[4] + p[0]*p[5] + p[3]*p[5]; 
+  detCoef[2] = -p[0] - p[3] - p[5];
+  detCoef[3] = 1;
+  lambdaVec = utl::PolynomialRoot(detCoef);
+
+  for ( int i = 0; i < 3; ++i ) 
+    eigenValues[i] = std::real(lambdaVec[i]);
+
+  // sort three values in ascending order
+  if (eigenValues[0]>eigenValues[1])
+    std::swap(eigenValues[0], eigenValues[1]);
+  if (eigenValues[1]>eigenValues[2])
+    std::swap(eigenValues[1], eigenValues[2]);
+  if (eigenValues[0]>eigenValues[1])
+    std::swap(eigenValues[0], eigenValues[1]);
+  
+  bool numericalZero =false;
+  if (std::fabs(p[2])<1e-5)
+    numericalZero = true;
+
+  if (!numericalZero)
+    {
+    double norm, v1,v2,v3;
+    // double p2=p[2]!=0?p[2]:1e-10, p1=p[1]!=0?p[1]:1e-10;
+    double p2=p[2], p1=p[1];
+
+    double cebf = -p2*p[4]+p1*p[5];
+    double cdbe = -p2*p[3]+p1*p[4];
+    for ( int i = 0; i < 3; ++i ) 
+      {
+      v1 = -(p[5]-eigenValues[i])*(cdbe+p2*eigenValues[i]) + p[4]*(cebf-p1*eigenValues[i]);
+      v2 = -p2*(cebf-p1*eigenValues[i]);
+      v3 = p2*(cdbe+p2*eigenValues[i]);
+      norm = std::sqrt(v1*v1 + v2*v2 + v3*v3);
+      if (std::fabs(p2)<1e-5 || std::fabs(cdbe+p2*eigenValues[i])<1e-5 )
+        {
+        // NOTE: when p[2] or cdbe+p2*eigenValues[i] equal 0, we have divide by zero problem.
+        numericalZero=true;
+        break;
+        }
+      eigenVectors(0,i) = v1/norm;
+      eigenVectors(1,i) = v2/norm;
+      eigenVectors(2,i) = v3/norm;
+      }
+    }
+
+  if (numericalZero)
+    {
+    vnl_diag_matrix<TPrecision> val;
+    vnl_matrix<double> vec;
+    GetEigenValuesVectors(val, vec);
+    for ( int i = 0; i < 3; ++i ) 
+      for ( int j = 0; j < 3; ++j ) 
+        eigenVectors(i,j) = vec(i,j);
+    }
 }
 
 template<class TPrecision>
@@ -108,7 +211,7 @@ DiffusionTensor<TPrecision>
     {
     vnl_diag_matrix<TPrecision> eigenValues(NDimension);
     vnl_matrix<TPrecision> eigenVectors(NDimension, NDimension);
-    this->GetEigenValuesVectors(eigenValues, eigenVectors);
+    this->GetEigenValuesVectorsAnalytic(eigenValues, eigenVectors);
     for ( int i = 0; i < NDimension; i += 1 ) 
       eigenValues[i] = array[i];
     *this = eigenVectors * eigenValues.asMatrix() * eigenVectors.transpose();
@@ -130,7 +233,7 @@ DiffusionTensor<TPrecision>
   else
     {
     vnl_diag_matrix<TPrecision> eigenValues(NDimension);
-    this->GetEigenValuesVectors(eigenValues, eigenVectors);
+    this->GetEigenValuesVectorsAnalytic(eigenValues, eigenVectors);
     *this = eigenVectors * eigenValues.asMatrix() * eigenVectors.transpose();
     }
 }
@@ -194,6 +297,15 @@ DiffusionTensor<TPrecision>
 }
 
 template < class TPrecision>
+double
+DiffusionTensor<TPrecision>
+::GetQuadraticForm ( const double x, const double y, const double z) const
+{
+  return (*this)[0]*x*x + 2*(*this)[1]*x*y + 2*(*this)[2]*x*z +
+    (*this)[3]*y*y + 2*(*this)[4]*y*z + (*this)[5]*z*z; 
+}
+
+template < class TPrecision>
 template < class TVectorType >
 void
 DiffusionTensor<TPrecision>
@@ -204,8 +316,7 @@ DiffusionTensor<TPrecision>
   for ( int i = 0; i < gradients.Rows(); i += 1 ) 
     {
     TPrecision x=gradients(i,0), y=gradients(i,1), z=gradients(i,2);
-    TPrecision quadratic = (*this)(0,0)*x*x + 2*(*this)(0,1)*x*y + 2*(*this)(0,2)*x*z +
-        (*this)(1,1)*y*y + 2*(*this)(1,2)*y*z + (*this)(2,2)*z*z; 
+    double quadratic = GetQuadraticForm(x,y,z);
     dwisignal[i] = std::exp(-1.0*bValues[i]*quadratic);
     }
 }   // -----  end of method itkDiffusionTensor<TPrecision>::GetDWISignal  -----
@@ -284,7 +395,7 @@ DiffusionTensor<TPrecision>
 {
   vnl_diag_matrix<TPrecision> eigenValues(NDimension);
   vnl_matrix<TPrecision> eigenVectors(NDimension, NDimension);
-  this->GetEigenValuesVectors(eigenValues, eigenVectors);
+  this->GetEigenValuesVectorsAnalytic(eigenValues, eigenVectors);
 
   vnl_diag_matrix<TPrecision> logeigenValues(NDimension);
   for ( int i = 0; i < NDimension; i += 1 ) 
@@ -295,7 +406,10 @@ DiffusionTensor<TPrecision>
     meanEigenValues += logeigenValues[i];
   meanEigenValues /= NDimension;
   for ( int i = 0; i < NDimension; i += 1 ) 
-    ga += (logeigenValues[i]-meanEigenValues[i])*(logeigenValues[i]-meanEigenValues[i]);
+    {
+    double tmp = logeigenValues[i]-meanEigenValues;
+    ga += tmp*tmp;
+    }
   return std::sqrt(ga);
 }
 
@@ -346,7 +460,7 @@ DiffusionTensor<TPrecision>
   
   vnl_diag_matrix<TPrecision> eigenValues(NDimension);
   vnl_matrix<TPrecision> eigenVectors(NDimension, NDimension);
-  this->GetEigenValuesVectors(eigenValues, eigenVectors);
+  this->GetEigenValuesVectorsAnalytic(eigenValues, eigenVectors);
 
   for ( int i = 0; i < NDimension; i += 1 ) 
     {
@@ -359,11 +473,11 @@ DiffusionTensor<TPrecision>
 template<class TPrecision>
 bool
 DiffusionTensor<TPrecision>
-::IsZero () const
+::IsZero (const double eps) const
 {
   for ( int i = 0; i < NDegreesOfFreedom; i += 1 ) 
     {
-    if (std::abs((*this)[i])>1e-10)
+    if (std::fabs((*this)[i])>eps)
       return false;
     }
   return true;
@@ -372,12 +486,12 @@ DiffusionTensor<TPrecision>
 template<class TPrecision>
 bool
 DiffusionTensor<TPrecision>
-::IsDiagonal () const
+::IsDiagonal (const double eps) const
 {
   for ( int i = 0; i < NDimension; i += 1 ) 
     for ( int j = i+1; j < NDimension; j += 1 ) 
       {
-      if (std::abs((*this)(i,j))>1e-10)
+      if (std::fabs((*this)(i,j))>eps)
         return false;
       }
   return true;
@@ -404,8 +518,8 @@ TPrecision
 DiffusionTensor<TPrecision>
 ::GetDeterminant () const
 {
-  vnl_matrix< TPrecision > M = this->GetVnlMatrix();
-  return vnl_determinant( M );
+  const TPrecision* p = this->GetDataPointer();
+  return -p[2]*p[2]*p[3] + 2.0*p[1]*p[2]*p[4] - p[0]*p[4]*p[4] - p[1]*p[1]*p[5] + p[0]*p[3]*p[5];
 }
 
 template<class TPrecision>
@@ -417,7 +531,7 @@ DiffusionTensor<TPrecision>
   Self result;
   vnl_diag_matrix<TPrecision> eigenValues(NDimension);
   vnl_matrix<TPrecision> eigenVectors(NDimension, NDimension);
-  this->GetEigenValuesVectors(eigenValues, eigenVectors);
+  this->GetEigenValuesVectorsAnalytic(eigenValues, eigenVectors);
   for(unsigned int i=0;i<NDimension;i++)
     {
     utlException (eigenValues[i] < 0.0, "Negative eigenvalue encountered.");
@@ -438,7 +552,7 @@ DiffusionTensor<TPrecision>
   Self result;
   vnl_diag_matrix<TPrecision> eigenValues(NDimension);
   vnl_matrix<TPrecision> eigenVectors(NDimension, NDimension);
-  this->GetEigenValuesVectors(eigenValues, eigenVectors);
+  this->GetEigenValuesVectorsAnalytic(eigenValues, eigenVectors);
   for(unsigned int i=0;i<NDimension;i++)
     eigenValues[i] = vcl_exp (eigenValues[i]);
 
@@ -457,7 +571,7 @@ DiffusionTensor<TPrecision>
 
   vnl_diag_matrix<TPrecision> eigenValues(NDimension);
   vnl_matrix<TPrecision> eigenVectors(NDimension, NDimension);
-  this->GetEigenValuesVectors(eigenValues, eigenVectors);
+  this->GetEigenValuesVectorsAnalytic(eigenValues, eigenVectors);
   // std::cout << *this << std::endl << std::flush;
   // std::cout << "eigenValues = " << eigenValues << std::endl << std::flush;
   // std::cout << "eigenVectors = " << eigenVectors << std::endl << std::flush;
@@ -483,7 +597,18 @@ DiffusionTensor<TPrecision>
 DiffusionTensor<TPrecision>
 ::Inv (void) const
 {
-  return this->Pow (-1.0);
+  double det = GetDeterminant();
+  utlGlobalException(det==0, "det=0, cannot be inverted");
+  double detInv=1.0/det;
+  const TPrecision* p = this->GetDataPointer();
+  DiffusionTensor<TPrecision> result;
+  result[0] = (-p[4]*p[4] + p[3]*p[5]) *detInv;
+  result[1] = ( p[2]*p[4] - p[1]*p[5]) *detInv;
+  result[2] = (-p[2]*p[3] + p[1]*p[4]) *detInv;
+  result[3] = (-p[2]*p[2] + p[0]*p[5]) *detInv;
+  result[4] = ( p[1]*p[2] - p[0]*p[4]) *detInv;
+  result[5] = (-p[1]*p[1] + p[0]*p[3]) *detInv;
+  return result;
 }
 
 

@@ -20,9 +20,11 @@
 #include "utlVNLLapack.h"
 #include "utlSTDHeaders.h"
 #include "itkMultiThreader.h"
+#include <vnl/algo/vnl_determinant.h>
 #include <vnl/algo/vnl_svd.h>
 #include "utlNDArray.h"
 #include "utlVNLIO.h"
+#include "utlMath.h"
 
 typedef vnl_matrix<double>         MatrixType;
 typedef utl::NDArray<double,2>     UtlMatrixType;
@@ -152,6 +154,28 @@ TEST_F(utlVNLLapack_gtest, svd_VnlMatrix)
     matEstUtl = UUtl*SUtl.GetDiagonalMatrix()*VUtl.GetTranspose(); 
     EXPECT_NEAR_MATRIX(mm, matEstUtl, mm.rows(), mm.cols(), 1e-10); 
     EXPECT_NEAR_VECTOR(s1, SUtl, utl::min(SUtl.Size(),s1.size()),1e-10); 
+    }
+}
+
+TEST(utlMath, SmallMatrix)
+{
+  for ( int n = 1; n <= 4; ++n ) 
+    {
+    MatrixType mat = __GenerateRandomMatrix<double>(n,n, -2, 2);
+    for ( int i = 0; i < n; ++i ) 
+      mat(i,i) += 3.0;
+    double det = vnl_determinant(mat);
+    MatrixType matInv = utl::GetVnlMatrixPInverse(mat);
+
+    double det1 = utl::DeterminantSmallMatrix(mat, n);
+    EXPECT_NEAR(det, det1, 1e-10*std::fabs(det));
+
+    UtlMatrixType matUtl(mat.data_block(), n, n);
+    EXPECT_NEAR(det, matUtl.Determinant(), 1e-10*std::fabs(det));
+
+    MatrixType matInv1(n,n);
+    utl::InverseSmallMatrix<MatrixType>(mat, matInv1, n);
+    EXPECT_NEAR_MATRIX(matInv, matInv1, n, n, 1e-8); 
     }
 }
 

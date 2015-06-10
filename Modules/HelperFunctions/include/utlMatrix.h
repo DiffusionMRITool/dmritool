@@ -13,6 +13,7 @@
 #include "utlVector.h"
 #include "utlCore.h"
 #include "utlLapack.h"
+#include "utlMath.h"
 
 namespace utl
 {
@@ -263,48 +264,71 @@ gesdd_UtlMatrix(const NDArray<T,2>& mat, NDArray<T,2>& U, NDArray<T,1>& s, NDArr
   utlGlobalException(INFO, "LAPACK library function dgesdd_() returned error code INFO=" << INFO);
 }
 
+template <class T> inline void 
+InverseMatrix( const NDArray<T,2>& mat, NDArray<T,2>& result, const T eps=1e-8 )
+{
+  utlSAException(mat.Rows()!=mat.Cols())(mat.Rows())(mat.Cols()).msg("the matrix should be symmetric");
+  int n = mat.Rows();
+  utlException(n==0, "matrix cannot be empty");
+  if (n>=1 && n <=4)
+    {
+    result.ReSize(n,n); 
+    utl::InverseSmallMatrix(mat, result, n);
+    }
+  else
+    {
+    utlException(true, "TODO: use LU factorization. See getrf getri CImg");
+    }
+}
+
 /** inverse of a symmetric matrix (non-singular). If the matrix is singular, it stop with an error. 
  * It is fast than PInverseVnlMatrix, but only works for non-singular matrix. */
 template <class T> inline void 
 InverseSymmericMatrix( const NDArray<T,2>& mat, NDArray<T,2>& result, const T eps=1e-8 )
 {
+  utlSAException(mat.Rows()!=mat.Cols())(mat.Rows())(mat.Cols()).msg("the matrix should be symmetric");
   int n = mat.Rows();
-  result = mat;
+  if (n<=4)
+    InverseMatrix(mat, result, eps);
+  else
+    {
+    result = mat;
+    char uplo='U';
+    int lwork=-1, INFO=0;
+    int* ipiv= new int[n];
 
-  char uplo='U';
-  int lwork=-1, INFO=0;
-  int* ipiv= new int[n];
+    // T *query, *work;
+    // query = new T[1];
+    // utl::sytrf<T>(&uplo,&n,result.GetData(),&n,ipiv,query,&lwork,&INFO);
+    // lwork=static_cast<INTT>(*query); 
+    // delete[] query;
+    // work = new T[lwork];
+    // utl::sytrf<T>(&uplo,&n,result.GetData(),&n,ipiv,work,&lwork,&INFO);
+    // delete[] work;
+    // work = new T[2*n];
+    // utl::sytri<T>(&uplo,&n,result.GetData(),&n,ipiv,work,&INFO);
+    // delete[] work;
 
-  // T *query, *work;
-  // query = new T[1];
-  // utl::sytrf<T>(&uplo,&n,result.GetData(),&n,ipiv,query,&lwork,&INFO);
-  // lwork=static_cast<INTT>(*query); 
-  // delete[] query;
-  // work = new T[lwork];
-  // utl::sytrf<T>(&uplo,&n,result.GetData(),&n,ipiv,work,&lwork,&INFO);
-  // delete[] work;
-  // work = new T[2*n];
-  // utl::sytri<T>(&uplo,&n,result.GetData(),&n,ipiv,work,&INFO);
-  // delete[] work;
+    utl::sytrf<T>(LAPACK_COL_MAJOR, uplo,n,result.GetData(),n,ipiv);
+    INFO=utl::sytri<T>(LAPACK_COL_MAJOR, uplo,n,result.GetData(),n,ipiv);
+    delete[] ipiv;
 
-  utl::sytrf<T>(LAPACK_COL_MAJOR, uplo,n,result.GetData(),n,ipiv);
-  INFO=utl::sytri<T>(LAPACK_COL_MAJOR, uplo,n,result.GetData(),n,ipiv);
-  delete[] ipiv;
+    utlGlobalException(INFO>0, "The matrix is singular and its inverse could not be computed. \
+      LAPACK library function sytrid_() returned error code INFO=" << INFO);
+    utlGlobalException(INFO<0, "LAPACK library function sytrid_() returned error code INFO=" << INFO);
 
-  utlGlobalException(INFO>0, "The matrix is singular and its inverse could not be computed. \
-    LAPACK library function sytrid_() returned error code INFO=" << INFO);
-  utlGlobalException(INFO<0, "LAPACK library function sytrid_() returned error code INFO=" << INFO);
-
-  T* data = result.GetData();
-  for ( int i = 0; i < n; ++i ) 
-    for ( int j = 0; j < i; ++j ) 
-       data[j*n+i] = data[i*n+j];
+    T* data = result.GetData();
+    for ( int i = 0; i < n; ++i ) 
+      for ( int j = 0; j < i; ++j ) 
+        data[j*n+i] = data[i*n+j];
+    }
 }
 
 /** pseudo-inverse of a symmetric matrix which can be singular. If the matrix is not singular, it returns the inverse.  */
 template <class T> inline void 
 PInverseSymmericMatrix( const NDArray<T,2>& mat, NDArray<T,2>& result, const T eps=1e-8 )
 {
+  utlSAException(mat.Rows()!=mat.Cols())(mat.Rows())(mat.Cols()).msg("the matrix should be symmetric");
   int N = mat.Rows();
   NDArray<T,2> eigenVectors, tmp, S(N,N,0.0);
   NDArray<T,1> eigenValues, v;
@@ -763,19 +787,77 @@ public:
   
   void InverseSymmericMatrix(NDArray<T,2>& result, const T eps=1e-8)
     {
-    utlSAException(this->m_Shape[0]!=this->m_Shape[1])(this->m_Shape[0])(this->m_Shape[1]).msg("the matrix should be symmetric");
     utl::InverseSymmericMatrix(*this, result, eps);
     }
 
   void PInverseSymmericMatrix(NDArray<T,2>& result, const T eps=1e-8)
     {
-    utlSAException(this->m_Shape[0]!=this->m_Shape[1])(this->m_Shape[0])(this->m_Shape[1]).msg("the matrix should be symmetric");
     utl::PInverseSymmericMatrix(*this, result, eps);
     }
   
   void PInverseMatrix(NDArray<T,2>& result, const T eps=1e-8)
     {
     utl::PInverseMatrix(*this, result, eps);
+    }
+  void InverseMatrix(NDArray<T,2>& result, const T eps=1e-8)
+    {
+    utl::InverseMatrix(*this, result, eps);
+    }
+
+  double Determinant() const
+    {
+    utlException(!IsSquareMatrix(), "should be a square matrix");
+    utlException(this->m_Shape[0]==0, "should not be empty");
+    const T* p = this->m_Data;
+    switch ( this->m_Shape[0] )
+      {
+      case 1 :  return p[0];
+      case 2 :  return p[0]* p[3] - p[1]*p[2];
+      case 3 :
+           {
+          const double
+            a = p[0], d = p[1], g = p[2],
+            b = p[3], e = p[4], h = p[5],
+            c = p[6], f = p[7], i = p[8];
+          return i*a*e-a*h*f-i*b*d+b*g*f+c*d*h-c*g*e;
+           }
+      case 4 :
+          return
+            + p[0]*p[5]*p[10]*p[15]
+            - p[0]*p[5]*p[14]*p[11]
+            - p[0]*p[9]*p[6]*p[15]
+            + p[0]*p[9]*p[14]*p[7]
+            + p[0]*p[13]*p[6]*p[11]
+            - p[0]*p[13]*p[10]*p[7]
+            - p[4]*p[1]*p[10]*p[15]
+            + p[4]*p[1]*p[14]*p[11]
+            + p[4]*p[9]*p[2]*p[15]
+            - p[4]*p[9]*p[14]*p[3]
+            - p[4]*p[13]*p[2]*p[11]
+            + p[4]*p[13]*p[10]*p[3]
+            + p[8]*p[1]*p[6]*p[15]
+            - p[8]*p[1]*p[14]*p[7]
+            - p[8]*p[5]*p[2]*p[15]
+            + p[8]*p[5]*p[14]*p[3]
+            + p[8]*p[13]*p[2]*p[7]
+            - p[8]*p[13]*p[6]*p[3]
+            - p[12]*p[1]*p[6]*p[11]
+            + p[12]*p[1]*p[10]*p[7]
+            + p[12]*p[5]*p[2]*p[11]
+            - p[12]*p[5]*p[10]*p[3]
+            - p[12]*p[9]*p[2]*p[7]
+            + p[12]*p[9]*p[6]*p[3];
+      default :
+           {
+           utlException(true, "TODO use LU factorization for matrix");
+           return 0;
+           }
+      }
+    }
+
+  bool IsSquareMatrix() const
+    {
+    return this->m_Shape[0] == this->m_Shape[1];
     }
 
   bool IsSymmetric(const double eps=1e-10) const

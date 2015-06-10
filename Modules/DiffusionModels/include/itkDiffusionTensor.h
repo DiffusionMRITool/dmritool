@@ -80,6 +80,30 @@ public:
   template< class TTensorValueType > 
     inline DiffusionTensor(const DiffusionTensor< TTensorValueType>& v): Superclass(v) {}
   
+  inline bool operator==(const Self & mat) const
+    {
+    for ( int i = 0; i < NDegreesOfFreedom; ++i ) 
+      {
+      if ((*this)[i]!=mat[i])
+        return false;
+      }
+    return true;
+    }
+  inline bool operator!=(const Self& mat) const
+    {
+    return !operator==(mat);
+    }
+  
+  inline bool IsSame(const Self & mat, const double eps=1e-8) const
+    {
+    for ( int i = 0; i < NDegreesOfFreedom; ++i ) 
+      {
+      if ( std::fabs((*this)[i]-mat[i]) > eps )
+        return false;
+      }
+    return true;
+    }
+  
   template< class TMatrixType > 
   inline Self& operator=(const TMatrixType & mat)
     {
@@ -139,6 +163,16 @@ public:
    * \note eigenvectors in \ref itk::SymmetricSecondRankTensor::ComputeEigenAnalysis stored as rows of \ref itk::Matrix
    * */
   void GetEigenValuesVectors(vnl_diag_matrix<TPrecision> & eigenValues, vnl_matrix<TPrecision> & eigenVectors) const;
+  
+  /** analytic way to calculate eigenValues and eigenVectors.  
+   *  In mathematica, Eigenvectors[( { {a, b, c}, {b, d, e}, {c, e, f}  } )] 
+   *
+   * \note: Eigenvalues can be obtained analytically. 
+   * But there is a numerical issue when dividing a small number for calculating eigenvectors. 
+   * In this case, use a numerical way for eigenvectors.
+   * */
+  template<class TArrayType, class TMatrixType >
+  void GetEigenValuesVectorsAnalytic(TArrayType& eigenValues, TMatrixType& eigenVectors) const;
 
   template <class TArrayType >
   void SetEigenValues(const TArrayType& array);
@@ -159,6 +193,8 @@ public:
 
   /** Transform the tensor with a matrix */
   inline vnl_matrix<TPrecision> GetRotate (const vnl_matrix<TPrecision> & vec) const;
+  
+  double GetQuadraticForm( const double x, const double y, const double z) const;
 
   /** get the DWI samples based on given gradients (Cartesian form) and b values.
    * \note No boundary checking. The size of the input vec should be the same as the gradients.rows(), and vec should have the operator[].
@@ -196,10 +232,10 @@ public:
 
   bool IsFinite() const;
   bool HasNans() const;
-  bool IsZero() const;
+  bool IsZero(const double eps=1e-10) const;
 
   bool IsPositive() const;
-  bool IsDiagonal() const;
+  bool IsDiagonal(const double eps=1e-10) const;
     
   void Positivize() const;
   
@@ -233,6 +269,7 @@ public:
     }
 
 };
+
 
 }
 
