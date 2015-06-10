@@ -71,6 +71,7 @@ public:
     utlGlobalException(m_VariableMax<=m_VariableMin, "m_VariableMax should be larger than m_VariableMin");
     m_Table = STDVectorPointer(new STDVectorType(m_NumberOfBins+1));
     m_Delta = (m_VariableMax-m_VariableMin)/(double)m_NumberOfBins;
+    m_DeltaInv = 1.0/m_Delta;
 
     for (int i=0; i<= m_NumberOfBins; i++)   
       (*m_Table)[i] = this->m_Functor( m_Delta*i + m_VariableMin );
@@ -94,7 +95,7 @@ public:
     if (var>=m_VariableMax)
       return m_Table->back();
 
-    double xDouble = (var-m_VariableMin)/m_Delta;
+    double xDouble = (var-m_VariableMin)*m_DeltaInv;
     int x = (int) std::floor(xDouble);
     return (*m_Table)[x] + ((*m_Table)[x+1]-(*m_Table)[x])*(xDouble-x);
     }
@@ -106,6 +107,7 @@ protected:
     m_VariableMax = 0;
     m_VariableMin = 0;
     m_Delta = 0;
+    m_DeltaInv = 0;
     m_NumberOfBins = -1;
     }
   ~UnaryFunctorLookUpTable() {};
@@ -129,6 +131,7 @@ protected:
     rval->m_VariableMax = m_VariableMax;
     rval->m_VariableMin = m_VariableMin;
     rval->m_Delta = m_Delta;
+    rval->m_DeltaInv = m_DeltaInv;
     rval->m_NumberOfBins = m_NumberOfBins;
 
     rval->m_Table = m_Table;
@@ -138,6 +141,7 @@ protected:
   double m_VariableMax;
   double m_VariableMin;
   double m_Delta;
+  double m_DeltaInv;
 
   /** number of bins between m_VariableMin and m_VariableMax  */
   int m_NumberOfBins;
