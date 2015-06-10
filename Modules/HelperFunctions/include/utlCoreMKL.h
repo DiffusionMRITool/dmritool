@@ -23,7 +23,7 @@
 #include "utlMKL.h"
 #endif
 
-/** @addtogroup utlHelperFunctions
+/** @addtogroup Math
 @{ */
 namespace utl
 {

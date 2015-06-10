@@ -19,6 +19,9 @@
 #ifndef __utlBlas_h
 #define __utlBlas_h
 
+/** @addtogroup Math
+@{ */
+
 #ifdef __cplusplus
 extern "C"
 {
@@ -582,6 +585,7 @@ Product##FuncHelperName##XtX ( const RowMajorMatrixName& A, RowMajorMatrixName& 
   FuncName<T>(true, alpha, A, beta, C); \
 }
 
+    /** @} */
 
 #endif 
 

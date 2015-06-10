@@ -370,7 +370,7 @@ PInverseMatrix( const NDArray<T,2>& mat, NDArray<T,2>& result, const T eps=1e-8 
  *   \brief   NDArray<T,2> is a row-major matrix
  *   \author  Jian Cheng
  *   \date    08-23-2014
- *   \ingroup utlNDArray
+ *   \ingroup utlNDArray Math
  */
 template < class T >
 class NDArray<T,2> : public NDArrayBase<T,2>

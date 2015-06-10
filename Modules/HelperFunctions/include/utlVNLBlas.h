@@ -29,7 +29,7 @@
 namespace utl 
 {
 
-/** @addtogroup utlHelperFunctions
+/** @addtogroup Math
 @{ */
 
 /**

@@ -26,7 +26,7 @@
 namespace utl
 {
 
-/** @addtogroup utlHelperFunctions
+/** @addtogroup Math
 @{ */
 
 /** in-place copy or transpose  */

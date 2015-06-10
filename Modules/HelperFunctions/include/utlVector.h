@@ -126,7 +126,7 @@ __utl_gevm_MatrixTimesVector(T, gemm_UtlVectorTimesMatrix, Utl, utl::NDArray<T U
  *   \brief   NDArray<T,1> is a vector class which uses blas mkl
  *   \author  Jian Cheng
  *   \date    08-22-2014
- *   \ingroup utlNDArray
+ *   \ingroup utlNDArray Math
  */
 template < class T >
 class NDArray<T, 1> : public NDArrayBase<T,1>

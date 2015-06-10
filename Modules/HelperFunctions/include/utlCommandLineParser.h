@@ -28,6 +28,8 @@
 #include <unistd.h>
 #endif
 
+/** @addtogroup utlHelperFunctions
+@{ */
 
 /** 
  * small but powerful CMD parser, borrowed from CImg, http://cimg.sourceforge.net/ 
@@ -155,6 +157,7 @@ utlOption(const char *const name,const unsigned int argc,char **argv, const doub
 }
 
 }
+    /** @} */
 
 #endif 
 
