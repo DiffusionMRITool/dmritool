@@ -9,6 +9,14 @@ News
    :depth: 2
    :local:
 
+DMRITOOL is using github pages (06-09-2015)
+===========================================
+
+* The homepage of DMRITOOL_ is moving from `readthedocs <http://dmritool.readthedocs.org/>`__ to github pages, 
+* Using gh-pages, it is possible to automatically generate some documents, for example, `the list of commands <commands/commandlist.html>`__. 
+* As required by a user, ``ComputeSHCoefficientsOfDWIFromSymmetricTensor`` is added to compute a fiber response function from a given symmetric tensor. 
+* Some tips using paraview_ is added based on the `discussion <http://www.nitrc.org/pipermail/dmritool-discussion/2015-March/000001.html>`__
+
 Version 0.1.1 is released (03-09-2015)
 ======================================
 

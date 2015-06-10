@@ -8,9 +8,6 @@ Building
 
 .. image:: https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master
     :target: https://travis-ci.org/DiffusionMRITool/dmritool
-.. image:: https://readthedocs.org/projects/dmritool/badge/?version=latest
-    :target: https://readthedocs.org/projects/dmritool/?badge=latest
-    :alt: Documentation Status             
 
 
 Dependent Packages

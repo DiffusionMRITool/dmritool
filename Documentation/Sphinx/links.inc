@@ -1,6 +1,6 @@
 
-.. _DMRITOOL: http://dmritool.readthedocs.org/en/latest/index.html 
-.. _`DMRITOOL doxygen documentation`: http://diffusionmritool.github.io/dmritool-doxygen
+.. _DMRITOOL:  https://diffusionmritool.github.io/
+.. _`DMRITOOL doxygen documentation`: https://diffusionmritool.github.io/dmritool-doxygen
 .. _`dmritool-discussion`:  http://www.nitrc.org/mailman/listinfo/dmritool-discussion
 
 .. Licenses

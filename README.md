@@ -2,12 +2,11 @@ DMRITOOL
 ========
 
 [![Build Status](https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master)](https://travis-ci.org/DiffusionMRITool/dmritool)
-[![Documentation Status](https://readthedocs.org/projects/dmritool/badge/?version=latest)](https://readthedocs.org/projects/dmritool/?badge=latest)
 
 Introduction
 ============
 
-[DMRITOOL](http://dmritool.readthedocs.org/en/latest/index.html) is a **free** and **open source** toolbox for [diffusion MRI](http://en.wikipedia.org/wiki/Diffusion_MRI) data processing. 
+[DMRITOOL](http://diffusionmritool.github.io/) is a **free** and **open source** toolbox for [diffusion MRI](http://en.wikipedia.org/wiki/Diffusion_MRI) data processing. 
 It is written in C++ with matlab interface. 
 
 DMRITOOL mainly focus on:
@@ -22,7 +21,7 @@ DMRITOOL mainly focus on:
 Website
 =======
 
-Please check the [DMRITOOL website](http://dmritool.readthedocs.org/en/latest/index.html) for documentation and more information.
+Please check the [DMRITOOL website](http://diffusionmritool.github.io/) for documentation and more information.
 
 Download
 ========
@@ -34,7 +33,7 @@ You can download the latest source codes from [github](https://github.com/Diffus
 Building
 ========
 
-See [this page](http://dmritool.readthedocs.org/en/latest/building.html) for building the source codes. 
+See [this page](http://diffusionmritool.github.io/building.html) for building the source codes. 
 
 Citation
 ========
@@ -42,7 +41,7 @@ Citation
 Citations will help us support the continued development of DMRITOOL. 
 
 If you use the methods and codes released in DMRITOOL, please cite the related references. 
-See [the citation page](http://dmritool.readthedocs.org/en/latest/citation.html) for details. 
+See [the citation page](http://diffusionmritool.github.io/citation.html) for details. 
 
 Acknowledgements
 ================

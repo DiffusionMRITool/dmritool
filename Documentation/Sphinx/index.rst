@@ -7,10 +7,6 @@ DMRITOOL's documentation
     :alt: travis-ci Status             
 
 
-.. image:: https://readthedocs.org/projects/dmritool/badge/?version=latest
-    :target: https://readthedocs.org/projects/dmritool/?badge=latest
-    :alt: Documentation Status             
-
 Introduction
 ============
 
