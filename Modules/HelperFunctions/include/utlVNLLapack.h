@@ -27,7 +27,7 @@
 namespace utl
 {
 
-/** @addtogroup Math
+/** @addtogroup utlMath
 @{ */
 
 /**

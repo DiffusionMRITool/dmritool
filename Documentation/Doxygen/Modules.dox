@@ -1,0 +1,49 @@
+
+/** \defgroup utl
+*   \brief helper functions and classes.
+**/
+
+/** \defgroup utlMath
+*   \brief math related helper functions.
+*   \ingroup utl Math
+**/
+
+/** \defgroup utlHelperFunctions
+*   \brief helper functions.
+*   \ingroup utl
+**/
+ 
+/**
+*  \defgroup utlNDArray 
+*  \brief utl::NDArray with supports for expression template, blas, mkl.
+*  \ingroup utl
+**/
+
+/** \defgroup Math
+*   \brief math related functions and classes. 
+**/
+
+/** 
+*   \defgroup OptimizationSolver
+*   \brief Solvers for optimization problems.
+*   \ingroup Math
+**/
+
+/** 
+*   \defgroup SamplingScheme
+*   \brief Sampling scheme in q-space.
+**/
+
+/** \defgroup DWIProcessing
+ *  \brief simulation and processing of DWI.
+ **/
+
+/** 
+ *   \defgroup DiffusionModels
+ *   \brief Diffusion models used in diffusion data reconstruction.
+ **/
+
+/** 
+ *   \defgroup Visualization
+ *   \brief Visualization of diffusion data.
+ **/

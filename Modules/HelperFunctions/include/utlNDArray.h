@@ -95,7 +95,7 @@ operator<<(std::ostream & os, const NDArray<T,Dim> & arr)
  *   It uses blas, mkl, and expression templates.
  *
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
- *   \ingroup utlNDArray Math
+ *   \ingroup utlNDArray
  */
 template < class T, unsigned int Dim  >
 class NDArray : public NDArrayBase<T,Dim>
@@ -154,7 +154,7 @@ public:
  *   \brief   Base class for utl::NDArray
  *
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
- *   \ingroup utlNDArray Math
+ *   \ingroup utlNDArray 
  */
 template < class T, unsigned int Dim  >
 class NDArrayBase : public Expr<NDArrayBase<T, Dim> > 

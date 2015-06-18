@@ -28,10 +28,6 @@
 
 namespace itk
 {
-/** 
-*   \defgroup SamplingScheme
-*   \brief Sampling scheme in q-space 
-* */
 
 /**
  *   \class   SamplingScheme3D

@@ -27,10 +27,6 @@
 
 namespace itk
 {
-/** 
-*   \defgroup OptimizationSolver
-*   \brief Solvers for optimization problems
-* */
 
 /**
  *   \class   SolverBase

@@ -17,7 +17,7 @@
 namespace utl
 {
 
-/** @ingroup utlHelperFunctions Math*/
+/** @ingroup utlMath*/
 template<typename T>
 struct Maximum
 {
@@ -26,7 +26,7 @@ struct Maximum
 };
 
 
-/** @ingroup utlHelperFunctions Math*/
+/** @ingroup utlMath*/
 template<typename T>
 struct Minimum
 {
@@ -34,7 +34,7 @@ struct Minimum
       { return a <= b ? a : b; }
 };
 
-/** @ingroup utlHelperFunctions Math*/
+/** @ingroup utlMath*/
 template<typename T>
 struct Absolute
 {

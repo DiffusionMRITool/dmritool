@@ -55,9 +55,6 @@
 
 namespace utl 
 {
-/** \defgroup utlHelperFunctions
-*  \brief helper functions 
-*  */
 
 
 /** @addtogroup utlHelperFunctions

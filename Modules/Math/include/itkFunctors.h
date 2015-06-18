@@ -27,9 +27,6 @@ namespace itk {
 
 namespace Functor {
 
-/** \defgroup Math
-* \brief math related functions and classes. */
-
 /** @addtogroup Math
 @{ */
 

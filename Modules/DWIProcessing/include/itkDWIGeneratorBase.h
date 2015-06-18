@@ -28,10 +28,6 @@
 
 namespace itk
 {
-
-/** @defgroup DWIProcessing
- \brief simulation and processing of DWI
- */
   
 /** \class DWIGeneratorBase
  *  \brief Generate DWI data based on provided parameter file.

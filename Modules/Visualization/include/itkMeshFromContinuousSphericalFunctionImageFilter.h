@@ -23,10 +23,6 @@
 
 namespace itk
 {
-/** 
-*   \defgroup Visualization
-*   \brief Visualization of diffusion data 
-* */
 
 /** \class MeshFromContinuousSphericalFunctionImageFilter
  * \brief Compute mesh from continuous spherical function represented by a set of basis.

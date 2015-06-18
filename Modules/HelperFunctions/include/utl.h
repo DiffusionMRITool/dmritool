@@ -51,6 +51,8 @@
 
 #include "itkMultiVolumeImageToVectorImageFilter.h"
 
+/** @addtogroup utlHelperFunctions
+@{ */
 namespace itk
 {
 
@@ -369,5 +371,6 @@ InitializeThreadedLibraries(const int numThreads)
 }
 
 }
+    /** @} */
 
 #endif 

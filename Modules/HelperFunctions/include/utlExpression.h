@@ -20,9 +20,8 @@ namespace utl
 
 
 /** 
- *  \defgroup utlNDArray 
- *  \brief utl::NDArray with supports for expression template, blas, mkl
  *
+ * @addtogroup utlNDArray
  *  @{
  *
  *  \class Expr

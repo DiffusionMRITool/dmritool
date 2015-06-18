@@ -111,7 +111,7 @@ public:
  * This filter is templated over the input image type
  * and the output image type.
  *
- * \ingroup IntensityImageFilters  Multithreaded
+ * \ingroup IntensityImageFilters  Multithreaded DiffusionModels
  * \sa UnaryFunctorImageFilter
  */
 template <class TInputImage, class TOutputImage>

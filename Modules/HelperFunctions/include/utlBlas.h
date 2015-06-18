@@ -19,7 +19,7 @@
 #ifndef __utlBlas_h
 #define __utlBlas_h
 
-/** @addtogroup Math
+/** @addtogroup utlMath
 @{ */
 
 #ifdef __cplusplus

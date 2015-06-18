@@ -20,7 +20,7 @@ http://jgt.akpeters.com/papers/MollerHughes99/code.html
 namespace utl
 {
 
-/** @addtogroup Math
+/** @addtogroup utlMath
 @{ */
 
 /** 

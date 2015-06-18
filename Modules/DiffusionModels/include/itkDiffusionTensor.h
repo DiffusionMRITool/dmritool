@@ -24,10 +24,6 @@
 
 namespace itk
 {
-/** 
- *   \defgroup DiffusionModels
- *   \brief Diffusion models used in diffusion data reconstruction
-* */
 
 /**
  *   \class  DiffusionTensor

@@ -25,7 +25,7 @@
 
 namespace utl
 {
-/** @addtogroup Math
+/** @addtogroup utlMath
 @{ */
 
 /** Confluent hypergeometric function. 

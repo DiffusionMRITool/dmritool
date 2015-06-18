@@ -18,7 +18,7 @@
 #ifndef __utlLapack_h
 #define __utlLapack_h
 
-/** @addtogroup Math
+/** @addtogroup utlMath
 @{ */
 
 #ifdef __cplusplus
