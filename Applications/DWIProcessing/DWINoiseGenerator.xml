@@ -2,7 +2,10 @@
 <executable>
   <category>Noise Generator</category>
   <title>Noise Generator</title>
-  <description>Add noise to a set of DWI data.</description>
+  <description>Add noise to a set of DWI data.\n\
+    Examples: \n\
+    DWINoiseGenerator dwi_b1000.nii.gz  dwi_b1000_noise.nii.gz --snr 25
+  </description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   <acknowledgements/>

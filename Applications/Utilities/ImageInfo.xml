@@ -2,7 +2,10 @@
 <executable>
   <category>Image Information</category>
   <title>Image Information</title>
-  <description>Display image information.</description>
+  <description>Display image information.\n\
+    Examples: \n\
+    ImageInfo image.nii.gz
+  </description>
   
   <documentation-url>http://www.unc.edu/~ptyap</documentation-url>
   

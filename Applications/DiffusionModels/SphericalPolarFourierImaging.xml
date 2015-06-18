@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
   <category>Diffusion Models</category>
-  <title>SPFI</title>
-  <description>SPFI: estimate SPF coefficients from DWI signals</description>
+  <title>Genralized SPFI using SPF/dSPF/SHORE basis</title>
+  <description>SPFI: estimate SPF coefficients from DWI signals. \n\
+    Examples: \n\
+    SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-6 --mdImage MD.nii.gz 
+  </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 

@@ -2,7 +2,10 @@
 <executable>
   <category>Diffusion Models</category>
   <title>Spherical Harmonic coefficients To GFA</title>
-  <description>calculate GFA from SH coefficients.</description>
+  <description>calculate GFA from SH coefficients.\n\
+    Examples: \n\
+    SHCoefficientsToGFA eap_r0.015.nii.gz eap_r0.015_gfa.nii.gz
+  </description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   

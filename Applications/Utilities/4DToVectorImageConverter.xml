@@ -2,7 +2,10 @@
 <executable>
   <category>Converter</category>
   <title>4D Image to Vector Image Converter</title>
-  <description>Convert a 4D image to a vector image.</description>
+  <description>Convert a 4D image to a vector image. \n\
+    Examples: \n\
+    4DToVectorImageConverter 4dImage.nii.gz vectorImage.nii.gz
+  </description>
   
   <documentation-url>http://www.unc.edu/~ptyap</documentation-url>
   

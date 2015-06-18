@@ -3,7 +3,10 @@
   
   <category>Converter</category>
   <title>Vector Image to 4D Image Converter</title>
-  <description>Convert a vector image to a 4D image.</description>
+  <description>Convert a vector image to a 4D image.\n\
+    Examples: \n\
+    VectorTo4DImageConverter vectorImage.nii.gz 4dImage.nii.gz 
+  </description>
   
   <documentation-url>http://www.unc.edu/~ptyap</documentation-url>
   

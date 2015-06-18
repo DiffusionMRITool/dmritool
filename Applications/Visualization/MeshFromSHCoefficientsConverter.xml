@@ -2,7 +2,11 @@
 <executable>
   <category>Converter</category>
   <title>Mesh From SH Coefficients Converter</title>
-  <description>Create a mesh from spherical harmonics coefficients for visualization.</description>
+  <description>Create a mesh from spherical harmonics coefficients for visualization.\n\
+    Examples: \n\
+    MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 \n\
+    MeshFromSHCoefficientsConverter odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
+  </description>
   
   <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   

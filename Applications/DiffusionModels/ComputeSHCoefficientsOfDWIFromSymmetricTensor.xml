@@ -2,7 +2,12 @@
 <executable>
   <category>Diffusion Models</category>
   <title>SH Coefficients of DWI Signal in DTI With Symmetric Tensor</title>
-  <description>Compute SH coefficients of DWI signal in DTI with symmetric tensor (along z-axis).</description>
+  <description>Compute SH coefficients of DWI signal in DTI with symmetric tensor (along z-axis). \n\
+    Examples: \n\
+    ComputeSHCoefficientsOfDWIFromSymmetricTensor --sh 4 --bvalues 1000 --famd 0.9,0.7e-3 \n\
+    ComputeSHCoefficientsOfDWIFromSymmetricTensor --sh 4 --bvalues 1000 --famd 0.9,0.7e-3 --nob \n\
+    ComputeSHCoefficientsOfDWIFromSymmetricTensor --sh 4 --bvalues 1000 --eigenvalues 1.7e-3,0.3e-3 
+  </description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   

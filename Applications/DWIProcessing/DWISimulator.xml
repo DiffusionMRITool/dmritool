@@ -2,7 +2,10 @@
 <executable>
   <category>Simulator</category>
   <title>DWI Simulator</title>
-  <description>Simulate DWI data.</description>
+  <description>Simulate DWI data.\n\
+    Examples: \n\
+    DWISimulator dwi_config.txt --outdwi dwi.nii.gz --outodf odfTrue.nii.gz --outeap eapTrue_r0.015.nii.gz  --qorientations Elec060.txt --bvalues 1000,2000,3000 --rorientations directions_t4.txt --rvalues 0.015 --noisesigma 0.0 --outb0 dwi_diagonal_b0.nii.gz --outputdwitype EACHSHELL
+  </description>
   
   <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   

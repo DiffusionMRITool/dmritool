@@ -2,7 +2,10 @@
 <executable>
   <category>Test</category>
   <title>DWI IO Preprocess</title>
-  <description>Read DWI images, gradients, b values, and output the formal normalized formalt in a configuration file.</description>
+  <description>Read DWI images, gradients, b values, and output the formal normalized formalt in a configuration file.\n\
+    Examples: \n\
+   DWIPreprocess data.txt  data_normalize.txt --oEachShell --bThreshold 15 --mask mask.nii.gz  --odwi dwi_normalize.nii.gz  --ograd grad_normalize.txt --ob0Image dwi_b0.nii.gz
+  </description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   

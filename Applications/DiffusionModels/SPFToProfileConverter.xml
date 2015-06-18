@@ -2,7 +2,11 @@
 <executable>
   <category>Diffusion Models</category>
   <title>Convert SPF coefficients to DWI/EAP profile (represented by SH basis or discrete samples).</title>
-  <description>Convert SPF coefficients to DWI/EAP profile (represented by SH basis or discrete samples).</description>
+  <description>Convert SPF coefficients to DWI/EAP profile (represented by SH basis or discrete samples).\n\
+    Examples: \n\
+    SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier --mdImage MD.nii.gz \n\
+    SPFToProfileConverter signal.nii.gz dwiFromSignal.nii.gz --radius 1500 --sh 8 --ra 4 --mdImage MD.nii.gz
+  </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 

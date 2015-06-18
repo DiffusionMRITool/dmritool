@@ -2,7 +2,10 @@
 <executable>
   <category>Diffusion Models</category>
   <title>Estimate Mean Diffusivity in each voxel</title>
-  <description>Estimate Mean Diffusivity in each voxel</description>
+  <description>Estimate Mean Diffusivity in each voxel. \n\
+  Examples: \n\
+  MeanDiffusivityEstimator dwi.txt D_sh4_ra1.nii.gz --sh 4 --ra 1
+  </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 

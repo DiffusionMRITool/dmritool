@@ -2,7 +2,10 @@
 <executable>
   <category>Diffusion Models</category>
   <title>Convert SPF coefficients to ODFs (represented by SH basis or discrete samples).</title>
-  <description>Convert SPF coefficients to ODFs (represented by SH basis or discrete samples).</description>
+  <description>Convert SPF coefficients to ODFs (represented by SH basis or discrete samples).\n\
+    Examples: \n\
+    SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4 --mdImage MD.nii.gz
+  </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 
