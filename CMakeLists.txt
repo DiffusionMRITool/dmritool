@@ -208,6 +208,7 @@ endif(APPLE)
 # Applications
 #
 add_subdirectory(Applications)
+add_subdirectory(Utilities)
 
 if (BUILD_QT_APPLICATIONS)
   find_package(Qt4 REQUIRED)
