@@ -271,7 +271,7 @@ void VTKViewer::add(vtkPolyData * polyData)
     vtkSmartPointer< vtkPolyDataNormals > polyDataNormals
       = vtkSmartPointer< vtkPolyDataNormals >::New();
     setInputData(polyDataNormals, polyData);
-    polyDataNormals->SetFeatureAngle(90.0);
+    // polyDataNormals->SetFeatureAngle(90.0);
     mapper->SetInputConnection(polyDataNormals->GetOutputPort());
     }
   else
