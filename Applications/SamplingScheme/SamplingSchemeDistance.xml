@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Sampling Scheme</category>
+  <title>Distance between Two Single Sampling Schemes</title>
+  <description>Calculate the distance (maximum of the minimal angles) between two single shell sampling schemes. \n\
+    Examples: \n\
+    SamplingSchemeDistance grad1.txt grad2.txt
+  </description>
+
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+
+  <parameters>
+    <label>I/O</label>
+    <description>Input/Output Parameters</description>
+    
+    <file>
+      <name>_InputFile1</name>
+      <description>Input gradient File 1.</description>
+      <index>0</index>
+    </file>
+    
+    <file>
+      <name>_InputFile2</name>
+      <description>Input gradient File 2.</description>
+      <index>1</index>
+    </file>
+    
+  </parameters>
+
+  <parameters>
+    
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+
+</executable>
+
+
+
+

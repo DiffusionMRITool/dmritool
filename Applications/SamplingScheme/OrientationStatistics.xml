@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Sampling Scheme</category>
+  <title>OrientationStatistics</title>
+  <description>Get statistics information from a given orientation file. \
+    Show the (min, max, mean, std) of the minimal angles of all samples. \
+    Show electrostatic energy, spherical code cost function.\n\
+    Examples: \n\
+    OrientationStatistics grad.txt
+  </description>
+
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+
+  <parameters>
+    <label>I/O</label>
+    <description>Input/Output Parameters</description>
+    
+    <file multiple="true">
+      <name>_InputOrientationFile</name>
+      <description>Input Orientation File.</description>
+      <index>0</index>
+    </file>
+    
+  </parameters>
+
+  <parameters>
+    
+    <float>
+      <name>_Weight</name>
+      <default>0.5</default>
+      <description>Weight for single shell term, 1-weight for mutiple shell term.</description>
+      <constraints>
+        <minimum>0.0</minimum>
+        <maximum>1.0</maximum>
+      </constraints>
+      <longflag>weight</longflag>
+    </float>
+    
+    <float>
+      <name>_EnergyOrder</name>
+      <default>2.0</default>
+      <description>order for the calculation of Electrostatic energy. </description>
+      <longflag>--order</longflag>
+    </float>
+    
+    <boolean>
+      <name>_Asymmetric</name>
+      <description>If set, the orientation is not antipodal symmetric</description>
+      <longflag>--asym</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Combine</name>
+      <description>If set, also show the statistics for the orientation combining all input orientations.</description>
+      <longflag>--combine</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+
+</executable>
+
+
+
