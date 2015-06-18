@@ -35,6 +35,9 @@
 #include <vtkPointData.h>
 #include <vtkGlyph3D.h>
 
+#include <vtkWindowToImageFilter.h>
+#include <vtkPNGWriter.h>
+
 #include "OrientationsViewerCLP.h"
 #include "itkSamplingScheme3D.h"
 #include "utl.h"
@@ -390,7 +393,21 @@ main ( int argc, char *argv[] )
   renderWindowInteractor->SetDesiredUpdateRate(25);
 
   renderWindow->Render();
-  renderWindowInteractor->Start();
+
+  if (_PNGFile!="")
+    {
+    vtkSmartPointer<vtkWindowToImageFilter> windowToImage = vtkSmartPointer<vtkWindowToImageFilter>::New();
+    windowToImage->SetInput(renderWindow);
+    windowToImage->SetMagnification(2);
+    vtkSmartPointer<vtkPNGWriter> pngWriter = vtkSmartPointer<vtkPNGWriter>::New();
+    pngWriter->SetInputConnection(windowToImage->GetOutputPort());
+    pngWriter->SetFileName(_PNGFile.c_str());
+    pngWriter->Write();
+    }
+  else
+    renderWindowInteractor->Start();
+
+
 
   return EXIT_SUCCESS;
 }

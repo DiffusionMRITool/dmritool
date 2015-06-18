@@ -3,7 +3,12 @@
   
   <category>Viewer</category>
   <title>Orientations Viewer</title>
-  <description>Orientations viewer.</description>
+  <description>Single and multi-shell orientations viewer.\n\
+    Examples: \n\
+    OrientationsViewer grad1.txt --mesh \n\
+    OrientationsViewer grad1.txt grad2.txt --combine --mesh \n\
+    OrientationsViewer grad1.txt grad2.txt --combine --mesh --png out.png
+  </description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   
@@ -15,6 +20,14 @@
       <description>Input Orientation File.</description>
       <index>0</index>
       <channel>input</channel>
+    </file>
+    
+    <file>
+      <name>_PNGFile</name>
+      <description>Output png File.</description>
+      <longflag>--png</longflag>
+      <default></default>
+      <channel>Output</channel>
     </file>
     
     <boolean>
@@ -121,7 +134,7 @@
       <name>_Window</name>
       <description>window size.</description>
       <longflag>window</longflag>
-      <default>500,500</default>
+      <default>600,600</default>
     </float-vector> 
     
   </parameters>
