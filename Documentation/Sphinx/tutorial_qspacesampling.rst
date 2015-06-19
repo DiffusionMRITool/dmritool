@@ -51,8 +51,8 @@ These two problem categories include the following application problems.
   It is related with P-C-M by discretizing the continuous sphere using many points. 
 
   
-Note that considering the diffusion signal is antipodal symmetric, the antipodal symmetric samples have the same role. 
-Thus when we talk about :math:`K` points in a sphere, we actually have :math:`2K` samples by adding the antipodal symmetric samples. 
+.. Note:: Considering the diffusion signal is antipodal symmetric, the antipodal symmetric samples have the same role. 
+   Thus when we talk about :math:`K` points in a sphere, we actually have :math:`2K` samples by adding the antipodal symmetric samples. 
 
 
 Methods
@@ -80,9 +80,10 @@ The `spherical code <http://mathworld.wolfram.com/SphericalCode.html>`__ formula
 This formulation to solve P-C-S is well studied in mathematics. 
 [Toth1949]_ gave a upper bound for the covering radius. 
 [Conway1996]_ proposed a way to solve the above optimization problem by iteratively approximating the above objective function. 
-The authors of [Conway1996]_ also collected `some best known solutions for P-C-S <http://neilsloane.com/grass/dim3/>`__.
+Dr. Sloane, one of the authors of [Conway1996]_, collected `some best known solutions for P-C-S <http://neilsloane.com/grass/dim3/>`__.
 These schemes have been stored in ``Data/Packing`` folder in dmritool. 
-Note that these schemes have larger covering radii than the schemes provided in CAMINO_. 
+
+.. Note:: The schemes by SC formulation in `Sloane's collection`_ have larger covering radii than the schemes by EEM in CAMINO_. 
 
 [Cheng2014]_ [Cheng2015]_ generalized the SC formulation to multi-shell case by solving:
 
@@ -119,8 +120,12 @@ We provide the following demos in matlab to demonstrate the effectiveness of MIL
 * `Uniformly subsampling for the multi-shell scheme in Human Connectome Project (P-D-MM) <demos/demo_separate_HCPQ390x3_30x3.html>`__
 
 The codes can be found in ``Matlab/Demos`` folder in dmritool. 
-To run these demos, you need to add ``Matlab`` folder in your matlab path and install Gurobi_. 
-Gurobi is academic free if you have an edu email account. 
+To run these demos, you need to: 
+
+#. add ``${DMRITOOL_SOURCE_DIR}/Matlab`` folder in your matlab path. 
+#. copy ``${DMRITOOL_SOURCE_DIR}/Data`` to ``${HOME}/.dmritool/Data`` if you did not build dmritool source codes.  
+#. install Gurobi_. Gurobi is academic free if you have an edu email account. 
+
 To run the demo for subsampling of the HCP scheme, you can download the 3 shell scheme from `this link <https://www.dropbox.com/s/l4j8m0vf3wnihg2/HCP_Q3_grad.zip?dl=0>`__.
 
 
@@ -150,9 +155,17 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
    :width: 400
    :alt: imoc_30.png
 
-`OrientationStatistics <commands/OrientationStatistics.html>`__  is to show the covering radius of the estimated scheme. 
-`OrientationsViewer <commands/OrientationsViewer.html>`__ is to visualize the obtained schemes. 
-With ``--png`` option, it writes the visualization in a png file. 
+* The ``tessOrder`` option is the order of sphere tessellation to discretize the continuous sphere. 
+  [Cheng2015]_ showed that with a finer sphere tessellation IMOC obtains a larger covering radius. 
+  However finer sphere tessellation takes longer time for IMOC.  
+  For ``--tessOrder 7``, which uses ``20481`` samples in the hemisphere, IMOC normally finishes in seconds. 
+* `OrientationStatistics <commands/OrientationStatistics.html>`__  is to show the covering radius of the estimated scheme. 
+* `OrientationsViewer <commands/OrientationsViewer.html>`__ is to visualize the obtained schemes. 
+  With ``--png`` option, it writes the visualization in a png file. 
+
+.. Note:: The single shell schemes by IMOC have larger covering radii than the schemes by EEM in CAMINO_. 
+   With finer sphere tessellation, IMOC schemes approximately have the similar covering radii with the schemes in `Sloane's collection`_ 
+   Please see the experiments in [Cheng2015]_ and `this repository <https://github.com/DiffusionMRITool/dmritool-MultiShellSampling>`__.
 
 To generate a 3 shell scheme with 28 samples per shell (P-C-M), you can run:
 
@@ -168,11 +181,25 @@ To generate a 3 shell scheme with 28 samples per shell (P-C-M), you can run:
    :alt: imoc_28x3.png
 
 The three colors denote samples in 3 shells. 
-Note that the ``tessOrder`` option is the order of sphere tessellation to discretize the continuous sphere. 
-[Cheng2015]_ showed that a finer sphere tessellation obtains a larger covering radius. 
-However finer sphere tessellation takes longer time for IMOC.  
-For ``--tessOrder 7``, which uses ``20481`` samples in the hemisphere, IMOC normally finishes in seconds. 
 
+Experiments in the papers
+-------------------------
+ 
+`This repository <https://github.com/DiffusionMRITool/dmritool-MultiShellSampling>`__ has some results and codes 
+to reproduce the results showed in the papers [Cheng2014]_ [Cheng2015]_. 
+To run the demos, you need to download matlab codes in dmritool_.
+
+::
+
+  git clone https://github.com/DiffusionMRITool/dmritool-MultiShellSampling.git 
+  git clone https://github.com/DiffusionMRITool/dmritool.git
+
+Then add ``dmritool/Matlab`` folder into the matlab path. 
+
+
+
+  
+.. _`Sloane's collection`: http://neilsloane.com/grass/dim3/ 
 
 
 .. [Jones1999]  DK Jones, MA Horsfield, A Simmons, 

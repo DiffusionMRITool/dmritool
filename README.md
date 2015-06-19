@@ -9,13 +9,13 @@ Introduction
 [DMRITOOL](http://diffusionmritool.github.io/) is a **free** and **open source** toolbox for [diffusion MRI](http://en.wikipedia.org/wiki/Diffusion_MRI) data processing. 
 It is written in C++ with matlab interface. 
 
-DMRITOOL mainly focus on:
+With DMRITOOL, you can:
 
-* Reconstruction/estimation of diffusion data, 
-  including diffusion weighted signal, ensemble average propagator (EAP), diffusion orientation distribution function (dODF), 
-  and some meaningful scalar maps. 
+* perform reconstruction/estimation of diffusion data, including diffusion weighted signal, ensemble average propagator (EAP), diffusion orientation distribution function (dODF), and some meaningful scalar maps, etc.
+* generate spherically uniform sampling schemes for single or multiple shells.
+* perform diffusion MRI data simulation.
+* visualize spherical function field (e.g. dODF field, EAP profile field)
 
-* Spherically uniform sampling scheme design for single or multiple shells. 
 
 
 Website
