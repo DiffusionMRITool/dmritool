@@ -111,7 +111,7 @@ Uniformly select samples using MILP
 -----------------------------------
 
 
-We provides the following demos in matlab to demonstrate the effectiveness of MILP. 
+We provide the following demos in matlab to demonstrate the effectiveness of MILP. 
 
 * `Uniformly separate two subsets (P-D-MS) <demos/demo_separate_sets.html>`__
 * `Uniformly select a subset from a set (P-D-SS) <demos/demo_separate_t4_1shell.html>`__
@@ -147,7 +147,7 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
 
 .. figure:: imoc_30.png
    :align: center
-   :width: 600
+   :width: 400
    :alt: imoc_30.png
 
 `OrientationStatistics <commands/OrientationStatistics.html>`__  is to show the covering radius of the estimated scheme. 
@@ -164,9 +164,10 @@ To generate a 3 shell scheme with 28 samples per shell (P-C-M), you can run:
 
 .. figure:: imoc_28x3.png
    :align: center
-   :width: 600
+   :width: 400
    :alt: imoc_28x3.png
 
+The three colors denote samples in 3 shells. 
 Note that the ``tessOrder`` option is the order of sphere tessellation to discretize the continuous sphere. 
 [Cheng2015]_ showed that a finer sphere tessellation obtains a larger covering radius. 
 However finer sphere tessellation takes longer time for IMOC.  
