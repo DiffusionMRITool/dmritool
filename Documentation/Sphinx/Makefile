@@ -2,18 +2,21 @@
 #
 
 # You can set these variables from the command line.
-SPHINXOPTS    =
-SPHINXBUILD   = sphinx-build
-PAPER         =
-BUILDDIR      = _build
-CMDDIR        = commands
+SPHINXOPTS          =
+SPHINXBUILD         = sphinx-build
+PAPER               =
+BUILDDIR            = _build
+SRCDIR              = ../..
+CMDOUTPUTDIR        = commands
+MATFUNCDIR          = matlabfiles
+MATDEMOSDIR         = $(BUILDDIR)/html/demos
 
 # Internal variables.
-PAPEROPT_a4     = -D latex_paper_size=a4
-PAPEROPT_letter = -D latex_paper_size=letter
-ALLSPHINXOPTS   = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+PAPEROPT_a4         = -D latex_paper_size=a4
+PAPEROPT_letter     = -D latex_paper_size=letter
+ALLSPHINXOPTS       = -d $(BUILDDIR)/doctrees $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 # the i18n builder cannot share the environment and doctrees with the others
-I18NSPHINXOPTS  = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
+I18NSPHINXOPTS      = $(PAPEROPT_$(PAPER)) $(SPHINXOPTS) .
 
 .PHONY: help clean html cmd dirhtml singlehtml pickle json htmlhelp qthelp devhelp epub latex latexpdf text man changes linkcheck doctest gettext
 
@@ -44,12 +47,35 @@ clean:
 	rm -rf $(BUILDDIR)/html/* $(BUILDDIR)/doctrees $(BUILDDIR)/latex
 
 cleanall: clean
-	rm -rf $(CMDDIR)/*
+	rm -rf $(CMDOUTPUTDIR)/* $(MATFUNCDIR)/*
 
 cmd:
-	python tools/generate_doc_for_commands.py $(CMDDIR) 
+	python ./tools/generate_doc_for_commands.py $(SRCDIR)/Applications $(CMDOUTPUTDIR) 
 
-rst: cmd
+matfunc:
+	@echo "need to set DMRITOOL_DIR."
+	python ./tools/generate_doc_for_matlabfunctions.py $(SRCDIR) $(DMRITOOL_DIR)  $(MATFUNCDIR)
+
+matdemo:
+	@echo "copy published matlab demos to $(SRCDIR)/Matlab/Demos/html to $(BUILDDIR)/html/demos"
+	@echo "need to publish these demos first"
+	cp -rp $(SRCDIR)/Matlab/Demos/html  $(MATDEMOSDIR)
+
+tutorial: 
+	python ./tools/make_tutorial_outputs.py .
+
+rst: cmd matfunc matdemo
+
+htmlall: rst tutorial html
+
+upload_sphinx:
+	sh ./tools/upload_ghpages.sh
+	@echo "Upload sphinx finished."
+
+upload_doxygen:
+	@echo "need to set DMRITOOL_DIR."
+	sh ./tools/upload_doxygen.sh $(DMRITOOL_DIR)
+	@echo "Upload doxygen finished."
 
 html:
 	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html

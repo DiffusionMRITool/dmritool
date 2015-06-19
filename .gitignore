@@ -4,4 +4,5 @@ _build
 
 Examples/temp
 Documentation/Sphinx/commands/
+Documentation/Sphinx/matlabfiles/
 Matlab/Demos/html

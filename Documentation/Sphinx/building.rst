@@ -9,6 +9,15 @@ Building
 .. image:: https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master
     :target: https://travis-ci.org/DiffusionMRITool/dmritool
 
+Matlab codes
+============
+
+The codes in folder ``${DMRITOOL_SOURCE_DIR}/Matlab`` are purely in matlab. 
+Thus you do not need to build c++ codes to run codes in that folder. 
+The codes in folder ``${DMRITOOL_SOURCE_DIR}/Wrapping/Matlab`` are matlab mex files, which depend on the c++ codes. 
+
+See `the matlab function list <matlabfiles/matlabfunctions.html>`__, 
+where these functions starting with mex prefix need to be built using cmake. 
 
 Dependent Packages
 ==================
@@ -112,8 +121,8 @@ Linux and Mac
 7. Set environments. 
 
   - You can add ``dmritool-build/bin`` into your ``PATH`` to use the binary executables easily.
-  - When set ``DMRITOOL_WRAP_MATLAB``, the built mex executables are in ``dmritool-build/Wrapping/Matlab/bin``. 
-    Then you need to put the folder into matlab path. 
+  - When ``DMRITOOL_WRAP_MATLAB`` is set ``ON``, the built mex executables are in ``dmritool-build/Wrapping/Matlab/bin``. 
+    Then to use these mex executables in matlab, you need to put the folder into matlab path. 
   - For matlab mex files, you also need to set ``BLAS_VERSION`` as the openblas lib or mkl lib. 
     If you use mkl_, then set ``blas_version`` as ::
 

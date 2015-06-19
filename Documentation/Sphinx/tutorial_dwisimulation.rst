@@ -4,7 +4,7 @@ DWI data simulation
 
 
 Generate DWI data from a configuration file
--------------------------------------------
+===========================================
 
 .. _DWISimulator:
 
@@ -22,7 +22,9 @@ See example codes in ``Example/test.sh`` and example configuration files in ``Ex
 
 See :ref:`userguide <DWIConfigurationFile>`.
 
-Generate data with 3 shells ::
+Generate data with 3 shells.
+
+.. code-block:: shell
 
   mkdir ${DMRITOOL_SOURCE_DIR}/Examples/temp
   cd ${DMRITOOL_SOURCE_DIR}/Examples/temp
@@ -38,7 +40,9 @@ Generate data with 3 shells ::
 
 The ground truth of EAP profile field with radius :math:`15 \mu m` is in ``eapTrue_r0.015.nii.gz``, and 
 the ground truth ODF file is ``odfTrue.nii.gz``. 
-The you can visualize the ground truth of EAP profiles and ODFs via ``vtkviewer`` or via Paraview_. ::
+The you can visualize the ground truth of EAP profiles and ODFs via ``vtkviewer`` or via Paraview_.
+
+.. code-block:: shell
 
   MeshFromSphericalFunctionTessellatedSamples eapTrue_r0.015.nii.gz eapTrue_r0.015_vis.vtk ../directions_t4.txt  --scale 1e-5
   vtkviewer eapTrue_r0.015_vis.vtk &  
@@ -51,12 +55,16 @@ The you can visualize the ground truth of EAP profiles and ODFs via ``vtkviewer`
 eapTrue_r0.015.nii.gz    odfTrue.nii.gz 
 =====================   ================
 
-To obtain the ground truth of MSD map, RTO map, you can use::
+To obtain the ground truth of MSD map, RTO map, you can use:
+
+.. code-block:: shell
 
   b=1000,2000,3000
   DWISimulator ../dwi_crossing.txt --outdwi dwi.nii.gz --outodf odfTrue.nii.gz --outeap eapTrue_r0.015.nii.gz --outrto rtoTrue.nii.gz --outmsd msdTrue.nii.gz --qorientations ../Elec060.txt --bvalues ${b} --rorientations ../directions_t4.txt --rvalues 0.015 --noisesigma 0.0 --outb0 dwi_diagonal_b0.nii.gz --outputdwitype EACHSHELL
 
-You can also add noise to the noise-free dwi data. ::
+You can also add noise to the noise-free dwi data.
+
+.. code-block:: shell
 
   DWINoiseGenerator dwi_b1000.nii.gz  dwi_b1000_noise.nii.gz --snr 25
 

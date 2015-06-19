@@ -9,12 +9,23 @@ News
    :depth: 2
    :local:
 
+Some codes on sampling scheme design are released (06-18-2015)
+==============================================================
+
+* Mixed Integer Linear Programming (MILP) for sampling scheme design is released in matlab. See folder ``${DMRITOOL_SOURCE_DIR}/Matlab``. 
+* Iterative Maximum Overlap Construction (IMOC) for sampling scheme design is released in C++. 
+  See command `SamplingSchemeQSpaceIMOCEstimation <commands/SamplingSchemeQSpaceIMOCEstimation.html>`__.
+* Add `a tutorial on sampling scheme design <tutorial_qspacesampling.html>`__ with some demos.
+* Use some scripts to generate the c++ executable list, matlab function list, run demos in tutorials, update dmritool website and doxygen. 
+* Add `VTKPolyData.py <commands/VTKPolyData.py.html>`__ to visualize vtk files and save the visualization into png files. It can replace `vtkviewer <commands/vtkviewer.html>`__
+
+
 DMRITOOL is using github pages (06-09-2015)
 ===========================================
 
 * The homepage of DMRITOOL_ is moving from `readthedocs <http://dmritool.readthedocs.org/>`__ to github pages, 
 * Using gh-pages, it is possible to automatically generate some documents, for example, `the list of commands <commands/commandlist.html>`__. 
-* As required by a user, ``ComputeSHCoefficientsOfDWIFromSymmetricTensor`` is added to compute a fiber response function from a given symmetric tensor. 
+* As required by a user, `ComputeSHCoefficientsOfDWIFromSymmetricTensor <commands/ComputeSHCoefficientsOfDWIFromSymmetricTensor.html>`__ is added to compute a fiber response function from a given symmetric tensor. 
 * Some tips using paraview_ is added based on the `discussion <http://www.nitrc.org/pipermail/dmritool-discussion/2015-March/000001.html>`__
 
 Version 0.1.1 is released (03-09-2015)

@@ -157,21 +157,19 @@ The following table explains the parameters in the configuration file
 Visualization of spherical function field
 ==========================================
 
-Generate vtk files 
------------------- 
+Generate and visualize vtk files 
+--------------------------------
 
 Both ODFs and EAP profile are spherical function fields, where in each voxel there is a spherical function (e.g. ODF, EAP profile with a fixed radius). 
 The spherical function field can be represented using uniform samples of spherical functions or the Spherical Harmonics (SH) coefficients of spherical functions. 
-We provides some routines to generate mesh files (.vtk format) from the SH coefficients or spherical function samples. 
-Then these vtk files can be visualized in paraview_ or using the routine ``vtkviewer``. 
 
-+-------------------------------------------------+-----------------------------------------------------------+
-| ``MeshFromSphericalFunctionTessellatedSamples`` | generate mesh from uniform samples of spherical functions |
-+-------------------------------------------------+-----------------------------------------------------------+
-| ``MeshFromSHCoefficientsConverter``             | generate mesh from SH coefficients                        |
-+-------------------------------------------------+-----------------------------------------------------------+
-| ``vtkviewer``                                   | visualize generated mesh file                             |
-+-------------------------------------------------+-----------------------------------------------------------+
+We provides some routines to generate mesh files (.vtk format) from the SH coefficients or spherical function samples. 
+Then these vtk files can be visualized in paraview_ 
+or using the routine `vtkviewer <commands/vtkviewer.html>`__ 
+and `VTKPolyData.py <commands/VTKPolyData.py.html>`__. 
+Please see :ref:`the command list for visualization <commandlist_Visualization>`. 
+To use `VTKPolyData.py <commands/VTKPolyData.py.html>`__, you only need to build VTK with python wrapping. 
+It does not need to build dmritool_. 
 
 Visualization using Paraview
 ----------------------------

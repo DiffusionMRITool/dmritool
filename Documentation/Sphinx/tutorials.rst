@@ -7,6 +7,7 @@ Tutorials
    
    tutorial_dwisimulation
    tutorial_spfi
+   tutorial_qspacesampling
 
 
 

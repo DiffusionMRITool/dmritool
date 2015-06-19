@@ -214,6 +214,20 @@ latex_documents = [
    u'Jian Cheng', 'manual'),
 ]
 
+
+try:
+    pngmath_latex_preamble  # check whether this is already defined
+except NameError:
+    pngmath_latex_preamble = ""
+
+f = file('./newCommands.tex')
+for macro in f:
+    # used when building latex and pdf versions
+    latex_elements['preamble'] += macro + '\n'
+    # used when building html version
+    pngmath_latex_preamble += macro + '\n'
+
+
 # The name of an image file (relative to this directory) to place at the top of
 # the title page.
 #latex_logo = None

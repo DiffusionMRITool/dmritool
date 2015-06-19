@@ -47,7 +47,7 @@
 .. _FSL: http://fsl.fmrib.ox.ac.uk/fsl/fslwiki/
 .. _CAMINO: http://cmic.cs.ucl.ac.uk/camino/
 .. _paraview: http://www.paraview.org/
-
+.. _Gurobi: http://www.gurobi.com/
 
 .. |br| raw:: html
 
