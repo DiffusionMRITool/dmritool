@@ -13,6 +13,8 @@
 %% read sphere tessellation with 321 samples in the hemisphere
 grad_t4 = ReadDirections([getenv('HOME'), '/.dmritool/Data/Tessellation/directions_t4.txt']);
 
+VisualizeMultiShellScheme(grad_t4);
+title(['Sphere tessellation with 321 samples in the hemisphere']);
 
 %% extract 30 samples from grad_t4 using MILP
 clear params grbParams
@@ -33,5 +35,5 @@ grbParams.OutputFlag=true;
 [grad,grb] = OptimalSamplingSingleSubset(grad_t4, params, grbParams);
 
 %% visualize the result
-VisualizeMultiShellScheme(grad)
-title(['Covering radius = ', num2str(CoveringRadius(grad)*180/pi), ' degree'], 'FontSize', 15);
+VisualizeMultiShellScheme(grad);
+title(['Estimated Scheme. Covering radius = ', num2str(CoveringRadius(grad)*180/pi), ' degree'], 'FontSize', 15);

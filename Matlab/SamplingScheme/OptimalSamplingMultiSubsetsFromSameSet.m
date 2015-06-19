@@ -46,7 +46,7 @@ if (isfield(param,'w')==0)
 end
 
 if (isfield(param,'sos')==0)
-    param.sos = 0;
+    param.sos = 1;
 end
 
 % model

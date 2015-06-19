@@ -17,7 +17,7 @@ colors{1} = 'ro';
 colors{2} = 'go';
 colors{3} = 'bo';
 colors{4} = 'co';
-colors{5} = 'bo';
+colors{5} = 'ko';
 ss=100;
 
 figure; 

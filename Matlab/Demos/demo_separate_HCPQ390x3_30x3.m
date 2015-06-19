@@ -15,6 +15,8 @@ grad_hcp_all{1}=ReadDirections('/home/jcheng/mywork/output/sampling/HCP_Q3/grad_
 grad_hcp_all{2}=ReadDirections('/home/jcheng/mywork/output/sampling/HCP_Q3/grad_b2000.txt');
 grad_hcp_all{3}=ReadDirections('/home/jcheng/mywork/output/sampling/HCP_Q3/grad_b3000.txt');
 
+VisualizeMultiShellScheme(grad_hcp_all{1}, grad_hcp_all{2}, grad_hcp_all{3});
+title(['Original 90x3 HCP scheme']);
 
 %% extract 30x3 samples from 90x3 scheme
 clear params grbParams
@@ -38,5 +40,5 @@ index_3=find(indexMatrix{3}==1);
 
 %% visualize the result
 VisualizeMultiShellScheme(grad{1},grad{2},grad{3});
-title(['Combined covering radius = ', num2str(CoveringRadius([grad{1};grad{2};grad{3}])*180/pi), ' degree'], 'FontSize', 15);
+title(['Estimated scheme. Combined covering radius = ', num2str(CoveringRadius([grad{1};grad{2};grad{3}])*180/pi), ' degree'], 'FontSize', 15);
 

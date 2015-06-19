@@ -18,6 +18,9 @@ n1 = size(grad1, 1);
 grad2=mexReadGrad([getenv('HOME'), '/.dmritool/Data/ElectricRepulsion/Elec060.txt']);
 n2 = size(grad2, 1);
 
+% Visualize the original two schemes. Different colors denote samples in different shells.
+VisualizeMultiShellScheme(grad1, grad2);
+title(['Orignal two schemes']);
 
 %% Randomly mix these two sets
 index = randperm(n1+n2);
@@ -25,7 +28,12 @@ index = randperm(n1+n2);
 gradAll = [grad1; grad2];
 gradAll = gradAll(index,:);
 
+% Visualize the mixed two schemes. 
+VisualizeMultiShellScheme(gradAll);
+title(['Randomly mixed scheme']);
+
 %% Extract two sets using MILP
+% Now we want to seperate these two sets from the mixture. 
 
 clear params grbParams
 % set parameters
@@ -37,11 +45,17 @@ param.numSamples=[n1 n2];
 [gradCell, grb, indexMatrix]=OptimalSamplingMultiSubsetsFromSameSet(gradAll,param, []);
 
 %% Test the results 
+% covering radius comparison
 fprintf('covering radius of set 1 = %f\n', CoveringRadius(grad1));
 fprintf('covering radius of set 2 = %f\n', CoveringRadius(grad2));
 fprintf('covering radius of extracted set 1 = %f\n', CoveringRadius(gradCell{1}));
 fprintf('covering radius of extracted set 2 = %f\n', CoveringRadius(gradCell{2}));
 
+% number of wrongly detected samples
 fprintf('the number of extracted directions not in set 1: %d\n', n1-sum(indexMatrix(index<=n1,1)))
 fprintf('the number of extracted directions not in set 2: %d\n', n2-sum(indexMatrix(index>n1,2)))
+
+% Visualize the separated two sets
+VisualizeMultiShellScheme(gradCell{1}, gradCell{2});
+title(['Separated two schemes']);
 
