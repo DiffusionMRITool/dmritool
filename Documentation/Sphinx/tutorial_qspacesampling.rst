@@ -150,9 +150,9 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
    OrientationStatistics  imoc_30_shell1.txt
    OrientationsViewer imoc_30_shell1.txt --mesh --png imoc_30.png
 
-.. figure:: imoc_30.png
+.. figure:: .tutorial_qspacesampling/imoc_30.png
    :align: center
-   :width: 400
+   :scale: 30%
    :alt: imoc_30.png
 
 * The ``tessOrder`` option is the order of sphere tessellation to discretize the continuous sphere. 
@@ -175,9 +175,9 @@ To generate a 3 shell scheme with 28 samples per shell (P-C-M), you can run:
    OrientationStatistics  imoc_28x3_shell1.txt imoc_28x3_shell2.txt imoc_28x3_shell3.txt --combine
    OrientationsViewer imoc_28x3_shell1.txt imoc_28x3_shell2.txt imoc_28x3_shell3.txt --combine --mesh --png imoc_28x3.png
 
-.. figure:: imoc_28x3.png
+.. figure:: .tutorial_qspacesampling/imoc_28x3.png
    :align: center
-   :width: 400
+   :scale: 30%
    :alt: imoc_28x3.png
 
 The three colors denote samples in 3 shells. 

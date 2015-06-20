@@ -3,6 +3,9 @@ build
 _build
 
 Examples/temp
+
 Documentation/Sphinx/commands/
 Documentation/Sphinx/matlabfiles/
+Documentation/Sphinx/.tutorial*
+
 Matlab/Demos/html

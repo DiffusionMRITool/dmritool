@@ -3,7 +3,6 @@
 Generate outputs for tutorils.
 It may take a long time
 """
-tutorial_list = ['tutorial_qspacesampling']
 
 import os, subprocess, argparse
 
@@ -14,12 +13,26 @@ args = parser.parse_args()
 sphinxDir = os.path.abspath(args.sphinxDir[0])
 origWD = os.getcwd()
 
+f = open(os.path.join(sphinxDir, 'tutoriallist.txt'),"r")
+tutorial_list = f.readlines()
+f.close()
+tutorial_list = [t.strip() for t in tutorial_list if t.strip() ]
 
-os.chdir(os.path.join(sphinxDir, '_build/html'))
 for tutorial in tutorial_list:
+
     rstfile = os.path.join(sphinxDir, tutorial + '.rst')
-    shfile = os.path.join(sphinxDir, '_build/html', tutorial + '.sh')
+    if not os.path.isfile(rstfile):
+        raise Exception('no file: ' + rstfile)
+
+    runpath = os.path.join(sphinxDir, '.' + tutorial)
+    if os.path.exists(runpath):
+        subprocess.call(['rm', '-rf', runpath])
+    os.makedirs(runpath)
+    os.chdir(runpath)
+
+    shfile = os.path.join(runpath, tutorial + '.sh')
     subprocess.call(('python', os.path.join(sphinxDir, 'tools/extract_bash_from_rst.py'), rstfile,  shfile ))
     subprocess.call(['sh', shfile])
 
-os.chdir(origWD)
+    os.chdir(origWD)
+

@@ -46,10 +46,10 @@ param.numSamples=[n1 n2];
 
 %% Test the results 
 % covering radius comparison
-fprintf('covering radius of set 1 = %f\n', CoveringRadius(grad1));
-fprintf('covering radius of set 2 = %f\n', CoveringRadius(grad2));
-fprintf('covering radius of extracted set 1 = %f\n', CoveringRadius(gradCell{1}));
-fprintf('covering radius of extracted set 2 = %f\n', CoveringRadius(gradCell{2}));
+fprintf('covering radius of set 1 = %f degree\n', CoveringRadius(grad1)*180/pi);
+fprintf('covering radius of set 2 = %f degree\n', CoveringRadius(grad2)*180/pi);
+fprintf('covering radius of extracted set 1 = %f degree\n', CoveringRadius(gradCell{1})*180/pi);
+fprintf('covering radius of extracted set 2 = %f degree\n', CoveringRadius(gradCell{2})*180/pi);
 
 % number of wrongly detected samples
 fprintf('the number of extracted directions not in set 1: %d\n', n1-sum(indexMatrix(index<=n1,1)))
