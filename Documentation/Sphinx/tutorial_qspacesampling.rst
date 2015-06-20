@@ -101,9 +101,9 @@ where :math:`w` is the weighting factor to balance the uniformity of each single
 MILP was implemented in matlab, thus you **do not** have to build the C++ codes. 
 See the following matlab functions:
 
-* `OptimalSamplingSingleSubset <matlabfiles/OptimalSamplingSingleSubset.html>`__ is for P-D-SS. 
-* `OptimalSamplingMultiSubsetsFromSameSet <matlabfiles/OptimalSamplingMultiSubsetsFromSameSet.html>`__ is for P-D-MS.
-* `OptimalSamplingMultiSubsetsFromDifferentSets <matlabfiles/OptimalSamplingMultiSubsetsFromDifferentSets.html>`__ is for P-D-MM. 
+* :doc:`OptimalSamplingSingleSubset <matlabfiles/OptimalSamplingSingleSubset>` is for P-D-SS. 
+* :doc:`OptimalSamplingMultiSubsetsFromSameSet <matlabfiles/OptimalSamplingMultiSubsetsFromSameSet>` is for P-D-MS.
+* :doc:`OptimalSamplingMultiSubsetsFromDifferentSets <matlabfiles/OptimalSamplingMultiSubsetsFromDifferentSets>` is for P-D-MM. 
 
 Experiments
 ===========
@@ -159,8 +159,8 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
   [Cheng2015]_ showed that with a finer sphere tessellation IMOC obtains a larger covering radius. 
   However finer sphere tessellation takes longer time for IMOC.  
   For ``--tessOrder 7``, which uses ``20481`` samples in the hemisphere, IMOC normally finishes in seconds. 
-* `OrientationStatistics <commands/OrientationStatistics.html>`__  is to show the covering radius of the estimated scheme. 
-* `OrientationsViewer <commands/OrientationsViewer.html>`__ is to visualize the obtained schemes. 
+* :doc:`OrientationStatistics <commands/OrientationStatistics>`  is to show the covering radius of the estimated scheme. 
+* :doc:`OrientationsViewer <commands/OrientationsViewer>` is to visualize the obtained schemes. 
   With ``--png`` option, it writes the visualization in a png file. 
 
 .. Note:: The single shell schemes by IMOC have larger covering radii than the schemes by EEM in CAMINO_. 

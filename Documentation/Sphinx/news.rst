@@ -14,18 +14,18 @@ Some codes on sampling scheme design are released (06-18-2015)
 
 * Mixed Integer Linear Programming (MILP) for sampling scheme design is released in matlab. See folder ``${DMRITOOL_SOURCE_DIR}/Matlab``. 
 * Iterative Maximum Overlap Construction (IMOC) for sampling scheme design is released in C++. 
-  See command `SamplingSchemeQSpaceIMOCEstimation <commands/SamplingSchemeQSpaceIMOCEstimation.html>`__.
-* Add `a tutorial on sampling scheme design <tutorial_qspacesampling.html>`__ with some demos.
+  See command :doc:`SamplingSchemeQSpaceIMOCEstimation <commands/SamplingSchemeQSpaceIMOCEstimation>`.
+* Add :doc:`a tutorial on sampling scheme design <tutorial_qspacesampling>` with some demos.
 * Use some scripts to generate the c++ executable list, matlab function list, run demos in tutorials, update dmritool website and doxygen. 
-* Add `VTKPolyData.py <commands/VTKPolyData.py.html>`__ to visualize vtk files and save the visualization into png files. It can replace `vtkviewer <commands/vtkviewer.html>`__
+* Add :doc:`VTKPolyData.py <commands/VTKPolyData.py>` to visualize vtk files and save the visualization into png files. It can replace :doc:`vtkviewer <commands/vtkviewer>`.
 
 
 DMRITOOL is using github pages (06-09-2015)
 ===========================================
 
 * The homepage of DMRITOOL_ is moving from `readthedocs <http://dmritool.readthedocs.org/>`__ to github pages, 
-* Using gh-pages, it is possible to automatically generate some documents, for example, `the list of commands <commands/commandlist.html>`__. 
-* As required by a user, `ComputeSHCoefficientsOfDWIFromSymmetricTensor <commands/ComputeSHCoefficientsOfDWIFromSymmetricTensor.html>`__ is added to compute a fiber response function from a given symmetric tensor. 
+* Using gh-pages, it is possible to automatically generate some documents, for example, :doc:`the list of commands <commands/commandlist>`. 
+* As required by a user, :doc:`ComputeSHCoefficientsOfDWIFromSymmetricTensor <commands/ComputeSHCoefficientsOfDWIFromSymmetricTensor>` is added to compute a fiber response function from a given symmetric tensor. 
 * Some tips using paraview_ is added based on the `discussion <http://www.nitrc.org/pipermail/dmritool-discussion/2015-March/000001.html>`__
 
 Version 0.1.1 is released (03-09-2015)
@@ -45,8 +45,8 @@ The source code is in `github <https://github.com/DiffusionMRITool/dmritool>`__ 
 
 The fist release (v0.1) includes:
 
-* Spherical Polar Fourier Imaging. See :ref:`the SPFI tutorial <DL_SPFI>`.
-* DWI simulation. See :ref:`the DWI data simulation tutotial <DWISimulator>`.
+* Spherical Polar Fourier Imaging. See :doc:`the SPFI tutorial <tutorial_spfi>`.
+* DWI simulation. See :doc:`the DWI data simulation tutotial <tutorial_dwisimulation>`.
 * Visualization of spherical function fields.
 
 

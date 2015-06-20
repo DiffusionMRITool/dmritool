@@ -52,7 +52,7 @@ We provide two executables for conversions between these two image storages.
       
       4DToVectorImageConverter  4dmultivolumeimage.nii.gz vectorimage.nii.gz  
 
-* You can also use ``ImageInfo`` to check the image header information ::
+* You can also use :doc:`ImageInfo <commands/ImageInfo>` to check the image header information ::
   
       ImageInfo vectorimage.nii.gz  
       ImageInfo 4dmultivolumeimage.nii.gz
@@ -124,32 +124,41 @@ Configuration file format for DWI data simulation
 
 .. _DWIConfigurationFile:
 
-We provides ``DWISimulator`` routine to generate DWI data from a customizable configuration file.  
+We provides :doc:`DWISimulator <commands/DWISimulator>` routine to generate DWI data from a customizable configuration file.  
 See example codes in ``Example/test.sh`` and example configuration files in ``Example`` folder. 
 
 The configuration file specially sets the mixture of tensor model or mixture of configuration model for each voxel. 
 The following table explains the parameters in the configuration file  
 
+.. list-table::
+   :header-rows: 1
+   :widths: 30 30
+   :stub-columns: 0
+   
+   *  -  DimSize
+      -  output DWI image spatial size.
 
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| DimSize                       | output DWI image spatial size                                                                                               |
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ElementSpacing                | spatial spacing                                                                                                             |
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| Scale                         | DWI image for ``b=0``                                                                                                       |
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| ModelType                     | Symmetric tensor model, or cylinder model, spherical coordinate or Cartesian coordinate                                     |
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| DiffusionParameters           | First three numbers are for spatial position. The following numbers are respectively for each tensor/cylinder components.   |
-|                               | For example, when ``ModelType=SYMMETRICAL_TENSOR_IN_SPHERICAL_COORDS``,                                                     |
-|                               | ``DiffusionParameters = 3 3 0 90 0 0.0015 0.0003 0.5 90 60 0.0015 0.0003 0.5`` means in voxel ``(3,3,0)``, two tensors      |
-|                               | with eigenvalues ``(0.0015,0.0003)``, partial volume weight ``0.5``, spherical coordinates (90,0) and (90,60) respectively. |
-|                               | Thus crossing angle is ``60`` degree.                                                                                       |
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| BackgroundDiffusionParameters | diffusion parameters for all other voxels which are not specially set in ``DiffusionParameters``                            |
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
-| RicianNoiseSigma              | Sigma for  Rician noise. Suggest to set it as 0, then use ``DWINoiseGenerator`` to add noise to the noise-free DWI data     |
-+-------------------------------+-----------------------------------------------------------------------------------------------------------------------------+
+   *  -  ElementSpacing
+      -  spatial spacing.
+
+   *  -  Scale
+      -  DWI image for ``b=0``.
+
+   *  -  ModelType
+      -  Symmetric tensor model, or cylinder model, spherical coordinate or Cartesian coordinate.
+
+   *  -  DiffusionParameters
+      -  First three numbers are for spatial position. The following numbers are respectively for each tensor/cylinder components. |br|
+         For example, when ``ModelType=SYMMETRICAL_TENSOR_IN_SPHERICAL_COORDS``, |br|
+         ``DiffusionParameters = 3 3 0 90 0 0.0015 0.0003 0.5 90 60 0.0015 0.0003 0.5`` means in voxel ``(3,3,0)``, |br| 
+         two tensors with eigenvalues ``(0.0015,0.0003)``, partial volume weight ``0.5``, spherical coordinates (90,0) and (90,60) respectively. |br|
+         Thus crossing angle is ``60`` degree. 
+
+   *  -  BackgroundDiffusionParameters
+      -  diffusion parameters for all other voxels which are not specially set in ``DiffusionParameters``.
+
+   *  -  RicianNoiseSigma
+      -  Sigma for  Rician noise. Suggest to set it as 0, then use :doc:`DWINoiseGenerator <commands/DWINoiseGenerator>` to add noise to the noise-free DWI data.
 
 
 
@@ -165,10 +174,10 @@ The spherical function field can be represented using uniform samples of spheric
 
 We provides some routines to generate mesh files (.vtk format) from the SH coefficients or spherical function samples. 
 Then these vtk files can be visualized in paraview_ 
-or using the routine `vtkviewer <commands/vtkviewer.html>`__ 
-and `VTKPolyData.py <commands/VTKPolyData.py.html>`__. 
+or using the routine :doc:`vtkviewer <commands/vtkviewer>` 
+and :doc:`VTKPolyData.py <commands/VTKPolyData.py>`. 
 Please see :ref:`the command list for visualization <commandlist_Visualization>`. 
-To use `VTKPolyData.py <commands/VTKPolyData.py.html>`__, you only need to build VTK with python wrapping. 
+To use :doc:`VTKPolyData.py <commands/VTKPolyData.py>`, you only need to build VTK with python wrapping. 
 It does not need to build dmritool_. 
 
 Visualization using Paraview

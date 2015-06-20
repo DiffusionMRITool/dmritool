@@ -169,7 +169,7 @@ Matlab Function List
             write_helpdoc(doc, file, outputDir)
 
             filename = get_filename(file)
-            rstfile.write(''.join(['   `', filename, ' <',filename, '.html>`__, "', description,'"\n']))
+            rstfile.write(''.join(['   :doc:`', filename, ' <',filename, '>`, "', description,'"\n']))
 
         rstfile.write('\n\n')
 

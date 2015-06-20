@@ -149,7 +149,7 @@ Command List
         # print cmd_descriptions
 
         for cmd, description in zip(cmds, cmd_descriptions):
-            rstfile.write(''.join(['   `', cmd, ' <',cmd, '.html>`__, "', description,'"\n']))
+            rstfile.write(''.join(['   :doc:`', cmd, ' <',cmd, '>`, "', description,'"\n']))
 
         rstfile.write('\n\n')
 

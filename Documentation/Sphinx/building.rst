@@ -16,7 +16,7 @@ The codes in folder ``${DMRITOOL_SOURCE_DIR}/Matlab`` are purely in matlab.
 Thus you do not need to build c++ codes to run codes in that folder. 
 The codes in folder ``${DMRITOOL_SOURCE_DIR}/Wrapping/Matlab`` are matlab mex files, which depend on the c++ codes. 
 
-See `the matlab function list <matlabfiles/matlabfunctions.html>`__, 
+See :doc:`the matlab function list <matlabfiles/matlabfunctions>`, 
 where these functions starting with mex prefix need to be built using cmake. 
 
 Dependent Packages

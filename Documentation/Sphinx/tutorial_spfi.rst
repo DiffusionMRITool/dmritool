@@ -217,7 +217,7 @@ Preprocess for DMRITOOL
 -----------------------
 
 The data has already preprocessed. 
-Here we just use ``DWIPreprocess`` to normalize the DWI data using the baseline image.  
+Here we just use :doc:`DWIPreprocess <commands/DWIPreprocess>` to normalize the DWI data using the baseline image.  
 
 .. code-block:: shell
 
@@ -225,7 +225,7 @@ Here we just use ``DWIPreprocess`` to normalize the DWI data using the baseline 
   DWIPreprocess data_c88_raw.txt  data_c88_normalize.txt --oEachShell --bThreshold 15 --mask mask_c88.nii.gz  --odwi dwi_c88_normalize.nii.gz  --ograd grad_normalize.txt --ob0Image dwi_c88_b0.nii.gz 
 
 * The b values in the HCP data all larger than 0. There is no exact ``b=0``. Thus we consider b values smaller than the ``bThreshold`` as ``b=0``. 
-* The b values are not exactly equal 1000, 2000, or 3000. ``DWIPreprocess`` can group b values and replace b values using the mean of the group. 
+* The b values are not exactly equal 1000, 2000, or 3000. :doc:`DWIPreprocess <commands/DWIPreprocess>` can group b values and replace b values using the mean of the group. 
 * It outputs ``data_c88_normalize.txt`` which contains the b values, gradients and the normalized DWI data.  
 
 

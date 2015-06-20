@@ -14,8 +14,7 @@ DMRITOOL's documentation
 Introduction
 ============
 
-DMRITOOL_ is a **free** and **open source** toolbox for `diffusion
-MRI <http://en.wikipedia.org/wiki/Diffusion_MRI>`__ data processing. 
+DMRITOOL_ is a **free** and **open source** toolbox for `diffusion MRI <http://en.wikipedia.org/wiki/Diffusion_MRI>`__ data processing. 
 It is written in C++ with Matlab_ interface. 
 Currently DMRITOOL_ has no GUI. It only provides executables for command line usage. 
 You can also use the released mex executables in matlab_. 
@@ -33,7 +32,7 @@ With DMRITOOL_, you can:
 
 Citations will help us support the continued development of DMRITOOL_.
 If you use the methods and codes released in DMRITOOL_, please cite the
-related references. See `citation page <citation.html>`__.
+related references. See :doc:`citation page <citation>`.
 
 Download
 ========

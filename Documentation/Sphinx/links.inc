@@ -38,7 +38,7 @@
 .. _GTest: https://code.google.com/p/googletest/
 .. _vtkviewer:  https://github.com/HalCanary/vtkviewer
 .. _nifti: http://nifti.nimh.nih.gov/nifti-1/
-.. _niftilib: sourceforge.net/projects/niftilib
+.. _niftilib: http://sourceforge.net/projects/niftilib
 .. _nrrd: http://teem.sourceforge.net/nrrd/index.html
 .. _Doxygen: http://www.doxygen.org
 .. _OpenMP: http://openmp.org/wp/

@@ -17,7 +17,7 @@ Generate DWI data from a configuration file
    :alt: odfTrue
    :scale: 50%
 
-We provides ``DWISimulator`` routine to generate DWI data from a customizable configuration file.  
+We provides :doc:`DWISimulator <commands/DWISimulator>` routine to generate DWI data from a customizable configuration file.  
 See example codes in ``Example/test.sh`` and example configuration files in ``Example`` folder. 
 
 See :ref:`userguide <DWIConfigurationFile>`.
@@ -40,7 +40,7 @@ Generate data with 3 shells.
 
 The ground truth of EAP profile field with radius :math:`15 \mu m` is in ``eapTrue_r0.015.nii.gz``, and 
 the ground truth ODF file is ``odfTrue.nii.gz``. 
-The you can visualize the ground truth of EAP profiles and ODFs via ``vtkviewer`` or via Paraview_.
+The you can visualize the ground truth of EAP profiles and ODFs via :doc:`vtkviewer <commands/vtkviewer>`, :doc:`VTKPolyData.py <commands/VTKPolyData.py>` or via Paraview_.
 
 .. code-block:: shell
 
