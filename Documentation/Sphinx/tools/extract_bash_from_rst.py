@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 """
-Extract bash codes from a rst file
+Extract bash codes from a rst file.
+The extracted code bloacks must start with
+.. code-block:: shell
 """
 import argparse, re
 
