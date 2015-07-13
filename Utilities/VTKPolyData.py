@@ -53,17 +53,20 @@ def main():
     parser.add_argument('--view-up', help='Camera ViewUp',
                         type=three_floats, metavar=('x,y,z'))
     parser.add_argument('--bgcolor', help='back ground color',
-                        type=float, metavar=('r', 'g', 'b'), nargs=3)
-    parser.add_argument('--size', help='Window size in pixels',
+                        type=float, metavar=('r', 'g', 'b'), nargs=3, default=(0,0,0))
+    parser.add_argument('--size', help='Window size in pixels. Default: (600,600)',default=(600,600),
                         type=int, metavar=('width', 'height'), nargs=2)
     parser.add_argument('--clipping-range', help='Window size in pixels',
                         type=two_floats, metavar=('near,far'))
     parser.add_argument('--png', help='Output PNG file',
                         metavar='file.png')
+    parser.add_argument('--zoom', help='camera zoom factor',
+                        type=float, metavar=('zoomfactor'), default=1.0)
     parser.add_argument('--webgl', help='File prefix for WebGL output',
                         metavar='webglFilePrefix')
 
     args = parser.parse_args()
+    # print args
 
     if len(args.inputFiles) == 0:
         print "need inputs"
@@ -71,19 +74,13 @@ def main():
 
     render_window = vtk.vtkRenderWindow()
     renderer = vtk.vtkRenderer()
-    if args.bgcolor:
-        renderer.SetBackground(args.bgcolor[0],args.bgcolor[1],args.bgcolor[2])
-    else:
-        renderer.SetBackground(0,0,0)
+    renderer.SetBackground(args.bgcolor[0],args.bgcolor[1],args.bgcolor[2])
     render_window.AddRenderer(renderer)
-    render_window.SetSize(600, 600)
+    render_window.SetSize(args.size)
 
     for inputFile in args.inputFiles:
         reader = vtk.vtkPolyDataReader()
         reader.SetFileName(inputFile)
-
-        if args.size:
-            render_window.SetSize(args.size)
 
         reader.Update()
 
@@ -162,6 +159,11 @@ def main():
         camera.SetViewUp(args.view_up)
     if args.clipping_range:
         camera.SetClippingRange(args.clipping_range)
+
+    camera.Zoom(args.zoom)
+
+    # re-render after setting camera
+    render_window.Render()
 
     if args.png:
         window_to_image = vtk.vtkWindowToImageFilter()
