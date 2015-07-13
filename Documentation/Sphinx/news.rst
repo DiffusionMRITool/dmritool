@@ -9,8 +9,8 @@ News
    :depth: 2
    :local:
 
-Some codes on sampling scheme design are released (06-18-2015)
-==============================================================
+2015-06-18: Some codes on sampling scheme design are released
+=============================================================
 
 * Mixed Integer Linear Programming (MILP) for sampling scheme design is released in matlab. See folder ``${DMRITOOL_SOURCE_DIR}/Matlab``. 
 * Iterative Maximum Overlap Construction (IMOC) for sampling scheme design is released in C++. 
@@ -20,16 +20,16 @@ Some codes on sampling scheme design are released (06-18-2015)
 * Add :doc:`VTKPolyData.py <commands/VTKPolyData.py>` to visualize vtk files and save the visualization into png files. It can replace :doc:`vtkviewer <commands/vtkviewer>`.
 
 
-DMRITOOL is using github pages (06-09-2015)
-===========================================
+2015-06-09: DMRITOOL is using github pages
+==========================================
 
 * The homepage of DMRITOOL_ is moving from `readthedocs <http://dmritool.readthedocs.org/>`__ to github pages, 
 * Using gh-pages, it is possible to automatically generate some documents, for example, :doc:`the list of commands <commands/commandlist>`. 
 * As required by a user, :doc:`ComputeSHCoefficientsOfDWIFromSymmetricTensor <commands/ComputeSHCoefficientsOfDWIFromSymmetricTensor>` is added to compute a fiber response function from a given symmetric tensor. 
 * Some tips using paraview_ is added based on the `discussion <http://www.nitrc.org/pipermail/dmritool-discussion/2015-March/000001.html>`__
 
-Version 0.1.1 is released (03-09-2015)
-======================================
+2015-03-09: Version 0.1.1 is released
+=====================================
 
 The version v0.1.1 is released. 
 It is mainly a bug-fix release to make the building process better. 
@@ -37,8 +37,8 @@ It is mainly a bug-fix release to make the building process better.
 * We now use the dmritool-discussion_ mailing list by `nitrc <http://www.nitrc.org/projects/dmritool>`__. 
 * The doxygen documentation can be found in the `github page <http://diffusionmritool.github.io/dmritool-doxygen>`__. 
 
-DMRITOOL is now open source (02-18-2015)
-=========================================
+2015-02-18: DMRITOOL is now open source
+=======================================
 
 DMRITOOL_ is released as an open source toolbox. 
 The source code is in `github <https://github.com/DiffusionMRITool/dmritool>`__ and the documentation is in `readthedocs <http://dmritool.readthedocs.org/>`__.

@@ -9,8 +9,9 @@ We are glad to hear your feedback and support you.
 Mailing List
 ============
 
-For support and discussion, please subscribe to the dmritool-discussion_ mailing list by `nitrc <http://www.nitrc.org/projects/dmritool>`__. 
+If you have questions about DMRITOOL_, please contact us via dmritool-discussion@www.nitrc.org. 
 We are glad to answer your questions when you post them to the mailing list. 
+For support and discussion, please subscribe to the dmritool-discussion_ mailing list by `nitrc <http://www.nitrc.org/projects/dmritool>`__. 
 
 Issue Tracker
 =============

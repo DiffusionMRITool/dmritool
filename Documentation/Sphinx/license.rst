@@ -20,26 +20,26 @@ spams
 -----
 
 See folder ``ThirdParty/Spams``.
-It is modified from Spams_ which uses GPL_ license. 
+It was modified from Spams_ which uses GPL_ license. 
 
 
 vtkviewer
 ---------
 
 See folder ``QTApplications/vtkviewer``. 
-It is modified from vtkviewer_ which uses Apache License. 
+It was modified from vtkviewer_ which uses Apache License. 
 
 
 Electrostatic point sets
 ------------------------
 
 See folder ``Data/ElectricRepulsion``. 
-The electrostatic point sets are copied from CAMINO_ which is under Artistic License.
+The electrostatic point sets were copied from CAMINO_ which is under Artistic License.
 
 Spherical packing point sets
 ----------------------------
 
 See folder ``Data/Packing``. 
-The spherical packing point sets are copied from `Neil J. A. Sloane' collection <http://neilsloane.com/grass/dim3/>`__.
+The spherical packing point sets were copied from `Neil J. A. Sloane' collection <http://neilsloane.com/grass/dim3/>`__.
 
 .. include:: links.inc

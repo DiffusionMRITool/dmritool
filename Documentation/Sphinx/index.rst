@@ -37,9 +37,25 @@ related references. See :doc:`citation page <citation>`.
 Download
 ========
 
-You can download the latest source codes from `github <https://github.com/DiffusionMRITool/dmritool>`__::
+You can download the latest source codes from `github <https://github.com/DiffusionMRITool/dmritool>`__:
+
+
+.. raw:: html
+ 
+  <div>
+    <img style="width:30px;height:30px;vertical-align:middle">
+    <span style=""></span>
+    <IMG SRC="_static/GitHub.png" height="40" width="40"> <a href="https://github.com/DiffusionMRITool/dmritool/zipball/master"> [ZIP]   </a>  
+    <a image="_static/GitHub.png" href="https://github.com/DiffusionMRITool/dmritool/tarball/master">[TAR.GZ] </a></p>
+  </div>
+
+Or use git_:
+
+:: 
 
   git clone https://github.com/DiffusionMRITool/dmritool
+
+
 
 Acknowledgements
 ================
@@ -54,6 +70,10 @@ DMRITOOL_ is/was supported by the following research groups:
 
 Users Documentation
 ===================
+
+.. sidebar:: Contact Us 
+   
+   If you have questions about dmritool, please contact us: dmritool-discussion@www.nitrc.org
 
 .. toctree::
    :maxdepth: 2

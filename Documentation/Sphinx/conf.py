@@ -43,7 +43,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'DMRITOOL'
-copyright = u'2015, Jian Cheng'
+copyright = u'2010-2015, DMRITool developers <dmritool-discussion@www.nitrc.org>'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the

@@ -301,8 +301,8 @@ Here are pictures for the scalar maps I got by ``fslview`` in FSL_.
   RTO map                         MSD map                       PFA map
 ===========================   ==========================      ============
 
-.. [Assemlal2009]  Haz-Edine Assemlal, David Tschumperl\'{e}, Luc Brun, 
-   `Efficient and robust computation of {PDF} features from diffusion MR signal <http://dx.doi.org/10.1016/j.media.2009.06.004>`__, Medical Image Analysis, vol 13, p. 715-729, 2009
+.. [Assemlal2009]  Haz-Edine Assemlal, David Tschumperle, Luc Brun, 
+   `Efficient and robust computation of PDF features from diffusion MR signal <http://dx.doi.org/10.1016/j.media.2009.06.004>`__, Medical Image Analysis, vol 13, p. 715-729, 2009
 .. [Tuch2004] David S. Tuch, `Q-Ball Imaging <http://onlinelibrary.wiley.com/doi/10.1002/mrm.20279/full>`__,  Magnetic Resonance in Medicine, vol 52, p. 1358-1372, 2004. 
 .. [Wu2007]   Yu-Chien Wu, Andrew L. Alexanderb, `Hybrid diffusion imaging <http://www.ncbi.nlm.nih.gov/pubmed/17481920>`__, NeuroImage, vol 36, p. 617-629, 2007.
 .. [Cheng2010a] Jian Cheng, Aurobrata Ghosh, Rachid Deriche, Tianzi Jiang, 
