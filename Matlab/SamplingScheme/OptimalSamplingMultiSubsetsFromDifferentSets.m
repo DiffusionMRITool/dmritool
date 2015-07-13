@@ -8,7 +8,7 @@ function [gradCell,grb_result,indexMatrix] = OptimalSamplingMultiSubsetsFromDiff
 % INPUT
 %   gradAll           :  K gradient matrix cell, where each element is a N_kx3 gradient matrix for a single shell.
 %   param.numSamples  :  Kx1 or 1xK vector which gives number of samples in K subsets
-%   param.w           :  weight for single shell term. 0<w<1
+%   param.w           :  weight for single shell term. 0<w<1. Default value is 0.5.
 %
 %   grbParam.start     :  a warm start if provided
 %   grbParam.TimeLimit :  time limit to terminate the program

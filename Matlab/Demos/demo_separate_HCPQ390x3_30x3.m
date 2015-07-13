@@ -25,6 +25,8 @@ params.numSamples = [30, 30, 30];
 params.lbCost = [0.33,0.33,0.33,0.15];
 % params.lbCost = [0,0,0,0];
 
+params.w=0.5;
+
 % grb parameters
 % MIPFocus 1
 grbParams.MIPFocus=1;

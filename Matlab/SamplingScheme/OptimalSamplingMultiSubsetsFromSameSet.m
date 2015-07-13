@@ -8,7 +8,7 @@ function [gradCell,grb_result,indexMatrix] = OptimalSamplingMultiSubsetsFromSame
 % INPUT
 %   gradAll           :  Nx3 gradient matrix, where each row is a point in sphere. 
 %   param.numSamples  :  Kx1 or 1xK vector which gives number of samples in K subsets
-%   param.w           :  weight for single shell term. 0<w<1
+%   param.w           :  weight for single shell term. 0<w<1. Default value is 0.5.
 %   param.sos         :  1 (default), use sos constraint
 %                        0, do not use sos
 %
