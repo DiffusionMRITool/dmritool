@@ -2,6 +2,10 @@
 Spherical Polar Fourier Imaging
 ================================
 
+.. meta::
+   :description: tutorial on Spherical Polar Fourier Imaging
+.. include:: meta_keywords.txt
+.. include:: links.inc
 
 .. |HCP_eap_r0.015_whole| image:: _static/tutorials/spfi/HCP_DL-SPFI_1e-6_eap_r0.015_whole.png
    :alt: HCP_eap_r0.015_whole
@@ -319,4 +323,3 @@ Here are pictures for the scalar maps I got by ``fslview`` in FSL_.
    `Regularized Spherical Polar Fourier Diffusion MRI with Optimal Dictionary Learning <https://hal.archives-ouvertes.fr/file/index/docid/824507/filename/DL_SPFI_MICCAI.pdf>`__, 
    16th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI'13), Nagoya, September 22-26, 2013
 
-.. include:: links.inc

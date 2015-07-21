@@ -2,6 +2,11 @@
 DMRITOOL's documentation
 ========================
 
+.. meta::
+   :description: homepage of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 .. contents:: Table of Contents
    :depth: 2
    :local:
@@ -99,4 +104,3 @@ Developers Documentation
    codemodules
 
 
-.. include:: links.inc

@@ -3,6 +3,11 @@
 Support
 =======
 
+.. meta::
+   :description: support of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 Thank you for your interests on DMRITOOL_. 
 We are glad to hear your feedback and support you.
 

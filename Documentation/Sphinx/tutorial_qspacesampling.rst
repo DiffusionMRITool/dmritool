@@ -2,6 +2,11 @@
 Sampling In Q-Space
 ===================
 
+.. meta::
+   :description: tutorial on sampling in q-space
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 .. _uniformsampling:
 
 
@@ -212,4 +217,3 @@ Then add ``dmritool/Matlab`` folder into the matlab path.
 .. [Cheng2015]  Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, 
    `Novel Single and Multiple Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes <https://hal.archives-ouvertes.fr/hal-01154774/file/sampling_MICCAI2015.pdf>`__, MICCAI 2015
 
-.. include:: links.inc

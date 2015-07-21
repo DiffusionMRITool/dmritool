@@ -2,6 +2,11 @@
 Tutorials
 =========
 
+.. meta::
+   :description: tutorials of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 .. toctree::
    :maxdepth: 2
    

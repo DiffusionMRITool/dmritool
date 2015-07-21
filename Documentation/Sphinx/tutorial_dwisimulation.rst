@@ -2,6 +2,10 @@
 DWI data simulation
 ====================
 
+.. meta::
+   :description: tutorial on DWI data simulation
+.. include:: meta_keywords.txt
+.. include:: links.inc
 
 Generate DWI data from a configuration file
 ===========================================
@@ -83,4 +87,3 @@ You can also add noise to the noise-free dwi data.
 ``--snr 25`` means variance of the noise is ``S(0)/25``, if b0 image is not set by ``--b0``, then ``S(0)=1`` is the default value. 
 
 
-.. include:: links.inc

@@ -3,6 +3,11 @@
 License
 =======
 
+.. meta::
+   :description: license of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 License for DMRITOOL
 ====================
 
@@ -42,4 +47,3 @@ Spherical packing point sets
 See folder ``Data/Packing``. 
 The spherical packing point sets were copied from `Neil J. A. Sloane' collection <http://neilsloane.com/grass/dim3/>`__.
 
-.. include:: links.inc

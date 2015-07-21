@@ -2,6 +2,11 @@
 UTL HelperFunctions
 ===================
 
+.. meta::
+   :description: UTL helper functions of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 UTL Module
 ==========
 
@@ -117,4 +122,3 @@ File structure and dependency
 
 
 
-.. include:: links.inc

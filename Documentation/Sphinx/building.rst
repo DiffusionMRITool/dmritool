@@ -2,6 +2,11 @@
 Building
 ========
 
+.. meta::
+   :description: building of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 .. contents:: Table of Contents
    :depth: 2
    :local:
@@ -140,4 +145,3 @@ You can try it by yourself.
 
 
 
-.. include:: links.inc

@@ -2,6 +2,11 @@
 Citation
 ========
 
+.. meta::
+   :description: citation of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 .. _cite:
 
 Citations will help us support the continued development of DMRITOOL_.
@@ -42,4 +47,3 @@ related references.
          `Novel Single and Multiple Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes <https://hal.archives-ouvertes.fr/hal-01154774/file/sampling_MICCAI2015.pdf>`__, |br|
          18th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI'15), Munich, October 5-9, 2015. 
 
-.. include:: links.inc

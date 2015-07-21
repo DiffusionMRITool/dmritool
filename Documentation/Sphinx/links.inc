@@ -49,8 +49,4 @@
 .. _paraview: http://www.paraview.org/
 .. _Gurobi: http://www.gurobi.com/
 
-.. |br| raw:: html
-
-   <br />
-
 .. vim:syntax=rst

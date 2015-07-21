@@ -5,6 +5,11 @@
 News
 ====
 
+.. meta::
+   :description: news of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 .. contents:: Table of Contents
    :depth: 2
    :local:
@@ -51,4 +56,3 @@ The fist release (v0.1) includes:
 
 
 
-.. include:: links.inc

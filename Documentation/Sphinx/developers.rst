@@ -2,6 +2,11 @@
 Developers
 ==========
 
+.. meta::
+   :description: developers of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 DMRITOOL core development team includes:
 
 * **Jian Cheng**, `Section on Tissue Biophysics and Biomimetics (STBB)`_, `National Institutes of Health`_
@@ -17,4 +22,3 @@ We can collaborate via `github <https://github.com/DiffusionMRITool/dmritool>`__
 
 
 
-.. include:: links.inc

@@ -2,6 +2,11 @@
 User Guide
 ==========
 
+.. meta::
+   :description: user guide of dmritool
+.. include:: meta_keywords.txt
+.. include:: links.inc
+
 .. contents:: Table of Contents
    :depth: 2
    :local:
@@ -200,4 +205,3 @@ You can also enable other useful plugins for paraview, e.g. ``quadview``.
 
 
 
-.. include:: links.inc
