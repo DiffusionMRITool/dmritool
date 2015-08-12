@@ -15,7 +15,7 @@
 grad1 = ReadDirections([getenv('HOME'), '/.dmritool/Data/Tessellation/directions_t3.txt']);
 n1 = size(grad1, 1);
 
-grad2=mexReadGrad([getenv('HOME'), '/.dmritool/Data/ElectricRepulsion/Elec060.txt']);
+grad2 = ReadDirections([getenv('HOME'), '/.dmritool/Data/ElectricRepulsion/Elec060.txt']);
 n2 = size(grad2, 1);
 
 % Visualize the original two schemes. Different colors denote samples in different shells.
