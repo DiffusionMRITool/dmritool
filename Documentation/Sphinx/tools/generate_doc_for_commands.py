@@ -79,7 +79,7 @@ def generate_cmd_helpfiles(cmds, outfolder):
             else:
                 if description_found:
                     if line:
-                        cmd_help_desciption = cmd_help_desciption + line
+                        cmd_help_desciption = ' '.join([cmd_help_desciption, line])
                     else:
                         cmd_descriptions.append(cmd_help_desciption)
                         break
