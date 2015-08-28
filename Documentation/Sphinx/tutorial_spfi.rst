@@ -150,6 +150,7 @@ But please set the scale in SPF basis correctly based the mean diffusivity used 
 * Analytically obtain EAP profiles and ODFs (using default scale based on default mean diffusivity). 
 
 ::
+
     SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier
     SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4
 

@@ -14,6 +14,11 @@ q: quit the application
 s: surface representation
 w: wireframe representation
 
+Examples:
+VTKPolyData.py --vtk file1.vtk file2.vtk --image im.nii.gz
+VTKPolyData.py --vtk file1.vtk file2.vtk --image im.nii.gz --sliceX 50 --sliceY 40 --sliceZ 60
+VTKPolyData.py --vtk file1.vtk file2.vtk --image im.nii.gz --png out.png
+
 Author(s): Jian Cheng (jian.cheng.1983@gmail.com)
 """
 
