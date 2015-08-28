@@ -77,11 +77,10 @@ See :ref:`the tutorial on DWI data simulation <DWISimulator>`.
 
 .. code-block:: shell
 
-  mkdir ${DMRITOOL_SOURCE_DIR}/Examples/temp
-  cd ${DMRITOOL_SOURCE_DIR}/Examples/temp
+  export DMRITOOL_EXAMPLE_DIR=${DMRITOOL_SOURCE_DIR}/Examples
 
   b=1000,2000,3000
-  DWISimulator ../dwi_crossing.txt --outdwi dwi.nii.gz --outodf odfTrue.nii.gz --outeap eapTrue_r0.015.nii.gz --qorientations ../Elec060.txt --bvalues ${b} --rorientations ../directions_t4.txt --rvalues 0.015 --noisesigma 0.0 --outb0 dwi_diagonal_b0.nii.gz --outputdwitype EACHSHELL
+  DWISimulator ${DMRITOOL_EXAMPLE_DIR}/dwi_circle_crossing.txt --outdwi dwi.nii.gz --outodf odfTrue.nii.gz --outeap eapTrue_r0.015.nii.gz --qorientations ${DMRITOOL_EXAMPLE_DIR}/Elec060.txt --bvalues ${b} --rorientations ${DMRITOOL_EXAMPLE_DIR}/directions_t4.txt --rvalues 0.015 --noisesigma 0.0 --outb0 dwi_diagonal_b0.nii.gz --outputdwitype EACHSHELL
 
 
 DL-SPFI reconstruction
@@ -97,7 +96,7 @@ Reconstruction of SPF coefficients using DL-SPFI (with the default scale).
 
 * The above commend is to perform DL-SPFI using SH rank 8 and radial rank 4, regularization parameter lambda 1e-7. 
 * It uses default scale :math:`\zeta = 1.0 / (8 \pi^2 \tau D_0)`, default mean diffusivity :math:`D_0=0.7\times 10^{-3}` for all voxels. You can set default mean diffusivity in ``--md0``
-* You can try different regularization ``lamdaL1`` around :math:`1e-6` in range :math:`[1e-5, 1e-8]`
+* You can try different regularization ``lamdaL1`` around :math:`1e-6` in range :math:`[1e-8, 1e-5]`
 * For real data or general synthetic data with unknown mean diffusivity, 
   It is better to estimate mean diffusivity and adaptively set scale for each voxel. 
 
@@ -116,7 +115,7 @@ L1-SPFI reconstruction
 
 Without using learned dictionary, you can try L1-SPFI which uses least squares with L1 norm regularization based on compressed sensing [Cheng2011]_.
 
-.. code-block:: shell
+::
   
   SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --lambdaSH 1e-9 --lambdaRA 1e-9 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_2 --mdImage D_sh4_ra1.nii.gz
 
@@ -128,7 +127,7 @@ L2-SPFI reconstruction
 
 Besides DL-SPFI and L1-SPFI, you can also try L2-SPFI which uses least squares with L2 norm regularization [Cheng2010a]_.
 
-.. code-block:: shell
+::
   
   SphericalPolarFourierImaging dwi.txt --sh 6 --ra 2 --lambdaSH 1e-9 --lambdaRA 1e-9 --signal signalSPF.nii.gz --radius 0.015 --estimation LS --mdImage D_sh4_ra1.nii.gz
 
@@ -150,8 +149,7 @@ But please set the scale in SPF basis correctly based the mean diffusivity used 
 
 * Analytically obtain EAP profiles and ODFs (using default scale based on default mean diffusivity). 
 
-.. code-block:: shell
-
+::
     SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier
     SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4
 
@@ -166,10 +164,24 @@ But please set the scale in SPF basis correctly based the mean diffusivity used 
 
 .. code-block:: shell
   
-    MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5
-    vtkviewer eap_r0.015_vis.vtk &
+    MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 8e-6
+    VTKPolyData.py --vtk eap_r0.015_vis.vtk --png synthetic_eap_r0.015.png --zoom 1.3
     MeshFromSHCoefficientsConverter odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
-    vtkviewer odf_vis.vtk &
+    VTKPolyData.py --vtk odf_vis.vtk --png synthetic_odf.png --zoom 1.3
+
+.. figure:: .tutorial_spfi/synthetic_eap_r0.015.png
+   :scale: 40%
+   :alt: synthetic_eap_r0.015.png
+   :align: center
+   
+   **eap_r0.015**
+
+.. figure:: .tutorial_spfi/synthetic_odf.png
+   :scale: 40%
+   :alt: synthetic_odf.png
+   :align: center
+   
+   **odf**
 
 Analytical reconstruction of scalar maps
 ----------------------------------------
@@ -203,6 +215,22 @@ See [Wu2007]_, [Cheng2010a]_, [ChengThesis2012]_.
     SHCoefficientsToGFA eap_r0.015.nii.gz eap_r0.015_gfa.nii.gz
     SHCoefficientsToGFA odf.nii.gz odf_gfa.nii.gz
 
+* We can visualize eap profile using scalar maps as background.
+  ``--valuerange`` is to control the contrast in visualization.
+  If it is not given, it maps the minimal value to black and the maximal value to white.
+
+.. code-block:: shell
+
+    VTKPolyData.py --vtk eap_r0.015_vis.vtk --image eap_r0.015_gfa.nii.gz --valuerange 0,1 --png synthetic_eap_r0.015_withgfa.png --zoom 1.3
+
+
+.. figure:: .tutorial_spfi/synthetic_eap_r0.015_withgfa.png
+   :scale: 40%
+   :alt: synthetic_eap_r0.015_withgfa.png
+   :align: center
+   
+   **eap_r0.015**
+
 
 Real data Experiment for Human Connectome Project
 =================================================
@@ -223,7 +251,7 @@ Preprocess for DMRITOOL
 The data has already preprocessed. 
 Here we just use :doc:`DWIPreprocess <commands/DWIPreprocess>` to normalize the DWI data using the baseline image.  
 
-.. code-block:: shell
+::
 
   echo b_raw.txt grad_raw.txt dwi_c88.nii.gz > data_c88_raw.txt
   DWIPreprocess data_c88_raw.txt  data_c88_normalize.txt --oEachShell --bThreshold 15 --mask mask_c88.nii.gz  --odwi dwi_c88_normalize.nii.gz  --ograd grad_normalize.txt --ob0Image dwi_c88_b0.nii.gz 
@@ -238,13 +266,13 @@ DL-SPFI Reconstruction of SPF coefficients
 
 Estimate the mean diffusivity first.
 
-.. code-block:: shell
+::
 
   MeanDiffusivityEstimator data_c88_normalize.txt D_sh4_ra1.nii.gz --sh 4 --ra 1
 
 Perform DL-SPFI to estimate the SPF coefficients.
 
-.. code-block:: shell
+::
 
   SphericalPolarFourierImaging data_c88_normalize.txt --estimation L1_DL --sh 8 --ra 4 --lambdaL1 1e-6  --signal signalSPF.nii.gz --solver SPAMS --mask mask_c88.nii.gz --mdImage D_sh4_ra1.nii.gz
 
@@ -253,31 +281,31 @@ Reconstruction of EAPs
 
 Obtain EAP profiles from the SPF coefficients, and obtain GFA of EAP profiles.
 
-.. code-block:: shell
+::
 
   SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz  --radius 0.015 --ra 4 --sh 8 --mdImage D_sh4_ra1.nii.gz --fourier
   SHCoefficientsToGFA eap_r0.015.nii.gz eap_r0.015_gfa.nii.gz
 
 Generate a coarse mesh (``--tessorder 3``) for visualization the EAP profiles in a whole slice. 
 
-.. code-block:: shell
+::
 
   MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_visall.vtk --tessorder 3 --scale 1e-5 
 
 Generate a fine mesh (``--tessorder 4``) for visualization the EAP profiles in a ROI. 
 
-.. code-block:: shell
+::
 
   MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 --box 80,100,0,0,70,90
 
-You can use ``vtkviewer`` to visualize the vtk files.
+You can use :doc:`VTKPolyData.py <commands/VTKPolyData.py>` or paraview_ to visualize the vtk files.
 
-.. code-block:: shell
+:: 
 
-  vtkviewer eap_r0.015_visall.vtk
-  vtkviewer eap_r0.015_vis.vtk
+  VTKPolyData.py --vtk eap_r0.015_visall.vtk
+  VTKPolyData.py --vtk eap_r0.015_vis.vtk
 
-But if you want to put scalar map like GFA map in the back group, you'd better to use paraview_. 
+You can also put scalar map like GFA map in the background. 
 See the following results obtained by paraview_. 
 
 ===========================   ==========================
@@ -297,7 +325,7 @@ Analytical reconstruction of RTO, MSD and PFA maps.
   SPFToScalarMapConverter signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
   SPFToScalarMapConverter signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
-You can use many other tools to visualize the 3D volume. 
+You can use many tools to visualize the 3D volume, e.g. :doc:`VTKPolyData.py <commands/VTKPolyData.py>`. 
 Here are pictures for the scalar maps I got by ``fslview`` in FSL_. 
 
 ===========================   ==========================      ============

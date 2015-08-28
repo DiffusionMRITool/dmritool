@@ -50,7 +50,7 @@ The you can visualize the ground truth of EAP profiles and ODFs via :doc:`vtkvie
 .. code-block:: shell
 
   MeshFromSphericalFunctionTessellatedSamples eapTrue_r0.015.nii.gz eapTrue_r0.015_vis.vtk ${DMRITOOL_EXAMPLE_DIR}/directions_t4.txt  --scale 8e-6
-  VTKPolyData.py eapTrue_r0.015_vis.vtk --png eapTrue_r0.015.png  --zoom 1.3
+  VTKPolyData.py --vtk eapTrue_r0.015_vis.vtk --png eapTrue_r0.015.png  --zoom 1.3
 
 .. figure:: .tutorial_dwisimulation/eapTrue_r0.015.png
    :scale: 40%
@@ -62,7 +62,7 @@ The you can visualize the ground truth of EAP profiles and ODFs via :doc:`vtkvie
 .. code-block:: shell
   
   MeshFromSphericalFunctionTessellatedSamples odfTrue.nii.gz odfTrue_vis.vtk ${DMRITOOL_EXAMPLE_DIR}/directions_t4.txt  --scale 1.5
-  VTKPolyData.py odfTrue_vis.vtk --png odfTrue.png --zoom 1.3
+  VTKPolyData.py --vtk odfTrue_vis.vtk --png odfTrue.png --zoom 1.3
 
 .. figure:: .tutorial_dwisimulation/odfTrue.png
    :scale: 40%

@@ -1,5 +1,6 @@
 .. meta::
-   :keywords: Diffusion MRI, dmri, Spherical Polar Fourier Imaging, Spherical Polar Fourier, 
+   :keywords: Diffusion MRI, software, tool, dmritool, diffusionmritool, 
+    dmri, Spherical Polar Fourier Imaging, Spherical Polar Fourier, 
     Sampling scheme, Uniform sampling, sphere, 
     HARDI, Orientation Distribution Function, ODF, Ensemble Average Propagator, EAP, Diffusion Propagator, 
     q-space, q space, 

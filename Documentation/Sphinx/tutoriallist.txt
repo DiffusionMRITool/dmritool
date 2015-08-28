@@ -1,2 +1,3 @@
 tutorial_dwisimulation
 tutorial_qspacesampling
+tutorial_spfi
