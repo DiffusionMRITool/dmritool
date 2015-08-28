@@ -20,6 +20,7 @@ tutorial_list = [t.strip() for t in tutorial_list if t.strip() ]
 
 for tutorial in tutorial_list:
 
+    print '\n#Tutorial: ', tutorial
     rstfile = os.path.join(sphinxDir, tutorial + '.rst')
     if not os.path.isfile(rstfile):
         raise Exception('no file: ' + rstfile)
@@ -31,7 +32,7 @@ for tutorial in tutorial_list:
     os.chdir(runpath)
 
     shfile = os.path.join(runpath, tutorial + '.sh')
-    subprocess.call(('python', os.path.join(sphinxDir, 'tools/extract_bash_from_rst.py'), rstfile,  shfile ))
+    subprocess.call(('python', os.path.join(sphinxDir, 'tools/extract_bash_from_rst.py'), rstfile,  shfile, '--with-comments' ))
     subprocess.call(['sh', shfile])
 
     os.chdir(origWD)
