@@ -59,9 +59,8 @@ Linux and Mac
 1. build/install CMake_, GCC_, Git_, SVN_, GSL_, VTK_, ITK_, Qt_ (optional), Doxygen_ (optional).
 2. build/install OpenBlas_ + Lapack_ or MKL_ .
 
-   MKL_ was free for non-commercial usage in linux. However now the 
-   `free download link <https://software.intel.com/en-us/non-commercial-software-development>`__
-   seems dead forever. 
+   MKL_ is free for students, educators, academic researchers and open source contributors. 
+   See `the free download link <https://software.intel.com/en-us/qualify-for-free-software>`__. 
    OpenBlas_ and Lapack_ are always free and easy to use. 
 
    If you choose OpenBlas_ + Lapack_, you can use them from system repositories. 
