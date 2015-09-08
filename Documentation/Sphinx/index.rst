@@ -48,10 +48,10 @@ You can download the latest source codes from `github <https://github.com/Diffus
 .. raw:: html
  
   <div>
-    <img style="width:30px;height:30px;vertical-align:middle">
-    <span style=""></span>
-    <IMG SRC="_static/GitHub.png" height="40" width="40"> <a href="https://github.com/DiffusionMRITool/dmritool/zipball/master"> [ZIP]   </a>  
-    <a image="_static/GitHub.png" href="https://github.com/DiffusionMRITool/dmritool/tarball/master">[TAR.GZ] </a></p>
+    <IMG SRC="_static/GitHub.png" height="40" width="40"> 
+    <a href="https://github.com/DiffusionMRITool/dmritool/zipball/master"> [ZIP]   </a>  
+    <a href="https://github.com/DiffusionMRITool/dmritool/tarball/master">[TAR.GZ] </a>
+    <p></p>
   </div>
 
 Or use git_:
