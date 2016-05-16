@@ -8,8 +8,8 @@
 # MKL_FOUND, If false, do not try to use MKL; if true, the macro definition USE_MKL is added.
 # Set the include path
 
-if ($ENV{MKLROOT})
-  set(MKLROOT_PATH $ENV{MKLROOT}/../..)
+if (EXISTS $ENV{MKLROOT})
+  set(MKLROOT_PATH $ENV{MKLROOT}/..)
 endif()
 
 if (NOT MKLROOT_PATH)
@@ -17,8 +17,8 @@ if (NOT MKLROOT_PATH)
     set(MKLROOT_PATH "C:/Program Files (x86)/Intel/Composer XE" CACHE PATH "Where the MKL are stored")
   else ( WIN32 )
     find_path(MKL_INCLUDE_DIR mkl_cblas.h 
-      /opt/intel/mkl/*/include
-      $ENV{HOME}/intel/*/include
+      /opt/intel/mkl/include
+      $ENV{HOME}/intel/mkl/include
       /usr/include
       /usr/local/include
       )

@@ -53,16 +53,17 @@ set(VTK_LIBRARIES_back ${VTK_LIBRARIES})
 
 find_package(ITK 4 REQUIRED)
 include(${ITK_USE_FILE})
+set(ITK_LIBRARIES_back ${ITK_LIBRARIES})
 
 find_package(GenerateCLP REQUIRED)
 include(${GenerateCLP_USE_FILE})
 
 set(VTK_LIBRARIES ${VTK_LIBRARIES_back})
-set(ITK_FOUND TRUE)
+set(ITK_LIBRARIES ${ITK_LIBRARIES_back})
 
 find_path(MKL_INCLUDE_DIR mkl_cblas.h 
-  /opt/intel/mkl/*/include
-  $ENV{HOME}/intel/*/include
+  /opt/intel/mkl/include
+  $ENV{HOME}/intel/mkl/include
   /usr/include
   /usr/local/include
   )
