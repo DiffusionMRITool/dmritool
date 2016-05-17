@@ -5,7 +5,9 @@
   <description>Single and multi-shell sampling scheme estimation using Iterative Maximum Overlap Construction (IMOC).\n\
     Examples: \n\
     SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 28,28,28 --tessOrder 7 \n\
-    SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 30 --tessOrder 7 
+    SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 30 --tessOrder 7 \n\
+    SphereTessellator --tessorder 8 --hemisphere grad_t8.txt \n\
+    SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 60,90 --fineOrientations grad_t8.txt
   </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
@@ -47,7 +49,7 @@
     <integer>
       <name>_Order</name>
       <label>Tessellation Order</label>
-      <description>Tessellation order for the fine orientations.</description>
+      <description>Tessellation order for the fine orientations (no more than 7).</description>
       <longflag>tessOrder</longflag>
       <default>7</default>
     </integer>

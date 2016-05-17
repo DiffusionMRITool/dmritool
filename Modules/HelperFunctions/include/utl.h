@@ -147,7 +147,7 @@ ReadGrad(const int tess=3, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, con
   case 7 :
     return ReadGrad<T>(CreateExpandedPath(DirectionsT7), NoSymmetricDuple, mode, flipx, flipy, flipz);
   default :
-    utlAssert(false, "tess should be 1, 2, 3, 4, 5, 6, 7");
+    utlGlobalException(true, "tess should be 1, 2, 3, 4, 5, 6, 7");
     return utl_shared_ptr<NDArray<T,2> > ();
     }
 }
