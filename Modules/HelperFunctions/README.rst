@@ -27,14 +27,13 @@ See :ref:`file dependency <dependency>`.
 
 To build codes using ``utl::NDArray``, you need to have MKL_ or OpenBlas_ + Lapack_.
 
--  MKL_ once was free for `non-commercial usage <https://software.intel.com/en-us/non-commercial-software-development>`__ 
-   in linux, which includes functions of blas and lapack. 
-   However now it is not free. 
--  Without MKL_, OpenBlas_ + Lapack_ can be a good alternative. 
--  If OpenBlas_ is used for multi-thread applications, please make sure
-   that you build OpenBlas_ correctly or set related environment variables. 
-   See `FAQ of openblas <https://github.com/xianyi/OpenBLAS/wiki/faq#multi-threaded>`__.
--  Suggested building command for OpenBlas_ used in DMRITOOL_:
+
+-  MKL_ is free for students, educators, academic researchers and open source contributors. 
+   See `the free download link <https://software.intel.com/en-us/qualify-for-free-software>`__. 
+   OpenBlas_ and Lapack_ are always free and easy to use. 
+-  If you choose OpenBlas_ + Lapack_, you can use them from system repositories. 
+   In this case, you need to set environment variables correctly. 
+   See `FAQ of OpenBlas <https://github.com/xianyi/OpenBLAS/wiki/faq#multi-threaded>`__.
 
    ::
 
