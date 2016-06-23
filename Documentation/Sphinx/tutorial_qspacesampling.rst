@@ -3,7 +3,7 @@ Sampling In Q-Space
 ===================
 
 .. meta::
-   :description: tutorial on sampling in q-space
+   :description: tutorial on sampling in q-space for diffusion MRI
 .. include:: meta_keywords.txt
 .. include:: links.inc
 

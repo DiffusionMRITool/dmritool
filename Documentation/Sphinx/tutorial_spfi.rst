@@ -59,7 +59,7 @@ SPFI can be seen as a generalization of Q-Ball Imaging [Tuch2004]_. Compared to 
 Compared to Diffusion spectrum imaging (DSI), SPFI requires relatively less number of samples and lower b values. 
 SPFI uses analytical transforms, avoiding numerical Fourier transform and numerical integral in DSI. 
 
-A typical sampling scheme for SPFI has 2 or 3 b-values, maximal b value more than 3000 s/mm^2, and each shell has more than 30 samples. 
+A typical sampling scheme for SPFI has 2 or 3 b-values, maximal b value more than 3000 :math:`s/mm^2`, and each shell has more than 30 samples. 
 For example, b values are 1500 and 3000, 40 samples per shell. 
 The samples in different shell are better to be staggered.  
 See :ref:`the tutorial on uniform sampling scheme <uniformsampling>`.
@@ -95,7 +95,7 @@ Reconstruction of SPF coefficients using DL-SPFI (with the default scale).
   SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-7
 
 * The above commend is to perform DL-SPFI using SH rank 8 and radial rank 4, regularization parameter lambda 1e-7. 
-* It uses default scale :math:`\zeta = 1.0 / (8 \pi^2 \tau D_0)`, default mean diffusivity :math:`D_0=0.7\times 10^{-3}` for all voxels. You can set default mean diffusivity in ``--md0``
+* It uses default scale :math:`\zeta = 1.0 / (8 \pi^2 \tau D_0)`, default mean diffusivity :math:`D_0=0.7\times 10^{-3} mm^2/s` for all voxels. You can set default mean diffusivity in ``--md0``
 * You can try different regularization ``lamdaL1`` around :math:`1e-6` in range :math:`[1e-8, 1e-5]`
 * For real data or general synthetic data with unknown mean diffusivity, 
   It is better to estimate mean diffusivity and adaptively set scale for each voxel. 
@@ -240,7 +240,7 @@ HCP data
 --------
 
 We downloaded a preprocessed subject data (ID: 100307) from `HCP data <http://www.humanconnectome.org/documentation/Q3/>`__. 
-The data has three shells with b values of 1000, 2000, 3000 s/mm^2, 90 samples per shell. 
+The data has three shells with b values of 1000, 2000, 3000 :math:`s/mm^2`, 90 samples per shell. 
 It also contains 18 volumes with ``b=0``, thus totally it has 288 volumes. 
 Considering the data size is big ``(145, 174, 145, 288)``, we cropped only one slice for this tutorial. 
 You can download it from `this link <https://www.dropbox.com/s/ct8hsbn8wfp1diw/HCP_100307_c88.zip?dl=0>`__.
