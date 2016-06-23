@@ -55,20 +55,17 @@ def generate_cmd_helpfiles(cmds, outfolder):
     recheck = re.compile(r"Description:")
     for cmd in cmds:
         cmd_help = subprocess.check_output((cmd, '-h'))
-        # cmd_help = '\nDescription: adadad\n'
-
-        outfile = open(os.path.join(outfolder, cmd+'.txt'), 'w')
-        # outfile.write(cmd + ' -h\n\n')
-        outfile.write(cmd_help)
-        outfile.close()
 
         rstfile_cmd_name = cmd + '.rst'
         rstfile_cmd = open(os.path.join(outfolder, rstfile_cmd_name), 'w')
-        rstfile_cmd.write(''.join([cmd, "\n", len(cmd)*"=", "\n\n",
-                        ".. literalinclude:: ", cmd, ".txt"]))
+        rstfile_cmd.write(''.join([cmd, "\n", len(cmd)*"=", "\n\n"]))
+        rstfile_cmd.write('::\n\n')
+
+        cmd_help_lines = cmd_help.split('\n')
+        rstfile_cmd.write('\n'.join(['  ' + line_i for line_i in cmd_help_lines]))
+
         rstfile_cmd.close()
 
-        cmd_help_lines = cmd_help.split('\n');
         description_found = False
         for line in cmd_help_lines:
             if not line and not description_found:
