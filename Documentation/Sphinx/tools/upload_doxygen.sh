@@ -1,6 +1,6 @@
 #!/bin/bash - 
 
-repo="https://github.com/DiffusionMRITool/dmritool-doxygen.git"
+repo="git@github.com:DiffusionMRITool/dmritool-doxygen.git"
 
 USAGE="$0 DMRITOOL_BUILD_DIR"
 BUILD_DIR=$1

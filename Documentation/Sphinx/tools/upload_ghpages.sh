@@ -1,6 +1,6 @@
 #!/bin/bash - 
 
-repo="https://github.com/DiffusionMRITool/DiffusionMRITool.github.io.git"
+repo="git@github.com:DiffusionMRITool/DiffusionMRITool.github.io.git"
 
 DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
 HTML_DIR=${DIR}/../_build/html
