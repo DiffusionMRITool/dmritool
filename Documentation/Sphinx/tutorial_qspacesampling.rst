@@ -83,7 +83,7 @@ The `spherical code <http://mathworld.wolfram.com/SphericalCode.html>`__ formula
    \max_{\{\uu_i \in \mathbb{S}^2 \}_{i=1}^K} d(\{\uu_i\}_{i=1}^K)
 
 This formulation to solve P-C-S is well studied in mathematics. 
-[Toth1949]_ gave a upper bound for the covering radius. 
+[Toth1949]_ gave an upper bound for the covering radius. 
 [Conway1996]_ proposed a way to solve the above optimization problem by iteratively approximating the above objective function. 
 Dr. Sloane, one of the authors of [Conway1996]_, collected `some best known solutions for P-C-S <http://neilsloane.com/grass/dim3/>`__.
 These schemes have been stored in ``Data/Packing`` folder in dmritool. 
