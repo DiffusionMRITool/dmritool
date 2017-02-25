@@ -8,10 +8,10 @@ License
 .. include:: meta_keywords.txt
 .. include:: links.inc
 
-License for DMRITOOL
+License for DMRITool
 ====================
 
-DMRITOOL_ is a free open source software. It is currently under the GPL_, 
+DMRITool_ is a free open source software. It is currently under the GPL_, 
 because it uses GSL_ for mathematical special functions and spams_ for some optimization problems.
 
 The software under the license is distributed on an "as is" basis, without warranties. 

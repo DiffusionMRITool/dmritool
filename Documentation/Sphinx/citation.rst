@@ -9,9 +9,9 @@ Citation
 
 .. _cite:
 
-Citations will help us support the continued development of DMRITOOL_.
+Citations will help us support the continued development of DMRITool_.
 
-If you use the methods and codes released in DMRITOOL_, please cite the
+If you use the methods and codes released in DMRITool_, please cite the
 related references.
 
 

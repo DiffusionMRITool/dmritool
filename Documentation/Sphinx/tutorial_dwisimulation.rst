@@ -16,12 +16,12 @@ Generate DWI data from a configuration file
 .. .. |eapTrue_r0.015| image:: _static/tutorials/dwisimulation/eapTrue_r0.015.png
 .. .. |eapTrue_r0.015| image:: .tutorial_dwisimulation/eapTrue_r0.015.png
 ..    :alt: eapTrue_r0.015
-..    :scale: 40%
+..    :scale: 80%
 
 .. .. |odfTrue| image:: _static/tutorials/dwisimulation/odfTrue.png
 .. .. |odfTrue| image:: .tutorial_dwisimulation/odfTrue.png
 ..    :alt: odfTrue
-..    :scale: 40%
+..    :scale: 80%
 
 We provides :doc:`DWISimulator <commands/DWISimulator>` routine to generate DWI data from a customizable configuration file.  
 See example codes in ``Example/test.sh`` and example configuration files in ``Example`` folder. 
@@ -53,7 +53,7 @@ The you can visualize the ground truth of EAP profiles and ODFs via :doc:`vtkvie
   VTKPolyData.py --vtk eapTrue_r0.015_vis.vtk --png eapTrue_r0.015.png  --zoom 1.3
 
 .. figure:: .tutorial_dwisimulation/eapTrue_r0.015.png
-   :scale: 40%
+   :scale: 80%
    :alt: eapTrue_r0.015.png
    :align: center
    
@@ -65,7 +65,7 @@ The you can visualize the ground truth of EAP profiles and ODFs via :doc:`vtkvie
   VTKPolyData.py --vtk odfTrue_vis.vtk --png odfTrue.png --zoom 1.3
 
 .. figure:: .tutorial_dwisimulation/odfTrue.png
-   :scale: 40%
+   :scale: 80%
    :alt: odfTrue.png
    :align: center
    

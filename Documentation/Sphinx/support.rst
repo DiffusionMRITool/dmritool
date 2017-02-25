@@ -8,13 +8,13 @@ Support
 .. include:: meta_keywords.txt
 .. include:: links.inc
 
-Thank you for your interests on DMRITOOL_. 
+Thank you for your interests on DMRITool_. 
 We are glad to hear your feedback and support you.
 
 Mailing List
 ============
 
-If you have questions about DMRITOOL_, please contact us via dmritool-discussion@www.nitrc.org. 
+If you have questions about DMRITool_, please contact us via dmritool-discussion@www.nitrc.org. 
 We are glad to answer your questions when you post them to the mailing list. 
 For support and discussion, please subscribe to the dmritool-discussion_ mailing list by `nitrc <http://www.nitrc.org/projects/dmritool>`__. 
 

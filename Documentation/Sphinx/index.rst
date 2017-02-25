@@ -1,5 +1,5 @@
 ========================
-DMRITOOL's documentation
+DMRITool's documentation
 ========================
 
 .. meta::
@@ -19,13 +19,13 @@ DMRITOOL's documentation
 Introduction
 ============
 
-DMRITOOL_ is a **free** and **open source** toolbox for `diffusion MRI <http://en.wikipedia.org/wiki/Diffusion_MRI>`__ data processing. 
+DMRITool_ is a **free** and **open source** toolbox for `diffusion MRI <http://en.wikipedia.org/wiki/Diffusion_MRI>`__ data processing. 
 It is written in C++ with Matlab_ interface. 
-Currently DMRITOOL_ has no GUI. It only provides executables for command line usage. 
+Currently DMRITool_ has no GUI. It only provides executables for command line usage. 
 You can also use the released mex executables in matlab_. 
 
 
-With DMRITOOL_, you can: 
+With DMRITool_, you can: 
 
 * perform reconstruction/estimation of diffusion data, including diffusion weighted signal, 
   ensemble average propagator (EAP), diffusion orientation distribution function (dODF), 
@@ -35,8 +35,8 @@ With DMRITOOL_, you can:
 * visualize spherical function field (e.g. dODF field, EAP profile field)
 
 
-Citations will help us support the continued development of DMRITOOL_.
-If you use the methods and codes released in DMRITOOL_, please cite the
+Citations will help us support the continued development of DMRITool_.
+If you use the methods and codes released in DMRITool_, please cite the
 related references. See :doc:`citation page <citation>`.
 
 Download
@@ -65,9 +65,9 @@ Or use git_:
 Acknowledgements
 ================
 
-DMRITOOL_ is/was supported by the following research groups:
+DMRITool_ is/was supported by the following research groups:
 
-*  `Section on Tissue Biophysics and Biomimetics (STBB)`_, `National Institutes of Health`_
+*  `Section on Quantitative Imaging and Tissue Sciences (SQITS)`_, `National Institutes of Health`_
 *  `MIND Lab`_, `IDEA Group`_, `University of North Carolina at Chapel Hill`_
 *  `Athena project team`_, INRIA_
 *  `Brainnetome center`_, `Institute of Automation, Chinese Academy of Sciences`_
@@ -83,6 +83,7 @@ Users Documentation
 .. toctree::
    :maxdepth: 2
 
+   Home <self>
    news
    building
    tutorials
@@ -100,7 +101,7 @@ Developers Documentation
    :maxdepth: 2
 
    developers
-   doxygen
+   Doxygen Documentation <http://diffusionmritool.github.io/dmritool-doxygen>
    codemodules
 
 

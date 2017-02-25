@@ -1,19 +1,21 @@
 
-.. _DMRITOOL:  https://diffusionmritool.github.io
-.. _`DMRITOOL doxygen documentation`: https://diffusionmritool.github.io/dmritool-doxygen
+.. _DMRITool:  https://diffusionmritool.github.io
+.. _`DMRITool doxygen documentation`: https://diffusionmritool.github.io/dmritool-doxygen
 .. _`dmritool-discussion`:  http://www.nitrc.org/mailman/listinfo/dmritool-discussion
 
 .. Licenses
 .. _GPL: http://www.gnu.org/licenses/gpl.html
 
 .. Organizations
-.. _`Section on Tissue Biophysics and Biomimetics (STBB)`: http://stbb.nichd.nih.gov/index.html
+.. _`Section on Tissue Biophysics and Biomimetics (STBB)`: https://science.nichd.nih.gov/confluence/display/sqits/Home
+.. _SQITS: https://science.nichd.nih.gov/confluence/display/sqits/Home
+.. _`Section on Quantitative Imaging and Tissue Sciences (SQITS)`: https://science.nichd.nih.gov/confluence/display/sqits/Home
 .. _`National Institutes of Health`: http://www.nih.gov
 .. _`Athena project team`: https://team.inria.fr/athena
 .. _INRIA: https://www.inria.fr/en
 .. _`Brainnetome center`: http://www.brainnetome.org/en
 .. _`Institute of Automation, Chinese Academy of Sciences`: http://english.ia.cas.cn
-.. _`MIND Lab`: http://www.unc.edu/~ptyap/index.html
+.. _`MIND Lab`: http://www.unc.edu/~ptyap
 .. _`IDEA Group`: https://www.med.unc.edu/bric/ideagroup
 .. _`University of North Carolina at Chapel Hill`: http://www.unc.edu
 
@@ -42,6 +44,7 @@
 .. _nrrd: http://teem.sourceforge.net/nrrd/index.html
 .. _Doxygen: http://www.doxygen.org
 .. _OpenMP: http://openmp.org/wp
+.. _C++11:  https://en.wikipedia.org/wiki/C%2B%2B11
 
 .. software
 .. _FSL: http://fsl.fmrib.ox.ac.uk/fsl/fslwiki

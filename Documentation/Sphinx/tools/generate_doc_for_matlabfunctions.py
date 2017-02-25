@@ -54,7 +54,7 @@ def write_helpdoc(doc, file, outputDir):
 
     f = open(os.path.join(outputDir, outfile+'.rst'), 'w')
     f.write(''.join([outfile, "\n", len(outfile)*"=", "\n\n"]))
-    f.write('::\n\n')
+    f.write('.. code-block:: none\n\n')
     cmd_help_lines = doc.split('\n')
     f.write('\n'.join(['  ' + line_i for line_i in cmd_help_lines]))
     f.close()

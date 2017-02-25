@@ -10,6 +10,7 @@ SRCDIR              = ../..
 CMDOUTPUTDIR        = commands
 MATFUNCDIR          = matlabfiles
 MATDEMOSDIR         = $(BUILDDIR)/html/demos
+SOURCE_VERSION      = $$(git describe --abbrev=8 --always)
 
 # Internal variables.
 PAPEROPT_a4         = -D latex_paper_size=a4
@@ -79,8 +80,8 @@ upload_doxygen:
 	@echo "Upload doxygen finished."
 
 html:
-	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html
-	@echo
+	$(SPHINXBUILD) -b html $(ALLSPHINXOPTS) $(BUILDDIR)/html -D version=$(SOURCE_VERSION)
+	@echo 
 	@echo "Build finished. The HTML pages are in $(BUILDDIR)/html."
 
 dirhtml:

@@ -16,7 +16,8 @@ def which(exe):
     return None
 
 def is_exe(exe):
-    return which(exe) is not None
+    exe_real = which(exe)
+    return (exe_real is not None) and (os.access(exe_real, os.X_OK))
 
 def get_subdirectories(a_dir):
     return [name for name in os.listdir(a_dir)
@@ -33,12 +34,18 @@ def generate_cmd_lists(appfolder):
     apps = []
     for app_category in app_categories:
         app_list = glob.glob(os.path.join(appfolder, app_category, '*.cxx'))
-        app_list = [os.path.splitext(os.path.basename(name))[0] for name in app_list]
+        if app_category=='Scripts':
+            app_list = glob.glob(os.path.join(appfolder, app_category, '*.py'))
+            app_list = [os.path.basename(name) for name in app_list]
+        else:
+            app_list = [os.path.splitext(os.path.basename(name))[0] for name in app_list]
 
         # add vtkviewer into Visualization
         if app_category=='Visualization':
             app_list.append('vtkviewer')
             app_list.append('VTKPolyData.py')
+            app_list.append('CombineVTKPolyData.py')
+            app_list.append('MeshFromLocalFrame.py')
 
         app_list = [name for name in app_list if is_exe(name)]
         app_list = sorted(app_list)
@@ -59,7 +66,7 @@ def generate_cmd_helpfiles(cmds, outfolder):
         rstfile_cmd_name = cmd + '.rst'
         rstfile_cmd = open(os.path.join(outfolder, rstfile_cmd_name), 'w')
         rstfile_cmd.write(''.join([cmd, "\n", len(cmd)*"=", "\n\n"]))
-        rstfile_cmd.write('::\n\n')
+        rstfile_cmd.write('.. code-block:: none\n\n')
 
         cmd_help_lines = cmd_help.split('\n')
         rstfile_cmd.write('\n'.join(['  ' + line_i for line_i in cmd_help_lines]))

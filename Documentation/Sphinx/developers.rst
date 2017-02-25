@@ -7,9 +7,9 @@ Developers
 .. include:: meta_keywords.txt
 .. include:: links.inc
 
-DMRITOOL core development team includes:
+DMRITool core development team includes:
 
-* **Jian Cheng**, `Section on Tissue Biophysics and Biomimetics (STBB)`_, `National Institutes of Health`_
+* **Jian Cheng**, `Section on Quantitative Imaging and Tissue Sciences (SQITS)`_, `National Institutes of Health`_
 
 
 Some wonderful contributors:
@@ -20,7 +20,7 @@ Some wonderful contributors:
 People who are interested in diffusion MRI methodology are welcome to join the development team. 
 We can collaborate via `github <https://github.com/DiffusionMRITool/dmritool>`__. 
 
-Online web statistics on the DMRITOOL_ development activity are available below:
+Online web statistics on the DMRITool_ development activity are available below:
 
 .. raw:: html
    

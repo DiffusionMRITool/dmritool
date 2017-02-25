@@ -1,4 +1,4 @@
-DMRITOOL 
+DMRITool 
 ========
 
 [![Build Status](https://travis-ci.org/DiffusionMRITool/dmritool.svg?branch=master)](https://travis-ci.org/DiffusionMRITool/dmritool)
@@ -6,10 +6,10 @@ DMRITOOL
 Introduction
 ============
 
-[DMRITOOL](http://diffusionmritool.github.io/) is a **free** and **open source** toolbox for [diffusion MRI](http://en.wikipedia.org/wiki/Diffusion_MRI) data processing. 
+[DMRITool](http://diffusionmritool.github.io/) is a **free** and **open source** toolbox for [diffusion MRI](http://en.wikipedia.org/wiki/Diffusion_MRI) data processing. 
 It is written in C++ with matlab interface. 
 
-With DMRITOOL, you can:
+With DMRITool, you can:
 
 * perform reconstruction/estimation of diffusion data, including diffusion weighted signal, ensemble average propagator (EAP), diffusion orientation distribution function (dODF), and some meaningful scalar maps, etc.
 * generate spherically uniform sampling schemes for single or multiple shells.
@@ -21,7 +21,7 @@ With DMRITOOL, you can:
 Website
 =======
 
-Please check the [DMRITOOL website](http://diffusionmritool.github.io/) for documentation and more information.
+Please check the [DMRITool website](http://diffusionmritool.github.io/) for documentation and more information.
 
 Download
 ========
@@ -38,17 +38,17 @@ See [this page](http://diffusionmritool.github.io/building.html) for building th
 Citation
 ========
 
-Citations will help us support the continued development of DMRITOOL. 
+Citations will help us support the continued development of DMRITool. 
 
-If you use the methods and codes released in DMRITOOL, please cite the related references. 
+If you use the methods and codes released in DMRITool, please cite the related references. 
 See [the citation page](http://diffusionmritool.github.io/citation.html) for details. 
 
 Acknowledgements
 ================
 
-DMRITOOL is/was supported by the following research groups:
+DMRITool is/was supported by the following research groups:
 
-* [Section on Tissue Biophysics and Biomimetics (STBB)](http://stbb.nichd.nih.gov/index.html), [National Institutes of Health](http://www.nih.gov/)
+* [Section on Quantitative Imaging and Tissue Sciences (SQITS)](https://science.nichd.nih.gov/confluence/display/sqits/Home), [National Institutes of Health](http://www.nih.gov/)
 * [MIND Lab](http://www.unc.edu/~ptyap/index.html), [IDEA Group](https://www.med.unc.edu/bric/ideagroup), [University of North Carolina at Chapel Hill](http://www.unc.edu/)
 * [Athena project team](https://team.inria.fr/athena/), [INRIA](http://www.inria.fr/)
 * [Brainnetome center](http://www.brainnetome.org/en/), [Institute of Automation, Chinese Academy of Sciences](http://english.ia.cas.cn/)
@@ -56,7 +56,7 @@ DMRITOOL is/was supported by the following research groups:
 License
 =======
 
-DMRITOOL is a free open source software. 
+DMRITool is a free open source software. 
 It is currently under the [GNU General Public License](http://www.gnu.org/licenses/gpl.html), 
 because it uses [GSL](http://www.gnu.org/software/gsl/) for mathematical special functions and [SPAMS](http://spams-devel.gforge.inria.fr/) for some optimization problems. 
 
