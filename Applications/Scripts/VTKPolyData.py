@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-Description: Render a list of VTK data  and (or) an nifti image, then view or save PNG or save WebGL.
+Description: Render a list of VTK data  and (or) a nifti image, then view or save PNG or save WebGL.
 The code is modified from ITKExamples.
 
 When an output PNG or WebGL file is not specified, an interactive windows is
@@ -26,85 +26,30 @@ import argparse
 import sys
 
 import vtk
-
+import utlVTK
 
 
 def arg_values(value, typefunc, numberOfValues):
     '''set arguments based using comma. If numberOfValues<0, it supports arbitrary number of inputs.'''
     values = value.split(',')
-    if numberOfValues>0 and len(values) != numberOfValues:
+    if numberOfValues > 0 and len(values) != numberOfValues:
         raise argparse.ArgumentError
     return map(typefunc, values)
 
+
 def arg_bool(parser, boolarg, defaultbool, helpdoc):
     '''set bool argment'''
-    parser.add_argument('--' + boolarg, dest=boolarg, action='store_true', help='with ' + boolarg +'. '+ helpdoc)
-    parser.add_argument('--no-' + boolarg, dest=boolarg, action='store_false', help='without ' + boolarg +'. '+ helpdoc)
+    parser.add_argument('--' + boolarg, dest=boolarg, action='store_true', help='with ' + boolarg + '. ' + helpdoc)
+    parser.add_argument('--no-' + boolarg, dest=boolarg, action='store_false', help='without ' + boolarg + '. ' + helpdoc)
     exec ''.join(['parser.set_defaults(', boolarg, '=', 'True' if defaultbool else 'False', ')'])
-
-def ConvertDataSetToSurface(algorithmOutputPort):
-    dataSetSurfaceFilter = vtk.vtkDataSetSurfaceFilter()
-    dataSetSurfaceFilter.SetInputConnection(algorithmOutputPort)
-    dataSetSurfaceFilter.UseStripsOn()
-    dataSetSurfaceFilter.Update()
-    polyData = vtk.vtkPolyData()
-    polyData.ShallowCopy(dataSetSurfaceFilter.GetOutput())
-    return polyData
-
-def ReadLegacyVTK(file_name):
-    '''Support POLYDATA and some other vtk data (*.vtk).'''
-    reader = vtk.vtkDataSetReader()
-    reader.SetFileName(file_name)
-    reader.Update()
-    if None != reader.GetPolyDataOutput():
-        polyData = vtk.vtkPolyData()
-        polyData.ShallowCopy(reader.GetPolyDataOutput())
-        return polyData, 'PolyData'
-    if None != reader.GetUnstructuredGridOutput():
-        return ConvertDataSetToSurface(reader.GetOutputPort()), 'UnstructuredGrid'
-    if None != reader.GetStructuredPointsOutput():
-        return ConvertDataSetToSurface(reader.GetOutputPort()), 'StructuredPoints'
-    if None != reader.GetStructuredGridOutput():
-        return ConvertDataSetToSurface(reader.GetOutputPort()), 'StructuredGrid'
-    if None != reader.GetRectilinearGridOutput():
-        return ConvertDataSetToSurface(reader.GetOutputPort()), 'RectilinearGrid'
-    else:
-        raise Exception("Unsupported type!\n")
-
-def PrintImage(image):
-    '''print image'''
-    dim = image.GetDimensions()
-    for i in range(dim[0]):
-        for j in range(dim[1]):
-            for k in range(dim[2]):
-                if image.GetScalarComponentAsFloat(i, j, k, 0)>0:
-                    print i, j, k, image.GetScalarComponentAsFloat(i, j, k, 0)
-
-def FlipVTKImageData(image, image_flip):
-    '''flip image for visualization.'''
-
-    if image_flip[0]==1 and image_flip[1]==1 and image_flip[2]==1:
-        return image
-
-    image2 = vtk.vtkImageData()
-    image2.DeepCopy(image)
-
-    for i in range(len(image_flip)):
-        if image_flip[i]==-1:
-            flipFilter = vtk.vtkImageFlip()
-            flipFilter.SetInputData(image2)
-            flipFilter.SetFilteredAxis(i)
-            flipFilter.Update()
-            image2 = flipFilter.GetOutput()
-
-    return image2
 
 
 def main():
 
-    #  work for arguments with minus sign
+    # work for arguments with minus sign
     for i, arg in enumerate(sys.argv):
-        if (arg[0] == '-') and arg[1].isdigit(): sys.argv[i] = ' ' + arg
+        if (arg[0] == '-') and arg[1].isdigit():
+            sys.argv[i] = ' ' + arg
 
     parser = argparse.ArgumentParser(description=__doc__,  formatter_class=argparse.RawTextHelpFormatter)
 
@@ -116,14 +61,16 @@ def main():
 
     # nifti data
     parser.add_argument('--image', help='nifti image file', nargs=1)
-    parser.add_argument('--image-flip', help='flip x,y,z axis in image. Default: (1,1,1)', default=(1,1,1),
-                        type=(lambda value: arg_values(value, int, 3)), metavar=('flipZ,flipY,flipZ') )
+    parser.add_argument('--image-flip', help='flip x,y,z axis in image. Default: (1,1,1)', default=(1, 1, 1),
+                        type=(lambda value: arg_values(value, int, 3)), metavar=('flipZ,flipY,flipZ'))
+    parser.add_argument('--image-opacity', help='image opacity', type=float, metavar=('opacity'), default=0.5)
     arg_bool(parser, 'interpolate', False, 'Image interpolation.')
     parser.add_argument('--sliceX', help='x-axis slices of the image', type=(lambda value: arg_values(value, int, -1)), metavar=('x1,x2,...'))
     parser.add_argument('--sliceY', help='y-axis slices of the image', type=(lambda value: arg_values(value, int, -1)), metavar=('y1,y2,...'))
     parser.add_argument('--sliceZ', help='z-axis slices of the image', type=(lambda value: arg_values(value, int, -1)), metavar=('z1,z2,...'))
-    parser.add_argument('--valuerange', help='lowest and highest contrast value for the image visualization. If not set, use the minimal and maximal values in the image.',
-                        type=(lambda value: arg_values(value, float, 2)), metavar=('lowest value, highest value') )
+    parser.add_argument('--image-range', help='lowest and highest contrast value for the image visualization. If not set, use the minimal and maximal values in the image. \
+                        Default: (-1,-1) means the (min,max) from the image', default=(-1, -1),
+                        type=(lambda value: arg_values(value, float, 2)), metavar=('lowest value, highest value'))
 
     # camera
     parser.add_argument('--angle', help='azimuth and elevation for camera',
@@ -135,9 +82,9 @@ def main():
     parser.add_argument('--view-up', help='Camera ViewUp',
                         type=(lambda value: arg_values(value, float, 3)), metavar=('x,y,z'))
     parser.add_argument('--bgcolor', help='back ground color',
-                        type=(lambda value: arg_values(value, float, 3)), metavar=('r,g,b'), default=(0,0,0))
-    parser.add_argument('--size', help='Window size in pixels. Default: (600,600)',default=(600,600),
-                        type=(lambda value: arg_values(value, int, 2)), metavar=('width,height') )
+                        type=(lambda value: arg_values(value, float, 3)), metavar=('r,g,b'), default=(0, 0, 0))
+    parser.add_argument('--size', help='Window size in pixels. Default: (600,600)', default=(600, 600),
+                        type=(lambda value: arg_values(value, int, 2)), metavar=('width,height'))
     parser.add_argument('--clipping-range', help='Window size in pixels',
                         type=(lambda value: arg_values(value, float, 2)), metavar=('near,far'))
 
@@ -148,8 +95,11 @@ def main():
     parser.add_argument('--webgl', help='File prefix for WebGL output',
                         metavar='webglFilePrefix')
 
+    parser.add_argument('--verbose', '-v', dest='verbose', action='store_true', help='verbose information')
+
     args = parser.parse_args()
-    # print args
+    if args.verbose:
+        print args
 
     if not args.vtk and not args.image:
         print "need inputs for --vtk and (or) --image"
@@ -157,13 +107,13 @@ def main():
 
     render_window = vtk.vtkRenderWindow()
     renderer = vtk.vtkRenderer()
-    renderer.SetBackground(args.bgcolor[0],args.bgcolor[1],args.bgcolor[2])
+    renderer.SetBackground(args.bgcolor[0], args.bgcolor[1], args.bgcolor[2])
     render_window.AddRenderer(renderer)
     render_window.SetSize(args.size)
 
     if args.vtk:
         for inputFile in args.vtk:
-            polyData, dataType = ReadLegacyVTK(inputFile)
+            polyData = utlVTK.readPolydata(inputFile)
 
             if args.frame:
                 frame_mapper = vtk.vtkDataSetMapper()
@@ -174,7 +124,6 @@ def main():
                 prop.SetRepresentationToWireframe()
                 prop.SetColor(0.0, 0.0, 1.0)
                 renderer.AddActor(frame_actor)
-
 
             if args.surface:
                 surface_mapper = vtk.vtkDataSetMapper()
@@ -200,7 +149,6 @@ def main():
                 prop.SetRepresentationToSurface()
                 renderer.AddActor(surface_actor)
 
-
     if args.image:
 
         imagefile = args.image[0]
@@ -213,13 +161,13 @@ def main():
         niftiheader = reader.GetNIFTIHeader()
         im.SetOrigin(-niftiheader.GetQOffsetX(), -niftiheader.GetQOffsetY(), niftiheader.GetQOffsetZ())
 
-        #  for 2D image, set sliceX or sliceY or slizeZ automatically
+        # for 2D image, set sliceX or sliceY or slizeZ automatically
         x1, x2, y1, y2, z1, z2 = im.GetExtent()
-        if x1==x2:
+        if x1 == x2:
             args.sliceX = [x1]
-        if y1==y2:
+        if y1 == y2:
             args.sliceY = [y1]
-        if z1==z2:
+        if z1 == z2:
             args.sliceZ = [z1]
 
         # for 3D image, slice needs to be set manually
@@ -227,16 +175,34 @@ def main():
             raise Exception("need to choose one or more slice for the 3D image!\n")
 
         # flip image if needed
-        image = FlipVTKImageData(im, args.image_flip)
+        image = utlVTK.flipVTKImageData(im, args.image_flip)
 
+        # opacity
+        image_opacity = args.image_opacity
+
+        # lut
         lut = vtk.vtkLookupTable()
-        valueRange = args.valuerange if args.valuerange else image.GetScalarRange()
+        if args.image_range[0] == -1 or args.image_range[1] == -1:
+            valueRange = image.GetScalarRange()
+        vr0 = args.image_range[0] if args.image_range[0] != -1 else valueRange[0]
+        vr1 = args.image_range[1] if args.image_range[1] != -1 else valueRange[1]
+        valueRange = (vr0, vr1)
         lut.SetTableRange(valueRange[0], valueRange[1])
         lut.SetSaturationRange(0, 0)
         lut.SetHueRange(0, 0)
         lut.SetValueRange(0, 1)
         lut.SetRampToLinear()
         lut.Build()
+
+        if args.verbose:
+            print('image_opacity: ', image_opacity)
+            print('valueRange: ', valueRange)
+            if args.sliceX:
+                print('sliceX: ', args.sliceX)
+            if args.sliceY:
+                print('sliceY: ', args.sliceY)
+            if args.sliceZ:
+                print('sliceZ: ', args.sliceZ)
 
         planeColors = vtk.vtkImageMapToColors()
         planeColors.SetInputData(image)
@@ -251,6 +217,7 @@ def main():
                 act.SetInputData(planeColors.GetOutput())
                 act.SetDisplayExtent(x, x, y1, y2, z1, z2)
                 act.InterpolateOn() if args.interpolate else act.InterpolateOff()
+                act.SetOpacity(image_opacity)
                 assem.AddPart(act)
 
         if args.sliceY:
@@ -259,6 +226,7 @@ def main():
                 act.SetInputData(planeColors.GetOutput())
                 act.SetDisplayExtent(x1, x2, y, y, z1, z2)
                 act.InterpolateOn() if args.interpolate else act.InterpolateOff()
+                act.SetOpacity(image_opacity)
                 assem.AddPart(act)
 
         if args.sliceZ:
@@ -267,21 +235,21 @@ def main():
                 act.SetInputData(planeColors.GetOutput())
                 act.SetDisplayExtent(x1, x2, y1, y2, z, z)
                 act.InterpolateOn() if args.interpolate else act.InterpolateOff()
+                act.SetOpacity(image_opacity)
                 assem.AddPart(act)
 
         renderer.AddViewProp(assem)
-
 
     render_window_interactor = vtk.vtkRenderWindowInteractor()
     render_window_interactor.SetRenderWindow(render_window)
     interactorStyle = render_window_interactor.GetInteractorStyle()
     interactorStyle.SetCurrentStyleToTrackballCamera()
 
+    render_window_interactor.Initialize()
 
     render_window.Render()
 
     camera = renderer.GetActiveCamera()
-
 
     def print_camera_position(interactor, event):
         def cmd_line_friendly(xyz):
@@ -319,7 +287,6 @@ def main():
         camera.Roll(args.angle[0])
         camera.Elevation(args.angle[1])
 
-
     camera.Zoom(args.zoom)
 
     # re-render after setting camera
@@ -328,7 +295,7 @@ def main():
     if args.png:
         window_to_image = vtk.vtkWindowToImageFilter()
         window_to_image.SetInput(render_window)
-        window_to_image.SetMagnification(2)
+        #  window_to_image.SetMagnification(2)
         png_writer = vtk.vtkPNGWriter()
         png_writer.SetInputConnection(window_to_image.GetOutputPort())
         png_writer.SetFileName(args.png)
