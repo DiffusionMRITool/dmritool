@@ -151,34 +151,34 @@ But please set the scale in SPF basis correctly based the mean diffusivity used 
 
 ::
 
-    SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier
-    SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4
+    SPFToProfile signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier
+    SPFToODF signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4
 
 * Analytically obtain EAP profiles and ODFs (using adaptive scale based on adaptive mean diffusivity). 
 
 .. code-block:: shell
 
-    SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier --mdImage D_sh4_ra1.nii.gz
-    SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+    SPFToProfile signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier --mdImage D_sh4_ra1.nii.gz
+    SPFToODF signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
 * Visualization of EAP profiles and ODFs. 
 
 .. code-block:: shell
   
-    MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 8e-6
+    MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 8e-6
     VTKPolyData.py --vtk eap_r0.015_vis.vtk --png synthetic_eap_r0.015.png --zoom 1.3
-    MeshFromSHCoefficientsConverter odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
+    MeshFromSHCoefficients odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
     VTKPolyData.py --vtk odf_vis.vtk --png synthetic_odf.png --zoom 1.3
 
 .. figure:: .tutorial_spfi/synthetic_eap_r0.015.png
-   :scale: 40%
+   :scale: 80%
    :alt: synthetic_eap_r0.015.png
    :align: center
    
    **eap_r0.015**
 
 .. figure:: .tutorial_spfi/synthetic_odf.png
-   :scale: 40%
+   :scale: 80%
    :alt: synthetic_odf.png
    :align: center
    
@@ -194,20 +194,20 @@ See [Wu2007]_, [Cheng2010a]_, [ChengThesis2012]_.
   
 .. code-block:: shell
 
-    SPFToScalarMapConverter signalSPF.nii.gz rto.nii.gz --mapType RTO  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+    SPFToScalarMap signalSPF.nii.gz rto.nii.gz --mapType RTO  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
 * **Mean Squared Displacement (MSD)** is the variance of the probability, i.e. :math:`\int_{\mathbb{R}^3} P(R) R^TR d R`.   
 
 .. code-block:: shell
     
-    SPFToScalarMapConverter signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+    SPFToScalarMap signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
 * **Propagator Fractional Anisotropy (PFA)** is a generalization of FA for non-Gaussian EAP. 
   It is defined as the normalized L2 distance between the EAP to its nearest EAP. See [ChengThesis2012]_. 
     
 .. code-block:: shell
 
-    SPFToScalarMapConverter signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+    SPFToScalarMap signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
 * From the above estimated EAP profiles and ODFs, you can also generate **generalized FA (GFA)**. See [Tuch2004]_. 
 
@@ -217,16 +217,16 @@ See [Wu2007]_, [Cheng2010a]_, [ChengThesis2012]_.
     SHCoefficientsToGFA odf.nii.gz odf_gfa.nii.gz
 
 * We can visualize eap profile using scalar maps as background.
-  ``--valuerange`` is to control the contrast in visualization.
+  ``--image-range`` is to control the contrast in visualization.
   If it is not given, it maps the minimal value to black and the maximal value to white.
 
 .. code-block:: shell
 
-    VTKPolyData.py --vtk eap_r0.015_vis.vtk --image eap_r0.015_gfa.nii.gz --valuerange 0,1 --png synthetic_eap_r0.015_withgfa.png --zoom 1.3
+    VTKPolyData.py --vtk eap_r0.015_vis.vtk --image eap_r0.015_gfa.nii.gz --image-range 0,1 --png synthetic_eap_r0.015_withgfa.png --zoom 1.3
 
 
 .. figure:: .tutorial_spfi/synthetic_eap_r0.015_withgfa.png
-   :scale: 40%
+   :scale: 80%
    :alt: synthetic_eap_r0.015_withgfa.png
    :align: center
    
@@ -246,7 +246,7 @@ Considering the data size is big ``(145, 174, 145, 288)``, we cropped only one s
 You can download it from `this link <https://www.dropbox.com/s/ct8hsbn8wfp1diw/HCP_100307_c88.zip?dl=0>`__.
 
 
-Preprocess for DMRITOOL 
+Preprocess for DMRITool 
 -----------------------
 
 The data has already preprocessed. 
@@ -284,20 +284,20 @@ Obtain EAP profiles from the SPF coefficients, and obtain GFA of EAP profiles.
 
 ::
 
-  SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz  --radius 0.015 --ra 4 --sh 8 --mdImage D_sh4_ra1.nii.gz --fourier
+  SPFToProfile signalSPF.nii.gz eap_r0.015.nii.gz  --radius 0.015 --ra 4 --sh 8 --mdImage D_sh4_ra1.nii.gz --fourier
   SHCoefficientsToGFA eap_r0.015.nii.gz eap_r0.015_gfa.nii.gz
 
 Generate a coarse mesh (``--tessorder 3``) for visualization the EAP profiles in a whole slice. 
 
 ::
 
-  MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_visall.vtk --tessorder 3 --scale 1e-5 
+  MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_visall.vtk --tessorder 3 --scale 1e-5 
 
 Generate a fine mesh (``--tessorder 4``) for visualization the EAP profiles in a ROI. 
 
 ::
 
-  MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 --box 80,100,0,0,70,90
+  MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 --box 80,100,0,0,70,90
 
 You can use :doc:`VTKPolyData.py <commands/VTKPolyData.py>` or paraview_ to visualize the vtk files.
 
@@ -322,17 +322,17 @@ Analytical reconstruction of RTO, MSD and PFA maps.
 
 .. code-block:: shell
 
-  SPFToScalarMapConverter signalSPF.nii.gz rto.nii.gz --mapType RTO  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
-  SPFToScalarMapConverter signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
-  SPFToScalarMapConverter signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+  SPFToScalarMap signalSPF.nii.gz rto.nii.gz --mapType RTO  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+  SPFToScalarMap signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+  SPFToScalarMap signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
 
 You can use many tools to visualize the 3D volume, e.g. :doc:`VTKPolyData.py <commands/VTKPolyData.py>`. 
 Here are pictures for the scalar maps I got by ``fslview`` in FSL_. 
 
-===========================   ==========================      ============
- |HCP_RTO|                       |HCP_MSD|                      |HCP_PFA|
-  RTO map                         MSD map                       PFA map
-===========================   ==========================      ============
+===========   ===========     ===========
+ |HCP_RTO|     |HCP_MSD|       |HCP_PFA|
+  RTO map       MSD map         PFA map
+===========   ===========     ===========
 
 .. [Assemlal2009]  Haz-Edine Assemlal, David Tschumperle, Luc Brun, 
    `Efficient and robust computation of PDF features from diffusion MR signal <http://dx.doi.org/10.1016/j.media.2009.06.004>`__, Medical Image Analysis, vol 13, p. 715-729, 2009

@@ -34,7 +34,7 @@ See `dim description <http://nifti.nimh.nih.gov/nifti-1/documentation/nifti1fiel
 VectorImage
 -----------
 
-In DMRITOOL_, we mainly use VectorImage format e.g. `ITK::VectorImage\<double,3\> <http://www.itk.org/Doxygen/html/classitk_1_1VectorImage.html>`__ for data processing. 
+In DMRITool_, we mainly use VectorImage format e.g. `ITK::VectorImage\<double,3\> <http://www.itk.org/Doxygen/html/classitk_1_1VectorImage.html>`__ for data processing. 
 In this format, the values for the same voxel is stored continuously in memory. 
 We can still nifti format to store it.  
 We use this format because it is more efficient for processing 4D image data. 
@@ -76,7 +76,7 @@ It is possible to put gradient file and b values into the image header,
 as is done in NRRD_ format.  
 Then the 3 files (e.g. image data file, gradient file, b values) becomes a single file. 
 
-In DMRITOOL_, we choose to store the 3 files (e.g. image data file, gradient file, b values) separately, 
+In DMRITool_, we choose to store the 3 files (e.g. image data file, gradient file, b values) separately, 
 and the routines use a single text file which includes these 3 file names as input. 
 The data reconstruction routines all rely on this input format. 
 
