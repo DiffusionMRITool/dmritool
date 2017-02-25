@@ -34,6 +34,7 @@
 #include <vtkUnsignedCharArray.h>
 #include <vtkPointData.h>
 #include <vtkGlyph3D.h>
+#include <vtkCamera.h>
 
 #include <vtkWindowToImageFilter.h>
 #include <vtkPNGWriter.h>
@@ -384,6 +385,7 @@ main ( int argc, char *argv[] )
       renderer->AddActor(sphereActor.back());
       }
     }
+
   
   renderWindow->AddRenderer(renderer);
   renderWindow->SetSize(_Window[0],_Window[1]);
@@ -393,12 +395,15 @@ main ( int argc, char *argv[] )
   renderWindowInteractor->SetDesiredUpdateRate(25);
 
   renderWindow->Render();
+  
+  renderer->GetActiveCamera()->Roll(_Angle[0]);
+  renderer->GetActiveCamera()->Elevation(_Angle[1]);
 
   if (_PNGFile!="")
     {
     vtkSmartPointer<vtkWindowToImageFilter> windowToImage = vtkSmartPointer<vtkWindowToImageFilter>::New();
     windowToImage->SetInput(renderWindow);
-    windowToImage->SetMagnification(2);
+    // windowToImage->SetMagnification(2);
     vtkSmartPointer<vtkPNGWriter> pngWriter = vtkSmartPointer<vtkPNGWriter>::New();
     pngWriter->SetInputConnection(windowToImage->GetOutputPort());
     pngWriter->SetFileName(_PNGFile.c_str());

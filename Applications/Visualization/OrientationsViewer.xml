@@ -37,40 +37,40 @@
       <default>false</default>
     </boolean>
 
-    <float-vector>
+    <double-vector>
       <name>_BackgroundColor</name>
       <description>background color for the window</description>
       <longflag>bg</longflag>
       <default>0,0,0</default>
-    </float-vector> 
+    </double-vector> 
     
-    <float-vector>
+    <double-vector>
       <name>_Color</name>
       <description>color for each shell</description>
       <longflag>color</longflag>
       <default>1,1,1</default>
-    </float-vector> 
+    </double-vector> 
     
-    <float-vector>
+    <double-vector>
       <name>_OpacityMesh</name>
       <description>Opacity of the Delaunary mesh.</description>
       <longflag>opaMesh</longflag>
       <default>1.0</default>
-    </float-vector> 
+    </double-vector> 
     
-    <float-vector>
+    <double-vector>
       <name>_OpacitySphere</name>
       <description>Opacity of the sphere.</description>
       <longflag>opaSphere</longflag>
       <default>0.5</default>
-    </float-vector> 
+    </double-vector> 
     
-    <float-vector>
+    <double-vector>
       <name>_Radius</name>
       <description>radius of the sphere.</description>
       <longflag>radius</longflag>
       <default>1.0</default>
-    </float-vector> 
+    </double-vector> 
     
     <file multiple="true">
       <name>_RadiusFile</name>
@@ -79,19 +79,19 @@
       <channel>input</channel>
     </file>
     
-    <float>
+    <double>
       <name>_VertexPointSize</name>
       <description>size of vertex for points. </description>
       <longflag>sizeVertex</longflag>
       <default>5</default>
-    </float> 
+    </double> 
     
-    <float>
+    <double>
       <name>_SpherePointSize</name>
       <description>radius of sphere for points. </description>
       <longflag>radiusSphere</longflag>
       <default>0.04</default>
-    </float> 
+    </double> 
     
     <string-enumeration>
       <name>_PointType</name>
@@ -130,12 +130,19 @@
       <default>false</default>
     </boolean>
     
-    <float-vector>
+    <double-vector>
       <name>_Window</name>
       <description>window size.</description>
       <longflag>window</longflag>
       <default>600,600</default>
-    </float-vector> 
+    </double-vector> 
+    
+    <double-vector>
+      <name>_Angle</name>
+      <description>azimuth and elevation for camera.</description>
+      <longflag>angle</longflag>
+      <default>0.0,0.0</default>
+    </double-vector> 
     
   </parameters>
   
