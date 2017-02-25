@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 #
-# DMRITOOL documentation build configuration file, created by
+# DMRITool documentation build configuration file, created by
 # sphinx-quickstart on Sun Feb 15 00:41:06 2015.
 #
 # This file is execfile()d with the current directory set to its containing dir.
@@ -42,7 +42,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'DMRITOOL'
+project = u'DMRITool'
 copyright = u'DMRITool developers <dmritool-discussion@www.nitrc.org>'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -187,7 +187,7 @@ html_static_path = ['_static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'DMRITOOLdoc'
+htmlhelp_basename = 'DMRIToolDoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -210,7 +210,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-  ('index', 'DMRITOOL.tex', u'DMRITOOL Documentation',
+  ('index', 'DMRITool.tex', u'DMRITool Documentation',
    u'Jian Cheng', 'manual'),
 ]
 
@@ -254,7 +254,7 @@ for macro in f:
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'dmritool', u'DMRITOOL Documentation',
+    ('index', 'dmritool', u'DMRITool Documentation',
      [u'Jian Cheng'], 1)
 ]
 
@@ -268,8 +268,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-  ('index', 'DMRITOOL', u'DMRITOOL Documentation',
-   u'Jian Cheng', 'DMRITOOL', 'One line description of project.',
+  ('index', 'DMRITool', u'DMRITool Documentation',
+   u'Jian Cheng', 'DMRITool', 'One line description of project.',
    'Miscellaneous'),
 ]
 
