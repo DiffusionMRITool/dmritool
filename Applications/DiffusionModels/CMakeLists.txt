@@ -21,8 +21,8 @@ add_clp_application(ODFNormalization ODFNormalization ${ITK_LIBRARIES} ${GSL_LIB
 
 add_clp_application(SphericalPolarFourierImaging SphericalPolarFourierImaging ${BLAS_LIBRARIES} ${LAPACK_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES} )
 add_clp_application(MeanDiffusivityEstimator MeanDiffusivityEstimator ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
-add_clp_application(SPFToProfileConverter SPFToProfileConverter ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
-add_clp_application(SPFToODFConverter SPFToODFConverter ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
-add_clp_application(SPFToScalarMapConverter SPFToScalarMapConverter ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
+add_clp_application(SPFToProfile SPFToProfile ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
+add_clp_application(SPFToODF SPFToODF ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
+add_clp_application(SPFToScalarMap SPFToScalarMap ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 
 add_clp_application(ComputeSHCoefficientsOfDWIFromSymmetricTensor ComputeSHCoefficientsOfDWIFromSymmetricTensor ${ITK_LIBRARIES} ${GSL_LIBRARIES})

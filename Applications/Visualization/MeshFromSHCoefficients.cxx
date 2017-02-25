@@ -1,6 +1,6 @@
 /*=========================================================================
 
- Program:   Mesh From Basis Weights Converter
+ Program:   Mesh From Basis Weights 
 
  Copyright (c) Pew-Thian Yap, Jian Cheng. All rights reserved.
  See http://www.unc.edu/~ptyap/ for details.
@@ -12,13 +12,15 @@
  =========================================================================*/
 
 
-#include "itkTimeProbe.h"
 #include "itkMeshFromSHCoefficientsImageFilter.h"
-#include "MeshFromSHCoefficientsConverterCLP.h"
+#include "MeshFromSHCoefficientsCLP.h"
+
 #include "vtkPolyDataWriter.h"
+
+#include "itkCommandProgressUpdate.h"
+
 #include "utl.h"
 #include "utlVTKMacro.h"
-
 
 int
 main(int argc, char *argv[])
@@ -68,6 +70,9 @@ main(int argc, char *argv[])
   if (_ColorScheme == "DIRECTION") { filter->SetColorScheme(MeshCreatorType::DIRECTION); }
   if (_ColorScheme == "MAGNITUDE") { filter->SetColorScheme(MeshCreatorType::MAGNITUDE); }
 
+  itk::CommandProgressUpdate::Pointer observer =itk::CommandProgressUpdate::New();
+  if (_ShowProgressArg.isSet())
+    filter->AddObserver( itk::ProgressEvent(), observer );
   if (_SingleThreadArg.isSet())
     filter->SetNumberOfThreads(1);
   filter->SetDebug(_DebugArg.isSet());

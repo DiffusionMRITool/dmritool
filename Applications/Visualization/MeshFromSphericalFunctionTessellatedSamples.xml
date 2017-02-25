@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
-  <category>Converter</category>
+  <category>Visualization</category>
   <title>Mesh From Image with Spherical Samples</title>
   <description>Create a mesh from spherical samples using tessellation.\n\
     Examples: \n\

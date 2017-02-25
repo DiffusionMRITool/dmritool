@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
-  <category>Converter</category>
-  <title>Mesh From SH Coefficients Converter</title>
+  <category>Visualization</category>
+  <title>Mesh From SH Coefficients</title>
   <description>Create a mesh from spherical harmonics coefficients for visualization.\n\
     Examples: \n\
-    MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 \n\
-    MeshFromSHCoefficientsConverter odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
+    MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 \n\
+    MeshFromSHCoefficients odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
   </description>
   
   <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
@@ -57,13 +57,13 @@
     <element>UNIT_INTEGRAL</element>
     </string-enumeration>
 
-    <float>
+    <double>
     <name>_Pow</name>
     <label>Pow</label>
     <description>Power factor.</description>
     <longflag>--pow</longflag>
     <default>1.0</default>
-    </float>
+    </double>
     
     <integer-vector>
       <name>_BoxView</name>
@@ -73,13 +73,13 @@
       <default>-1,-1,-1,-1,-1,-1</default>
     </integer-vector>
 
-    <float>
+    <double>
     <name>_Scale</name>
     <label>Scale</label>
     <description>Scale factor.</description>
     <longflag>--scale</longflag>
     <default>1.0</default>
-    </float>
+    </double>
 
     <integer>
     <name>_TessellationOrder</name>
@@ -114,6 +114,14 @@
       <name>_SingleThread</name>
       <description>Use single thread.</description>
       <longflag>st</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_ShowProgress</name>
+      <description>show progress of processing</description>
+      <longflag>progress</longflag>
+      <flag>p</flag>
       <default>false</default>
     </boolean>
 
