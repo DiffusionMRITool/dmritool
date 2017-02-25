@@ -116,6 +116,22 @@ protected:
     utl::PrintUtlMatrix(*m_Orientations, "m_Orientations", " ", os<<indent);
     }
   
+  typename LightObject::Pointer InternalClone() const
+    {
+    typename LightObject::Pointer loPtr = Superclass::InternalClone();
+
+    typename Self::Pointer rval = dynamic_cast<Self *>(loPtr.GetPointer());
+    if(rval.IsNull())
+      {
+      itkExceptionMacro(<< "downcast to type " << this->GetNameOfClass()<< " failed.");
+      }
+
+    rval->m_Orientations = m_Orientations;
+    rval->m_Normalization = m_Normalization;
+
+    return loPtr;
+    }
+  
   // virtual void GenerateData();
   // void ThreadedGenerateData(const typename TInputImage::RegionType& regionForThread,ThreadIdType threadId );
   // void BeforeThreadedGenerateData();

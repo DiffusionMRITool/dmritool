@@ -121,6 +121,18 @@ public:
     return this->m_BasisMatrix;
     }
   
+  VectorType NormalizeUnitIntegral(const VectorType& x) const
+    {
+    VectorType result(x);
+    if (x.GetTwoNorm()>0)
+      {
+      double normFactor = 4.0*M_PI/x.Size() * x.GetSum();
+      if (normFactor!=0)
+        result /= normFactor;
+      }
+    return result;
+    }
+  
   
 protected:
   MeshFromSphericalFunctionTessellatedSamplesImageFilter() : Superclass(), 

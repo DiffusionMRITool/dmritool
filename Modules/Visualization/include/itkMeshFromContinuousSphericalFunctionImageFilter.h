@@ -96,16 +96,29 @@ public:
     {
     return MatrixPointer();
     }
+
+  virtual VectorType NormalizeUnitIntegral(const VectorType& x) const
+    {
+    return x;
+    }
   
 protected:
   MeshFromContinuousSphericalFunctionImageFilter(); 
 
   ~MeshFromContinuousSphericalFunctionImageFilter()
     {};
+  
+  void VerifyInputParameters() const
+    {
+    utlSAException(this->m_ColorScheme!=Superclass::MAGNITUDE && this->m_ColorScheme!=Superclass::DIRECTION)
+      (this->m_ColorScheme).msg("wrong m_ColorScheme");
+    }
 
   void ScaleSamples(VectorType& b) const;
 
   void PrintSelf(std::ostream& os, Indent indent) const;
+  
+  typename LightObject::Pointer InternalClone() const;
   
   // virtual void GenerateData();
   void ThreadedGenerateData(const typename TInputImage::RegionType& regionForThread,ThreadIdType threadId );

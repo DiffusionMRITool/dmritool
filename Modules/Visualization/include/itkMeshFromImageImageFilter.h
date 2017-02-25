@@ -97,7 +97,7 @@ public:
   typedef std::vector<double>                     STDVectorType;
   typedef utl_shared_ptr<STDVectorType >          STDVectorPointer;
   
-  typedef  enum {UNKNOWN,DIRECTION,MAGNITUDE} ColorSchemeType;
+  typedef  enum {UNKNOWN=0, FIXED, DIRECTION, MAGNITUDE} ColorSchemeType;
   itkSetMacro(ColorScheme, ColorSchemeType);
   itkGetMacro(ColorScheme, ColorSchemeType);
   
@@ -145,20 +145,6 @@ public:
   {
     return m_Mesh;
   }
-
-  virtual bool IsPixelIndexVisible(const ImageRegionConstIteratorWithIndex<InputImageType> inputIt )
-    {
-    InputImageIndexType index = inputIt.GetIndex();
-    if (this->IsMaskUsed() && this->m_MaskImage->GetPixel(index)==0)
-      return false;
-    if ( (m_BoxView[0]>=0 || m_BoxView[1]>=0) && (index[0]<m_BoxView[0] || index[0]>m_BoxView[1]) )
-      return false;
-    if ( (m_BoxView[2]>=0 || m_BoxView[3]>=0) && (index[1]<m_BoxView[2] || index[1]>m_BoxView[3]) )
-      return false;
-    if ( (m_BoxView[4]>=0 || m_BoxView[5]>=0) && (index[2]<m_BoxView[4] || index[2]>m_BoxView[5]) )
-      return false;
-    return true;
-    }
   
 protected:
   MeshFromImageImageFilter()
@@ -178,6 +164,24 @@ protected:
     if (m_Mesh) 
       m_Mesh->Delete(); 
     }
+
+  virtual bool IsPixelIndexVisible(const InputImageIndexType& index )
+    {
+    if (this->IsMaskUsed() && this->m_MaskImage->GetPixel(index)==0)
+      return false;
+    if ( (m_BoxView[0]>=0 || m_BoxView[1]>=0) && (index[0]<m_BoxView[0] || index[0]>m_BoxView[1]) )
+      return false;
+    if ( (m_BoxView[2]>=0 || m_BoxView[3]>=0) && (index[1]<m_BoxView[2] || index[1]>m_BoxView[3]) )
+      return false;
+    if ( (m_BoxView[4]>=0 || m_BoxView[5]>=0) && (index[2]<m_BoxView[4] || index[2]>m_BoxView[5]) )
+      return false;
+    return true;
+    }
+
+  virtual void VerifyInputParameters() const
+    {
+    }
+
   void PrintSelf(std::ostream& os, Indent indent) const
     {
     PrintVar3(true, m_Scale, m_Pow, m_RemoveNegativeValues, os<<indent);
@@ -186,6 +190,22 @@ protected:
     m_Mesh->Print(std::cout<<"m_Mesh=");
     }
 
+  typename LightObject::Pointer InternalClone() const
+    {
+    typename LightObject::Pointer loPtr = Superclass::InternalClone();
+
+    typename Self::Pointer rval = dynamic_cast<Self *>(loPtr.GetPointer());
+    if(rval.IsNull())
+      {
+      itkExceptionMacro(<< "downcast to type " << this->GetNameOfClass()<< " failed.");
+      }
+    rval->m_RemoveNegativeValues = m_RemoveNegativeValues;
+    rval->m_Scale = m_Scale;
+    rval->m_Pow = m_Pow;
+    rval->m_ColorScheme = m_ColorScheme;
+    rval->m_BoxView = m_BoxView;
+    return loPtr;
+    }
 
 
   /** the information of the output image is used for ThreadedGenerateData() in subclass */

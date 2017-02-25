@@ -19,12 +19,14 @@
 #define __itkMeshFromContinuousSphericalFunctionImageFilter_hxx
 #include "itkMeshFromContinuousSphericalFunctionImageFilter.h"
 
+#include "utl.h"
+
 #include "itkImageRegionIterator.h"
 #include "itkImageRegionIteratorWithIndex.h"
 #include "vtkColorTransferFunction.h"
 
-#include "utl.h"
 #include <vtkFloatArray.h>
+#include <itkProgressReporter.h>
 
 namespace itk
 {
@@ -56,6 +58,26 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
   utl::PrintUtlMatrix(*m_BasisMatrix, "m_BasisMatrix", " ", os<<indent);
 }
 
+template <class TInputImage, class TOutputMesh>
+typename LightObject::Pointer
+MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
+::InternalClone() const
+{
+  typename LightObject::Pointer loPtr = Superclass::InternalClone();
+
+  typename Self::Pointer rval = dynamic_cast<Self *>(loPtr.GetPointer());
+  if(rval.IsNull())
+    {
+    itkExceptionMacro(<< "downcast to type " << this->GetNameOfClass()<< " failed.");
+    }
+
+  rval->m_SphereTessellator = m_SphereTessellator;
+  rval->m_BasicShape = m_BasicShape;
+  rval->m_TessellationOrder = m_TessellationOrder;
+  rval->m_BasisMatrix = m_BasisMatrix;
+
+  return loPtr;
+}
 
 template <class TInputImage, class TOutputMesh>
 void 
@@ -64,6 +86,8 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 {
   utlShowPosition(this->GetDebug());
   InputImageConstPointer inputPtr = this->GetInput();
+
+  this->VerifyInputParameters();
 
   this->m_SphereTessellator->SetBasicShape(this->m_BasicShape);
   this->m_SphereTessellator->SetOrder(this->m_TessellationOrder);
@@ -87,6 +111,8 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 ::ThreadedGenerateData(const typename TInputImage::RegionType& regionForThread,ThreadIdType threadId ) 
 {
   utlShowPosition(this->GetDebug());
+  ProgressReporter progress(this, threadId, regionForThread.GetNumberOfPixels());
+
   // Pointers
   InputImageConstPointer inputPtr = this->GetInput();
   InputImagePixelType inputPixel;
@@ -119,14 +145,10 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
   VectorType b;
   VectorType x(numberOfBasis);
 
-  // Mesh
   // Output Mesh
-  vtkSmartPointer<OutputMeshPointsType> outputMeshPoints =  
-      vtkSmartPointer<OutputMeshPointsType>::New();
-  vtkSmartPointer<OutputMeshCellArrayType> outputMeshCellArray = 
-      vtkSmartPointer<OutputMeshCellArrayType>::New();
-//  vtkDoubleArray * ScalarValues = vtkDoubleArray::New();
-  OutputMeshRGBType *outputMeshRGB = OutputMeshRGBType::New();
+  vtkSmartPointer<OutputMeshPointsType> outputMeshPoints = vtkSmartPointer<OutputMeshPointsType>::New();
+  vtkSmartPointer<OutputMeshCellArrayType> outputMeshCellArray = vtkSmartPointer<OutputMeshCellArrayType>::New();
+  vtkSmartPointer<OutputMeshRGBType> outputMeshRGB = vtkSmartPointer<OutputMeshRGBType>::New();
   outputMeshRGB->SetNumberOfComponents(4);
   outputMeshRGB->SetName("RGBA_scalars");
 
@@ -155,13 +177,13 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
     inputIt.GoToBegin();
     while( !inputIt.IsAtEnd() )
       {  
-      if (!this->IsPixelIndexVisible(inputIt))
+      inputIndex = inputIt.GetIndex();
+      if (!this->IsPixelIndexVisible(inputIndex))
         {
         ++inputIt;
         continue;
         }
 
-      // inputIndex = inputIt.GetIndex();
       inputPixel = inputIt.Get(); 
 
       for (unsigned int k=0;k<numberOfBasis;k++) //isotropic component?
@@ -181,8 +203,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 
       if (this->m_Normalization==Superclass::UNIT_INTEGRAL)
         {
-        if (vcl_abs(x(0))>1e-8)
-          x /= (vcl_sqrt(4 * vnl_math::pi) * x(0));
+        x = this->NormalizeUnitIntegral(x);
         }
 
       b = (*this->m_BasisMatrix) * x;
@@ -203,13 +224,14 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
   inputIt.GoToBegin();
   while( !inputIt.IsAtEnd() )
   {
-    if (!this->IsPixelIndexVisible(inputIt))
+    inputIndex = inputIt.GetIndex();
+    if (!this->IsPixelIndexVisible(inputIndex))
       {
       ++inputIt;
+      progress.CompletedPixel();
       continue;
       }
 
-    inputIndex = inputIt.GetIndex();
     inputPtr->TransformIndexToPhysicalPoint(inputIndex, inputPhysicalPoint);
     inputPixel = inputIt.Get(); 
 
@@ -219,6 +241,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
     if (x.GetRootMeanSquares() == 0)
       {
       ++inputIt;
+      progress.CompletedPixel();
       continue;
       }
 
@@ -230,8 +253,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 
     if (this->m_Normalization==Superclass::UNIT_INTEGRAL)
       {
-      if (vcl_abs(x(0))>1e-8)
-        x /= (vcl_sqrt(4 * vnl_math::pi) * x(0));
+      x = this->NormalizeUnitIntegral(x);
       }
     
     b = (*this->m_BasisMatrix) * x;
@@ -256,7 +278,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
         for (unsigned int d=0;d<3;d++)
           {
           outputMeshPoint[d] = b(k) * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
-          RGB[d] = static_cast<VTK_TYPE_NAME_UNSIGNED_CHAR>(vcl_abs( (*this->m_Orientations)(k,d))*255.0);
+          RGB[d] = static_cast<VTK_TYPE_NAME_UNSIGNED_CHAR>(std::fabs( (*this->m_Orientations)(k,d))*255.0);
           }
 
         double min_val = std::numeric_limits<double>::max();
@@ -301,6 +323,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
     offset += numberOfPoints;
     
     ++inputIt;
+    progress.CompletedPixel();
 
   }
 
@@ -327,7 +350,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
       }
     }
 
-  if (vcl_abs(this->m_Pow-1.0)>1e-8)
+  if (std::fabs(this->m_Pow-1.0)>1e-8)
     {
     for ( int k = 0; k < b.Size(); k += 1 ) 
       b(k) = std::pow(b(k), this->m_Pow);

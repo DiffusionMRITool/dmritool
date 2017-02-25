@@ -98,7 +98,13 @@ public:
     return this->m_BasisMatrix;
     }
   
-  // bool IsPixelIndexVisible(const ImageRegionConstIteratorWithIndex<InputImageType> inputIt );
+  VectorType NormalizeUnitIntegral(const VectorType& x) const
+    {
+    VectorType result(x);
+    if (std::fabs(x[0]>1e-8))
+      result /= (std::sqrt(4.0 * M_PI) * x[0]);
+    return result;
+    }
   
 protected:
   MeshFromSHCoefficientsImageFilter() : Superclass()
@@ -113,6 +119,22 @@ protected:
     Superclass::PrintSelf(os, indent);
     PrintVar1(true, m_MaxOrder, os<<indent);
     }
+  
+  typename LightObject::Pointer InternalClone() const
+    {
+    typename LightObject::Pointer loPtr = Superclass::InternalClone();
+
+    typename Self::Pointer rval = dynamic_cast<Self *>(loPtr.GetPointer());
+    if(rval.IsNull())
+      {
+      itkExceptionMacro(<< "downcast to type " << this->GetNameOfClass()<< " failed.");
+      }
+
+    rval->m_MaxOrder = m_MaxOrder;
+
+    return loPtr;
+    }
+
   
   // virtual void GenerateData();
   // void ThreadedGenerateData(const typename TInputImage::RegionType& regionForThread,ThreadIdType threadId );
