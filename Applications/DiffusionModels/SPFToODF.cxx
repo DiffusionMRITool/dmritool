@@ -16,7 +16,7 @@
  */
 
 #include "utl.h"
-#include "SPFToODFConverterCLP.h"
+#include "SPFToODFCLP.h"
 #include "itkODFFromSPFImageFilter.h"
 #include "itkImage.h"
 #include "itkSPFScaleFromMeanDiffusivityImageFilter.h"

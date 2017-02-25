@@ -9,7 +9,7 @@
  */
 
 #include "itkScalarMapFromSPFImageFilter.h"
-#include "SPFToScalarMapConverterCLP.h"
+#include "SPFToScalarMapCLP.h"
 
 /**
  * \brief calculate RTO map from SPF coefficients  

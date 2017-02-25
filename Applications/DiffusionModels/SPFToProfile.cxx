@@ -16,7 +16,7 @@
  */
 
 #include "utl.h"
-#include "SPFToProfileConverterCLP.h"
+#include "SPFToProfileCLP.h"
 #include "itkProfileFromSPFImageFilter.h"
 #include "itkImage.h"
 #include "itkSPFScaleFromMeanDiffusivityImageFilter.h"
