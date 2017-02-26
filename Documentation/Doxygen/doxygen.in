@@ -772,7 +772,7 @@ INPUT_ENCODING         = UTF-8
 # *.md, *.mm, *.dox, *.py, *.f90, *.f, *.for, *.tcl, *.vhd, *.vhdl, *.ucf,
 # *.qsf, *.as and *.js.
 
-FILE_PATTERNS          = *.h *.hxx *.hpp *.cxx *.cpp *.md *.m *.py *.sh *.dox
+FILE_PATTERNS          = *.h *.hxx *.hpp *.cxx *.cpp *.md *.dox
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
@@ -790,6 +790,8 @@ RECURSIVE              = YES
 EXCLUDE                = "@DMRITOOL_SOURCE_DIR@/.git" \
                          "@DMRITOOL_SOURCE_DIR@/Data" \
                          "@DMRITOOL_SOURCE_DIR@/ThirdParty/gtest" \
+                         "@DMRITOOL_SOURCE_DIR@/Documentation/Sphinx" \
+                         "@DMRITOOL_SOURCE_DIR@/Utilities" \
                          "@DMRITOOL_SOURCE_DIR@/build" \
                          "@DMRITOOL_SOURCE_DIR@/build_clang"
 
