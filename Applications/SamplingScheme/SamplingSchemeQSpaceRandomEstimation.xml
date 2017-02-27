@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Sampling Scheme</category>
+  <title>Random generator for schemes </title>
+  <description>Random generator for multi-shell schemes.\n\
+    Examples: \n\
+    SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 60  \n\
+    SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 28,28,28
+  </description>
+
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+
+  <parameters>
+    <label>I/O</label>
+    <description>Input/Output Parameters</description>
+    
+    <file>
+      <name>_OutputOrientations</name>
+      <description>Output orientation file(s), single shell or multiple shells. </description>
+      <index>0</index>
+    </file>
+    
+  </parameters>
+
+  <parameters>
+    
+    <integer-vector>
+      <name>_NumberOfSamples</name>
+      <label>Number of samples in shells</label>
+      <description>number of samples in single/multiple shells.</description>
+      <longflag>numberOfSamples</longflag>
+    </integer-vector>
+
+  </parameters>
+
+</executable>
+
+
+
+
+
+

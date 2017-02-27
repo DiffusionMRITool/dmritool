@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Sampling Scheme</category>
+  <title>Inremental Sampling Scheme Estimation</title>
+  <description>Incrementatl estimation for single and multiple shell sampling scheme</description>
+
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+
+  <parameters>
+    <label>I/O</label>
+    <description>Input/Output Parameters</description>
+    
+    <file>
+      <name>_OutputOrientations</name>
+      <description>Output orientation file(s), single shell or multiple shells. </description>
+      <index>0</index>
+    </file>
+    
+  </parameters>
+
+  <parameters>
+    
+    <integer-vector>
+      <name>_NumberOfSamples</name>
+      <label>Number of samples in shells</label>
+      <description>number of samples in single/multiple shells.</description>
+      <longflag>numberOfSamples</longflag>
+    </integer-vector>
+    
+    <file>
+      <name>_FineOrientations</name>
+      <description>A given fine orientations. It overrides --tessOrder</description>
+      <longflag>fineOrientations</longflag>
+    </file>
+    
+    <file>
+      <name>_InitialOrientations</name>
+      <description>A given orientations for an intialization.</description>
+      <longflag>initialOrientations</longflag>
+    </file>
+    
+    <integer>
+      <name>_Order</name>
+      <label>Tessellation Order</label>
+      <description>Tessellation order for the fine orientations.</description>
+      <longflag>tessOrder</longflag>
+      <default>7</default>
+    </integer>
+    
+    <string-enumeration>
+      <name>_Criteria</name>
+      <label>Criteria Type</label>
+      <longflag>--criteria</longflag>
+      <description>Criteria Type.</description>
+      <default>DISTANCE</default>
+      <element>DISTANCE</element>
+      <element>ELECTROSTATIC</element>
+    </string-enumeration>
+    
+    <double>
+      <name>_Weight</name>
+      <default>0.5</default>
+      <description>Weight for single shell term, 1-weight for mutiple shell term.</description>
+      <constraints>
+        <minimum>0.0</minimum>
+        <maximum>1.0</maximum>
+      </constraints>
+      <longflag>weight</longflag>
+    </double>
+    
+    <double>
+      <name>_EnergyOrder</name>
+      <default>2.0</default>
+      <description>order for the calculation of Electrostatic energy. </description>
+      <longflag>elecOrder</longflag>
+    </double>
+    
+
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+
+</executable>
+
+
+
+
