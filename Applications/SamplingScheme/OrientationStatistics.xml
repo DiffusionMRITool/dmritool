@@ -25,7 +25,7 @@
 
   <parameters>
     
-    <float>
+    <double>
       <name>_Weight</name>
       <default>0.5</default>
       <description>Weight for single shell term, 1-weight for mutiple shell term.</description>
@@ -34,14 +34,14 @@
         <maximum>1.0</maximum>
       </constraints>
       <longflag>weight</longflag>
-    </float>
+    </double>
     
-    <float>
+    <double>
       <name>_EnergyOrder</name>
       <default>2.0</default>
       <description>order for the calculation of Electrostatic energy. </description>
       <longflag>--order</longflag>
-    </float>
+    </double>
     
     <boolean>
       <name>_Asymmetric</name>

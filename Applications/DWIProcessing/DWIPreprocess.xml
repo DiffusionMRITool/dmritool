@@ -80,12 +80,12 @@
       <default>false</default>
     </boolean>
     
-    <float>
+    <double>
       <name>_BThreshold</name>
       <default>15.0</default>
       <description>If it is set, b values whose distance is smallter the threshold will be considered in the same shell.</description>
       <longflag>bThreshold</longflag>
-    </float>
+    </double>
     
     <boolean>
       <name>_Warn</name>

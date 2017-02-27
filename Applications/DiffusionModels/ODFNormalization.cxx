@@ -32,7 +32,7 @@ main (int argc, char const* argv[])
   // GenerateCLP
   PARSE_ARGS;
 
-  typedef float FloatType;
+  typedef double FloatType;
 
   typedef itk::VectorImage<FloatType,3> InputImageType;
   typedef itk::VectorImage<FloatType,3> OutputImageType;

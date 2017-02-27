@@ -54,19 +54,19 @@
       <longflag>--noisetype</longflag>
     </string-enumeration>
     
-    <float>
+    <double>
       <name>_NoiseSigma</name>
       <label>Noise Sigma</label>
       <description>Sigma value denoting noise level.</description>
       <longflag>--noisesigma</longflag>
-    </float>
+    </double>
     
-    <float>
+    <double>
       <name>_SNR</name>
       <label>Noise SNR</label>
       <description>Sigma is defined as 1/SNR. </description>
       <longflag>--snr</longflag>
-    </float>
+    </double>
     
   </parameters>
   

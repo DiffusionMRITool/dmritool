@@ -24,13 +24,13 @@
       <channel>output</channel>
     </image>
     
-    <float>
+    <double>
       <name>_Scale</name>
       <label>a scale value for multiplication.</label>
       <description>a scale value for multiplication.</description>
       <longflag>--scale</longflag>
       <default>1.0</default>
-    </float> 
+    </double> 
     
     
   </parameters>

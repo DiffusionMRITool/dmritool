@@ -18,10 +18,11 @@
 #include "utl.h"
 #include "SPFToODFCLP.h"
 #include "itkODFFromSPFImageFilter.h"
-#include "itkImage.h"
 #include "itkSPFScaleFromMeanDiffusivityImageFilter.h"
 
+#include "itkCommandProgressUpdate.h"
 
+#include "itkImage.h"
 
 /**
  * \brief  DWI/EAP profile (represented by SH basis) converted from SPF coefficients.
@@ -43,7 +44,8 @@ main (int argc, char const* argv[])
   if (_MaskFileArg.isSet())
     itk::ReadImage<ScalarImageType>(_MaskFile, maskImage);
 
-  ScalarImageType::Pointer mdImage=0, scaleImage=0;
+  ScalarImageType::Pointer mdImage= ScalarImageType::New();
+  ScalarImageType::Pointer scaleImage= ScalarImageType::New();
   if (_MDImageFileArg.isSet())
     {
     itk::ReadImage<ScalarImageType>(_MDImageFile, mdImage);

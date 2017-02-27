@@ -39,12 +39,12 @@
       <longflag>fineOrientations</longflag>
     </file>
     
-    <float>
+    <double>
       <name>_MinChange</name>
       <default>0.0001</default>
       <description>Minimal change percentage of the angles in iterations. </description>
       <longflag>minChange</longflag>
-    </float>
+    </double>
     
     <integer>
       <name>_Order</name>
@@ -54,7 +54,7 @@
       <default>7</default>
     </integer>
     
-    <float>
+    <double>
       <name>_Weight</name>
       <default>0.5</default>
       <description>Weight for single shell term, 1-weight for mutiple shell term.</description>
@@ -63,7 +63,7 @@
         <maximum>1.0</maximum>
       </constraints>
       <longflag>weight</longflag>
-    </float>
+    </double>
 
     <boolean>
       <name>_Debug</name>

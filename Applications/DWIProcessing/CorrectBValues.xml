@@ -24,12 +24,12 @@
       <channel>output</channel>
     </image>
     
-    <float>
+    <double>
       <name>_BThreshold</name>
       <default>15</default>
       <description>b values whose distance is smallter the threshold will be considered in the same shell.</description>
       <flag>t</flag>
-    </float>
+    </double>
     
     <!-- <boolean> -->
     <!--   <name>_Debug</name> -->

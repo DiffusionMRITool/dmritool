@@ -89,13 +89,13 @@
     <channel>input</channel>
     </boolean> 
     
-    <float>
+    <double>
     <name>_Threshold</name>
     <label>Thrshold for b values</label>
     <description>Threshold to determine b values for each shell</description>
     <longflag>--threshold</longflag>
     <default>2.0</default>
-    </float> 
+    </double> 
     
     <boolean>
     <name>_Verbose</name>

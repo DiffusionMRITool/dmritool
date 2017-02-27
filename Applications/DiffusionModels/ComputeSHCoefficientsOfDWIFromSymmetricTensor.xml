@@ -21,29 +21,29 @@
       <longflag>output</longflag>
     </string>
   
-    <float-vector>
+    <double-vector>
       <name>_EigenValues</name>
       <default></default>
       <label>Tensor EigenValues</label>
       <description>Two eigenvalues for symmetric tensor.</description>
       <longflag>eigenvalues</longflag>
-    </float-vector>
+    </double-vector>
     
-    <float-vector>
+    <double-vector>
       <name>_FAMD</name>
       <default></default>
       <label>Tensor FA and MD</label>
       <description>FA and Mean Diffusivity (MD) for symmetric tensor.</description>
       <longflag>famd</longflag>
-    </float-vector>
+    </double-vector>
     
-    <float-vector>
+    <double-vector>
       <name>_BValues</name>
       <default></default>
       <label>B value</label>
       <description>B value.</description>
       <longflag>bvalues</longflag>
-    </float-vector>
+    </double-vector>
     
     <integer>
       <name>_SHOrder</name>

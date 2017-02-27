@@ -20,25 +20,25 @@
 #include "utlCore.h"
 
 void 
-DoMain ( std::vector<float>& e1e2, std::vector<float>& bvec, const int shOrder, std::ostream& os, const bool outputAll, const bool nob )
+DoMain ( std::vector<double>& e1e2, std::vector<double>& bvec, const int shOrder, std::ostream& os, const bool outputAll, const bool nob )
 {
   for ( int i = 0; i < bvec.size(); i += 1 ) 
     {
     double b = bvec[i];
-    std::vector<double> coef = utl::GetSymmetricTensorSHCoef<double>(b, e1e2[0], e1e2[1], shOrder, 0.0, 0.0 );
+    utl_shared_ptr<utl::NDArray<double,1> > coef = utl::GetSymmetricTensorSHCoef<double>(b, e1e2[0], e1e2[1], shOrder, 0.0, 0.0 );
     if (!nob)
       os << b << " ";
     if (outputAll)
       {
-      for ( int i = 0; i < coef.size(); i += 1 ) 
-        os << coef[i] << " ";
+      for ( int i = 0; i < coef->Size(); i += 1 ) 
+        os << (*coef)[i] << " ";
       }
     else
       {
       for ( int l = 0; l <= shOrder; l += 2 ) 
         {
         int jj = utl::GetIndexSHj(l, 0);
-        os << coef[jj] << " ";
+        os << (*coef)[jj] << " ";
         }
       }
     os << std::endl;
@@ -60,6 +60,7 @@ main (int argc, char const* argv[])
   utlGlobalException(!_EigenValuesArg.isSet() && !_FAMDArg.isSet(), "need to set one of --eigenvalues and --famd");
   utlGlobalException(_BValues.size()==0, "need to set --bvalues");
 
+  itk::InitializeLUTExp();
   if (_EigenValuesArg.isSet())
     {
     utlGlobalException(_EigenValues.size()!=2, "wrong size in --eigenvalues");
