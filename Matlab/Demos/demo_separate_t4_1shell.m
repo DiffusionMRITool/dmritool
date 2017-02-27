@@ -30,6 +30,7 @@ grbParams.TimeLimit=600;
 % print verbose output from gurobi
 grbParams.OutputFlag=true;
 % grbParams.OutputFlag=false;
+% params.ModelFile='model.mps';
 
 % run
 [grad,grb] = OptimalSamplingSingleSubset(grad_t4, params, grbParams);

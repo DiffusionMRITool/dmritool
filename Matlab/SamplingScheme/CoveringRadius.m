@@ -3,6 +3,7 @@ function radius = CoveringRadius(grad, ind)
 %
 % USAGE:
 %    radius = CoveringRadius(grad)
+%    radius = CoveringRadius(grad, ind)
 %
 % INPUT
 %    grad     :  Nx3 matrix, each row is a point in sphere.

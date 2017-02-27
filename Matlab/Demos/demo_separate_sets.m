@@ -38,11 +38,11 @@ title(['Randomly mixed scheme']);
 clear params grbParams
 % set parameters
 % w=1 means we do not care about the combined shell with all samples. See the paper. 
-param.w=1;
-param.numSamples=[n1 n2];
+params.w=1;
+params.numSamples=[n1 n2];
 
 % use default grb parameters
-[gradCell, grb, indexMatrix]=OptimalSamplingMultiSubsetsFromSameSet(gradAll,param, []);
+[gradCell, grb, indexMatrix]=OptimalSamplingMultiSubsetsFromSameSet(gradAll,params, []);
 
 %% Test the results 
 % covering radius comparison

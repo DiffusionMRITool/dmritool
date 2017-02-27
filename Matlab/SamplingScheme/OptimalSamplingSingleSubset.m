@@ -7,7 +7,8 @@ function [grad,grb_result] = OptimalSamplingSingleSubset(gradAll, param, grbPara
 %
 % INPUT
 %   gradAll            :  Nx3 gradient matrix, where each row is a point in sphere.
-%   params.numSamples  :  the number of samples in the subset
+%   param.numSamples   :  the number of samples in the subset
+%   param.ModelFile    :  string. If set, write the model into a file 
 %
 %   grbParam.start     :  a warm start if provided
 %   grbParam.TimeLimit :  time limit to terminate the program
@@ -16,6 +17,11 @@ function [grad,grb_result] = OptimalSamplingSingleSubset(gradAll, param, grbPara
 % OUTPUT
 %   grad               :  output gradient matrix with numSamples samples.
 %   grb_result         :  output from GUROBI
+%
+%
+% Reference:
+%   "Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code", 
+%   Jian Cheng, Dinggang Shen, Pew-Thian Yap, MICCAI 2014.  
 %
 % Copyright (c) 2013, Jian Cheng <jian.cheng.1983@gmail.com>
 %
@@ -104,6 +110,9 @@ end
 model.vtype = ['C', repmat('B',[1,N])];
 
 %%
+if isfield(param,'ModelFile') && ~strcmp(param.ModelFile,'')
+    gurobi_write(model,param.ModelFile);
+end
 grb_result = gurobi(model, grbParam);
 
 % grb_result.x

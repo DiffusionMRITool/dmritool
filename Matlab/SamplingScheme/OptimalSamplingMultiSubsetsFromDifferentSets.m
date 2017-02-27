@@ -6,17 +6,23 @@ function [gradCell,grb_result,indexMatrix] = OptimalSamplingMultiSubsetsFromDiff
 %   [gradCell,grb_result,indexMatrix] = OptimalSamplingMultiSubsetsFromDifferentSets(gradAll, param, grbParam)
 %
 % INPUT
-%   gradAll           :  K gradient matrix cell, where each element is a N_kx3 gradient matrix for a single shell.
-%   param.numSamples  :  Kx1 or 1xK vector which gives number of samples in K subsets
-%   param.w           :  weight for single shell term. 0<w<1. Default value is 0.5.
+%   gradAll            :  K gradient matrix cell, where each element is a N_kx3 gradient matrix for a single shell.
+%   param.numSamples   :  Kx1 or 1xK vector which gives number of samples in K subsets
+%   param.w            :  weight for single shell term. 0<w<1. Default value is 0.5.
+%   param.ModelFile    :  string. If set, write the model into a file 
 %
 %   grbParam.start     :  a warm start if provided
 %   grbParam.TimeLimit :  time limit to terminate the program
 %   grbParam.MIPFocus  :  MIPFocus
 %
 % OUTPUT
-%   gradCell          :  Kx1 cell, each element is a gradient matrix.
-%   grb_result        :  output from GUROBI
+%   gradCell           :  Kx1 cell, each element is a gradient matrix.
+%   grb_result         :  output from GUROBI
+%
+%
+% Reference:
+%   "Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code", 
+%   Jian Cheng, Dinggang Shen, Pew-Thian Yap, MICCAI 2014.  
 %
 % Copyright (c) 2013, Jian Cheng <jian.cheng.1983@gmail.com>
 %
@@ -182,6 +188,9 @@ end
 
 
 %%
+if isfield(param,'ModelFile') && ~strcmp(param.ModelFile,'')
+    gurobi_write(model,param.ModelFile);
+end
 grb_result = gurobi(model,grbParam);
 indexMatrix = cell(1, numShell);
 for ss = 1 : numShell
