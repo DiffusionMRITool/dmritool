@@ -122,7 +122,10 @@ We provide the following demos in matlab to demonstrate the effectiveness of MIL
 * `Uniformly separate two subsets (P-D-MS) <demos/demo_separate_sets.html>`__
 * `Uniformly select a subset from a set (P-D-SS) <demos/demo_separate_t4_1shell.html>`__
 * `Uniformly select several subsets from a set (P-D-MS) <demos/demo_separate_t4_28x3.html>`__
-* `Uniformly subsampling for the multi-shell scheme in Human Connectome Project (P-D-MM) <demos/demo_separate_HCPQ390x3_30x3.html>`__
+* Uniformly sub-sampling for the multi-shell scheme in Human Connectome Project (P-D-MM)
+
+  + `Extract a 30x3 scheme from the 90x3 scheme <demos/demo_separate_HCPQ390x3_30x3.html>`__
+  + `Extract a 45x3 scheme from the 90x3 scheme  <demos/demo_separate_HCPQ390x3_45x3.html>`__
 
 The codes can be found in ``Matlab/Demos`` folder in dmritool. 
 To run these demos, you need to: 
