@@ -1,5 +1,5 @@
 /**
- *       @file  SPFToODFConverter.cxx
+ *       @file  SPFToODF.cxx
  *      @brief  
  *
  *
