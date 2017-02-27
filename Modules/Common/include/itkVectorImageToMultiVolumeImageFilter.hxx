@@ -92,6 +92,17 @@ void VectorImageToMultiVolumeImageFilter<TInputPixelType, TOutputPixelType, VIma
   PrintVar1(this->GetOutput(), this->GetOutput(), os<<indent << "MultiVolumeImage");
 }
 
+template <class ScalarType, unsigned Dim>
+void 
+VectorToMultiVolumeImage ( const SmartPointer<VectorImage<ScalarType,Dim> >& image1, SmartPointer<Image<ScalarType, Dim+1> >& image2 )
+{
+  typedef itk::VectorImageToMultiVolumeImageFilter<ScalarType, ScalarType> ConvertorType;
+  typename ConvertorType::Pointer convertor = ConvertorType::New();
+  convertor->SetInput(image1);
+  convertor->Update();
+  image2 = convertor->GetOutput();
+}
+
 }
 
 #endif 
