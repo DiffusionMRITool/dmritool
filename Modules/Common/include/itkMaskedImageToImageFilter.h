@@ -21,6 +21,7 @@
 #include "itkImageToImageFilter.h"
 #include "itkThreadLogger.h"
 #include "utlSTDHeaders.h"
+#include "utlITKMacro.h"
 
 
 namespace itk
@@ -32,7 +33,7 @@ namespace itk
  *
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
-template< class TInputImage, class TOutputImage, class TMaskImage=Image<double, TInputImage::ImageDimension> >
+template< class TInputImage, class TOutputImage, class TMaskImage=Image<double, 3> >
 class ITK_EXPORT MaskedImageToImageFilter
   :public ImageToImageFilter< TInputImage, TOutputImage >
 {
@@ -89,6 +90,7 @@ public:
   itkGetObjectMacro(Logger, LoggerType);
   itkGetConstObjectMacro(Logger, LoggerType);
 
+  itkSetGetMacro(LogLevel, int);
 
   bool IsMaskUsed()
     {
@@ -104,6 +106,12 @@ protected:
   typename LightObject::Pointer InternalClone() const;
 
   virtual void VerifyMaskInformation() const;
+
+  virtual void VerifyInputParameters() const
+    {
+    if (!IsImageEmpty(this->m_MaskImage))
+      this->VerifyMaskInformation();
+    }
   
   /** Use single thread for MKL or openmp to avoid confliction with itk threader. 
    * Otherwise it has worse performance due to thread conflication (but correct solution).  */
@@ -123,6 +131,12 @@ protected:
 
   /** It is used for ThreadLogger. It is -1 as default, and it is set as thread id when *this is cloned.  */
   int m_ThreadID;
+  
+  /** Debug verbose log level. Default value is 1 (LOG_NORMAL), which only shows some process information. 
+   * It is normally set as utl::LogLevel, but each class could have its own logLevel. 
+   * If it is LOG_MUTE, mute all output messeage. 
+   * If it is LOG_LARGE, print some large matrix etc.*/
+  int m_LogLevel;
 
 private:
   MaskedImageToImageFilter(const Self &); //purposely not implemented

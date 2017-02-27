@@ -21,6 +21,7 @@
 
 #include "itkMaskedImageToImageFilter.h"
 #include "itkStdStreamLogOutput.h"
+#include "itkProgressReporter.h"
 
 #include "utl.h"
 
@@ -28,16 +29,18 @@ namespace itk
 {
 template< class TInputImage, class TOutputImage, class TMaskImage >
 MaskedImageToImageFilter< TInputImage, TOutputImage, TMaskImage >
-::MaskedImageToImageFilter() : Superclass(), 
-  m_LoggerVector(new LoggerVectorType())
+::MaskedImageToImageFilter() : Superclass() 
 {
   // Modify superclass default values, can be overridden by subclasses
   this->SetNumberOfRequiredInputs(1);
   m_MaskImage = NULL;
   m_ThreadID=-1;
 
+  m_LogLevel= LOG_NORMAL;
+
   // NOTE: m_Logger makes the estimation a little bit slower once it is newed, even though it is not used. 
   // m_Logger = itk::ThreadLogger::New();
+  // m_LoggerVector= LoggerVectorPointer(new LoggerVectorType())
 }
 
 template< class TInputImage, class TOutputImage, class TMaskImage >
@@ -83,6 +86,7 @@ MaskedImageToImageFilter< TInputImage, TOutputImage, TMaskImage >
   rval->m_Logger = m_Logger;
   rval->m_LoggerVector = m_LoggerVector;
   rval->m_ThreadID = m_ThreadID;
+  rval->m_LogLevel = m_LogLevel;
   rval->SetNumberOfThreads(this->GetNumberOfThreads());
   rval->SetDebug(this->GetDebug());
   return loPtr;
