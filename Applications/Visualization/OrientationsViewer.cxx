@@ -397,6 +397,8 @@ main ( int argc, char *argv[] )
   
   renderer->GetActiveCamera()->Roll(_Angle[0]);
   renderer->GetActiveCamera()->Elevation(_Angle[1]);
+  
+  renderWindow->Render();
 
   if (_PNGFile!="")
     {
