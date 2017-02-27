@@ -58,7 +58,7 @@ matfunc:
 	python ./tools/generate_doc_for_matlabfunctions.py $(SRCDIR) $(DMRITOOL_DIR)  $(MATFUNCDIR)
 
 matdemo:
-	@echo "copy published matlab demos to $(SRCDIR)/Matlab/Demos/html to $(BUILDDIR)/html/demos"
+	@echo "copy published matlab demos from $(SRCDIR)/Matlab/Demos/html to $(BUILDDIR)/html/demos"
 	@echo "need to publish these demos first"
 	rm -rf $(MATDEMOSDIR)
 	cp -rp $(SRCDIR)/Matlab/Demos/html  $(MATDEMOSDIR)

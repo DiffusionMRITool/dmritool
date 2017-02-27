@@ -42,5 +42,5 @@ index_3=find(indexMatrix{3}==1);
 
 %% visualize the result
 VisualizeMultiShellScheme(grad{1},grad{2},grad{3});
-title(['Estimated scheme. Combined covering radius = ', num2str(CoveringRadius([grad{1};grad{2};grad{3}])*180/pi), ' degree'], 'FontSize', 15);
+title({'Estimated scheme.', ['Combined covering radius = ', num2str(CoveringRadius([grad{1};grad{2};grad{3}])*180/pi), ' degree']});
 

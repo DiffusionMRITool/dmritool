@@ -79,5 +79,5 @@ fprintf('\nConvering radii:\t %10.3f\t%10.3f\t%10.3f\t%10.3f\t\n',...
     CoveringRadius([gradCell{1};gradCell{2};gradCell{3}])*180/pi);
 
 VisualizeMultiShellScheme(gradCell{1}, gradCell{2}, gradCell{3});
-title({'Scheme by IMOC + 1-Opt + CNLO.', ['Combined covering radius = ', num2str(CoveringRadius([grad{1};grad{2};grad{3}])*180/pi), ' degree']});
+title({'Scheme by IMOC + 1-Opt + CNLO.', ['Combined covering radius = ', num2str(CoveringRadius([gradCell{1};gradCell{2};gradCell{3}])*180/pi), ' degree']});
 

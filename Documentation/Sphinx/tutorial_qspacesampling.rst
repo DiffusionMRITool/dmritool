@@ -151,14 +151,14 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
 
 .. code-block:: shell
    
-   SamplingSchemeQSpaceIMOCEstimation imoc_30.txt --numberOfSamples 30 --tessOrder 7 
-   OrientationStatistics  imoc_30_shell1.txt
-   OrientationsViewer imoc_30_shell1.txt --mesh --png imoc_30.png
+   SamplingSchemeQSpaceIMOCEstimation grad_30_IMOC.txt --numberOfSamples 30 --tessOrder 7 
+   OrientationStatistics  grad_30_IMOC_shell1.txt
+   OrientationsViewer grad_30_IMOC_shell1.txt --mesh --png grad_30_IMOC.png
 
-.. figure:: .tutorial_qspacesampling/imoc_30.png
+.. figure:: .tutorial_qspacesampling/grad_30_IMOC.png
    :align: center
    :scale: 60%
-   :alt: imoc_30.png
+   :alt: grad_30_IMOC.png
 
 * The ``tessOrder`` option is the order of sphere tessellation to discretize the continuous sphere. 
   [Cheng2015]_ showed that with a finer sphere tessellation IMOC obtains a larger covering radius. 
@@ -166,7 +166,7 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
   For ``--tessOrder 7``, which uses ``20481`` samples in the hemisphere, IMOC normally finishes in seconds. 
 * :doc:`OrientationStatistics <commands/OrientationStatistics>`  is to show the covering radius of the estimated scheme. 
 * :doc:`OrientationsViewer <commands/OrientationsViewer>` is to visualize the obtained schemes. 
-  With ``--png`` option, it writes the visualization in a png file. 
+  With ``--png`` option, it writes the visualization in a png image. 
 
 .. Note:: The single shell schemes by IMOC have larger covering radii than the schemes by EEM in CAMINO_. 
    With finer sphere tessellation, IMOC schemes approximately have the similar covering radii with the schemes in `Sloane's collection`_ 
@@ -176,16 +176,62 @@ To generate a 3 shell scheme with 28 samples per shell (P-C-M), you can run:
 
 .. code-block:: shell
    
-   SamplingSchemeQSpaceIMOCEstimation imoc_28x3.txt --numberOfSamples 28,28,28 --tessOrder 7 
-   OrientationStatistics  imoc_28x3_shell1.txt imoc_28x3_shell2.txt imoc_28x3_shell3.txt --combine
-   OrientationsViewer imoc_28x3_shell1.txt imoc_28x3_shell2.txt imoc_28x3_shell3.txt --combine --mesh --png imoc_28x3.png
+   SamplingSchemeQSpaceIMOCEstimation grad_28x3_IMOC.txt --numberOfSamples 28,28,28 --tessOrder 7 
+   OrientationStatistics  grad_28x3_IMOC_shell1.txt grad_28x3_IMOC_shell2.txt grad_28x3_IMOC_shell3.txt --combine
+   OrientationsViewer grad_28x3_IMOC_shell1.txt grad_28x3_IMOC_shell2.txt grad_28x3_IMOC_shell3.txt --combine --mesh --png grad_28x3_IMOC.png
 
-.. figure:: .tutorial_qspacesampling/imoc_28x3.png
+.. figure:: .tutorial_qspacesampling/grad_28x3_IMOC.png
    :align: center
    :scale: 60%
-   :alt: imoc_28x3.png
+   :alt: grad_28x3_IMOC.png
 
 The three colors denote samples in 3 shells. 
+
+
+Sampling Schemes by IMOC + 1-Opt + CNLO
+---------------------------------------
+
+IMOC is used to quickly obtain an acceptable sampling scheme. 
+The results by IMOC can be refined by using 1-Opt and CNLO. 
+
+1-Opt is a greedy algorithm which at each iteration moves one best sample as far as possible to all other samples. 
+1-Opt can be used to refine any initialized sampling scheme. 
+However, schemes by IMOC are suggested as the initialization of 1-Opt due to good performance. 
+
+IMOC requires a discretization of the continuous sphere, which may result in a hole area in sphere due to the error accumulation when the number of samples is large. 
+For example, we can use IMOC to generate a 3 shell scheme with 90 samples per shell (P-C-M): 
+
+.. code-block:: shell
+   
+   SamplingSchemeQSpaceIMOCEstimation grad_90x3_IMOC.txt --numberOfSamples 90,90,90 --tessOrder 7 
+   OrientationStatistics  grad_90x3_IMOC_shell1.txt grad_90x3_IMOC_shell2.txt grad_90x3_IMOC_shell3.txt --combine
+   OrientationsViewer grad_90x3_IMOC_shell1.txt grad_90x3_IMOC_shell2.txt grad_90x3_IMOC_shell3.txt --combine --mesh --angle -10,-45 --png grad_90x3_IMOC.png
+
+.. figure:: .tutorial_qspacesampling/grad_90x3_IMOC.png
+   :align: center
+   :scale: 60%
+   :alt: grad_90x3_IMOC.png
+
+See there is a hole area without any sample. 
+This can be fixed by using 1-Opt:
+
+.. code-block:: shell
+
+   SamplingSchemeQSpace1OptEstimation grad_90x3_IMOC1Opt.txt --initial grad_90x3_IMOC_shell1.txt,grad_90x3_IMOC_shell2.txt,grad_90x3_IMOC_shell3.txt --tessOrder 7 -v 2
+   OrientationStatistics grad_90x3_IMOC1Opt_shell1.txt grad_90x3_IMOC1Opt_shell2.txt grad_90x3_IMOC1Opt_shell3.txt --combine
+   OrientationsViewer grad_90x3_IMOC1Opt_shell1.txt grad_90x3_IMOC1Opt_shell2.txt grad_90x3_IMOC1Opt_shell3.txt --combine  --mesh --angle -10,-45 --png grad_90x3_IMOC1Opt.png
+
+.. figure:: .tutorial_qspacesampling/grad_90x3_IMOC1Opt.png
+   :align: center
+   :scale: 60%
+   :alt: grad_90x3_IMOC1Opt.png
+
+The scheme by IMOC + 1-Opt can be refined by using CNLO. 
+We provide 2 matlab demos to demonstrate IMOC + 1-Opt + CNLO for P-C-S and P-C-M, respectively:
+
+* `Generate a single-shell sampling scheme by using IMOC + 1-Opt + CNLO (P-C-S) <demos/demo_singleshell_IMOC_1Opt_CNLO.html>`__
+* `Generate a multi-shell sampling scheme by using IMOC + 1-Opt + CNLO (P-C-M) <demos/demo_mutishell_IMOC_1Opt_CNLO.html>`__
+
 
 Experiments in the papers
 -------------------------

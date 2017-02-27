@@ -70,7 +70,7 @@ VisualizeMultiShellScheme(grad_EEM);
 title({'Scheme by EEM.', ['Covering radius = ', num2str(CoveringRadius(grad_EEM)*180/pi), ' degree']});
 
 
-%% compared with the single shell scheme with 81 samples by spherical tessellation
+%% Compared with the single shell scheme with 81 samples by spherical tessellation
 grad_Tess = ReadDirections([getenv('HOME'), '/.dmritool/Data/Tessellation/directions_t3.txt']);
 
 fprintf('\nConvering radius:\t %10.3f\n',CoveringRadius(grad_Tess)*180/pi);

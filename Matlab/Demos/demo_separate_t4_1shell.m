@@ -37,4 +37,4 @@ grbParams.OutputFlag=true;
 
 %% visualize the result
 VisualizeMultiShellScheme(grad);
-title(['Estimated Scheme. Covering radius = ', num2str(CoveringRadius(grad)*180/pi), ' degree'], 'FontSize', 15);
+title({'Estimated Scheme.', ['Covering radius = ', num2str(CoveringRadius(grad)*180/pi), ' degree']});
