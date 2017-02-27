@@ -86,6 +86,10 @@ public:
 
   virtual void GenerateData(){}
 
+  bool IsSetInitialization() const
+    {
+    return m_InitialOrientations && m_InitialOrientations->GetNumberOfSamples()>0;
+    }
 
 protected:
   

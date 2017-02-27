@@ -78,8 +78,8 @@ public:
   typedef utl_shared_ptr<Index2DVectorType>          Index2DVectorPointer;
   
   /** Orientations as matrix, return a pointer */
-  MatrixPointer GetOrientationsCartesian();
-  MatrixPointer GetOrientationsSpherical();
+  MatrixPointer GetOrientationsCartesian(const bool alwarysReCalculate=false);
+  MatrixPointer GetOrientationsSpherical(const bool alwarysReCalculate=false);
   void SetOrientationsCartesian(const MatrixPointer mat);
   void SetOrientationsSpherical(const MatrixPointer mat);
   MatrixPointer GetOrientationsCartesianInShell(const unsigned int shellIndex) const;
@@ -139,6 +139,9 @@ public:
   
   void Clear();
 
+  /** remove samples not in m_IndicesInShells  */
+  void RemoveSamplesNotIndexed();
+
   /** generate sampling scheme from random points in sphere  */
   void GenerateFromRandomPoints(const std::vector<int>& numberOfPoints);
 
@@ -174,6 +177,28 @@ public:
   MatrixPointer CalculateInnerProductMatrix(const bool isAbsolute=true) const;
   /** return electrostatic energy matrix, the diagonal elements are maximal double value  */
   MatrixPointer CalculateElectrostaticEnergyMatrix(const double order=2.0) const;
+  
+  /**
+   * Packing density: 
+   * https://en.wikipedia.org/wiki/Packing_density 
+   * https://en.wikipedia.org/wiki/Spherical_cap
+   * */
+  double CalculatePackingDensity( const bool isSymmetric=true) const;
+  double CalculatePackingDensityInShell(const unsigned int shellIndex, const bool isSymmetric=true) const;
+  
+  /** 
+   * Calculate entropy based on spherical cap. 
+   * https://en.wikipedia.org/wiki/Spherical_cap  
+   * */
+  double CalculateSphericalCodeEntropy( const bool isSymmetric=true) const;
+  double CalculateSphericalCodeEntropyInShell(const unsigned int shellIndex, const bool isSymmetric=true) const;
+
+  static double CalculateVoronoiEntropy(const MatrixType& grad, const MatrixType& gradTess, const bool isSymmetric=true);
+  double CalculateVoronoiEntropy(const int tess=7, const bool isSymmetric=true);
+  double CalculateVoronoiEntropyInShell(const unsigned int shellIndex, const int tess=7, const bool isSymmetric=true);
+  
+  double CalculateMaxDot(const unsigned int index, const bool isSymmetric=true) const;
+  double CalculateMaxDotInShell(const unsigned int sampleIndex, const unsigned int shellIndex, const bool isSymmetric=true) const;
 
   /** calculate the minimum distance for the point with a given index.  */
   double CalculateMinDistance(const unsigned int index, const bool isSymmetric=true) const;
@@ -189,7 +214,7 @@ public:
   double CalculateElectrostaticEnergy(const double order=2.0, const bool isNormalize=true, const bool countHalf=true ) const;
   double CalculateElectrostaticEnergyInShell(const unsigned int shellIndex, const double order=2.0, const bool isNormalize=true, const bool countHalf=true ) const;
 
-  /** calculate the upper of the minimal distance for a given number of points. 
+  /** calculate an upper bound of the minimal distance for a given number of points. 
    *  If isSphericalDistance is true, return spherical distance instead of Euclidean distance. 
    *  http://mathworld.wolfram.com/SphericalCode.html 
    * */
@@ -219,6 +244,7 @@ protected:
    * If m_IndicesInShells is empty, single shell sampling is used. 
    *
    * \note: There may be some samples whose indices are not in m_IndicesInShells. 
+   * These samples which are not indexed can be removed by using RemoveSamplesNotIndexed(). 
    * */
   Index2DVectorPointer m_IndicesInShells;
 

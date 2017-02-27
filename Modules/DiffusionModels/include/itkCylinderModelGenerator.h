@@ -70,7 +70,7 @@ public:
   typedef Image<double>  Image3DType;
   typedef typename Image3DType::Pointer  Image3DPointer;
   
-  typedef UnaryFunctorLookUpTable<Functor::EXP<double> >                   LUTExpType;
+  typedef UnaryFunctorLookUpTable<utl::Functor::Exp<double> >                   LUTExpType;
   typedef typename LUTExpType::Pointer                         LUTExpPointer;
   
   itkSetMacro(CylinderAxis, PointType);

@@ -75,6 +75,9 @@ public:
   
   void CorrectBValues();
   void CorrectRadiusValues();
+  
+  /** remove samples not in m_IndicesInShells  */
+  void RemoveSamplesNotIndexed();
 
 protected:
   SamplingSchemeQSpace ();

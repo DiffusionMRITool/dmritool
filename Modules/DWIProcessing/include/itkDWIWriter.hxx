@@ -149,9 +149,11 @@ DWIWriter<TPixelType, VImageDimension>
   else
     {
     STDVectorPointer bVector = m_SamplingSchemeQSpace->GetBVector();
+    std::cout << "Write b vector to " << folderPath + m_BFile << std::endl << std::flush;
     utl::SaveVector(*bVector, folderPath + m_BFile);
+    std::cout << "Write orientation file to " << folderPath + m_OrientationFile << std::endl << std::flush;
     orientationsCartesian->Save(folderPath + m_OrientationFile);
-    itk::SaveImage(dwi, folderPath + m_DWIFile);
+    itk::SaveImage(dwi, folderPath + m_DWIFile, "Write DWI image to");
     out << m_BFile << " " << m_OrientationFile << " " << m_DWIFile << std::endl;
     }
   

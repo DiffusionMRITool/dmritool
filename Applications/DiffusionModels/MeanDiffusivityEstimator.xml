@@ -61,6 +61,14 @@
     </integer>
 
     <boolean>
+      <name>_ShowProgress</name>
+      <description>show progress of processing</description>
+      <longflag>progress</longflag>
+      <flag>p</flag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
       <name>_Debug</name>
       <label>Debug</label>
       <description>debug</description>

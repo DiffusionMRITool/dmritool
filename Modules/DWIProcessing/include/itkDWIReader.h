@@ -73,7 +73,7 @@ public:
   
   typedef Image<TPixelType, VImageDimension>       B0ImageType;
   typedef VectorImage<TPixelType, VImageDimension> DWIImageType;
-  typedef B0ImageType                              MaskImageType;
+  typedef Image<double, VImageDimension>           MaskImageType;
   
   typedef utl::NDArray<double,2>                     MatrixType;
   typedef utl_shared_ptr<MatrixType>                 MatrixPointer;

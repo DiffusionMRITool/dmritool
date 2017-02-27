@@ -128,13 +128,6 @@
     <default>true</default>
     </boolean>
     
-    <boolean>
-    <name>_Print</name>
-    <description>Print values in image</description>
-    <longflag>--print</longflag>
-    <default>false</default>
-    </boolean>
-    
   </parameters>
    
 </executable>

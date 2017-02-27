@@ -20,7 +20,7 @@
 #include "itkGeneralizedHighOrderTensorImageFilter.h"
 #include "itkDWIReader.h"
 #include "itkMeanDiffusivityFromGHOTImageFilter.h"
-// #include "itkCommandProgressUpdate.h"
+#include "itkCommandProgressUpdate.h"
 // #include "itkSPFScaleFromMeanDiffusivityImageFilter.h"
 
 
@@ -42,11 +42,6 @@ main (int argc, char const* argv[])
   typedef itk::DWIReader<PrecisionType>  DWIReaderType;
   typedef itk::GeneralizedHighOrderTensorImageFilter<VectorImageType> GHOTFilterType;
   
-  DWIReaderType::Pointer reader = DWIReaderType::New();
-  // reader->GetSamplingSchemeQSpace()->SetTau(_Tau);
-  reader->SetConfigurationFile(_InputFile);
-  reader->Update();
-
   GHOTFilterType::Pointer ghot = GHOTFilterType::New();
   typedef  GHOTFilterType::MaskImageType MaskImageType;
   MaskImageType::Pointer maskImage;
@@ -55,14 +50,23 @@ main (int argc, char const* argv[])
     itk::ReadImage(_MaskFile, maskImage);
     ghot->SetMaskImage(maskImage);
     }
+  
+  DWIReaderType::Pointer reader = DWIReaderType::New();
+  // reader->GetSamplingSchemeQSpace()->SetTau(_Tau);
+  reader->SetConfigurationFile(_InputFile);
+  if (_MaskFileArg.isSet())
+    reader->SetMaskImage(maskImage);
+  reader->Update();
+
   ghot->SetInput(reader->GetOutput());
   ghot->SetSamplingSchemeQSpace(reader->GetSamplingSchemeQSpace());
   ghot->SetSHRank(_SHRank);
   ghot->SetRadialRank(_RadialRank);
   if (_NumberOfThreads>0)
     ghot->SetNumberOfThreads( _NumberOfThreads );
-  // itk::CommandProgressUpdate::Pointer observer =itk::CommandProgressUpdate::New();
-  // ghot->AddObserver( itk::ProgressEvent(), observer );
+  itk::CommandProgressUpdate::Pointer observer =itk::CommandProgressUpdate::New();
+  if (_ShowProgressArg.isSet())
+    ghot->AddObserver( itk::ProgressEvent(), observer );
   if (_DebugArg.isSet())
     ghot->DebugOn();
   std::cout << "Estimate MD using GHOT model" << std::endl << std::flush;

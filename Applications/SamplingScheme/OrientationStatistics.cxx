@@ -45,11 +45,13 @@ processOrientation ( const itk::SamplingScheme3D<double>::Pointer scheme, const 
   std::cout << "upper bound ("<< 2*size <<" points) = " << ud2*180/M_PI << ", radian=" << ud2 << std::endl << std::flush;
   std::cout << "upper bound ("<< size <<" points) = " << ud*180/M_PI << ", radian=" << ud << std::endl << std::flush;
 
-  if (numberAntipodalSamples==0 && numberRepeatedSamples==0)
+  if (numberRepeatedSamples==0)
     {
-    double electrostaticEnergy = scheme->CalculateElectrostaticEnergy(2.0, true);
+    // double isSymmetric = numberAntipodalSamples==0 && !_Asymmetric;
+
+    double electrostaticEnergy = scheme->CalculateElectrostaticEnergy(2.0, !_Asymmetric);
     std::cout << "electrostaticEnergy (order=2) = " << electrostaticEnergy << std::endl << std::flush;
-    electrostaticEnergy = scheme->CalculateElectrostaticEnergy(1.0, true);
+    electrostaticEnergy = scheme->CalculateElectrostaticEnergy(1.0, !_Asymmetric);
     std::cout << "electrostaticEnergy (order=1) = " << electrostaticEnergy << std::endl << std::flush;
     }
 

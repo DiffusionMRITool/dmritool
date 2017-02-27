@@ -38,8 +38,8 @@ DWIReader<TPixelType, VImageDimension>
   m_CorrectDWIValues = true;
   m_ShowWarnings = true;
 
-  m_MaskImage = B0ImageType::New();
-  m_B0Image = MaskImageType::New();
+  m_MaskImage = MaskImageType::New();
+  m_B0Image = B0ImageType::New();
 
   m_SamplingSchemeQSpace = SamplingSchemeQSpaceType::New();
 }
@@ -119,7 +119,7 @@ DWIReader<TPixelType, VImageDimension>
       {
       dataStr0 = utl::IsFileExist(stringMatrix[i][2]) ? stringMatrix[i][2] : dwiPath+stringMatrix[i][2];
       utlGlobalException( !IsImageEmpty(m_MaskImage) && !itk::VerifyImageSize<MaskImageType>(m_MaskImage, dataStr0, true), "wrong size of m_MaskImage and DWI file " << stringMatrix[i][2] << ". Inconsistent information!");
-      utlGlobalException( !IsImageEmpty(m_B0Image) && !itk::VerifyImageSize<MaskImageType>(m_B0Image, dataStr0, true), "wrong size of b0Image and DWI file " << stringMatrix[i][2] << ". Inconsistent information! m_B0Image="<<m_B0Image);
+      utlGlobalException( !IsImageEmpty(m_B0Image) && !itk::VerifyImageSize<B0ImageType>(m_B0Image, dataStr0, true), "wrong size of b0Image and DWI file " << stringMatrix[i][2] << ". Inconsistent information! m_B0Image="<<m_B0Image);
       m_IsInput4DImage = DetermineIsInput4DImage(dataStr0);
       }
     else
@@ -145,7 +145,7 @@ DWIReader<TPixelType, VImageDimension>
       }
     else 
       {
-      bStr = dwiPath+stringMatrix[i][0];
+      bStr = utl::IsFileExist(stringMatrix[i][0]) ? stringMatrix[i][0] : dwiPath+stringMatrix[i][0];
       utl::ReadVector(bStr,bVecTemp);
       utlGlobalException(gradStrTempMatrix.size()!=gradStrTempMatrix.size(), "wrong size of b values in " << bStr << " and gradients in " << gradStr);
       }
@@ -179,7 +179,7 @@ DWIReader<TPixelType, VImageDimension>
     oss << ", gradStrTempMatrix.size()=" << gradStrTempMatrix.size() << ", 4D image = " << dataStr;
     if (stringMatrix[i].size()==4)
       oss << ", index=" << indexStr;
-    oss << std::endl << std::flush;
+    // oss << std::endl << std::flush;
     ossStr.push_back(oss.str());
 
 
@@ -325,10 +325,13 @@ DWIReader<TPixelType, VImageDimension>
         if (!IsImageEmpty(m_MaskImage) && maskIt.Get()<=1e-10)
           {
           dwiIt.Set(dwiZeroPixel);
+          b0It.Set(0.0);
           continue;
           }
 
         b0Index = b0It.GetIndex();
+        if (this->GetDebug())
+          std::cout << "index = " << b0Index << std::endl << std::flush;
         for ( int kk = 0; kk < VImageDimension; kk += 1 ) 
           dwi4DTempIndex[kk] = b0Index[kk];
 
@@ -364,6 +367,12 @@ DWIReader<TPixelType, VImageDimension>
             }
           }
 
+        if (b0It.Get()<1e-10)
+          {
+          dwiIt.Set(dwiZeroPixel);
+          continue;
+          }
+
         // dwi without b0
         double sumPixeldwi=0;
         dwiPixel = dwiIt.Get();
@@ -390,6 +399,12 @@ DWIReader<TPixelType, VImageDimension>
           std::cout << "Warning: " << ossWarn.str() << std::endl << std::flush;
           }
 
+        if (this->GetDebug())
+          {
+          utlPrintVar(true, b0It.Get());
+          itk::PrintVariableLengthVector(dwiPixel, "dwiPixel");
+          }
+
         dwiIt.Set(dwiPixel);
 
         }
@@ -406,10 +421,14 @@ DWIReader<TPixelType, VImageDimension>
         if (!IsImageEmpty(m_MaskImage) && maskIt.Get()<=1e-10)
           {
           dwiIt.Set(dwiZeroPixel);
+          b0It.Set(0.0);
           continue;
           }
 
         b0Index = b0It.GetIndex();
+        if (this->GetDebug())
+          std::cout << "index = " << b0Index << std::endl << std::flush;
+
         dwiTempPixel = dwiTempIt.Get();
         std::ostringstream ossWarn;
         // additional b0
@@ -435,6 +454,12 @@ DWIReader<TPixelType, VImageDimension>
             }
           }
 
+        if (b0It.Get()<1e-10)
+          {
+          dwiIt.Set(dwiZeroPixel);
+          continue;
+          }
+
         // dwi without b0
         dwiPixel = dwiIt.Get();
         int jj=0;
@@ -453,6 +478,12 @@ DWIReader<TPixelType, VImageDimension>
           {
           // utlWarning(true,  "Warning: " << ossWarn.str() << "dwiPixel=" << dwiPixel<<";");
           std::cout << "Warning: " << ossWarn.str() << std::endl << std::flush;
+          }
+
+        if (this->GetDebug())
+          {
+          utlPrintVar(true, b0It.Get());
+          itk::PrintVariableLengthVector(dwiPixel, "dwiPixel");
           }
         dwiIt.Set(dwiPixel);
         }
@@ -495,11 +526,19 @@ DWIReader<TPixelType, VImageDimension>
       continue;
     b0Pixel = b0It.Get();
     if (b0Pixel<1e-10)
+      {
+      dwiPixel = dwiIt.Get();
+      dwiPixel.Fill(0.0);
+      dwiIt.Set(dwiPixel);
       continue;
+      }
 
     dwiPixel = dwiIt.Get();
     if (dwiPixel.GetSquaredNorm()<1e-10)
+      {
+      b0It.Set(0.0);
       continue;
+      }
 
     b0Index = b0It.GetIndex();
     double maxData=0.0, minData=std::numeric_limits<double>::max();
@@ -510,6 +549,19 @@ DWIReader<TPixelType, VImageDimension>
       if (dwiPixel[j]<=0.99*b0Pixel && dwiPixel[j]>=1e-8*b0Pixel && dwiPixel[j]<minData)
         minData = dwiPixel[j];
       }
+    
+    if (maxData < minData)
+      {
+      if (this->GetDebug())
+        {
+        std::cout << "Logical ERROR: ("<<b0Index[0]<<","<<b0Index[1]<<","<<b0Index[2]<<"), all dwi values are not in [0, 0.99]*b0. " << std::endl << std::flush;
+        b0It.Set(0.0);
+        dwiPixel = dwiIt.Get();
+        dwiPixel.Fill(0.0);
+        dwiIt.Set(dwiPixel);
+        continue;
+        }
+      }
 
     for ( int j = 0; j < numberOfDWIsWithoutB0; j += 1 ) 
       {
@@ -518,7 +570,7 @@ DWIReader<TPixelType, VImageDimension>
         if (this->GetDebug())
           {
           std::cout << "Logical ERROR in itk::DWIReader, dwi("<<b0Index[0]<<","<<b0Index[1]<<","<<b0Index[2]<<","<<j<<")=" << dwiPixel[j] << " > " << "b0("<<b0Index[0]<<","<<b0Index[1]<<","<<b0Index[2]<<")=" << b0Pixel
-            << " Thus we force data["<<j<<"]="<< maxData <<", which the maximal value of the other dwi values."<< std::endl;
+            << " Thus we force data["<<j<<"]="<< maxData <<", which is the maximal value of the other dwi values."<< std::endl;
           }
         dwiPixel[j] = maxData;
         }
@@ -527,7 +579,7 @@ DWIReader<TPixelType, VImageDimension>
         if (this->GetDebug())
           {
           std::cout << "Logical ERROR in itk::DWIReader, dwi("<<b0Index[0]<<","<<b0Index[1]<<","<<b0Index[2]<<","<<j<<")=" << dwiPixel[j] << " < " << "b0("<<b0Index[0]<<","<<b0Index[1]<<","<<b0Index[2]<<")=" << b0Pixel
-            << " Thus we force data["<<j<<"]="<< minData <<", which the minimal value of the other dwi values."<< std::endl;
+            << " Thus we force data["<<j<<"]="<< minData <<", which is the minimal value of the other dwi values."<< std::endl;
           }
         dwiPixel[j] = minData;
         }

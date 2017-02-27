@@ -251,6 +251,33 @@ SamplingSchemeQSpace<TPixelType>
   ConvertQVectorToBVector();
 }
 
+template <class TPixelType>
+void
+SamplingSchemeQSpace<TPixelType>
+::RemoveSamplesNotIndexed()
+{
+  if (this->size()==0)
+    return;
+  utlGlobalException(this->m_IndicesInShells->size()==0, "need to set m_IndicesInShells first");
+
+  if (m_BVector->size()>0)
+    {
+    utlGlobalException(m_BVector->size()!=this->size(), "different size of bVec and gradients");
+    STDVectorType bVec = *m_BVector;
+    m_BVector->clear();
+    for ( int i = 0; i < this->GetNumberOfShells(); ++i ) 
+      {
+      IndexVectorType indices = (*this->m_IndicesInShells)[i];
+      for ( int j = 0; j < indices.size(); ++j ) 
+        {
+        m_BVector->push_back(bVec[indices[j]]);
+        }
+      }
+    }
+
+  Superclass::RemoveSamplesNotIndexed();
+}
+
 }
 
 

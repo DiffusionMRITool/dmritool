@@ -75,41 +75,42 @@ SamplingScheme3D<TPixelType>
 template <class TPixelType>
 typename SamplingScheme3D<TPixelType>::MatrixPointer
 SamplingScheme3D<TPixelType>
-::GetOrientationsCartesian()
+::GetOrientationsCartesian(const bool alwarysReCalculate)
 {
-  if (m_OrientationsCartesian->Rows()==GetNumberOfSamples())
-    return m_OrientationsCartesian;
-  else if (m_OrientationsSpherical->Rows()==GetNumberOfSamples())
-    {
-    m_OrientationsCartesian = MatrixPointer(new MatrixType());
-    *m_OrientationsCartesian = utl::SphericalToCartesian(*m_OrientationsSpherical);
-    return m_OrientationsCartesian;
-    }
-  else if (this->GetNumberOfSamples()>0)
+  if (alwarysReCalculate)
     {
     m_OrientationsCartesian = MatrixPointer(new MatrixType());
     utl::PointsContainerToUtlMatrix<Superclass, double>(*this, *m_OrientationsCartesian);
     return m_OrientationsCartesian;
     }
   else
-    utlGlobalException(true, "no orientations");
-  return MatrixPointer(new MatrixType());
+    {
+    if (m_OrientationsCartesian->Rows()==GetNumberOfSamples())
+      return m_OrientationsCartesian;
+    else if (m_OrientationsSpherical->Rows()==GetNumberOfSamples())
+      {
+      m_OrientationsCartesian = MatrixPointer(new MatrixType());
+      *m_OrientationsCartesian = utl::SphericalToCartesian(*m_OrientationsSpherical);
+      return m_OrientationsCartesian;
+      }
+    else if (this->GetNumberOfSamples()>0)
+      {
+      m_OrientationsCartesian = MatrixPointer(new MatrixType());
+      utl::PointsContainerToUtlMatrix<Superclass, double>(*this, *m_OrientationsCartesian);
+      return m_OrientationsCartesian;
+      }
+    else
+      utlGlobalException(true, "no orientations");
+    return MatrixPointer(new MatrixType());
+    }
 }
 
 template <class TPixelType>
 typename SamplingScheme3D<TPixelType>::MatrixPointer
 SamplingScheme3D<TPixelType>
-::GetOrientationsSpherical()
+::GetOrientationsSpherical(const bool alwarysReCalculate)
 {
-  if (m_OrientationsSpherical->Rows()==GetNumberOfSamples())
-    return m_OrientationsSpherical;
-  else if (m_OrientationsCartesian->Rows()==GetNumberOfSamples())
-    {
-    m_OrientationsSpherical = MatrixPointer(new MatrixType());
-    *m_OrientationsSpherical = utl::CartesianToSpherical(*m_OrientationsCartesian);
-    return m_OrientationsSpherical;
-    }
-  else if (this->GetNumberOfSamples()>0)
+  if (alwarysReCalculate)
     {
     m_OrientationsCartesian = MatrixPointer(new MatrixType());
     m_OrientationsSpherical = MatrixPointer(new MatrixType());
@@ -118,8 +119,27 @@ SamplingScheme3D<TPixelType>
     return m_OrientationsSpherical;
     }
   else
-    utlGlobalException(true, "no orientations");
-  return MatrixPointer(new MatrixType());
+    {
+    if (m_OrientationsSpherical->Rows()==GetNumberOfSamples())
+      return m_OrientationsSpherical;
+    else if (m_OrientationsCartesian->Rows()==GetNumberOfSamples())
+      {
+      m_OrientationsSpherical = MatrixPointer(new MatrixType());
+      *m_OrientationsSpherical = utl::CartesianToSpherical(*m_OrientationsCartesian);
+      return m_OrientationsSpherical;
+      }
+    else if (this->GetNumberOfSamples()>0)
+      {
+      m_OrientationsCartesian = MatrixPointer(new MatrixType());
+      m_OrientationsSpherical = MatrixPointer(new MatrixType());
+      utl::PointsContainerToUtlMatrix<Superclass, double>(*this, *m_OrientationsCartesian);
+      *m_OrientationsSpherical = utl::CartesianToSpherical(*m_OrientationsCartesian);
+      return m_OrientationsSpherical;
+      }
+    else
+      utlGlobalException(true, "no orientations");
+    return MatrixPointer(new MatrixType());
+    }
 }
 
 template <class TPixelType>
@@ -143,7 +163,7 @@ SamplingScheme3D<TPixelType>
   utlException(shellIndex>num, "wrong index");
   MatrixPointer mat (new MatrixType(num, 3));
   m_OrientationsSpherical = GetOrientationsSpherical();
-  m_OrientationsSpherical->GetRows((*m_IndicesInShells)[shellIndex], *mat);
+  *mat = m_OrientationsSpherical->GetRows((*m_IndicesInShells)[shellIndex]);
   return mat;
 }
 
@@ -249,6 +269,35 @@ SamplingScheme3D<TPixelType>
   m_OrientationsSpherical=MatrixPointer(new MatrixType());
   m_OrientationsCartesian=MatrixPointer(new MatrixType());
   this->Modified();
+}
+
+template <class TPixelType>
+void
+SamplingScheme3D<TPixelType>
+::RemoveSamplesNotIndexed()
+{
+  if (this->size()==0)
+    return;
+  utlGlobalException(m_IndicesInShells->size()==0, "need to set m_IndicesInShells first");
+  utlGlobalException(m_RadiusVector->size()>0 && m_RadiusVector->size()!=this->size(), "different size of radiusVector and gradients");
+
+  Pointer selfClone = this->Clone();
+  this->Clear();
+  int ind=0;
+  for ( int i = 0; i < selfClone->GetNumberOfShells(); ++i ) 
+    {
+    IndexVectorType indices = (*selfClone->m_IndicesInShells)[i];
+    IndexVectorType indicesNew;
+    for ( int j = 0; j < indices.size(); ++j ) 
+      {
+      this->push_back((*selfClone)[indices[j]]);
+      if (selfClone->m_RadiusVector->size()>0)
+        this->m_RadiusVector->push_back((*selfClone->m_RadiusVector)[indices[j]]);
+      indicesNew.push_back(ind);
+      ind++;
+      }
+    this->m_IndicesInShells->push_back(indicesNew);
+    }
 }
 
 template <class TPixelType>
@@ -526,12 +575,150 @@ SamplingScheme3D<TPixelType>
 template <class TPixelType>
 double
 SamplingScheme3D<TPixelType>
-::CalculateMinDistance(const unsigned int index, const bool isSymmetric) const
+::CalculatePackingDensity( const bool isSymmetric) const
+{
+  STDVectorType dist = CalculateMinDistance(isSymmetric);
+  double sum_area=0;
+  for ( int i = 0; i < dist.size(); ++i ) 
+    {
+    // https://en.wikipedia.org/wiki/Spherical_cap 
+    // double area = 1.0/(4.0*M_PI)  * (2.0*M_PI*(1-std::cos(dist[i]/2.0))) *2.0; 
+    double area = 1-std::cos(dist[i]/2.0); 
+    if (!isSymmetric)
+      area /= 2.0;
+    sum_area += area; 
+    }
+  return sum_area;
+}
+
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculatePackingDensityInShell(const unsigned int shellIndex, const bool isSymmetric) const
+{
+  STDVectorType dist = CalculateMinDistanceInShell(shellIndex, isSymmetric);
+  double sum_area=0;
+  for ( int i = 0; i < dist.size(); ++i ) 
+    {
+    double area = 1-std::cos(dist[i]/2.0); 
+    if (!isSymmetric)
+      area /= 2.0;
+    sum_area += area; 
+    }
+  return sum_area;
+}
+  
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateSphericalCodeEntropy( const bool isSymmetric) const
+{
+  STDVectorType dist = CalculateMinDistance(isSymmetric);
+  STDVectorType pdf(dist.size()+1);
+  double sum_pdf=0.0;
+  for ( int i = 0; i < dist.size(); ++i ) 
+    {
+    // https://en.wikipedia.org/wiki/Spherical_cap 
+    // double theta = dist[i]/2.0;
+    // pdf[i] = 1.0/(4.0*M_PI)  * (2.0*M_PI*(1-std::cos(theta))) *2.0; 
+    pdf[i] = 1-std::cos(dist[i]/2.0); 
+    if (!isSymmetric)
+      pdf[i] /= 2.0;
+    sum_pdf += pdf[i];
+    }
+  pdf.back()= 1.0 - sum_pdf;
+  // utl::PrintVector(pdf, "pdf");
+  return utl::Entropy(pdf, pdf.size());
+}
+
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateSphericalCodeEntropyInShell(const unsigned int shellIndex,  const bool isSymmetric) const
+{
+  STDVectorType dist = CalculateMinDistanceInShell(shellIndex, isSymmetric);
+  STDVectorType pdf(dist.size()+1);
+  double sum_pdf=0.0;
+  for ( int i = 0; i < dist.size(); ++i ) 
+    {
+    pdf[i] = 1-std::cos(dist[i]/2.0); 
+    if (!isSymmetric)
+      pdf[i] /= 2.0;
+    sum_pdf += pdf[i];
+    }
+  pdf.back()= 1.0 - sum_pdf;
+  return utl::Entropy(pdf, pdf.size());
+}
+
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateVoronoiEntropy(const MatrixType& grad, const MatrixType& gradTess, const bool isSymmetric)
+{
+  unsigned int num = grad.Rows();
+  unsigned int N = gradTess.Rows();
+
+  MatrixType dotMat = gradTess * grad.GetTranspose();
+  std::vector<int> indices(N,-1);
+  for ( int i = 0; i < N; ++i ) 
+    {
+    double dotMax=-2.0;
+    for ( int j = 0; j < num; ++j ) 
+      {
+      double dot = dotMat(i,j);
+      if (isSymmetric)
+        dot = std::fabs(dot);
+
+      if (dotMax<dot)
+        {
+        dotMax = dot;
+        indices[i] = j;
+        }
+      }
+    }
+
+  // utl::PrintVector(indices, "indices");
+  utl::Vector<double> distNum(num,0);
+  for ( int i = 0; i < N; ++i ) 
+    distNum[indices[i]] += 1;
+
+  // utl::PrintUtlVector(distNum, "distNum");
+  distNum /= (double)N;
+  // utl::PrintUtlVector(distNum, "distNum");
+  return utl::Entropy(distNum, num);
+}
+
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateVoronoiEntropy(const int tess, const bool isSymmetric)
+{
+  utl::GradientTable<double>::Initialize(tess);
+  MatrixPointer gradT4 = utl::GradientTable<double>::GetGrad(tess,DIRECTION_NODUPLICATE, CARTESIAN_TO_CARTESIAN);
+  MatrixPointer grad = GetOrientationsCartesian();
+  return CalculateVoronoiEntropy(*grad, *gradT4, isSymmetric);
+}
+
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateVoronoiEntropyInShell(const unsigned int shellIndex, const int tess, const bool isSymmetric)
+{
+  utl::GradientTable<double>::Initialize(tess);
+  MatrixPointer gradT4 = utl::GradientTable<double>::GetGrad(tess,DIRECTION_NODUPLICATE, CARTESIAN_TO_CARTESIAN);
+  MatrixPointer grad = GetOrientationsCartesianInShell(shellIndex);
+  return CalculateVoronoiEntropy(*grad, *gradT4, isSymmetric);
+}
+
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateMaxDot(const unsigned int index, const bool isSymmetric) const
 {
   utlGlobalException(this->GetNumberOfSamples()<2, "No enough points!");
   unsigned int num = GetNumberOfSamples();
   
-  double angle, dotMax=-3;  
+  double dotMax=-3;  
 
   double x = (*this)[index][0];
   double y = (*this)[index][1];
@@ -549,28 +736,22 @@ SamplingScheme3D<TPixelType>
     if (isSymmetric && dot<0 )
       dot = -dot;
 
-    if (dot>dotMax && std::abs(1-dot)>1e-8)
+    if (dot>dotMax)
       dotMax = dot;
     }
-
-    if(dotMax >= -1.0 - M_EPS && dotMax <= -1.0 + M_EPS)
-      angle = M_PI;
-    else if(dotMax <= 1.0 + M_EPS && dotMax >= 1.0 - M_EPS)
-      angle = 0;
-    else 
-      angle = std::acos(dotMax);
-  return angle;
+  utlGlobalException(dotMax<-1.0-M_EPS || dotMax>1+M_EPS, "wrong dot, not in [-1,1]");
+  return dotMax;
 }
 
 template <class TPixelType>
 double
 SamplingScheme3D<TPixelType>
-::CalculateMinDistanceInShell(const unsigned int sampleIndex, const unsigned int shellIndex, const bool isSymmetric) const
+::CalculateMaxDotInShell(const unsigned int sampleIndex, const unsigned int shellIndex, const bool isSymmetric) const
 {
   utlGlobalException(this->GetNumberOfSamples()<2, "No enough points!");
   unsigned int num = GetNumberOfSamplesInShell(shellIndex);
-  
-  double angle, dotMax=-3;  
+
+  double dotMax=-3;  
 
   double x = (*this)[sampleIndex][0];
   double y = (*this)[sampleIndex][1];
@@ -589,16 +770,42 @@ SamplingScheme3D<TPixelType>
     if (isSymmetric && dot<0 )
       dot = -dot;
 
-    if (dot>dotMax && std::abs(1-dot)>1e-8)
+    if (dot>dotMax)
       dotMax = dot;
     }
+  utlGlobalException(dotMax<-1.0-M_EPS || dotMax>1+M_EPS, "wrong dot, not in [-1,1]");
+  return dotMax;
+}
 
-    if(dotMax >= -1.0 - M_EPS && dotMax <= -1.0 + M_EPS)
-      angle = M_PI;
-    else if(dotMax <= 1.0 + M_EPS && dotMax >= 1.0 - M_EPS)
-      angle = 0;
-    else 
-      angle = std::acos(dotMax);
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateMinDistance(const unsigned int index, const bool isSymmetric) const
+{
+  double dotMax = CalculateMaxDot(index, isSymmetric);
+  double angle=0;
+  if(dotMax >= -1.0 - M_EPS && dotMax <= -1.0 + M_EPS)
+    angle = M_PI;
+  else if(dotMax <= 1.0 + M_EPS && dotMax >= 1.0 - M_EPS)
+    angle = 0;
+  else 
+    angle = std::acos(dotMax);
+  return angle;
+}
+
+template <class TPixelType>
+double
+SamplingScheme3D<TPixelType>
+::CalculateMinDistanceInShell(const unsigned int sampleIndex, const unsigned int shellIndex, const bool isSymmetric) const
+{
+  double dotMax = CalculateMaxDotInShell(index, isSymmetric);
+  double angle=0;
+  if(dotMax >= -1.0 - M_EPS && dotMax <= -1.0 + M_EPS)
+    angle = M_PI;
+  else if(dotMax <= 1.0 + M_EPS && dotMax >= 1.0 - M_EPS)
+    angle = 0;
+  else 
+    angle = std::acos(dotMax);
   return angle;
 }
 

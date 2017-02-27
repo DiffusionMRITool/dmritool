@@ -328,24 +328,6 @@ main(int argc, char *argv[])
     default:
       break;
   }
-
-  if (_PrintArg.isSet())
-    {
-    if (inputNumberOfComponentsPerPixel>1)
-      {
-      typedef itk::VectorImage<float,3> ImageType;
-      ImageType::Pointer image = ImageType::New();
-      itk::ReadImage(_InputFile, image);
-      itk::PrintVectorImage(image, "vectorImage");
-      }
-    else
-      {
-      typedef itk::Image<float,4> ImageType;
-      ImageType::Pointer image = ImageType::New();
-      itk::ReadImage(_InputFile, image);
-      itk::PrintImage(image, "4DImage");
-      }
-    }
   
   return EXIT_SUCCESS;
 }

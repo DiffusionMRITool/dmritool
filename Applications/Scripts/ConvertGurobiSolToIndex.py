@@ -12,6 +12,10 @@ Options:
   -v --verbose             Verbose
   -n <numberOfSamples>     number of samples used in shells
 
+References:
+  "Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code",
+  Jian Cheng, Dinggang Shen, Pew-Thian Yap, MICCAI 2014.
+
 Examples:
 ConvertGurobiSolToIndex.py solution_gurobi.sol indexInShells.txt -n 90,90,90
 
