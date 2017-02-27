@@ -25,7 +25,7 @@ Build
 UTL module has only header files and can be used separately based on the different dependencies. 
 See :ref:`file dependency <dependency>`. 
 
-To build codes using ``utl::NDArray``, you need to have MKL_ or OpenBlas_ + Lapack_.
+To build codes using ``utl::NDArray``, you need to have MKL_ or OpenBlas_ + Lapack_, and your compile needs to support `C++11`_.
 
 
 -  MKL_ is free for students, educators, academic researchers and open source contributors. 
@@ -49,8 +49,9 @@ utl::NDArray
 -  ``utl::NDArray<T,N>`` is an N-dimensional array based on `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__.
 -  ``utl::NDArray<T,1>`` and ``utl::NDArray<T,2>`` are more efficient than ``vnl_vector<T>`` and ``vnl_matrix<T>`` because
 
-  * they are implemented based on openblas_, lapack_ or mkl_.
-  * they use expression template to avoid temporary copies.
+  * ``utl::NDArray<T,N>`` were implemented based on openblas_, lapack_ or mkl_.
+  * ``utl::NDArray<T,N>`` use `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__ to avoid temporary copies.
+  * ``utl::NDArray<T,N>`` use `rvalue references and move constructors, move assignment from C++11 <https://en.wikipedia.org/wiki/C%2B%2B11#Rvalue_references_and_move_constructors>`__. 
 
 - You can run ``utlVNLBlasGTest`` and ``utlVNLLapackGTest`` to compare efficiency of ``utl::NDArray`` and ``vnl_vector``, ``vnl_matrix``.
 
@@ -68,15 +69,19 @@ File structure and dependency
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlCore.h                      | std                                         | useful functions for general purpose                                                                                                                                      |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| utlCore11.h                    | std, c++11 specific                         | useful functions for general purpose                                                                                                                                      |
++--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlCoreMKL.h                   | std, (mkl optional)                         | useful functions for mkl. If mkl is not found, a manual implementation is used.                                                                                           |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| utlCommandLineParser.h         | std                                         | small but powerful command line parser, borrowed from `CImg <http://cimg.sourceforge.net/>`__                                                                             |
+| utlCommandLineParser.h         | std                                         | small but powerful command line parser, borrowed from `CImg <http://cimg.eu/>`__                                                                                          |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlMath.h                      | std                                         | math related functions                                                                                                                                                    |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlRotationMatrixFromVectors.h | std                                         | functions to find rotation 3x3 matrix from two 3D vectors                                                                                                                 |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlSTDHeaders.h                | std                                         | macros to avoid include confliction issues for different versions of std                                                                                                  |
++--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| utlTypeinfo.h                  | std, c++11 specific                         | type alias for c++11                                                                                                                                                      |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlGTest.h                     | google gtest                                | useful macros for gtest_                                                                                                                                                  |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
@@ -90,15 +95,21 @@ File structure and dependency
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlExpression.h                | std                                         | Implementation of `Expression Template <http://en.wikipedia.org/wiki/Expression_templates>`__ to avoid temporary copies in expression.                                    |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| utlFunctors.h                  | std                                         | Some functor classes.                                                                                                                                                     |
+| utlFunctors.h                  | std                                         | Some functor classes, and functions for ``utl::NDArray<T,N>``.                                                                                                            |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| utlNDArray.h                   | std, blas, (mkl optional)                   | ``utl::NDArray<T,N>`` class (N-dimensional array) based on expression template, blas and mkl.                                                                             |
+| utlNDArray.h                   | std, blas, lapack, (mkl optional)           | ``utl::NDArray<T,N>`` class (N-dimensional array) based on expression template, blas and mkl.                                                                             |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| utlVector.h                    | std, blas, lapack, (mkl optional)           | ``utl::NDArray<T,1>`` class and its related functions.                                                                                                                    |
+| utlVector.h                    | std, blas, lapack, (mkl optional)           | ``utl::NDArray<T,1>`` class (vector).                                                                                                                                     |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-| utlMatrix.h                    | std, blas, lapack, (mkl optional)           | ``utl::NDArray<T,2>`` class and its related functions.                                                                                                                    |
+| utlMatrix.h                    | std, blas, lapack, (mkl optional)           | ``utl::NDArray<T,2>`` class (matrix).                                                                                                                                     |
++--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| utl4thOrderTensor.h            | std, blas, lapack, (mkl optional)           | ``utl::NDArray<T,4>`` class (4th order tensor).                                                                                                                           |
++--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| utlNDArrayFunctions.h          | std, blas, lapack, (mkl optional)           | ``utl::NDArray<T,N>`` related functions.                                                                                                                                  |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlDMRI.h                      | std, ``utl::NDArray``                       | Useful functions for dMRI                                                                                                                                                 |
++--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
+| utlDMRIStoredTables.h          | std, ``utl::NDArray``                       | Precomputed tables for dmritool                                                                                                                                           |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 | utlOpenMP.h                    | openmp                                      | openmp_ related functions                                                                                                                                                 |
 +--------------------------------+---------------------------------------------+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------+

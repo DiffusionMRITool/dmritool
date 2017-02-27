@@ -35,7 +35,7 @@ namespace itk
  *     which is the solution of
  *
  *   0) when mode=0
- *   0) when mode=1
+ *   1) when mode=1
  *   2) when mode=2 (default)
  *   \f[
  *      \min_{x} \|Ax-b\|^2 + lambda* w^T abs(x)
@@ -143,9 +143,9 @@ public:
 
   void VerifyInputs() const;
   
-  void Solve(); 
+  void Solve(const VectorType& xInitial=VectorType()); 
   
-  ValueType EvaluateCostFunction(const VectorType& x, const int col) const;
+  ValueType EvaluateCostFunctionInColumn(const VectorType& x, const int col) const;
   ValueType EvaluateCostFunction(const MatrixType& x=MatrixType()) const;
   
 

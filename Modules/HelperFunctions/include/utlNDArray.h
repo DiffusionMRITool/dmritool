@@ -12,11 +12,15 @@
 
 #include <numeric>
 
-#include "utlBlas.h"
-#include "utlCore.h"
-#include "utlExpression.h"
-#include "utlCoreMacro.h"  
 #include "utlSTDHeaders.h"
+#include "utlCore.h"
+#include "utlCoreMacro.h"  
+#include "utlBlas.h"
+#include "utlExpression.h"
+#include "utlTypeinfo.h"
+
+#include "utlFunctors.h"
+#include "utlNDArrayFunctions.h"
 
 namespace utl
 {
@@ -33,60 +37,16 @@ do {                                                                            
   this->m_IsShared = false;                                                               \
 } while (false)                                                                           
 
+
 template <class T, unsigned int Dim> class NDArray;
 template <class T, unsigned int Dim> class NDArrayBase;
 
-template <class T, unsigned int Dim, class EType>
-utl_shared_ptr< NDArray<T,Dim> >
-ToNDArray ( const Expr<EType>& expr )
-{
-  utl_shared_ptr< NDArray<T,Dim> > mat(new NDArray<T,Dim>(expr) );
-  return mat;
-}
+template<class T> using Vector = NDArray<T,1>;
+template<class T> using Matrix = NDArray<T,2>;
 
-template <class T>
-inline void
-PrintUtlMatrix(const NDArray<T,2>& mat, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
-{
-  utl::PrintMatrix<NDArray<T,2> >(mat, mat.Rows(), mat.Columns(), str, separate, os);
-}
+// template <class T, unsigned int Dim>
+// T InnerProduct ( const NDArrayBase<T,Dim>& v1, const NDArrayBase<T,Dim>& v2 );
 
-template <class T>
-inline void
-PrintUtlVector(const NDArray<T,1>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
-{
-  PrintContainer(vec.Begin(), vec.End(), str, separate, os);
-}
-
-template <class T, unsigned int Dim>
-inline void
-PrintUtlNDArray(const NDArrayBase<T,Dim>& arr, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
-{
-  arr.Print(os<< str, separate );
-}
-
-template <class T, unsigned int Dim>
-inline T
-InnerProduct ( const NDArrayBase<T,Dim>& v1, const NDArrayBase<T,Dim>& v2 )
-{
-  utlSAException(v1.Size() != v2.Size())(v1.Size())(v2.Size()).msg("vector sizes mismatch");
-  return utl::cblas_dot<T>(v1.Size(), v1.GetData(), 1, v2.GetData(), 1);
-}
-
-template <class T, unsigned int Dim>
-inline T
-DotProduct ( const NDArray<T,Dim>& v1, const NDArray<T,Dim>& v2 )
-{
-  return InnerProduct(v1, v2);
-}
-
-template< typename T, unsigned int Dim >
-std::ostream & 
-operator<<(std::ostream & os, const NDArray<T,Dim> & arr)
-{
-  arr.Print(os<< "utl::NDArray<T,Dim>" );
-  return os;
-}
 
 /**
  *   \class   NDArray
@@ -106,6 +66,7 @@ public:
 
   
   typedef typename Superclass::ValueType          ValueType;
+  typedef typename Superclass::ScalarValueType    ScalarValueType;
   
   typedef typename Superclass::SizeType           SizeType;
   typedef typename Superclass::ShapeType          ShapeType;
@@ -118,6 +79,7 @@ public:
   typedef typename Superclass::ConstReference     ConstReference;
   
   using Superclass::Dimension;
+  using Superclass::SubDimension;
   
   using Superclass::operator=;
 
@@ -128,8 +90,13 @@ public:
 
   NDArray(const NDArray<T,Dim>& vec) : Superclass(vec) {  }
   
+  NDArray(NDArray<T,Dim>&& vec) 
+    {
+    operator=(std::move(vec));
+    }
+  
   template<typename EType>
-  NDArray(const Expr<EType>& expr) : Superclass(expr)   {  }
+  NDArray(const Expr<EType, typename EType::ValueType>& expr) : Superclass(expr)   {  }
 
 /**
  * Constructor assumes input points to array of correct size.
@@ -146,6 +113,21 @@ public:
   template< typename TValue >
   NDArray(const NDArray<TValue, Dim> & r) : Superclass(r)  {  }
   
+  NDArray<T,Dim>& operator=(const NDArray<T,Dim> & r)
+    {
+    Superclass::operator=(r);
+    return *this;
+    }
+  
+  NDArray<T,Dim>& operator=(NDArray<T,Dim> && r)
+    {
+    if ( this != &r ) 
+      {
+      this->Clear();
+      this->Swap(r);
+      }
+    return *this;
+    }
 };
 
 
@@ -157,22 +139,30 @@ public:
  *   \ingroup utlNDArray 
  */
 template < class T, unsigned int Dim  >
-class NDArrayBase : public Expr<NDArrayBase<T, Dim> > 
+class NDArrayBase : public Expr<NDArrayBase<T, Dim>, T > 
 {
+  static_assert(::std::is_scalar<T>::value 
+    || ::std::is_same<T,std::complex<double>>::value
+    || ::std::is_same<T,std::complex<float>>::value, "NDArrayBase<T,Dim>: T must be a scalar or std::complex<double> or std::complex<float>");
+
 public:
 
   /** The element type stored at each location in the NDArrayBase. */
   typedef NDArrayBase Self;
-  typedef Expr<NDArrayBase<T, Dim> >     Superclass;
+  typedef Expr<NDArrayBase<T, Dim>, T >     Superclass;
 
   typedef typename Superclass::SizeType          SizeType;
   typedef typename Superclass::ShapeType         ShapeType;
+  
 
   // typedef SizeType  ShapeType[Dim];
 
   enum { Dimension = Dim };
+  // static constexpr SizeType Dimension = Dim;
+  static constexpr SizeType SubDimension = Dim>1?Dim-1:1;
   
   typedef T ValueType;
+  typedef utl::remove_complex_t<T>                ScalarValueType;
 
   /** An iterator through the array. */
   typedef ValueType* Iterator;
@@ -253,9 +243,16 @@ public:
     m_Shape[i]=0, m_OffSetTable[i]=0; 
   operator=(vec);
   }
+  NDArrayBase(NDArrayBase<T,Dim>&& vec) 
+  { 
+  // NOTE: although the type of vec is an rvalue reference,
+  //       vec itself is an lvalue, since it is a named object. 
+  //       In order to ensure that the move assignment is used, we have to explicitly specify std::move(vec).
+    operator=(std::move(vec)); 
+  }
   
   template<typename EType>
-  NDArrayBase(const Expr<EType>& expr) : m_IsShared(false), m_Data(NULL)
+  NDArrayBase(const Expr<EType, typename EType::ValueType>& expr) : m_IsShared(false), m_Data(NULL)
   {
   for ( int i = 0; i < Dimension; ++i )
     m_Shape[i]=0, m_OffSetTable[i]=0; 
@@ -313,7 +310,7 @@ public:
     m_IsShared = false;
     }
   
-  UTL_ALWAYS_INLINE double Eval( int i ) const
+  UTL_ALWAYS_INLINE T Eval( int i ) const
     {
     return m_Data[i];
     }
@@ -323,11 +320,11 @@ public:
    */
   UTL_ALWAYS_INLINE SizeType   Size() const
     {
-    return m_OffSetTable[0];
+    return Dimension==0?1:m_OffSetTable[0];
     }
   UTL_ALWAYS_INLINE SizeType   GetSize() const
     {
-    return m_OffSetTable[0];
+    return Dimension==0?1:m_OffSetTable[0];
     }
 
   UTL_ALWAYS_INLINE const ShapeType GetShape() const
@@ -335,7 +332,7 @@ public:
   return m_Shape;
   }
   
-  UTL_ALWAYS_INLINE static SizeType  GetDimension() 
+  UTL_ALWAYS_INLINE static constexpr SizeType  GetDimension() 
     { return Dimension; }
 
   UTL_ALWAYS_INLINE SizeType GetOffset(const ShapeType& shapeIndex) const
@@ -346,12 +343,33 @@ public:
     index += shapeIndex[Dimension-1];
     return index;
     }
+
+  UTL_ALWAYS_INLINE void GetIndex(const SizeType offset, SizeType index[Dimension]) const
+    {
+    int nn = offset;
+    for ( int i = 1; i < Dim; i++ )
+      {
+      index[i-1] = nn / m_OffSetTable[i] ;
+      nn -= index[i-1] * m_OffSetTable[i];
+      }
+    index[Dimension-1] = nn;
+    }
+
+  const SizeType* GetOffSetTable() const 
+    {
+    return m_OffSetTable;
+    }
+
+  bool GetIsShared() const
+    {
+    return m_IsShared;
+    }
     
 
 #define __Array_Saver_Expr(saver, saverReal)                                                     \
 template<typename EType>                                                                         \
-inline NDArrayBase<T,Dim>& operator saver (const Expr<EType>& src){                              \
-  SizeType srcDim = Expr<EType>::GetDimension();                                                 \
+inline NDArrayBase<T,Dim>& operator saver (const Expr<EType, typename EType::ValueType>& src){   \
+  auto srcDim = Expr<EType, typename EType::ValueType>::GetDimension();                          \
   utlSAException(srcDim>0 && srcDim!=Dimension)                                                  \
     (srcDim)(Dimension).msg("the expression has a difference size");                             \
   const EType &r = src.ConstRef();                                                               \
@@ -392,7 +410,17 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     if ( this != &r ) 
       {
       this->ReSize(r.GetShape());
-      utl::cblas_copy(Size(), r.Begin(), 1, m_Data, 1);
+      utl::cblas_copy(r.Size(), r.Begin(), 1, m_Data, 1);
+      }
+    return *this;
+    }
+  
+  NDArrayBase<T,Dim>& operator=(NDArrayBase<T,Dim> && r)
+    {
+    if ( this != &r ) 
+      {
+      this->Clear();
+      this->Swap(r);
       }
     return *this;
     }
@@ -408,6 +436,22 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
       *i++ = static_cast< T >( *input++ );
     return *this;
     }
+  
+  NDArrayBase<T,Dim>& operator=(const std::initializer_list<T>& r)
+    {
+    if (r.size()==Size())
+      utl::cblas_copy(Size(), r.begin(), 1, m_Data, 1);
+    else if (Dim==1)
+      {
+      SizeType shape[Dim];
+      shape[0] = r.size();
+      ReSize(shape);
+      utl::cblas_copy(Size(), r.begin(), 1, m_Data, 1);
+      }
+    else
+      utlException(Dim!=1, "should have only 1 dimension, or have the same size.");
+    return *this;
+    }
 
   /**
    * Assignment operator assumes input points to array of correct size.
@@ -421,7 +465,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     {
     if (r.size()==Size())
       utl::cblas_copy(Size(), r.data(), 1, m_Data, 1);
-    else if (Dimension==1)
+    else if (Dim==1)
       {
       SizeType shape[Dim];
       shape[0] = r.size();
@@ -429,7 +473,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
       utl::cblas_copy(Size(), r.data(), 1, m_Data, 1);
       }
     else
-      utlException(Dimension!=1, "should have only 1 dimension, or have the same size.");
+      utlException(Dim!=1, "should have only 1 dimension, or have the same size.");
     return *this;
     }
 
@@ -472,7 +516,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
 
     while ( i != this->End() )
       {
-      if ( std::fabs(*i - *j) > eps )
+      if ( std::abs(*i - *j) > eps )
         return false;
       ++j;
       ++i;
@@ -491,7 +535,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
 
     while ( i != this->End() )
       {
-      if ( std::fabs(*i - *j) > eps )
+      if ( std::abs(*i - *j) > eps )
         return false;
       ++j;
       ++i;
@@ -553,6 +597,10 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     {
     return ConstIterator(m_Data);
     }
+  ConstIterator cBegin() const
+    {
+    return ConstIterator(m_Data);
+    }
 
   /**
    * Get an Iterator for the end of the NDArrayBase.
@@ -566,6 +614,10 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
    * Get a ConstIterator for the end of the NDArrayBase.
    */
   ConstIterator End() const
+    {
+    return ConstIterator(m_Data + Size());
+    }
+  ConstIterator cEnd() const
     {
     return ConstIterator(m_Data + Size());
     }
@@ -585,6 +637,10 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     {
     return ConstReverseIterator(m_Data + Size());
     }
+  ConstReverseIterator crBegin() const
+    {
+    return ConstReverseIterator(m_Data + Size());
+    }
 
   /**
    * Get an end ReverseIterator.
@@ -598,6 +654,10 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
    * Get an end ConstReverseIterator.
    */
   ConstReverseIterator rEnd() const
+    {
+    return ConstReverseIterator(m_Data);
+    }
+  ConstReverseIterator crEnd() const
     {
     return ConstReverseIterator(m_Data);
     }
@@ -626,7 +686,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     Clear();
     m_Data = data;
     m_IsShared = true;
-    for ( int i = 0; i < Dimension; ++i ) 
+    for ( int i = 0; i < Dim; ++i ) 
       m_Shape[i] = shape[i];
     ComputeOffSetTable();
     }
@@ -643,9 +703,9 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
   bool ReSize(const ShapeType& shape)
   {
   // if no change in shape or size, do not reallocate.
-  if (IsSameShape(shape)) 
+  if (IsSameShape(shape) && this->m_Data) 
     return false;
-  if (IsSameSize(shape)) 
+  if (IsSameSize(shape) && this->m_Data) 
     {
     ReShape(shape);
     return false;
@@ -669,16 +729,54 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
   {
   SizeType newSize = std::accumulate(shape, shape+Dim, 0);
   utlException(newSize!=Size(), "need to keep the same size");
-  for ( int i = 0; i < Dimension; ++i ) 
+  for ( int i = 0; i < Dim; ++i ) 
     m_Shape[i] = shape[i];
   ComputeOffSetTable();
   return *this;
   }
+
+  NDArray<T,SubDimension> GetRefSubArray(const int i) const
+    {
+    NDArray<T, SubDimension> arr;
+    unsigned shape[SubDimension];
+    if (Dim>1)
+      {
+      for ( int jj = 0; jj < SubDimension; ++jj ) 
+        shape[jj] = m_Shape[jj+1];
+      arr.SetData(m_Data+i*m_OffSetTable[1], shape);
+      }
+    else
+      {
+      shape[0] = 1;
+      arr.SetData(m_Data+i, shape);
+      }
+    return arr;
+    }
   
+  NDArray<T,Dim> GetRefSubArray(const int istart, const int iend) const
+    {
+    NDArray<T,Dim> arr;
+    unsigned shape[Dim];
+    if (Dim>1)
+      {
+      for ( int jj = 0; jj < Dim; ++jj ) 
+        shape[jj] = m_Shape[jj];
+      shape[0]= iend-istart+1;
+      arr.SetData(m_Data+istart*m_OffSetTable[1], shape);
+      }
+    else
+      {
+      shape[0]= iend-istart+1;
+      arr.SetData(m_Data+istart, shape);
+      }
+    return arr;
+    }
+  
+  /** return true if src is a scalar value (dimension of src is 0) or have the same shape.  */
   template<typename EType>                                      
   UTL_ALWAYS_INLINE bool IsSameShape(const EType& src) const
   {
-  SizeType srcDim = Expr<EType>::GetDimension();                                                 
+  SizeType srcDim = Expr<EType, typename EType::ValueType>::GetDimension();                                                 
   if (srcDim==0)
     return true;
   if (srcDim!=Dimension)
@@ -780,7 +878,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
 
   NDArrayBase<T,Dim>& Scale(const T a) 
     { 
-    if (std::fabs(a-1.0)>1e-10) 
+    if (std::abs(a-1.0)>1e-10) 
       cblas_scal<T>(Size(),a,m_Data,1); 
     return *this; 
     }
@@ -911,29 +1009,29 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     }
   
   /** Return largest absolute element value  */
-  T GetInfNorm( ) const
+  double GetInfNorm( ) const
     {
-    double absMax = AbsoluteMaxValue();
-    return absMax>=0 ? absMax : -absMax;
+    double absMax = std::abs(AbsoluteMaxValue());
+    return absMax;
     }
 
   /**  sqrt of sum of squares of its elements */
-  T GetTwoNorm( ) const
+  double GetTwoNorm( ) const
     {
     return utl::cblas_nrm2(Size(), m_Data, 1);
     }
-  T GetSquaredTwoNorm( ) const
+  double GetSquaredTwoNorm( ) const
     {
     double norm = GetTwoNorm();
     return norm*norm;
     }
-  T GetRootMeanSquares( ) const
+  double GetRootMeanSquares( ) const
     {
-    return GetTwoNorm()/std::sqrt(T(Size()));
+    return GetTwoNorm()/std::sqrt(double(Size()));
     }
 
   /** Return sum of absolute values of elements  */
-  T GetOneNorm( ) const
+  double GetOneNorm( ) const
     {
     return utl::cblas_asum(Size(), m_Data, 1);
     }
@@ -1000,7 +1098,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
     int sum=0;
     for (int i = 0; i<Size(); ++i) 
       {
-      if (std::fabs(m_Data[i])<eps) 
+      if (std::abs(m_Data[i])<eps) 
         ++sum;
       }
     return sum;
@@ -1030,21 +1128,47 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
 
   ValueType InnerProduct(const NDArrayBase<T,Dim>& vec) const
     { return utl::InnerProduct(*this, vec); }
+  
+  void 
+  PrintInfo(std::ostream & os, const char* separate=" ") const
+  {
+  utlOSPrintVar(true, os, Dimension, m_IsShared, m_Data);
+  utl::PrintContainer(m_Shape, m_Shape+Dimension, "m_Shape", separate, os);
+  utl::PrintContainer(m_OffSetTable, m_OffSetTable+Dimension,"m_OffSetTable", separate, os);
+  }
 
   void 
   Print(std::ostream & os, const char* separate=" ") const
   {
+  PrintInfo(os, separate);
+  utl::PrintContainer(m_Data, m_Data+Size(), "m_Data", separate, os);
+  }
+  
+  void 
+  PrintWithIndex(std::ostream & os, const char* separate=" ") const
+  {
   PrintVar1(true, Dimension, os);
   utl::PrintContainer(m_Shape, m_Shape+Dimension, "m_Shape", separate, os);
   utl::PrintContainer(m_OffSetTable, m_OffSetTable+Dimension,"m_OffSetTable", separate, os);
-  utl::PrintContainer(m_Data, m_Data+Size(), "m_Data", separate, os);
+  unsigned index[Dimension];
+  for ( int i = 0; i < Size(); ++i ) 
+    {
+    GetIndex(i, index);
+    std::ostringstream oss;
+    oss << "m_Data (";
+    for ( int j = 0; j < Dimension; ++j ) 
+      {
+      oss << index[j]; 
+      if (j<Dimension-1)
+        oss << " ";
+      }
+    oss << ") : ";
+    os << oss.str() << "[ " << m_Data[i]  << " ];"<< std::endl;
+    }
   }
 
 
 protected:
-
-  /** Internal C array representation. */
-  T* m_Data;
 
   SizeType m_OffSetTable[Dimension];
   SizeType m_Shape[Dimension];
@@ -1052,10 +1176,16 @@ protected:
   /** If m_IsShared is true, the memory is owned by other object  */
   bool m_IsShared;
 
+  /** Internal C array representation. */
+  T* m_Data;
+
   UTL_ALWAYS_INLINE void ClearData()
     {
     if (!m_IsShared && Size()>0)
+      {
       delete [] m_Data;
+      m_Data=NULL;
+      }
     }
   UTL_ALWAYS_INLINE void ClearShape()
     {
@@ -1082,6 +1212,7 @@ protected:
 
 #include "utlVector.h"
 #include "utlMatrix.h"
+#include "utl4thOrderTensor.h"
 
 
 #endif 

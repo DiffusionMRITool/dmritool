@@ -32,8 +32,7 @@
 #include "vtkType.h"
 #include "vtkSmartPointer.h"
 
-#include "utlVector.h"
-#include "utlMatrix.h"
+#include "utlNDArray.h"
 #include "itkImageSource.h"
 #include "itkMaskedImageToImageFilter.h"
 #include "utlCore.h"

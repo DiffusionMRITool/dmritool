@@ -20,7 +20,9 @@
 #define __itkFunctorTableBase_h
 
 #include "itkObject.h"
-#include "utl.h"
+#include "itkObjectFactory.h"
+#include "utlSTDHeaders.h"
+#include "utlCoreMacro.h"
 
 namespace itk
 {
@@ -78,6 +80,10 @@ public:
       this->Modified();
       }
   }
+
+  virtual void Initialize()
+    {
+    }
 
   void BuildTable()
     {

@@ -44,12 +44,12 @@ main (int argc, char const* argv[])
       double val_funcLut1 = utl::ExpNegtiveLUT(-val,30,1e3);
       utlPrintVar4(true, val, val_func, val_funcLut1, std::fabs(val_func-val_funcLut1)/val_func);
 
-      typedef itk::UnaryFunctorLookUpTable<itk::Functor::EXP<double> > LUTType;
+      typedef itk::UnaryFunctorLookUpTable<utl::Functor::Exp<double> > LUTType;
       LUTType::Pointer lut = LUTType::New();
       lut->SetVariableMax(0);
       lut->SetVariableMin(-30);
       lut->SetNumberOfBins(30*1e3);
-      lut->BuildTable();
+      lut->Initialize();
       double val_funcLut2 = lut->GetFunctionValue(val);
       utlPrintVar4(true, val, val_func, val_funcLut2, std::fabs(val_func-val_funcLut2)/val_func);
       }
@@ -64,12 +64,12 @@ main (int argc, char const* argv[])
     std::cout<< std::setprecision(15);
     double val_func = std::cos(val);
 
-    typedef itk::UnaryFunctorLookUpTable<itk::Functor::COS<double> > LUTType;
+    typedef itk::UnaryFunctorLookUpTable<utl::Functor::Cos<double> > LUTType;
     LUTType::Pointer lut = LUTType::New();
     lut->SetVariableMax(2*M_PI);
     lut->SetVariableMin(0);
     lut->SetNumberOfBins(2*M_PI*1e3);
-    lut->BuildTable();
+    lut->Initialize();
     double val_funcLut2 = lut->GetFunctionValue(val);
     utlPrintVar4(true, val, val_func, val_funcLut2, std::fabs(val_func-val_funcLut2)/std::fabs(val_func));
     }

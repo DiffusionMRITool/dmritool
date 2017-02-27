@@ -27,8 +27,10 @@
 #include <itkTimeProbe.h>
 #include <itkImageRegionIteratorWithIndex.h>
 #include <itkVariableLengthVector.h>
+#include <itkNumericTraits.h>
 
 #include "utlCore.h"
+#include "utlITKConceptChecking.h"
 
 #include "utlITKMacro.h"
 
@@ -113,7 +115,8 @@ ReadImage (const std::string filename, SmartPointer<ImageType>& image, const std
   reader->SetFileName(filename);
   try 
     {
-    std::cout << printInfo << " " << filename << std::endl;
+    if (utl::IsLogNormal())
+      std::cout << printInfo << " " << filename << std::endl;
     reader->Update(); 
     } 
   catch (itk::ExceptionObject & err) 
@@ -135,7 +138,8 @@ ReadImage (const std::string filename, SmartPointer<ImageType>& image, const std
   reader->SetFileName(filename);
   try 
     {
-    std::cout << printInfo << " " << filename << std::endl;
+    if (utl::IsLogNormal())
+      std::cout << printInfo << " " << filename << std::endl;
     reader->Update(); 
     } 
   catch (itk::ExceptionObject & err) 
@@ -159,7 +163,8 @@ SaveImage (const SmartPointer<ImageType>& image, const std::string filename, con
   writer->SetInput(image);
   try 
     {
-    std::cout << printInfo << " " << filename << std::endl;
+    if (utl::IsLogNormal())
+      std::cout << printInfo << " " << filename << std::endl;
     writer->Update(); 
     } 
   catch (itk::ExceptionObject & err) 
@@ -181,7 +186,8 @@ SaveImage (const SmartPointer<ImageType>& image, const std::string filename, con
   writer->SetInput(image);
   try 
     {
-    std::cout << printInfo << " " << filename << std::endl;
+    if (utl::IsLogNormal())
+      std::cout << printInfo << " " << filename << std::endl;
     writer->Update(); 
     } 
   catch (itk::ExceptionObject & err) 
@@ -192,7 +198,6 @@ SaveImage (const SmartPointer<ImageType>& image, const std::string filename, con
     }
   return true;
 }
-
 
 inline bool
 IsVectorImage(const std::string filename)
@@ -207,6 +212,149 @@ IsVectorImage(const std::string filename)
 
   unsigned int numberOfComponentsPerPixel = image->GetNumberOfComponentsPerPixel();
   return numberOfComponentsPerPixel > 1;
+}
+
+inline bool
+Is3DImage(const std::string filename)
+{
+  if (IsVectorImage(filename))
+    return false;
+
+  typedef itk::Image<float, 4> ImageType;
+  typedef itk::ImageFileReader<ImageType> ReaderType;
+
+  ReaderType::Pointer reader = ReaderType::New();
+  reader->SetFileName(filename);
+  reader->UpdateOutputInformation();
+  ImageType::Pointer image = reader->GetOutput();
+
+  typename ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
+  return size[3]==1;
+}
+
+template <class ImageType>
+int 
+GetVectorImageVectorSize(const SmartPointer<ImageType>& image)
+{
+  std::string name = image->GetNameOfClass();
+  if (name=="VectorImage")
+    {
+    return image->GetNumberOfComponentsPerPixel(); 
+    }
+  else if (name=="Image")
+    {
+    typename ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
+    return size[ImageType::ImageDimension-1];
+    }
+}
+
+template <class ImageType>
+void
+SetVectorImageVectorSize(const SmartPointer<ImageType>& image, const int vecsize)
+{
+  std::string name = image->GetNameOfClass();
+  if (name=="VectorImage")
+    {
+    image->SetNumberOfComponentsPerPixel(vecsize); 
+    }
+  else if (name=="Image")
+    {
+    typename ImageType::RegionType region = image->GetLargestPossibleRegion();
+    typename ImageType::SizeType size = region.GetSize();
+    size[ImageType::ImageDimension-1]=vecsize;
+    region.SetSize(size);
+    image->SetRegions(region);
+    }
+}
+
+template <class ImageType>
+std::vector<int>
+GetVectorImage3DVolumeSize(const SmartPointer<ImageType>& image)
+{
+  std::string name = image->GetNameOfClass();
+  std::vector<int> size(3, 1);
+  typename ImageType::SizeType imagesize = image->GetLargestPossibleRegion().GetSize();
+  if (name=="VectorImage")
+    {
+    for ( int i = 0; i < ImageType::ImageDimension; ++i ) 
+      {
+      utlException(i>2 && imagesize[i]!=1, "the image has more than 3D. Image size = " << imagesize);
+      size[i] = imagesize[i];
+      }
+    }
+  else if (name=="Image")
+    {
+    for ( int i = 0; i < utl::min<int>(ImageType::ImageDimension, 3); ++i ) 
+      size[i] = imagesize[i];
+    for ( int i = 4; i < ImageType::ImageDimension; ++i ) 
+      utlException(imagesize[i]!=1, "the image has more than 3D. Image size = " << imagesize);
+    }
+  return size;
+}
+
+template <class ImageType>
+void
+SetVectorImage3DVolumeSize(SmartPointer<ImageType>& image, const std::vector<int>& size)
+{
+  std::string name = image->GetNameOfClass();
+  utlException(size.size()!=3, "need to have size 3");
+  typename ImageType::RegionType region = image->GetLargestPossibleRegion();
+  typename ImageType::SizeType imagesize = region.GetSize();
+  for ( int i = 0; i < utl::min<int>(ImageType::ImageDimension, size.size()); ++i ) 
+    imagesize[i] = size[i];
+  region.SetSize(imagesize);
+  image->SetRegions(region);
+}
+
+/** Get 4d size from 3D vector image or 4D scalar image */
+template <class ImageType>
+std::vector<int>
+GetVectorImageFullSize(const SmartPointer<ImageType>& image)
+{
+  std::string name = image->GetNameOfClass();
+  std::vector<int> size;
+  typename ImageType::SizeType imagesize = image->GetLargestPossibleRegion().GetSize();
+  const int dim = ImageType::ImageDimension;
+  if (name=="VectorImage")
+    {
+    size.resize(dim+1);
+    for ( int i = 0; i < dim; ++i ) 
+      size[i] = imagesize[i];
+    size[dim] = image->GetNumberOfComponentsPerPixel();
+    }
+  else if (name=="Image")
+    {
+    size.resize(dim);
+    for ( int i = 0; i < dim; ++i ) 
+      size[i] = imagesize[i];
+    }
+  return size;
+}
+
+/** Set 4d size to 3D vector image or 4D scalar image */
+template <class ImageType>
+void
+SetVectorImageFullSize(SmartPointer<ImageType>& image, const std::vector<int>& size)
+{
+  std::string name = image->GetNameOfClass();
+  typename ImageType::RegionType region = image->GetLargestPossibleRegion();
+  typename ImageType::SizeType imagesize = region.GetSize();
+  const int dim = ImageType::ImageDimension;
+  if (name=="VectorImage")
+    {
+    utlSAException(size.size()!=dim+1)(size.size())(dim).msg("wrong size");
+    for ( int i = 0; i < dim; ++i ) 
+      imagesize[i] = size[i];
+    image->SetNumberOfComponentsPerPixel(size[dim]);
+    }
+  else if (name=="Image")
+    {
+    utlSAException(size.size()!=dim)(size.size())(dim).msg("wrong size");
+    for ( int i = 0; i < dim; ++i ) 
+      imagesize[i] = size[i];
+    }
+  region.SetSize(imagesize);
+  image->SetRegions(region);
 }
 
 inline bool
@@ -249,6 +397,23 @@ GenerateImage(const typename ImageType::SizeType& size, const int vectorLength=1
   return image;
 }
 
+template <class ImageType>
+typename ImageType::Pointer
+GenerateImageFromSingleVoxel(const typename ImageType::PixelType& pixel)
+{
+  typename ImageType::SizeType sizeVoxel;
+  typename ImageType::IndexType indexVoxel;
+  typedef typename ImageType::PixelType PixelType;
+  for ( int i = 0; i < sizeVoxel.Size(); ++i ) 
+    {
+    sizeVoxel[i]=1.0;
+    indexVoxel[i]=0.0;
+    }
+  typename ImageType::Pointer image = itk::GenerateImage<ImageType>(sizeVoxel, itk::NumericTraits<PixelType>::GetLength(pixel));
+  image->SetPixel(indexVoxel, pixel);
+  return image;
+}
+
 template <class Image1Type, class Image2Type>
 void
 ImageToImage ( const SmartPointer<Image1Type>& image1, SmartPointer<Image2Type>& image2)
@@ -279,6 +444,42 @@ ImageToImage ( const SmartPointer<Image1Type>& image1 )
   return image2;
 }
 
+template <unsigned dimIn, unsigned dimOut>
+void CopyImageRegion(const ImageRegion<dimIn>& regionIn, ImageRegion<dimOut>& regionOut, const int numberOfComponens=-1)
+{
+  typename ImageRegion<dimIn>::SizeType sizeIn = regionIn.GetSize();
+  typename ImageRegion<dimIn>::IndexType indexIn = regionIn.GetIndex();
+
+  typename ImageRegion<dimOut>::SizeType sizeOut = regionOut.GetSize();
+  typename ImageRegion<dimOut>::IndexType indexOut = regionOut.GetIndex();
+
+  int dimension = utl::min((int)dimIn, (int)dimOut);
+
+  for ( int i = 0; i < dimension; ++i ) 
+    {
+    sizeOut[i] = sizeIn[i];
+    indexOut[i] = indexIn[i];
+    }
+
+  if ((int)dimIn < (int)dimOut)
+    {
+    for ( int i = dimension; i < dimOut; i += 1 ) 
+      {
+      if (dimension+1==dimOut )
+        {
+        utlSAException(numberOfComponens==-1)(numberOfComponens).msg("need to set numberOfComponens");
+        sizeOut[i] = numberOfComponens;
+        }
+      else
+        sizeOut[i] = 1;
+      indexOut[i] = 0;
+      }
+    }
+
+  regionOut.SetSize(sizeOut);
+  regionOut.SetIndex(indexOut);
+}
+
 
 /** Copy Image Information from image with different image type */
 template <class ImageWithInfoType, class ImageType>
@@ -292,6 +493,7 @@ CopyImageInformation ( const SmartPointer<ImageWithInfoType>& imageFrom, SmartPo
   typename ImageWithInfoType::SpacingType  inputImageSpacing = imageFrom->GetSpacing();
   typename ImageWithInfoType::RegionType inRegion = imageFrom->GetLargestPossibleRegion();
   typename ImageWithInfoType::SizeType inputImageSize = inRegion.GetSize();
+  typename ImageWithInfoType::IndexType inputImageIndex = inRegion.GetIndex();
   typename ImageWithInfoType::PointType inOrigin = imageFrom->GetOrigin();
   typename ImageWithInfoType::DirectionType inDirection = imageFrom->GetDirection();
 
@@ -308,7 +510,7 @@ CopyImageInformation ( const SmartPointer<ImageWithInfoType>& imageFrom, SmartPo
     imageSpacing[i] = inputImageSpacing[i];
     imageSize[i] = inputImageSize[i];
     imageOrigin[i] = inOrigin[i];
-    imagePixelIndex[i] = 0.0;
+    imagePixelIndex[i] = inputImageIndex[i];
     for ( int j = 0; j < dimension; j += 1 ) 
       imageDirection(i,j) = inDirection(i,j);
     }
@@ -317,7 +519,10 @@ CopyImageInformation ( const SmartPointer<ImageWithInfoType>& imageFrom, SmartPo
     {
     for ( int i = dimension; i < ImageType::ImageDimension; i += 1 ) 
       {
-      imageSize[i] = 1;
+      if (dimension+1==ImageType::ImageDimension && std::string(imageFrom->GetNameOfClass())=="VectorImage" && std::string(imageTo->GetNameOfClass())=="Image" )
+        imageSize[i] = imageFrom->GetNumberOfComponentsPerPixel();
+      else
+        imageSize[i] = 1;
       imageSpacing[i] = 1;
       imageOrigin[i] = 0;
       imagePixelIndex[i] = 0;
@@ -332,6 +537,8 @@ CopyImageInformation ( const SmartPointer<ImageWithInfoType>& imageFrom, SmartPo
   imageTo->SetOrigin(imageOrigin);
   imageTo->SetRegions(imageRegion);
   imageTo->SetDirection(imageDirection);
+
+  imageTo->SetNumberOfComponentsPerPixel(GetVectorImageVectorSize(imageFrom));
 }
 
 /** print itk::VectorImage  */

@@ -10,12 +10,6 @@
 #ifndef __utlVector_h
 #define __utlVector_h
 
-#include "utlCore.h"
-#include "utlBlas.h"
-// #include "utlCore.h"
-#include <vector>
-#include "utlSTDHeaders.h"
-#include "utlExpression.h"
 #include "utlNDArray.h"
 
 namespace utl
@@ -23,107 +17,17 @@ namespace utl
 /** \ingroup utlNDArray
 * @{ */
 
-// typedef NDArray<double, 1>  VectorDouble;
-// typedef NDArray<float, 1>  VectorFloat;
-// template <class T> class Matrix;
 
-template <class T, class EType>
-utl_shared_ptr< NDArray<T,1> >
-ToVector ( const Expr<EType>& expr )
-{
-  utl_shared_ptr< NDArray<T,1> > vec (new NDArray<T,1>(expr));
-  return vec;
-}
+template < class T, unsigned int Dim >
+class NDArray;
 
-template <class T, class EType>
-utl_shared_ptr< NDArray<T,2> >
-ToMatrix ( const Expr<EType>& expr )
-{
-  utl_shared_ptr< NDArray<T,2> > mat(new NDArray<T,2>(expr));
-  return mat;
-}
-
-template <class T>
-std::vector<T> 
-UtlVectorToStdVector ( const NDArray<T,1>& vec )
-{
-  std::vector<T> v(vec.Size());
-  for ( int i = 0; i < vec.Size(); i += 1 ) 
-    v[i] = vec[i];
-  return v;
-}
-
-template <class T>
-NDArray<T,1> 
-StdVectorToUtlVector ( const std::vector<T>& vec )
-{
-  utl::NDArray<T,1> v(vec.size());
-  for ( int i = 0; i < vec.size(); ++i ) 
-    v[i] = vec[i];
-  return v;
-}
-
-template <class T>
-NDArray<T,1>
-ConnectUtlVector ( const NDArray<T,1>& m1, const NDArray<T,1>& m2 )
-{
-  NDArray<T,1> result(m1.Size()+m2.Size());
-  int m1Size = m1.Size();
-  for ( int i = 0; i < m1Size; i += 1 ) 
-    result[i] = m1[i];
-  for ( int i = 0; i < m2.Size(); i += 1 ) 
-    result[i+m1Size] = m2[i];
-  return result;
-}
-
-/** http://www.netlib.org/lapack/explore-html/d7/d2b/dgemm_8f.html
-*  https://developer.apple.com/library/mac/documentation/Accelerate/Reference/BLAS_Ref/Reference/reference.html 
-*
-*  \f$ Y = alpha * A * X + beta * Y \f$
-*  \note: Y should be pre-allocated
-*
-*  define several functions. 
-*
-*  template \<class T\>  inline bool  
-*  gemv_UtlMatrixTimesVector(const bool bATrans, const T alpha, const utl::NDArray<T,2>& A, const utl::NDArray<T,1>& X, const T beta, utl::NDArray<T,1>& Y);
-*
-*  \f$ Y = alpha * A * X + beta * Y \f$ \n
-*  template \<class T\>  inline void  
-*  ProductUtlMv(const utl::NDArray<T,2>& A, const utl::NDArray<T,1>& b, utl::NDArray<T,1>& c, const double alpha=1.0, const double beta=0.0);
-*
-*  \f$ Y = alpha * A^T * X + beta * Y \f$ \n
-*  template \<class T\>  inline void  
-*  ProductUtlMtv(const utl::NDArray<T,2>& A, const utl::NDArray<T,1>& b, utl::NDArray<T,1>& c, const double alpha=1.0, const double beta=0.0);
-*
-* */
-__utl_gemv_MatrixTimesVector(T, gemv_UtlMatrixTimesVector, Utl, utl::NDArray<T UTL_COMMA 2>, Rows, Cols, GetData, utl::NDArray<T UTL_COMMA 1>, Size, GetData, ReSize);
-
+template < class T, unsigned int Dim >
+class NDArrayBase;
 
 /**
-*  \f$ Y = alpha X^T * A + beta * Y \f$
-*  \note: Y should be pre-allocated
-*
-*  define several functions. 
-*
-*  template \<class T\>  inline bool  
-*  gemm_UtlVectorTimesMatrix(const bool bATrans, const T alpha, const utl::NDArray<T,1>& X, const utl::NDArray<T,2>& A, const T beta, utl::NDArray<T,1>& Y);
-*
-*  \f$ Y = alpha * b * A + beta * Y \f$ \n
-*  template \<class T\>  inline void  
-*  ProductUtlvM(const utl::NDArray<T,1>& b, const utl::NDArray<T,2>& A, utl::NDArray<T,1>& c, const double alpha=1.0, const double beta=0.0);
-*
-*  \f$ Y = alpha * b * A^T + beta * Y \f$ \n
-*  template \<class T\>  inline void  
-*  ProductUtlvMt(const utl::NDArray<T,1>& b, const utl::NDArray<T,2>& A, utl::NDArray<T,1>& c, const double alpha=1.0, const double beta=0.0);
-*
-* */
-__utl_gevm_MatrixTimesVector(T, gemm_UtlVectorTimesMatrix, Utl, utl::NDArray<T UTL_COMMA 2>, Rows, Cols, GetData, utl::NDArray<T UTL_COMMA 1>, Size, GetData, ReSize);
- 
-
-
-/**
- *   \class   NDArray
+ *   \class   NDArray<T,1>
  *   \brief   NDArray<T,1> is a vector class which uses blas mkl
+ *
  *   \author  Jian Cheng
  *   \date    08-22-2014
  *   \ingroup utlNDArray Math
@@ -138,6 +42,7 @@ public:
   typedef NDArrayBase<T,1>    Superclass;
 
   typedef typename Superclass::ValueType          ValueType;
+  typedef typename Superclass::ScalarValueType    ScalarValueType;
   
   typedef typename Superclass::SizeType           SizeType;
   typedef typename Superclass::ShapeType          ShapeType;
@@ -150,6 +55,7 @@ public:
   typedef typename Superclass::ConstReference     ConstReference;
 
   using Superclass::Dimension;
+  using Superclass::SubDimension;
 
   // NOTE: "using" to avoid hiding member functions of superclass
   using Superclass::SetData;
@@ -185,12 +91,21 @@ __NDArray_vector_constructor(long)
 
 #undef __NDArray_vector_constructor
 
-  NDArray(const NDArray<T,1>& vec) : Superclass(vec)
-  {
+  NDArray(const NDArray<T,1>& vec) : Superclass(vec) { }
+  
+  NDArray(NDArray<T,1>&& vec)   
+  { 
+    operator=(std::move(vec)); 
   }
   
+  NDArray(const std::initializer_list<T>& r)
+    {
+    ReSize(r.size());
+    utl::cblas_copy(this->Size(), r.begin(), 1, this->m_Data, 1);
+    }
+  
   template<typename EType>
-  NDArray(const Expr<EType>& expr) : Superclass(expr)
+  NDArray(const Expr<EType, typename EType::ValueType>& expr) : Superclass(expr)
   {
   }
 
@@ -295,35 +210,43 @@ __NDArray_vector_constructor(long)
   // UTL_ALWAYS_INLINE Reference operator()(const ShapeType& shape)         { return this->m_Data[shape[0]]; }
   // UTL_ALWAYS_INLINE ConstReference operator()(const ShapeType& shape) const { return this->m_Data[shape[0]]; }
 
-
-  NDArray<T,1>& operator*=(const NDArray<T,2>& mat) 
-    {
-    utlSAException(mat.Rows()!=this->Size())(this->Size())(mat.Rows()).msg("wrong size");
-    NDArray<T,1> tmp;
-    utl::ProductUtlvM(*this, mat, tmp);
-    *this = tmp;
-    return *this;
-    }
-  // NDArray<T,1> operator*(const NDArray<T,2>& mat) const
-  //   {
-  //   utlSAException(mat.Rows()!=this->Size())(this->Size())(mat.Rows()).msg("wrong size");
-  //   NDArray<T,1> tmp;
-  //   utl::ProductUtlvM(*this, mat, tmp);
-  //   return tmp;
-  //   }
   
-  template< typename EType >
-  NDArray<T,1>& operator*=(const Expr<EType>& expr ) 
+  NDArray<T,1>& operator=(NDArray<T,1> & r)
     {
-    utl_shared_ptr<NDArray<T,2> > mat = ToMatrix(expr);
-    operator*=(mat);
+    Superclass::operator=(r);
     return *this;
     }
-  template< typename EType >
-  NDArray<T,1> operator*(const Expr<EType>& expr ) const
+
+  NDArray<T,1>& operator=(NDArray<T,1> && r)
     {
-    utl_shared_ptr<NDArray<T,2> > mat = ToMatrix(expr);
-    return operator*(mat);
+    if ( this != &r ) 
+      {
+      this->Clear();
+      this->Swap(r);
+      }
+    return *this;
+    }
+
+
+  /** rotate *this about axis by angle alpha anticlockwise in 3d space. 
+   * https://en.wikipedia.org/wiki/Rodrigues'_rotation_formula */
+  NDArray<T,1> GetRotateAxis(const double alpha, const NDArray<T, 1>& axis)
+    {
+    utlException(this->Size()!=3, "wrong size");
+    utlException(axis.Size()!=3, "wrong size");
+    double cosA = std::cos(alpha);
+    double sinA = std::sin(alpha);
+    NDArray<T,1> p1 = *this % cosA;
+    NDArray<T,1> p2;
+    CrossProduct(axis, *this, p2);
+    p2.Scale(sinA);
+    NDArray<T,1> p3 = axis % (DotProduct(axis, *this)*(1-cosA));
+    return p1+p2+p3;
+    }
+
+  void RotateAxis(const double alpha, const NDArray<T, 1>& axis)
+    {
+    *this = GetRotateAxis(alpha, axis);
     }
 
 
@@ -380,35 +303,6 @@ private:
 
 }; // -----  end of template class Vector  -----
 
-
-
-template< typename T >
-inline NDArray<T,1> 
-operator*(const NDArray<T,2>& mat, const NDArray<T,1>& vec) 
-{ 
-  utlSAException(vec.Size()!=mat.Cols())(mat.Cols())(vec.Size()).msg("wrong size");
-  NDArray<T,1> result;
-  utl::ProductUtlMv(mat, vec, result);
-  return result;
-}
-
-template< typename T >
-inline NDArray<T,1> 
-operator*(const NDArray<T,1>& vec, const NDArray<T,2>& mat) 
-{ 
-  utlSAException(vec.Size()!=mat.Rows())(mat.Rows())(vec.Size()).msg("wrong size");
-  NDArray<T,1> result;
-  utl::ProductUtlvM(vec, mat, result);
-  return result;
-}
-
-template< typename T >
-std::ostream & 
-operator<<(std::ostream & os, const NDArray<T,1> & arr)
-{
-  utl::PrintContainer(arr.Begin(), arr.End(), "utl::NDArray<T,1>", " ", os);
-  return os;
-}
 
 
 

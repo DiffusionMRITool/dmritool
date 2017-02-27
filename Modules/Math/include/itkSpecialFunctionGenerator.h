@@ -19,8 +19,7 @@
 #define __itkSpecialFunctionGenerator_h
 
 #include "utlCore.h"
-#include "utlVector.h"
-#include "utlMatrix.h"
+#include "utlNDArray.h"
 
 
 namespace utl
@@ -67,29 +66,22 @@ GammaLower (const double s, const double x);
 inline double 
 BesselJa(const double a, const double x);
 
+inline double 
+BesselJInteger(const int n, const double x);
 
-/**
-* @brief GetRotatedSHCoefficient 
-*        rotate SH coefficient vector by a given rotation matrix
-*
-* @param shInput input SH coefficients
-* @param rotationMatrix rotation matrix
-* @author Jian Cheng
-*
-*  Reference: "Efficient and accurate rotation of finite spherical harmonics expansions", 
-*  Journal of Computational Physics 231 (2012) 243–250 
-*
-*  use itk::SphericalHarmonicCoefficientsRotation for multi-thread programming
-*/
-template<class T> 
-NDArray<T,1>
-GetRotatedSHCoefficients(const NDArray<T,1>& shInput, const NDArray<T,2>& rotationMatrix);
+inline double 
+BesselJIntegerPrime(const int n, const double x);
+
+//// use itk::SHCoefficientsRotation instead 
+// template<class T> 
+// NDArray<T,1>
+// GetRotatedSHCoefficients(const NDArray<T,1>& shInput, const NDArray<T,2>& rotationMatrix);
 
 /**
  * \brief  get the SH coefficients from the symmetric tensor with eigenvalues (e1,e2,e2), e1>e2, and (theta,phi) is the angular direction of the e1 axis.
  */
 template < class T >
-std::vector<T>
+utl_shared_ptr<utl::NDArray<T,1> >
 GetSymmetricTensorSHCoef(const T b, const T e1, const T e2, const int lMax, const T theta=0, const T phi=0 );
 
 /**
@@ -100,8 +92,43 @@ GetSymmetricTensorSHCoef(const T b, const T e1, const T e2, const int lMax, cons
 template < class T >
 std::vector< std::vector<T> >
 GetSymmetricTensorSHCoefDerivative(const T b, const T e1, const T e2, const int lMax, const T theta=0, const T phi=0 );
+ 
+/** 
+ * Get the legendre coefficient vector of \f$ \exp(-a\times x^2)\exp(-b\times (1-x^2)) \f$, 
+ * i.e.\f$ \exp(-a\times x^2)\exp(-b\times (1-x^2)) = \sum_{l=0}^{lMax} A_l(a,b) P_l(x) \f$. 
+ * In mathematica:  (2*l + 1)/2* Integrate[ LegendreP[l, x]*Exp[-a1*x^2] Exp[-a2*(1 - x^2)], {x, -1, 1}]
+  */
+inline double
+GetExpProductLegendreCoef(const double a, const double b, const int l );
 
-    /** @} */
+/** 
+ * Calculate SH coefficients of DWI samples in Cylinder GPD model. (theta,phi) is the direction of the cylinder. 
+ * Reference: Compartment models of the diffusion MR signal in brain white matter: A taxonomy and comparison, NeuroImage 2012. 
+ * */
+template < class T >
+utl_shared_ptr<utl::NDArray<T,1> >
+ComputeDWISHCoefficientsForGPDCylinder (const T radius, const T diffusivity, const T deltaBig, const T deltaSmall, const T qq, const int lMax , const T theta=0, const T phi=0);
+
+
+/**
+ * Calculate Orientational Order with a given axis from sh coefficients. 
+ * It is \f$ \int_{x \in \mathbb{S}^2} P_2^0(x^Tv) f(x) d S \f$, where \f$v\f$ is the axis.
+ *
+ * Refernce: https://en.wikipedia.org/wiki/Liquid_crystal#Order_parameter 
+ * */
+template < class T >
+double
+ComputeOrientationalOrderFromSHCoefficients(const utl::NDArray<T,1>& shCoef, const utl::NDArray<T,1>& axis);
+
+/**
+ * Calculate orientation order for a axisymmetric tensor (e1,e2,e2). 
+ *
+ * \param phi it is the angle between principal direction of tensor (v1) and the orientaiton axis (n).
+ * */
+inline double
+ComputeOrientationalOrderFromSymmetricTensor(const double e1, const double e2, const double phi=0);
+    
+/** @} */
 
 }
 

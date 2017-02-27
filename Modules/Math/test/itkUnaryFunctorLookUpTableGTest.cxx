@@ -20,34 +20,36 @@
 #include "utlCore.h"
 #include "itkUnaryFunctorLookUpTable.h"
 #include "itkFunctors.h"
+#include "utl.h"
 
 
 TEST(itkUnaryFunctorLookUpTable, EXP)
 {
   double eps=1e-8;
-  typedef itk::UnaryFunctorLookUpTable<itk::Functor::EXP<double> > LUTType;
+  typedef itk::UnaryFunctorLookUpTable<utl::Functor::Exp<double> > LUTType;
   LUTType::Pointer lut = LUTType::New();
   lut->SetVariableMax(0);
   lut->SetVariableMin(-30);
-  lut->SetNumberOfBins(30*1e3);
-  lut->BuildTable();
+  lut->SetNumberOfBins(30*5e3);
+  lut->Initialize();
   
-  double val[]={-3,0,-1.5,-10.5,-1e-5,-34};
-  for ( int i = 0; i < 5; i += 1 ) 
+  double val[]={-3,0,-1.5,-10.5,-1e-5,-34, -0.906588};
+  for ( int i = 0; i < 7; i += 1 ) 
     {
     double real_func_val = std::exp(val[i]);
-    EXPECT_NEAR(real_func_val, lut->GetFunctionValue(val[i]), eps*std::fabs(real_func_val));
+    // utlPrintVar4(true, i, val[i], real_func_val, lut->GetFunctionValue(val[i]));
+    EXPECT_NEAR(real_func_val, lut->GetFunctionValue(val[i]), eps);
     }
 }
 
 TEST(itkUnaryFunctorLookUpTable, EXP_TimeCost)
 {
-  typedef itk::UnaryFunctorLookUpTable<itk::Functor::EXP<double> > LUTType;
+  typedef itk::UnaryFunctorLookUpTable<utl::Functor::Exp<double> > LUTType;
   LUTType::Pointer lut = LUTType::New();
   lut->SetVariableMax(0);
   lut->SetVariableMin(-30);
-  lut->SetNumberOfBins(30*1e3);
-  lut->BuildTable();
+  lut->SetNumberOfBins(30*5e3);
+  lut->Initialize();
 
   long N = 1e7;
   std::vector<double> val;
@@ -88,12 +90,12 @@ TEST(itkUnaryFunctorLookUpTable, EXP_TimeCost)
 TEST(itkUnaryFunctorLookUpTable, COS)
 {
   double eps=1e-8;
-  typedef itk::UnaryFunctorLookUpTable<itk::Functor::COS<double> > LUTType;
+  typedef itk::UnaryFunctorLookUpTable<utl::Functor::Cos<double> > LUTType;
   LUTType::Pointer lut = LUTType::New();
   lut->SetVariableMax(2*M_PI);
   lut->SetVariableMin(0);
   lut->SetNumberOfBins(2*M_PI*1e4);
-  lut->BuildTable();
+  lut->Initialize();
 
   double val[]={0, 2*M_PI, M_PI, utl::Random<double>(0,2*M_PI), utl::Random<double>(0,2*M_PI)};
   for ( int i = 0; i < 5; i += 1 ) 
@@ -106,12 +108,12 @@ TEST(itkUnaryFunctorLookUpTable, COS)
 
 TEST(itkUnaryFunctorLookUpTable, COS_TimeCost)
 {
-  typedef itk::UnaryFunctorLookUpTable<itk::Functor::COS<double> > LUTType;
+  typedef itk::UnaryFunctorLookUpTable<utl::Functor::Cos<double> > LUTType;
   LUTType::Pointer lut = LUTType::New();
   lut->SetVariableMax(2*M_PI);
   lut->SetVariableMin(0);
   lut->SetNumberOfBins(2*M_PI*1e4);
-  lut->BuildTable();
+  lut->Initialize();
 
   long N = 1e7;
   std::vector<double> val;

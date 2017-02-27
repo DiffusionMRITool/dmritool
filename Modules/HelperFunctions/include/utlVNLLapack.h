@@ -30,6 +30,34 @@ namespace utl
 /** @addtogroup utlMath
 @{ */
 
+/** 
+ *
+ * \brief geev_VnlMatrix 
+ *  calculate non-symmetric eigen-decomposition. 
+ *
+ * \param mat matrix with size NxN.
+ * \param valReal real part of right eigen-values.
+ * \param valImg imginary part of right eigen-values.
+ * \param vecRealR real part of right eigen-vectors.
+ * \param vecImgR part of right eigen-vectors.
+ * \param vecRealL real part of left eigen-vectors.
+ * \param vecImgL part of left eigen-vectors.
+ *
+ * template \<class T\> inline void 
+ * geev_VnlMatrix ( const vnl_matrix<T>& mat, vnl_vector<T>& valReal, vnl_vector<T>& valImg);
+ *
+ * template \<class T\> inline void 
+ * geev_VnlMatrix ( const vnl_matrix<T>& mat, vnl_vector<T>& valReal, vnl_vector<T>& valImg, vnl_matrix<T>& vecRealR, vnl_matrix<T>& vecImgR);
+ * 
+ * template \<class T\> inline void 
+ * geev_VnlMatrix ( const vnl_matrix<T>& mat, vnl_vector<T>& valReal, vnl_vector<T>& valImg, vnl_matrix<T>& vecRealR, vnl_matrix<T>& vecImgR, vnl_matrix<T>& vecRealL, vnl_matrix<T>& vecImgL);
+ *
+ * http://www.netlib.org/lapack/explore-html/d9/d8e/group__double_g_eeigen_ga8ec1625302675b981eb34ed024b27a47.html 
+ * http://www.netlib.org/lapack/lug/node31.html
+ *
+ * */
+__utl_geev_Matrix(T, geev_VnlMatrix, vnl_matrix<T>, rows, cols, data_block, vnl_vector<T>, data_block, set_size);
+
 /**
  * \brief syev_VnlMatrix 
  *  eigen-decomposition for symmetric matrix.
@@ -206,6 +234,8 @@ gesdd_VnlMatrix(const vnl_matrix<T>& mat, vnl_matrix<T>& U, vnl_vector<T>& s, vn
 
   utlGlobalException(INFO, "LAPACK library function dgesdd_() returned error code INFO=" << INFO);
 }
+
+
 
 /**
  * \brief  EigenDecompositionSymmetricVnlMatrix

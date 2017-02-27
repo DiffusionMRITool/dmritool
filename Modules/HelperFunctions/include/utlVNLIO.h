@@ -21,6 +21,7 @@
 #include "utlVector.h"
 #include "utlNDArray.h"
 #include "utlVNL.h"
+#include <vnl/vnl_matrix_fixed.h>
 
 namespace utl
 {
@@ -31,6 +32,14 @@ namespace utl
 template <class T>
 void 
 VnlMatrixToUtlMatrix( const vnl_matrix<T>& mat, utl::NDArray<T,2>& matUtl )
+{
+  matUtl.ReSize(mat.rows(),mat.cols());
+  matUtl.CopyData((T* const)mat.data_block(), mat.rows(), mat.cols() );
+}
+
+template <class T, unsigned rows, unsigned cols>
+void 
+VnlMatrixToUtlMatrix( const vnl_matrix_fixed<T, rows, cols>& mat, utl::NDArray<T,2>& matUtl )
 {
   matUtl.ReSize(mat.rows(),mat.cols());
   matUtl.CopyData((T* const)mat.data_block(), mat.rows(), mat.cols() );
@@ -63,7 +72,7 @@ UtlMatrixToVnlMatrix( const NDArray<T,2>& mat )
 
 template <class T>
 utl::NDArray<T,1> 
-VnlVectorToVector( const vnl_vector<T>& vec )
+VnlVectorToUtlVector( const vnl_vector<T>& vec )
 {
   utl::NDArray<T,1> result(vec.data_block(), vec.size());
   return result;

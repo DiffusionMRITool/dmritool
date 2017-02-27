@@ -15,9 +15,11 @@
  * =====================================================================================
  */
 
+#include "gtest/gtest.h"
+#include "utlGTest.h"
+
 #include "utlCore.h"
 #include "utlMath.h"
-#include "gtest/gtest.h"
 
 
 TEST(UtlMath, Factorial)
@@ -60,6 +62,61 @@ TEST(utlMath, PowInteger)
       EXPECT_NEAR( std::pow(val,p), utl::PowInteger(val,p), eps*std::fabs(std::pow(val,p))) 
         << "val = " << val << ", p = " << p << ", std::pow(val,p) = " << std::pow(val,p) <<", utl::PowInteger(val,p) =" << utl::PowHalfInteger(val,p);
     }
+}
+
+TEST(utlMath, GetExpLegendreCoef)
+{
+  double a = 6.0;
+  EXPECT_NEAR(0.3616081474, utl::GetExpLegendreCoef(a, 0), 1e-8);
+  EXPECT_NEAR(-0.6795644964, utl::GetExpLegendreCoef(a, 2), 1e-8);
+  EXPECT_NEAR(0.4968409998, utl::GetExpLegendreCoef(a, 4), 1e-8);
+  EXPECT_NEAR(-0.2476876364, utl::GetExpLegendreCoef(a, 6), 1e-8);
+  EXPECT_NEAR(0.09406969861, utl::GetExpLegendreCoef(a, 8), 1e-8);
+  EXPECT_NEAR(-0.02881340120, utl::GetExpLegendreCoef(a, 10), 1e-8);
+  EXPECT_NEAR(0.007383277421, utl::GetExpLegendreCoef(a, 12), 1e-8);
+  EXPECT_NEAR(-0.001624354217, utl::GetExpLegendreCoef(a, 14), 1e-8);
+  EXPECT_NEAR(0.0003128408554, utl::GetExpLegendreCoef(a, 16), 1e-8);
+  EXPECT_NEAR(-0.00005354684710, utl::GetExpLegendreCoef(a, 18), 1e-8);
+  EXPECT_NEAR(8.244308195e-6, utl::GetExpLegendreCoef(a, 20), 1e-8);
+  EXPECT_NEAR(-1.153106330e-6, utl::GetExpLegendreCoef(a, 22), 1e-8);
+  EXPECT_NEAR(1.477220834e-7, utl::GetExpLegendreCoef(a, 24), 1e-8);
+  
+  EXPECT_NEAR_RELATIVE(37.73005583, utl::GetExpLegendreCoef(-a, 0), 1e-8);
+  EXPECT_NEAR_RELATIVE(134.2365715, utl::GetExpLegendreCoef(-a, 2), 1e-8);
+  EXPECT_NEAR_RELATIVE(122.5747217, utl::GetExpLegendreCoef(-a, 4), 1e-8);
+  EXPECT_NEAR_RELATIVE(68.71891695, utl::GetExpLegendreCoef(-a, 6), 1e-8);
+  EXPECT_NEAR_RELATIVE(28.06735217, utl::GetExpLegendreCoef(-a, 8), 1e-8);
+  EXPECT_NEAR_RELATIVE(9.032116684, utl::GetExpLegendreCoef(-a, 10), 1e-8);
+  EXPECT_NEAR_RELATIVE(2.398445427, utl::GetExpLegendreCoef(-a, 12), 1e-8);
+  EXPECT_NEAR_RELATIVE(0.5420685907, utl::GetExpLegendreCoef(-a, 14), 1e-8);
+  EXPECT_NEAR_RELATIVE(0.1066178565, utl::GetExpLegendreCoef(-a, 16), 1e-8);
+  EXPECT_NEAR(0.01855950228, utl::GetExpLegendreCoef(-a, 18), 1e-8);
+  EXPECT_NEAR(0.002897281387, utl::GetExpLegendreCoef(-a, 20), 1e-6);
+  EXPECT_NEAR(0.0004099343877, utl::GetExpLegendreCoef(-a, 22), 1e-6);
+  EXPECT_NEAR(0.00005303113981, utl::GetExpLegendreCoef(-a, 24), 1e-6);
+}
+
+TEST(utlMath, DawsonF)
+{
+  double aa = std::sqrt(6);
+  EXPECT_NEAR(0.2290847511, utl::DawsonF(aa), 1e-8);
+}
+
+TEST(utlMath, Erf)
+{
+  EXPECT_NEAR(0.6215718797, utl::Erf(std::sqrt(105./100 - 662099./1000000)), 1e-8);
+}
+
+TEST(utlMath, Erfi)
+{
+  EXPECT_NEAR(1.650425759, utl::Erfi(1.0), 1e-8);
+  EXPECT_NEAR(-1.650425759, utl::Erfi(-1.0), 1e-8);
+  EXPECT_NEAR(18.56480241, utl::Erfi(2.0), 1e-8);
+  EXPECT_NEAR(1629.994623, utl::Erfi(3.0), 1e-8*1629.994623);
+  EXPECT_NEAR(0.5466239254, utl::Erfi(0.45173), 1e-8);
+  EXPECT_NEAR(0.5466239254, utl::Erfi(0.45173), 1e-8);
+  EXPECT_NEAR(0.8898877196, utl::Erfi(std::sqrt(0.45173)), 1e-8);
+  EXPECT_NEAR(0.8052722615, utl::Erfi(std::sqrt(105./100 - 662099./1000000)), 1e-8);
 }
 
 template <class T>

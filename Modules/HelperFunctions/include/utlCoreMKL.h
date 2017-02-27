@@ -81,6 +81,17 @@ vSqrt<float>( int n,  float* vecIn, float* vecOut)
    vsSqrt(n,vecIn,vecOut);
 }
 template <> inline void 
+vSqrt<std::complex<double> >( int n,  std::complex<double>* vecIn, std::complex<double>* vecOut) 
+{
+   vzSqrt(n,vecIn,vecOut);
+}
+/// Implemenation of the interface for vsSqr
+template <> inline void 
+vSqrt<std::complex<float> >( int n,  std::complex<float>* vecIn, std::complex<float>* vecOut) 
+{
+   vcSqrt(n,vecIn,vecOut);
+}
+template <> inline void 
 vInvSqrt<double>( int n,  double* vecIn, double* vecOut) 
 {
    vdInvSqrt(n,vecIn,vecOut);
@@ -104,6 +115,16 @@ vSub<float>( int n,  float* vecIn, float* vecIn2, float* vecOut)
 {
    vsSub(n,vecIn,vecIn2,vecOut);
 }
+template <> inline void 
+vSub<std::complex<double> >( int n,  std::complex<double>* vecIn, std::complex<double>* vecIn2, std::complex<double>* vecOut) 
+{
+   vzSub(n,vecIn,vecIn2,vecOut);
+}
+template <> inline void 
+vSub<std::complex<float> >( int n,  std::complex<float>* vecIn, std::complex<float>* vecIn2, std::complex<float>* vecOut) 
+{
+   vcSub(n,vecIn,vecIn2,vecOut);
+}
 /// Implemenation of the interface for vdDiv
 template <> inline void 
 vDiv<double>( int n,  double* vecIn, double* vecIn2, double* vecOut) 
@@ -115,6 +136,16 @@ template <> inline void
 vDiv<float>( int n,  float* vecIn, float* vecIn2, float* vecOut) 
 {
    vsDiv(n,vecIn,vecIn2,vecOut);
+}
+template <> inline void 
+vDiv<std::complex<double> >( int n,  std::complex<double>* vecIn, std::complex<double>* vecIn2, std::complex<double>* vecOut) 
+{
+   vzDiv(n,vecIn,vecIn2,vecOut);
+}
+template <> inline void 
+vDiv<std::complex<float> >( int n,  std::complex<float>* vecIn, std::complex<float>* vecIn2, std::complex<float>* vecOut) 
+{
+   vcDiv(n,vecIn,vecIn2,vecOut);
 }
 /// Implemenation of the interface for vdExp
 template <> inline void 
@@ -188,6 +219,16 @@ vMul<float>( int n,  float* vecIn, float* vecIn2, float* vecOut)
 {
    vsMul(n,vecIn,vecIn2,vecOut);
 }
+template <> inline void 
+vMul<std::complex<double> >( int n,  std::complex<double>* vecIn, std::complex<double>* vecIn2, std::complex<double>* vecOut) 
+{
+   vzMul(n,vecIn,vecIn2,vecOut);
+}
+template <> inline void 
+vMul<std::complex<float> >( int n,  std::complex<float>* vecIn, std::complex<float>* vecIn2, std::complex<float>* vecOut) 
+{
+   vcMul(n,vecIn,vecIn2,vecOut);
+}
 
 /// interface to vdAbs
 template <> inline void 
@@ -200,6 +241,16 @@ template <> inline void
 vAbs( int n,  float* vecIn, float* vecOut) 
 {
    vsAbs(n,vecIn,vecOut);
+}
+inline void 
+vAbs( int n,  std::complex<double>* vecIn, double* vecOut) 
+{
+   vzAbs(n,vecIn,vecOut);
+}
+inline void 
+vAbs( int n,  std::complex<float>* vecIn, float* vecOut) 
+{
+   vcAbs(n,vecIn,vecOut);
 }
 
 #else
@@ -270,7 +321,7 @@ template <typename T> inline void
 vAbs( int n,  T* vecIn, T* vecOut) 
 {
    for (int i = 0; i<n; ++i) 
-     vecOut[i]=std::fabs(vecIn[i]);
+     vecOut[i]=std::abs(vecIn[i]);
 }
 
 #endif

@@ -43,6 +43,8 @@
 #include <stdlib.h>
 #include <stdexcept>
 
+#include "utlCoreMacro.h"
+
 
 #ifdef MATLAB_MEX_FILE
 #include <mex.h>
@@ -60,6 +62,7 @@
 #else
   #define __SMART_ASSERT_LOCATION__ __FUNCTION__
 #endif
+
 
 namespace smart_assert {
 enum {
@@ -482,11 +485,11 @@ namespace smart_assert {
     // returns a message corresponding to the type of level
     inline std::string get_typeof_level( int nLevel) {
         switch ( nLevel) {
-        case lvl_log: return "Log";
-        case lvl_warn: return "Warning";
-        case lvl_debug: return "Debug";
-        case lvl_error: return "Error";
-        case lvl_fatal: return "FATAL";
+        case lvl_log: return  __UTL_LOG_STRING;
+        case lvl_warn: return __UTL_WARNING_STRING;
+        case lvl_debug: return __UTL_DEBUG_STRING;
+        case lvl_error: return __UTL_ERROR_STRING;
+        case lvl_fatal: return __UTL_FATAL_STRING;
         default: {
             std::ostringstream out;
             out << "(level=" << nLevel << ")";
@@ -498,23 +501,23 @@ namespace smart_assert {
     // helpers, for dumping the assertion context
     inline void dump_context_summary( const assert_context & context, std::ostream & out) {
         out << "\n" << get_typeof_level( context.get_level() ) 
-            << " in File: " << context.get_context_file() << ", Line: " << context.get_context_line() << ", Function: " << context.get_context_func() << '\n';
+            << " in "<<__UTL_BOLD("File")<<": " << context.get_context_file() << ", "<<__UTL_BOLD("Line")<<": " << context.get_context_line() << ", "<<__UTL_BOLD("Function")<<": " << context.get_context_func() << '\n';
         if ( !context.get_level_msg().empty())
             // we have a user-friendly message
             out << context.get_level_msg();
         else
           if (context.get_expr()!="\"\"" && context.get_expr()!="")
-            out << "Expression : '" << context.get_expr() <<"' " << (context.get_condition()==lvl_condition_assert?"failed":"satisfied");
+            out << __UTL_BOLD("Expression")<<" : '" << __UTL_EXPSTR(context.get_expr()) <<"' " << (context.get_condition()==lvl_condition_assert?"failed":"satisfied");
         out << std::endl;
     }
 
     inline void dump_context_detail( const assert_context & context, std::ostream & out) {
         out << "\n" << get_typeof_level( context.get_level() ) 
-            << " in File: " << context.get_context_file() << ", Line: " << context.get_context_line() << ", Function: " << context.get_context_func() << '\n';
+            << " in "<<__UTL_BOLD("File")<<": " << context.get_context_file() << ", "<<__UTL_BOLD("Line")<<": " << context.get_context_line() << ", "<<__UTL_BOLD("Function")<<": " << context.get_context_func() << '\n';
         if ( !context.get_level_msg().empty())
-            out << "msg: '" << context.get_level_msg() << "'\n";
+            out << __UTL_BOLD("msg")<<": '" << context.get_level_msg() << "'\n";
         if (context.get_expr()!="\"\"" && context.get_expr()!="")
-          out << "Expression : '" << context.get_expr() <<"' "<< (context.get_condition()==lvl_condition_assert?"failed":"satisfied")  << "\n";
+          out << __UTL_BOLD("Expression")<<" : '" << __UTL_EXPSTR(context.get_expr()) <<"' " << (context.get_condition()==lvl_condition_assert?"failed":"satisfied") <<"\n";
         
         typedef assert_context::vals_array vals_array;
         const vals_array & aVals = context.get_vals_array();
@@ -538,11 +541,11 @@ namespace smart_assert {
     
     inline void dump_context_log_detail( const assert_context & context, std::ostream & out) {
         out << "\n" << get_typeof_level( context.get_level() ) 
-            << " in File: " << context.get_context_file() << ", Line: " << context.get_context_line() << ", Function: " << context.get_context_func() << '\n';
+            << " in "<<__UTL_BOLD("File")<<": " << context.get_context_file() << ", "<<__UTL_BOLD("Line")<<": " << context.get_context_line() << ", "<<__UTL_BOLD("Function")<<": " << context.get_context_func() << '\n';
         if ( !context.get_level_msg().empty())
-            out << "msg: '" << context.get_level_msg() << "'\n";
+            out << __UTL_BOLD("msg")<<": '" << context.get_level_msg() << "'\n";
         if (context.get_expr()!="\"\"" && context.get_expr()!="")
-          out << "Expression : '" << context.get_expr() <<"' "<< (context.get_condition()==lvl_condition_assert?"failed":"satisfied")  << "\n";
+          out << __UTL_BOLD("Expression")<<" : '" << __UTL_EXPSTR(context.get_expr()) <<"' " << (context.get_condition()==lvl_condition_assert?"failed":"satisfied") <<"\n";
         
         typedef assert_context::vals_array vals_array;
         const vals_array & aVals = context.get_vals_array();

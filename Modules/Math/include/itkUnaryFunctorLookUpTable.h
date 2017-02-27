@@ -64,6 +64,11 @@ public:
   itkGetMacro(NumberOfBins, int);
   
   itkGetMacro(Table, STDVectorPointer);
+
+  void Initialize()
+    {
+    BuildTable();
+    }
   
   void BuildTable()
     {
@@ -158,6 +163,7 @@ private:
 
 
 }
+
 
 
 #endif 

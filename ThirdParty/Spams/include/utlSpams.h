@@ -18,7 +18,7 @@
 #define __utlSpams_h
 
 #include "linalg.h"
-#include "utlMatrix.h"
+#include "utlNDArray.h"
 
 namespace spams
 {

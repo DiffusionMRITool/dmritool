@@ -38,8 +38,17 @@ TEST(utlVector, Constructors)
     // data constructor
     UtlVectorType vec1(vec0.data_block(), vec0.size()), vec2;
     EXPECT_NEAR_VECTOR(vec0, vec1, N, 1e-10);
-    vec2 = utl::VnlVectorToStdVector(vec0);;
+    vec2 = utl::VnlVectorToStdVector(vec0);
     EXPECT_NEAR_VECTOR(vec0, vec2, N, 1e-10);
+
+    UtlVectorType vec00(3);
+    vec00[0]=1.0, vec00[1]=2.0, vec00[2]=3.0;
+    vec2={1,2,3};
+    UtlVectorType vec3({1,2,3});
+    UtlVectorType vec4{1,2,3};
+    EXPECT_NEAR_VECTOR(vec00, vec2, 3, 1e-10);
+    EXPECT_NEAR_VECTOR(vec00, vec3, 3, 1e-10);
+    EXPECT_NEAR_VECTOR(vec00, vec4, 3, 1e-10);
     }
     {
     // change size
@@ -95,6 +104,15 @@ TEST(utlVector, Constructors)
     }
 }
 
+TEST(utlVector_DeathTest, AssignNDArrayDifferentDimension)
+{
+  utl::NDArray<double, 1> vec(3);
+  utl::NDArray<double, 2> mat(2,3);
+  EXPECT_DEATH(vec=mat, "");
+  EXPECT_DEATH(mat=vec, "");
+}
+
+
 TEST(utlVector, MaxMin)
 {
   int N =10;
@@ -106,6 +124,32 @@ TEST(utlVector, MaxMin)
     EXPECT_EQ(vec0.max_value(), vec1.MaxValue());
     EXPECT_EQ(vec0.min_value(), vec1.MinValue());
     }
+}
+
+TEST(utlVector, Rotate)
+{
+  UtlVectorType v(3), axis(3), vRotate(3);
+
+    {
+    v[0]=1, v[1]=1, v[2]=0;
+    axis[0]=0, axis[1]=0, axis[2]=1;
+    vRotate=v;
+    vRotate.RotateAxis(M_PI/4, axis);
+    EXPECT_NEAR(0, vRotate[0], 1e-10);
+    EXPECT_NEAR(std::sqrt(2), vRotate[1], 1e-10);
+    EXPECT_NEAR(0, vRotate[2], 1e-10);
+    }
+    
+    {
+    v[0]=1, v[1]=1, v[2]=1;
+    axis[0]=0, axis[1]=0, axis[2]=1;
+    vRotate=v;
+    vRotate.RotateAxis(M_PI/4, axis);
+    EXPECT_NEAR(0, vRotate[0], 1e-10);
+    EXPECT_NEAR(std::sqrt(2), vRotate[1], 1e-10);
+    EXPECT_NEAR(1, vRotate[2], 1e-10);
+    }
+
 }
 
 TEST(utlVector, Norms)
@@ -176,6 +220,16 @@ TEST(utlVector, Operators)
     {
     // dot
     EXPECT_NEAR(dot_product(vec0, vec1), utl::InnerProduct(d0,d1), std::fabs(dot_product(vec0, vec1))*1e-10);
+    }
+
+    {
+    // cross product
+    UtlVectorType v1(3), v2(3), v3(3), v0;
+    v1[0]=1, v1[1]=0, v1[2]=0;
+    v2[0]=0, v2[1]=1, v2[2]=0;
+    v3[0]=0, v3[1]=0, v3[2]=1;
+    utl::CrossProduct(v1, v2, v0);
+    EXPECT_NEAR_VECTOR(v3, v0, 3, 1e-10);
     }
 
     {

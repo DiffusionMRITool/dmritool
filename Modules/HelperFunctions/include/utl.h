@@ -30,24 +30,27 @@
 #include "utlOpenMP.h"
 #endif
 
+#include "utlSTDHeaders.h"
+
 #ifdef UTL_USE_MKL
 #include "utlMKL.h"
 #endif
 
-#include "utlSTDHeaders.h"
 
 #include "utlCore.h"
+#include "utlNDArray.h"
+
 #include "utlMath.h"
 #include "utlVNL.h"
 #include "utlVNLIO.h"
 #include "utlITK.h"
 #include "utlVNLBlas.h"
 #include "utlVNLLapack.h"
-#include "utlNDArray.h"
 
 #include "utlDMRI.h"
 
 #include "itkSphericalHarmonicsGenerator.h"
+#include "utlDMRIStoredTables.h"
 
 #include "itkMultiVolumeImageToVectorImageFilter.h"
 
@@ -123,50 +126,6 @@ VariableLengthVectorToUtlVector ( const itk::VariableLengthVector<T>& vec )
   for ( int i = 0; i < vec.GetSize(); i += 1 ) 
     v[i] = vec[i];
   return v;
-}
-
-template <class T>
-inline utl_shared_ptr<NDArray<T,2> >
-ReadGrad(const int tess=3, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, const int mode= CARTESIAN_TO_SPHERICAL, 
-  const int flipx=DIRECTION_NOFLIP, const int flipy=DIRECTION_NOFLIP, const int flipz=DIRECTION_NOFLIP, const bool need_normalize=true) 
-{
-  switch ( tess )
-    {
-  case 1 :
-    return ReadGrad<T>(CreateExpandedPath(DirectionsT1), NoSymmetricDuple, mode, flipx, flipy, flipz);
-  case 2 :
-    return ReadGrad<T>(CreateExpandedPath(DirectionsT2), NoSymmetricDuple, mode, flipx, flipy, flipz);
-  case 3 :
-    return ReadGrad<T>(CreateExpandedPath(DirectionsT3), NoSymmetricDuple, mode, flipx, flipy, flipz);
-  case 4 :
-    return ReadGrad<T>(CreateExpandedPath(DirectionsT4), NoSymmetricDuple, mode, flipx, flipy, flipz);
-  case 5 :
-    return ReadGrad<T>(CreateExpandedPath(DirectionsT5), NoSymmetricDuple, mode, flipx, flipy, flipz);
-  case 6 :
-    return ReadGrad<T>(CreateExpandedPath(DirectionsT6), NoSymmetricDuple, mode, flipx, flipy, flipz);
-  case 7 :
-    return ReadGrad<T>(CreateExpandedPath(DirectionsT7), NoSymmetricDuple, mode, flipx, flipy, flipz);
-  default :
-    utlGlobalException(true, "tess should be 1, 2, 3, 4, 5, 6, 7");
-    return utl_shared_ptr<NDArray<T,2> > ();
-    }
-}
-
-template <class T>
-inline utl_shared_ptr<NDArray<T,2> >
-ReadGradElectricRepulsion(const int num, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, const int mode= CARTESIAN_TO_SPHERICAL, 
-  const int flipx=DIRECTION_NOFLIP, const int flipy=DIRECTION_NOFLIP, const int flipz=DIRECTION_NOFLIP, const bool need_normalize=true) 
-{
-  char buf[255];
-  if (num<10)
-    sprintf(buf, "00%d", num);
-  else if (num<100)
-    sprintf(buf, "0%d", num);
-  else
-    sprintf(buf, "%d", num);
-  std::string index (buf);
-  std::string file= CreateExpandedPath(GradientsElec) + std::string("/Elec") + index + std::string(".txt");
-  return ReadGrad<T>(file, NoSymmetricDuple, mode, flipx, flipy, flipz, need_normalize);
 }
 
 // [>* generate SH basis with given rank and the gradients <]

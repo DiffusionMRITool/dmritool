@@ -17,6 +17,7 @@
 
 #include "gtest/gtest.h"
 #include "itkSphericalHarmonicsGenerator.h"
+#include "utlDMRIStoredTables.h"
 
 typedef itk::SphericalHarmonicsGenerator<double> SHGenerator;
 
@@ -90,6 +91,10 @@ do { \
 
 TEST(itkSphericalHarmonicsGenerator, RealTripleIntegration)
 {
+
+    {
+
+  utl::InitializeSHTripleIntegrationTable();
   __itkSphericalHarmonicsGenerator_RealTripleIntegration(4,3,2,1,M_PI/3.0,M_PI/5.0);
   __itkSphericalHarmonicsGenerator_RealTripleIntegration(2,1,6,-3,M_PI/3.0,M_PI/5.0);
   __itkSphericalHarmonicsGenerator_RealTripleIntegration(6,-5,8,7,-M_PI/3.0,M_PI/5.0);
@@ -102,6 +107,25 @@ TEST(itkSphericalHarmonicsGenerator, RealTripleIntegration)
     int m1 = utl::RandomInt(-l1,l1), m2 = utl::RandomInt(-l2,l2);
     double theta = utl::Random<double>(0,M_PI), phi=utl::Random<double>(0, 2*M_PI);
     __itkSphericalHarmonicsGenerator_RealTripleIntegration(l1,m1,l2,m2,theta,phi);
+    }
+    }
+
+    {
+  int lMax = 16;
+  utl::InitializeSHTripleIntegrationTable(lMax,lMax,lMax);
+  __itkSphericalHarmonicsGenerator_RealTripleIntegration(4,3,2,1,M_PI/3.0,M_PI/5.0);
+  __itkSphericalHarmonicsGenerator_RealTripleIntegration(2,1,6,-3,M_PI/3.0,M_PI/5.0);
+  __itkSphericalHarmonicsGenerator_RealTripleIntegration(6,-5,8,7,-M_PI/3.0,M_PI/5.0);
+  __itkSphericalHarmonicsGenerator_RealTripleIntegration(0,0,0,0,M_PI/3.0,M_PI/5.0);
+
+  int N = 10;
+  for ( int i = 0; i < N; ++i ) 
+    {
+    int l1 = utl::RandomInt(0,10)*2, l2 = utl::RandomInt(0,10)*2;
+    int m1 = utl::RandomInt(-l1,l1), m2 = utl::RandomInt(-l2,l2);
+    double theta = utl::Random<double>(0,M_PI), phi=utl::Random<double>(0, 2*M_PI);
+    __itkSphericalHarmonicsGenerator_RealTripleIntegration(l1,m1,l2,m2,theta,phi);
+    }
     }
 }
 

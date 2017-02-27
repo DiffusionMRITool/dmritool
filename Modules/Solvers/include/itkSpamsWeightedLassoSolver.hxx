@@ -175,7 +175,7 @@ SpamsWeightedLassoSolver<TPrecision>
 template < class TPrecision >
 void
 SpamsWeightedLassoSolver<TPrecision>
-::Solve () 
+::Solve (const VectorType& ) 
 {
   utlShowPosition(this->GetDebug());
   this->VerifyInputs();
@@ -212,7 +212,7 @@ SpamsWeightedLassoSolver<TPrecision>
   m_X= MatrixPointer(new MatrixType()); 
   spams::SpMatrixToUtlMatrix(*m_Xs, *m_X);
   if (M==1)
-    m_X->GetColumn(0, this->m_x);
+    this->m_x = m_X->GetColumn(0);
   // utl::PrintUtlMatrix(m_X, "m_X");
   // utl::PrintUtlVector(this->m_x, "m_x");
 }
@@ -220,7 +220,7 @@ SpamsWeightedLassoSolver<TPrecision>
 template < class TPrecision >
 typename SpamsWeightedLassoSolver<TPrecision>::ValueType
 SpamsWeightedLassoSolver<TPrecision>
-::EvaluateCostFunction (const VectorType& x, const int col) const 
+::EvaluateCostFunctionInColumn (const VectorType& x, const int col) const 
 {
   utlException(x.Size()==0, "need to give a vector");
   const VectorType* xx = &x;
@@ -239,8 +239,8 @@ SpamsWeightedLassoSolver<TPrecision>
   for ( int i = 0; i < xx->Columns(); i += 1 ) 
     {
     VectorType vec;
-    xx->GetColumn(i,vec);
-    func += EvaluateCostFunction(vec, i);
+    vec = xx->GetColumn(i);
+    func += EvaluateCostFunctionInColumn(vec, i);
     }
   return func;
 }

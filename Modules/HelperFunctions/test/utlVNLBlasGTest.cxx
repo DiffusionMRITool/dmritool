@@ -17,10 +17,10 @@
 
 // #include "utl.h"
 #include "utlGTest.h"
+#include "utlNDArray.h"
 #include "utlVNLBlas.h"
 #include "utlSTDHeaders.h"
 #include "itkMultiThreader.h"
-#include "utlMatrix.h"
 #include "utlVNLIO.h"
 
 typedef vnl_matrix<double>         MatrixType;
@@ -598,7 +598,7 @@ TEST(utlVNLBlas, MatrixCopy)
     utl::Toc();
     utl::Tic(std::cout<< "utl::Matrix matrix transpose time:");
     for ( int i = 0; i < K; ++i ) 
-       mat0Utl.GetTranspose(mat1Utl);
+       mat1Utl = mat0Utl.GetTranspose();
     utl::Toc();
     }
 }

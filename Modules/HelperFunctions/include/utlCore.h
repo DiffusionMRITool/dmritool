@@ -19,6 +19,9 @@
 #define __utlCore_h
 
 
+#include "utlCommandLineParser.h"
+#include "utlSTDHeaders.h"
+
 #include "utlCoreMacro.h"
 #include "utlSmartAssert.h"
 
@@ -49,16 +52,19 @@
 #include <ctime>
 // #include <wordexp.h>
 
+#include "utlConstants.h"
 #include "utlCoreMKL.h"
 
-#include "utlCommandLineParser.h"
+#if __cplusplus >= 201103L
+#include "utlCore11.h"
+#endif
+
+/** @addtogroup utlHelperFunctions
+@{ */
 
 namespace utl 
 {
 
-
-/** @addtogroup utlHelperFunctions
-@{ */
 
 //! Return the value of a system timer, with a millisecond precision.
 /**
@@ -151,7 +157,6 @@ SwapBytes(void *ptr, const int sizePerElement, const int count)
     }
 }
 
-
 template <typename T>
 inline T median(std::vector<T> values) 
 {
@@ -194,6 +199,31 @@ inline unsigned int argmax(Iterator i1, Iterator i2)
   return n;
 }
 
+/** calculate indices of the first two largest elements  */
+template <class VectorType>
+inline void 
+argmax2(const VectorType& vec, int size, int& index0, int& index1)
+{
+  double max0 = -std::numeric_limits<double>::max();
+  double max1 = max0;
+  index0=0, index1=0;
+  for ( int i = 0; i < size; ++i ) 
+    {
+    if (vec[i]>max0)
+      {
+      max1 = max0;
+      index1 = index0;
+      max0 = vec[i];
+      index0 = i;
+      }
+    else if (vec[i] > max1) 
+      {
+      max1 = vec[i];
+      index1 = i;
+      }
+    }
+}
+
 //! Return the minimum between \p a and \p b.
 template<typename T> inline const T& min(const T& a,const T& b) { return a<=b?a:b; }
 //! Return the minimum between \p a,\p b and \a c.
@@ -206,8 +236,13 @@ template<typename T> inline const T& max(const T& a,const T& b) { return a>=b?a:
 template<typename T> inline const T& max(const T& a,const T& b,const T& c) { return max(max(a,b),c); }
 //! Return the maximum between \p a,\p b,\p c and \p d.
 template<typename T> inline const T& max(const T& a,const T& b,const T& c,const T& d) { return max(max(a,b,c),d); }
+
 //! Return the sign of \p x.
-template<typename T> inline char sign(const T& x) { return (x<0)?-1:(x==0?0:1); }
+template<typename T> inline int  sign(const T& x) { return (x<0)?-1:(x==0?0:1); }
+
+template<typename T> inline T  square(const T& x) { return x*x; }
+
+template<typename T> inline T cube(const T& x) { return x*x*x; }
 
 inline std::string 
 StringToLowerCase(const std::string str)
@@ -623,9 +658,10 @@ IsNumber( const std::string input)
 /** convert number to string  */
 template <class T>
 inline std::string
-ConvertNumberToString ( const T value )
+ConvertNumberToString ( const T value, const int precision=6 )
 {
   std::ostringstream strs;
+  strs.precision(precision);
   strs << value;
   return strs.str();
 }
@@ -649,6 +685,20 @@ ConvertStringToNumber ( const std::string input )
   if (!ss)
     utlException(true, "input="<<input);
   return result;
+}
+
+template <class VectorType>
+std::string
+ConvertVectorToString ( VectorType vec, const int N, const char*  separate=" " )
+{
+  std::ostringstream ss;
+  for ( int i = 0; i < N; ++i ) 
+    {
+    ss << vec[i]; 
+    if (i!=N-1)
+      ss << separate; 
+    }
+  return ss.str();
 }
 
 template <class T>
@@ -785,22 +835,6 @@ GetSumOfVector( const TVectorType& vec, const int NSize)
   return sumTemp;
 }
 
-template <typename T>
-std::ostream& 
-operator<<(std::ostream& out, const std::vector<T>& vec )
-{
-  if (vec.size()>0)
-    {
-    for ( int i = 0; i < vec.size()-1; i += 1 ) 
-      {
-      out << vec[i] << " ";
-      }
-    out << vec[vec.size()-1];
-    }
-  else
-    out << "(empty vector)";
-  return out;
-}
 
 /** Get statistics (min, max, mean, std) from a given range of values.  */
 template <class IteratorType>
@@ -833,6 +867,41 @@ GetContainerStats ( IteratorType v1, IteratorType v2 )
   return result;
 }
 
+template <>
+inline std::vector<double> 
+GetContainerStats<const std::complex<double>*> ( const std::complex<double>* v1, const std::complex<double>* v2 )
+{
+  return std::vector<double>(4,0);
+}
+
+template <>
+inline std::vector<double> 
+GetContainerStats<std::complex<double>*> ( std::complex<double>* v1, std::complex<double>* v2 )
+{
+  return std::vector<double>(4,0);
+}
+
+template <>
+inline std::vector<double> 
+GetContainerStats<std::complex<float>*> ( std::complex<float>* v1, std::complex<float>* v2 )
+{
+  return std::vector<double>(4,0);
+}
+
+template <>
+inline std::vector<double> 
+GetContainerStats<const std::complex<float>*> ( const std::complex<float>* v1, const std::complex<float>* v2 )
+{
+  return std::vector<double>(4,0);
+}
+
+template <>
+inline std::vector<double> 
+GetContainerStats<const std::string*> ( const std::string* v1, const std::string* v2 )
+{
+  return std::vector<double>(4,0);
+}
+
 template <class IteratorType>
 int
 GetNumberOfNonZeroValues ( IteratorType v, IteratorType v2, const double threshold=1e-6 )
@@ -853,7 +922,6 @@ template <typename T>
 inline void 
 PrintVector ( const std::vector<T>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
 {
-  // utlShowPosition(true);
   std::vector<double> st = GetContainerStats(vec.begin(), vec.end());
   char tmp[1024];
   sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), &vec, vec.size(), st[0], st[2], st[3], st[1] );
@@ -891,7 +959,6 @@ template <class VectorType>
 inline void 
 PrintVector ( const VectorType& vec, const int NSize, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
 {
-  // utlShowPosition(true);
   char tmp[1024];
   std::vector<double> st = GetContainerStats(&vec[0], &vec[NSize]);
   sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), &vec, (long unsigned int)NSize, st[0], st[2], st[3], st[1] );
@@ -911,7 +978,6 @@ template <class IteratorType>
 inline void 
 PrintContainer ( IteratorType v1, IteratorType v2, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
 {
-  // utlShowPosition(true);
   char tmp[1024];
   std::vector<double> st = GetContainerStats(v1, v2);
   long unsigned int NSize=0;
@@ -990,7 +1056,7 @@ template <typename T>
   int
 SetVector(const std::string s, std::vector<T>& vec, const int least_num=0, const char& c=',') 
 {
-  SetVector(s.c_str(), vec, least_num, c);
+  return SetVector(s.c_str(), vec, least_num, c);
 }
 
 template < class T >
@@ -1171,13 +1237,70 @@ SelectVector ( const std::vector<T>& vec, const int startIndex, const int number
   return select;
 }
 
+template <class T>
+inline bool 
+IsSame ( const T& value, const T& v0, const double eps=1e-10 )
+{
+  return std::fabs(value-v0)<eps;
+}
+
+template <>
+inline bool 
+IsSame<int>(const int& value, const int& v0, const double)
+{
+  return value==v0;
+}
+
+template <>
+inline bool 
+IsSame<std::string>(const std::string& value, const std::string& v0, const double)
+{
+  return value==v0;
+}
+
+template <>
+inline bool
+IsSame<char>(const char& value, const char& v0, const double)
+{
+  return value==v0;
+}
+
+template <class T>
+inline bool
+IsSameVector(const std::vector<T>& vec1, const std::vector<T>& vec2, const double eps=1e-10)
+{
+  if (vec1.size()!=vec2.size())
+    return false;
+  for ( int i = 0; i < vec1.size(); ++i ) 
+    {
+    if (!IsSame<T>(vec1[i], vec2[i], eps))
+      return false;
+    }
+  return true;
+}
+
+
+template <class T, size_t N1, size_t N2 >
+inline bool 
+IsSameArray (const T (&a1)[N1], const T (&a2)[N2], const double eps=1e-10 )
+{
+  if (N1!=N2)
+    return false;
+  for ( int i = 0; i < N1; ++i ) 
+    {
+    if (!IsSame<T>(a1[i], a2[i], eps))
+      return false;
+    }
+  return true;
+}
+
 template <class VectorType, class T>
 inline bool 
 IsInVector ( const VectorType& vec, const int size, const T& num, const double eps=1e-10 )
 {
   for ( int i = 0; i < size; i += 1 ) 
     {
-    if (std::abs(vec[i]-num) < eps)
+    if (IsSame<T>(vec[i], num, eps))
       return true;
     }
   return false;
@@ -1190,41 +1313,6 @@ IsInVector ( const std::vector<T>& vec, const T& num, const double eps=1e-10 )
   return IsInVector<std::vector<T>, T>(vec, vec.size(), num, eps);
 }
 
-template <>
-inline bool 
-IsInVector<int> ( const std::vector<int>& vec, const int& num, const double )
-{
-  for ( int i = 0; i < vec.size(); i += 1 ) 
-    {
-    if (vec[i]==num)
-      return true;
-    }
-  return false;
-}
-
-template <>
-inline bool 
-IsInVector<std::string> ( const std::vector<std::string>& vec, const std::string& num, const double )
-{
-  for ( int i = 0; i < vec.size(); i += 1 ) 
-    {
-    if (vec[i]==num)
-      return true;
-    }
-  return false;
-}
-
-template <>
-inline bool 
-IsInVector<char> ( const std::vector<char>& vec, const char& num, const double )
-{
-  for ( int i = 0; i < vec.size(); i += 1 ) 
-    {
-    if (vec[i]==num)
-      return true;
-    }
-  return false;
-}
 
 /** generate random float value in [d1,d2]  */
 template < typename T >
@@ -1655,9 +1743,14 @@ Save2DVector ( const Vector2D& vv, std::ostream& out=std::cout)
 {
   for ( int i = 0; i < vv.size(); i += 1 ) 
     {
+    if (vv[i].size()==0)
+      {
+      out<<"\n" << std::flush; 
+      continue;
+      }
     for ( int j = 0; j < vv[i].size()-1; j += 1 ) 
       out << vv[i][j]<<  " ";
-    out << vv[i][vv[i].size()-1] << "\n";
+    out << vv[i][vv[i].size()-1] << "\n" << std::flush;
     }
   return;
 }
@@ -1709,8 +1802,153 @@ ReadMatrix ( const std::string file, TMatrixType& matrix )
     }
   return;
 }
-    /** @} */
+
+inline void 
+ComputeOffsetTable(const std::vector<int>& size, std::vector<int>& offsetTable, const int storedWay)
+{
+  int Dim = size.size();
+  if (storedWay==ROW_MAJOR)
+    {
+    offsetTable.resize(Dim);
+    for ( int i = Dim-1; i >= 0; i-- ) 
+      { 
+      if (i==Dim-1)
+        offsetTable[i]=size[i]; 
+      else
+        offsetTable[i]=size[i]*offsetTable[i+1]; 
+      }
+    }
+  else if (storedWay==COLUMN_MAJOR)
+    {
+    offsetTable.resize(Dim+1);
+    offsetTable[0]=1;
+    int numberOfSamples = 1;
+    for ( int i = 0; i < Dim; ++i ) 
+      {
+      numberOfSamples *= size[i];
+      offsetTable[i+1] = numberOfSamples;
+      }
+    }
+  else
+    utlException(true, "wrong storedWay input");
+}
+
+
+inline int 
+ComputeNDArrayOffset(const std::vector<int>& multiIndex, const std::vector<int>& size, const int storedWay, std::vector<int> offsetTable=std::vector<int>())
+{
+  int Dim = multiIndex.size();
+  if (Dim==1)
+    return multiIndex[0];
+
+  if (offsetTable.size()==0)
+    ComputeOffsetTable(size, offsetTable, storedWay);
+
+  int offset = 0;
+  if (storedWay==ROW_MAJOR)
+    {
+    offset = 0;
+    for ( int i = 0; i < Dim-1; ++i ) 
+      offset += multiIndex[i]*offsetTable[i+1];
+    offset += multiIndex[Dim-1];
+    }
+  else if (storedWay==COLUMN_MAJOR)
+    {
+    offset = 0;
+    for ( int i = Dim-1; i > 0; i-- )
+      offset += multiIndex[i] * offsetTable[i];
+    offset += multiIndex[0];
+    }
+  else
+    utlException(true, "wrong storedWay input");
+
+  return offset;
+}
+
+inline void 
+ComputeNDArrayIndex(const int offset, std::vector<int>& index, const std::vector<int>& size, const int storedWay, std::vector<int> offsetTable=std::vector<int>())
+{
+  int Dim = size.size();
+  if (Dim==1)
+    {
+    index.resize(1);
+    index[0]=offset;
+    return;
+    }
+
+  if (offsetTable.size()==0)
+    ComputeOffsetTable(size, offsetTable, storedWay);
+
+  index.resize(Dim);
+  if (storedWay==ROW_MAJOR)
+    {
+    int nn = offset;
+    for ( int i = 1; i < Dim; i++ )
+      {
+      index[i-1] = nn / offsetTable[i] ;
+      nn -= index[i-1] * offsetTable[i];
+      }
+    index[Dim-1] = nn;
+    }
+  else if (storedWay==COLUMN_MAJOR)
+    {
+    int nn = offset;
+    for ( int i = Dim-1; i > 0; i-- )
+      {
+      index[i] = nn / offsetTable[i] ;
+      nn -= index[i] * offsetTable[i];
+      }
+    index[0] = nn;
+    }
+  else
+    utlException(true, "wrong storedWay input");
+}
+
 
 }
+
+namespace std
+{
+
+template <typename T>
+std::ostream& 
+operator<<(std::ostream& out, const std::vector<T>& vec )
+{
+  if (vec.size()>0)
+    {
+    for ( int i = 0; i < vec.size()-1; i += 1 ) 
+      {
+      out << vec[i] << " ";
+      }
+    out << vec[vec.size()-1];
+    }
+  else
+    out << "(empty vector)";
+  return out;
+}
+
+template <typename T>
+std::ostream& 
+operator<<(std::ostream& out, const std::complex<T>& val )
+{
+  T a = val.real(), b = val.imag();
+  if (a==0 && b==0)
+    {
+    out << "0"; 
+    return out;
+    }
+
+  if (a!=0)
+    out << a;
+  if (b>0)
+    out << "+" << b << "i";
+  else if (b<0) 
+    out << b << "i";
+  return out;
+}
+
+}
+    
+/** @} */
 
 #endif 

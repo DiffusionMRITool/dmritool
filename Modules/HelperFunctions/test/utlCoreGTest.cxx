@@ -16,9 +16,52 @@
  */
 
 
-#include "gtest/gtest.h"
+#include "utlGTest.h"
 #include "utlCore.h"
 
+TEST(utlCore, utlArraySize)
+{
+  int a1[3];  
+  EXPECT_EQ(3, utlArraySize(a1));
+  double a2[5];  
+  EXPECT_EQ(5, utlArraySize(a2));
+
+    {
+    int nums []={2, 1, 2, 3, 4};
+    EXPECT_EQ(5, utlArraySize(nums));
+    }
+}
+
+TEST(utlCore, IsSame)
+{
+  EXPECT_TRUE(utl::IsSame<std::string>("abc", "abc"));
+  EXPECT_TRUE(utl::IsSameArray("abc", "abc"));
+  EXPECT_FALSE(utl::IsSame<std::string>("abc", " abc"));
+  EXPECT_FALSE(utl::IsSameArray("abc", " abc"));
+    {
+    int a1[3], a2[3];
+    for ( int i = 0; i < 3; ++i ) 
+      a1[i]=a2[i]=i;
+    EXPECT_TRUE(utl::IsSameArray(a1,a2));
+    }
+    {
+    int a1[3], a2[4];
+    for ( int i = 0; i < 3; ++i ) 
+      a1[i]=a2[i]=i;
+    EXPECT_FALSE(utl::IsSameArray(a1,a2));
+    }
+    {
+    int a1[3], a2[3];
+    std::vector<int> vec1, vec2;
+    for ( int i = 0; i < 3; ++i ) 
+      {
+      a1[i]=i, a2[i]=2*i;
+      vec1.push_back(a1[i]), vec2.push_back(a2[i]);
+      }
+    EXPECT_FALSE(utl::IsSameArray(a1,a2));
+    EXPECT_FALSE(utl::IsSameVector(vec1,vec2));
+    }
+}
 
 TEST(UtlCore, ZeroPad)
 {
@@ -69,6 +112,9 @@ TEST(UtlCore, CreateExpandedPath)
 TEST(utlCore, GetFileExtension)
 {
   std::string ext, file;
+  utl::GetPath("/home/dwi.hdr", ext, file);
+  EXPECT_STREQ("/home/", ext.c_str());
+  EXPECT_STREQ("dwi.hdr", file.c_str());
   utl::GetFileExtension("/home/dwi.hdr", ext, file);
   EXPECT_STREQ("hdr", ext.c_str());
   EXPECT_STREQ("/home/dwi", file.c_str());
@@ -92,3 +138,85 @@ TEST(utlCore, IsNumber)
 }
 
 
+TEST(utlCore, ComputeNDArrayOffset)
+{
+  std::vector<int> size(2);
+  size[0]=3, size[1]=4;
+  double off=0;
+
+    {
+    std::vector<int> index(2), index2(2);
+    index[0]=1, index[1]=3;
+    off=10;
+    EXPECT_EQ(10, utl::ComputeNDArrayOffset(index, size, COLUMN_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, COLUMN_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 2, 1e-10);
+
+    index[0]=0, index[1]=0;
+    off=0;
+    EXPECT_EQ(off, utl::ComputeNDArrayOffset(index, size, COLUMN_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, COLUMN_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 2, 1e-10);
+
+    index[0]=2, index[1]=3;
+    off=11;
+    EXPECT_EQ(off, utl::ComputeNDArrayOffset(index, size, COLUMN_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, COLUMN_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 2, 1e-10);
+    }
+    
+    {
+    std::vector<int> index(2), index2(2);
+    index[0]=1, index[1]=3;
+    off=7;
+    EXPECT_EQ(off, utl::ComputeNDArrayOffset(index, size, ROW_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, ROW_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 2, 1e-10);
+
+    index[0]=0, index[1]=0;
+    off=0;
+    EXPECT_EQ(off, utl::ComputeNDArrayOffset(index, size, ROW_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, ROW_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 2, 1e-10);
+
+    index[0]=2, index[1]=3;
+    off=11;
+    EXPECT_EQ(off, utl::ComputeNDArrayOffset(index, size, ROW_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, ROW_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 2, 1e-10);
+    }
+
+    {
+    std::vector<int> size(1);
+    size[0] = 10;
+
+    std::vector<int> index(1), index2(1);
+    index[0]=5;
+    off=5;
+    EXPECT_EQ(off, utl::ComputeNDArrayOffset(index, size, ROW_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, ROW_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 1, 1e-10);
+
+    EXPECT_EQ(off, utl::ComputeNDArrayOffset(index, size, COLUMN_MAJOR));
+    utl::ComputeNDArrayIndex(off, index2, size, COLUMN_MAJOR);
+    EXPECT_NEAR_VECTOR(index, index2, 1, 1e-10);
+    }
+}
+
+TEST(utlCore, print)
+{
+  double a_d=2.0;
+  int a_i = 1;
+  bool a_b = true;
+  
+    {
+    std::ostringstream oss;
+    utl::PrintOS(oss, a_d, a_i, a_b);
+    EXPECT_EQ(oss.str(), "(2, 1, true)\n");
+    }
+    {
+    std::ostringstream oss;
+    utlOSPrintVar(true, oss, a_d, a_i, a_b);
+    EXPECT_EQ(oss.str(), "(a_d, a_i, a_b) = (2, 1, true)\n");
+    }
+}

@@ -11,6 +11,8 @@
 
 #include "gtest/gtest.h"
 #include "utlDMRI.h"
+#include "itkSphericalHarmonicsGenerator.h"
+#include "utlDMRIStoredTables.h"
 
 TEST(utlDMRI, GetIndexSHlm)
 {
@@ -28,4 +30,14 @@ TEST(utlDMRI, GetIndexSHlm)
       j++;
       }
     }
+}
+
+TEST(utlDMRIStoredTables, ReadGrad)
+{
+  utl::ReadGrad<double>(3);
+}
+
+TEST(utlDMRIStoredTables_DeathTest, ReadGrad)
+{
+  EXPECT_DEATH(utl::ReadGrad<double>(8), "");
 }

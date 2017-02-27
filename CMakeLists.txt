@@ -33,8 +33,11 @@ endif(NOT VERBOSITY_LEVEL)
 add_definitions(-DUTL_VERBOSITY=${VERBOSITY_LEVEL})
 
 # Support for C++11
-#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -stdlib=libc++")
-#set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}-stdlib=libc++")
+  set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -stdlib=libc++")
+endif()
 
 option(BUILD_DOXYGEN_DOCUMENTATION "Build doxygen documentation" OFF)
 
@@ -174,7 +177,7 @@ include_directories(${DMRITOOL_INCLUDE_DIRECTORIES})
 
 foreach(dir ${DMRITOOL_MODULE_DIRECTORIES})
   set(dir_abs ${PROJECT_SOURCE_DIR}/Modules/${dir})
-  if (EXISTS "${dir_abs}}/src" AND EXISTS "${dir_abs}/src/CMakeLists.txt")
+  if (EXISTS "${dir_abs}/src" AND EXISTS "${dir_abs}/src/CMakeLists.txt")
     add_subdirectory(${dir_abs}/src)
   endif()
   if (BUILD_TESTING AND EXISTS "${dir_abs}/test" AND EXISTS "${dir_abs}/test/CMakeLists.txt")

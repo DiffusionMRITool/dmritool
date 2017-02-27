@@ -28,6 +28,7 @@
 #include "utlCore.h"
 #include "utlDMRI.h"
 #include "utlITK.h"
+#include "utlDMRIStoredTables.h"
 
 namespace utl 
 {
@@ -62,7 +63,7 @@ std::complex<PreciseType>
 SphericalHarmonicsGenerator<PreciseType>
 ::ComplexSH(const int l, const int m, const PreciseType theta, const PreciseType phi) 
 {
-  int absm = std::abs(int(m));
+  int absm = (m<0 ? -m : m);
   PreciseType sign = utl::IsEven(absm)? 1.0 : -1.0;
 
   std::complex<PreciseType> retval(0.0,(PreciseType)(absm*phi));
@@ -85,7 +86,7 @@ SphericalHarmonicsGenerator<PreciseType>
   if(m > 0) 
     {
     cplx = ComplexSH(l, m, theta, phi);
-    return std::sqrt(2.0)*std::imag(cplx);
+    return utl::SQRT2*std::imag(cplx);
     }
   else if( m == 0 )
     {
@@ -98,7 +99,7 @@ SphericalHarmonicsGenerator<PreciseType>
     PreciseType sign = utl::IsEven(m)? 1.0 : -1.0;
     // utlPrintVar5(true, l, m, utl::IsEven(m), m%2, -m%2);
     cplx = sign * ComplexSH(l, m, theta, phi);
-    return std::sqrt(2.0)*std::real(cplx);
+    return utl::SQRT2*std::real(cplx);
     }
 }
 
@@ -130,25 +131,15 @@ SphericalHarmonicsGenerator<PreciseType>
   if (is_precalculated)
     {
     utlException(!utl::IsFileExist(utl::SH3Itegralhdr), "no SH3Itegralhdr.");
-    typedef itk::Image<double,3> ImageType;
-    static bool isFirstTime = true;
-    static ImageType::Pointer image = ImageType::New();
-    static int rank = -1;
-    ImageType::IndexType pixelIndex;
-    if (isFirstTime)
-      {
-      itk::ReadImage<ImageType>(utl::SH3Itegralhdr, image);
-      ImageType::RegionType region = image->GetLargestPossibleRegion();
-      ImageType::SizeType size = region.GetSize();
-      rank = utl::DimToRankSH(size[0]);
-      isFirstTime = false;
-      }
+    utl::InitializeSHTripleIntegrationTable();
+    int rank = utl::DimToRankSH(utl::SH3IntegralTable->GetShape()[0]);
     if (l1<=rank && l2<=rank && l3<=rank)
       {
-      pixelIndex[0] = utl::GetIndexSHj(l1,m1);
-      pixelIndex[1] = utl::GetIndexSHj(l2,m2);
-      pixelIndex[2] = utl::GetIndexSHj(l3,m3);
-      result = image->GetPixel(pixelIndex);
+      unsigned index[3];
+      index[0] = utl::GetIndexSHj(l1,m1);
+      index[1] = utl::GetIndexSHj(l2,m2);
+      index[2] = utl::GetIndexSHj(l3,m3);
+      result = (*utl::SH3IntegralTable)(index);
       }
     else
       result = RealTripleIntegration(l1,m1,l2,m2,l3,m3,false);
@@ -162,16 +153,16 @@ SphericalHarmonicsGenerator<PreciseType>
     if (m1<0 && m2<0 && m3<0) // result = Sqrt[2]/4* Integrate[ ((-1)^(-m1)*Y[l1,m1]+Y[l1,-m1]) * ((-1)^(-m2)*Y[l2,m2]+Y[l2,-m2]) * ((-1)^(-m3)*Y[l3,m3]+Y[l3,-m3]) ]
       {
       if (m1+m2==m3)
-        result = ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,-m3) / std::sqrt(2); // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
+        result = ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,-m3) / utl::SQRT2; // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
       else if (m1+m3==m2)
-        result = ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,-m2,l3,m3) / std::sqrt(2); 
+        result = ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,-m2,l3,m3) / utl::SQRT2; 
       else if (m2+m3==m1)
         {
         // utlPrintVar3(true,l1,l2,l3);
         // utlPrintVar3(true,m1,m2,m3);
         // utlPrintVar3(true,m1%2, ( m1%2==1?-1:1 ),ComplexTripleIntegration(l1,-m1,l2,m2,l3,m3));
         // utlPrintVar1(true, ComplexTripleIntegration(l1,-m1,l2,m2,l3,m3));
-        result = ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,m2,l3,m3) / std::sqrt(2); 
+        result = ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,m2,l3,m3) / utl::SQRT2; 
         }
       }
     else if ( (m1>0 && m2<0 && m3<0) || (m1<0 && m2>0 && m3<0) || (m1<0 && m2<0 && m3>0) )  // Integrate[Sin[m1*Phi]*Cos[m2*Phi]*Cos[m3*Phi]]=0
@@ -181,29 +172,29 @@ SphericalHarmonicsGenerator<PreciseType>
     else if (m1>0 && m2>0 && m3<0) // result = -Sqrt[2]/4* Integrate[ (Y[l1,m1]-(-1)^(m1)*Y[l1,-m1]) * (Y[l2,m2]-(-1)^(-m2)*Y[l2,-m2]) * ((-1)^(-m3)*Y[l3,m3]+Y[l3,-m3]) ]
       {
       if (m1+m2+m3==0)
-        result = (-1.0) * ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,m3) / std::sqrt(2); // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
+        result = (-1.0) * ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,m3) / utl::SQRT2; // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
       else if (m1==m2+m3)
-        result = ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,-m2,l3,-m3) / std::sqrt(2); 
+        result = ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,-m2,l3,-m3) / utl::SQRT2; 
       else if (m2==m1+m3)
-        result = ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,m2,l3,-m3) / std::sqrt(2); 
+        result = ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,m2,l3,-m3) / utl::SQRT2; 
       }
     else if (m1>0 && m2<0 && m3>0) 
       {
       if (m1+m2+m3==0)
-        result = (-1.0) * ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,m3) / std::sqrt(2); // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
+        result = (-1.0) * ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,m3) / utl::SQRT2; // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
       else if (m1==m2+m3)
-        result = ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,-m2,l3,-m3) / std::sqrt(2); 
+        result = ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,-m2,l3,-m3) / utl::SQRT2; 
       else if (m3==m1+m2)
-        result = ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,-m2,l3,m3) / std::sqrt(2); 
+        result = ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,-m2,l3,m3) / utl::SQRT2; 
       }
     else if (m1<0 && m2>0 && m3>0) 
       {
       if (m1+m2+m3==0)
-        result = (-1.0) * ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,m3) / std::sqrt(2); // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
+        result = (-1.0) * ( m1%2==0?1:-1 ) * ComplexTripleIntegration(l1,m1,l2,m2,l3,m3) / utl::SQRT2; // (-1)^(m1)*(-1)^(m2)*Integrate[Y[l1,m1]*Y[l2,m2]*Y[l3,-m3]]==(-1)^m3*Integrate[Y[l1,-m1]*Y[l2,-m2]*Y[l3,m3]]
       else if (m3==m2+m1)
-        result = ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,-m2,l3,m3) / std::sqrt(2); 
+        result = ( m2%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,-m2,l3,m3) / utl::SQRT2; 
       else if (m2==m1+m3)
-        result = ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,m2,l3,-m3) / std::sqrt(2); 
+        result = ( m3%2==0?1:-1 ) * ComplexTripleIntegration(l1,-m1,l2,m2,l3,-m3) / utl::SQRT2; 
       }
     else if (m1>0 && m2>0 && m3>0) // Integrate[Sin[m1*Phi]*Sin[m2*Phi]*Sin[m3*Phi]]=0
       result = 0;
@@ -252,9 +243,9 @@ SphericalHarmonicsGenerator<PreciseType>
   if (m==0)
     return std::real(ComplexDerivativeOfTheta(l,m,theta,phi));
   else if (m>0)
-    return std::sqrt(2.0) * std::imag(ComplexDerivativeOfTheta(l,m,theta,phi));
+    return utl::SQRT2 * std::imag(ComplexDerivativeOfTheta(l,m,theta,phi));
   else 
-    return std::sqrt(2.0) * std::real(ComplexDerivativeOfTheta(l,-m,theta,phi));
+    return utl::SQRT2 * std::real(ComplexDerivativeOfTheta(l,-m,theta,phi));
 }
 
 template < class PreciseType >
@@ -265,9 +256,9 @@ SphericalHarmonicsGenerator<PreciseType>
   if (m==0)
     return std::real(ComplexDerivativeOfPhi(l,m,theta,phi));
   else if (m>0)
-    return std::sqrt(2.0) * std::imag(ComplexDerivativeOfPhi(l,m,theta,phi));
+    return utl::SQRT2 * std::imag(ComplexDerivativeOfPhi(l,m,theta,phi));
   else 
-    return std::sqrt(2.0) * std::real(ComplexDerivativeOfPhi(l,-m,theta,phi));
+    return utl::SQRT2 * std::real(ComplexDerivativeOfPhi(l,-m,theta,phi));
 }
 
 }

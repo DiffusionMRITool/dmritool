@@ -54,13 +54,7 @@
 #define M_EPS 1e-9
 #endif
 #ifndef M_PI
-#define M_PI 3.1415926535897932384626433832795
-#endif
-#ifndef M_E
-#define M_E             2.7182818284590452354
-#endif
-#ifndef M_SQRTPI
-#define M_SQRTPI   1.7724538509055160272981674833411452 
+#define M_PI 3.14159265358979323846264338328
 #endif
 
 
@@ -91,20 +85,9 @@
 #include <unistd.h>
 #endif
 
+#include "utlSTDHeaders.h"
 
-#include "utlSmartAssert.h"
-
-
-/**
- * \brief  macros which are used for debug with or without matlab mex files 
- * \author Jian Cheng
- */
-#ifdef MATLAB_MEX_FILE
-#include <mex.h>
-#define utlAbort(expout) do { mexErrMsgTxt(expout); } while(0)
-#else
-#define utlAbort(expout) do { std::cerr << expout <<"\n" << std::flush; abort(); } while(0)
-#endif
+// #include "utlSmartAssert.h"
 
 enum {
   COLOR_NORMAL=0,
@@ -117,6 +100,11 @@ enum {
   COLOR_YELLOW,
   COLOR_BLUE,
   COLOR_CYAN
+};
+
+enum {
+ ROW_MAJOR=0,
+ COLUMN_MAJOR 
 };
 
 namespace utl
@@ -162,66 +150,249 @@ GetColoredString(const std::string& str, const int color)
 }
 
 
-// #define __UTL_ERROR_STRING  utl::GetColoredString("Error", COLOR_RED)
-// #define __UTL_WARNING_STRING  utl::GetColoredString("Warning", COLOR_RED)
-// #define __UTL_DEBUG_STRING  utl::GetColoredString("Debug", COLOR_RED)
-// #define __UTL_BOLD(str) utl::GetColoredString(str, COLOR_BOLD)
-// #define __UTL_EXPSTR(str) utl::GetColoredString(str, COLOR_GREEN)
+#if UTL_OS==1
 
+#define __UTL_FATAL_STRING  utl::GetColoredString("Fatal", COLOR_RED)
+#define __UTL_ERROR_STRING  utl::GetColoredString("Error", COLOR_RED)
+#define __UTL_WARNING_STRING  utl::GetColoredString("Warning", COLOR_RED)
+#define __UTL_DEBUG_STRING  utl::GetColoredString("Debug", COLOR_CYAN)
+#define __UTL_LOG_STRING  utl::GetColoredString("Log", COLOR_BOLD)
+#define __UTL_BOLD(str) utl::GetColoredString(str, COLOR_BOLD)
+#define __UTL_EXPSTR(str) utl::GetColoredString(str, COLOR_GREEN)
+
+// #define __UTL_FATAL_STRING  "\033[1;31;59mFatal\033[0;0;0m"
+// #define __UTL_ERROR_STRING  "\033[1;31;59mError\033[0;0;0m"
+// #define __UTL_WARNING_STRING  "\033[1;31;59mWarning\033[0;0;0m"
+// #define __UTL_DEBUG_STRING  "\033[0;36;59mDebug\033[0;0;0m"
+// #define __UTL_LOG_STRING  "\033[0;36;59mLog\033[0;0;0m"
+// #define __UTL_BOLD(str)   std::string("\033[1m").append(str).append("\033[0;0;0m")
+// #define __UTL_EXPSTR(str) std::string("\033[0;32;59m").append(str).append("\033[0;0;0m")
+
+#else
+
+#define __UTL_FATAL_STRING  "Fatal"
 #define __UTL_ERROR_STRING  "Error"
 #define __UTL_WARNING_STRING  "Warning"
 #define __UTL_DEBUG_STRING  "Debug"
+#define __UTL_LOG_STRING  "Log"
 #define __UTL_BOLD(str) str
 #define __UTL_EXPSTR(str) str
+
+#endif
+
+
+#define __UTL_Print_LOCATION  "In "<< __UTL_BOLD("File") << ": " <<__FILE__<< ", "<<__UTL_BOLD("Line")<<": " << __LINE__   << ", "<<__UTL_BOLD("Function")<<": " << __utl_LOCATION__ <<  "\n" 
+
+
+enum{
+  /// no log
+  LOG_MUTE=0,   
+  /// normal log
+  LOG_NORMAL=1, 
+  /// used for debug information. this->GetDebug()
+  LOG_DEBUG=2,  
+  /// log for large matrix or vectors. 
+  LOG_LARGE=3,   
+  /// for all possible logs. 
+  LOG_ALL=100000000   
+};
+
+namespace utl
+{
+/** global Log verbosity level. Some class may have its own local LogLevel which override the global one.  */
+static int  LogLevel=LOG_NORMAL; 
+
+inline bool IsLogMute(const int level=utl::LogLevel)
+  {
+  return level<=LOG_MUTE;
+  }
+inline bool IsLogNormal(const int level=utl::LogLevel)
+  {
+  return LOG_NORMAL<=level;
+  }
+inline bool IsLogDebug(const int level=utl::LogLevel)
+  {
+  return LOG_DEBUG<=level;
+  }
+inline bool IsLogLarge(const int level=utl::LogLevel)
+  {
+  return LOG_LARGE<=level;
+  }
+inline bool IsLogAll(const int level=utl::LogLevel)
+  {
+  return LOG_ALL<=level;
+  }
+}
+
+
+#if __cplusplus >= 201103L
+
+#include "utlCore11.h"
+
+// namespace utl
+// {
+// template<typename... Args>
+// auto GetNumberOfArgs(Args... args) -> decltype(sizeof... (args));
+// }
+
+#define utlNumberOfArgs(...)   utl::GetNumberOfArgs(__VA_ARGS__) 
+
+
+/** Conditional print variable number of arguments to os */
+#define PrintVar(cond, os, ...)                                                                          \
+do                                                                                                       \
+{ if ((cond))                                                                                            \
+    {                                                                                                    \
+    if (utlNumberOfArgs(__VA_ARGS__)>1)                                                                  \
+      { os << "(" << #__VA_ARGS__ << ") = ";  utl::PrintOS(os, __VA_ARGS__);   }                         \
+    else                                                                                                 \
+      { os << #__VA_ARGS__ << " = ";  utl::PrintOS(os, __VA_ARGS__);   }                                 \
+    }                                                                                                    \
+} while(0)
+
+
+#define utlVLogOS_IF(cond, level, os)                                     \
+do                                                                        \
+  {                                                                       \
+  if ((level<=utl::LogLevel) && (cond))                                   \
+    { os << std::endl << std::flush; }                                    \
+  } while (0)
+  
+
+#define utlVLogOS(level, os)                            utlVLogOS_IF(true, level, os)
+#define utlVLog_IF(cond, level, expr)                   utlVLogOS_IF(cond, level, std::cout << expr)
+#define utlVLog(level, expr)                            utlVLogOS_IF(true, level, std::cout << expr)
+
+#define utlLogOS_IF(cond, os)                           utlVLogOS_IF(cond, 0, os)
+#define utlLogOS(os)                                    utlVLogOS_IF(true, 0, os)
+#define utlLog_IF(cond, expr)                           utlVLogOS_IF(cond, 0, std::cout << expr)
+#define utlLog(expr)                                    utlVLogOS_IF(true, 0, std::cout << expr)
+
+
+#define utlVLogOSVar_IF(cond, level, os, ...)                                                            \
+do                                                                                                       \
+{ if ( level<=utl::LogLevel )                                                                            \
+     {  PrintVar(cond, os, __VA_ARGS__);  }                                                              \
+} while(0)
+
+
+#define utlVLogOSVar(level, os, ...)                    utlVLogOSVar_IF(true, level, os,        __VA_ARGS__)
+#define utlVLogVar_IF(cond, level, ...)                 utlVLogOSVar_IF(cond, level, std::cout, __VA_ARGS__)
+#define utlVLogVar(level, ...)                          utlVLogOSVar_IF(true, level, std::cout, __VA_ARGS__)
+
+
+#define utlLogOSVar_IF(cond, os, ...)                   utlVLogOSVar_IF(cond, 0, os,        __VA_ARGS__)
+#define utlLogOSVar(os, ...)                            utlVLogOSVar_IF(true, 0, os,        __VA_ARGS__)
+#define utlLogVar_IF(cond, ...)                         utlVLogOSVar_IF(cond, 0, std::cout, __VA_ARGS__)
+#define utlLogVar(...)                                  utlVLogOSVar_IF(true, 0, std::cout, __VA_ARGS__)
+
+
+  
+#define utlVLogOSPosition_IF(cond,level, os)                                                                                   \
+do                                                                                                                             \
+{  if ((level<=utl::LogLevel) && (cond))                                                                                       \
+    { os << "\n"<<__UTL_BOLD("Work Flow")<<": "<< __UTL_Print_LOCATION << std::flush;                                          \
+    }                                                                                                                          \
+} while(0)
+
+#define utlVLogPosition(level)   utlVLogOSPosition_IF(true, level, std::cout)    
+
+
+#if UTL_VERBOSITY>0
+
+#define utlOSPrintVar(cond, os, ...)                          PrintVar(cond,      os,   __VA_ARGS__)
+#define utlPrintVar(cond, ...)                                PrintVar(cond, std::cout, __VA_ARGS__)
+
+#else
+
+#define utlOSPrintVar(cond, os, ...)                          
+#define utlPrintVar(cond, ...)            
+
+
+#endif
+
+
+#endif 
+
+
+template <typename T, size_t N>
+char(&__utlArraySizeHelper(T(&array)[N]))[N];
+#ifndef COMPILER_MSVC
+template <typename T, size_t N>
+char(&__utlArraySizeHelper(const T(&array)[N]))[N];
+#endif
+#define utlArraySize(array) (sizeof(__utlArraySizeHelper(array)))
+
+
+// #define utlArraySize(arr) (sizeof(arr)/sizeof(*(arr)))
+
+
+/**
+ * \brief  macros which are used for debug with or without matlab mex files 
+ * \author Jian Cheng
+ */
+#ifdef MATLAB_MEX_FILE
+#include <mex.h>
+#define utlAbort(expout) do { mexErrMsgTxt(expout); } while(0)
+#else
+#define utlAbort(expout) do { std::cerr << expout <<"\n" << std::flush; abort(); } while(0)
+#endif
 
 /**
  * \brief  macros which are used for debug 
  * \author Jian Cheng
  */
-#define __utlConditionFailPrint(cond)      "In File: " <<__FILE__<< ", Line: " << __LINE__   << ", Function: " << __utl_LOCATION__ <<  "\nExpression: '" << #cond << "' failed. " << "\n"
-#define __utlConditionSucceedPrint(cond)   "In File: " <<__FILE__<< ", Line: " << __LINE__   << ", Function: " << __utl_LOCATION__ <<  "\nExpression: '" << #cond << "' satisfied. " << "\n"
+#define __utlConditionFailPrint(cond)      __UTL_Print_LOCATION <<__UTL_BOLD("Expression")<<": '" << __UTL_EXPSTR(#cond) << "' failed. " << "\n"
+#define __utlConditionSucceedPrint(cond)   __UTL_Print_LOCATION <<__UTL_BOLD("Expression")<<": '" << __UTL_EXPSTR(#cond) << "' satisfied. " << "\n"
 
 #define utlSASetLog(log) Assert::set_log(log) 
 
 #define utlSAGlobalPrintIf(expr)     \
     if ( !(expr) ) ; \
-    else ::smart_assert::make_assert(#expr).log().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_exception).SMART_ASSERT_A \
+    else ::smart_assert::make_assert(#expr).log().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_exception).SMART_ASSERT_A 
+
 
 #define utlSAGlobalPrint utlSAGlobalPrintIf("") 
 
 #define utlSAGlobalWarning(expr)        \
     if ( !(expr) ) ; \
-    else ::smart_assert::make_assert(#expr).warn().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_exception).SMART_ASSERT_A \
+    else ::smart_assert::make_assert(#expr).warn().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_exception).SMART_ASSERT_A 
+
 
 #define utlSAGlobalException(expr)        \
     if ( !(expr) ) ; \
-    else ::smart_assert::make_assert(#expr).error().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_exception).SMART_ASSERT_A \
+    else ::smart_assert::make_assert(#expr).error().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_exception).SMART_ASSERT_A 
+
 
 #define utlSAGlobalAssert(expr)        \
     if ( (expr) ) ; \
-    else ::smart_assert::make_assert(#expr).error().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_assert).SMART_ASSERT_A \
+    else ::smart_assert::make_assert(#expr).error().print_context( __FILE__, __LINE__,__SMART_ASSERT_LOCATION__, ::smart_assert::lvl_condition_assert).SMART_ASSERT_A 
 
-#define utlGlobalException(cond,expout)                                                                                      \
-do                                                                                                                           \
-{                                                                                                                            \
-  if ((cond))                                                                                                                \
-    { std::cerr << "\n"<<__UTL_ERROR_STRING<<": " << __utlConditionSucceedPrint(cond) << expout << "\n" << std::flush;       \
-    utlAbort(""); }                                                                                                          \
+
+#define utlGlobalException(cond,expout)                                                                                                                 \
+do                                                                                                                                                      \
+{                                                                                                                                                       \
+  if ((cond))                                                                                                                                           \
+    { std::cerr << "\n"<<__UTL_ERROR_STRING<<": " << __utlConditionSucceedPrint(cond) << __UTL_BOLD("msg")<<": '"<<expout << "'\n" << std::flush;       \
+    utlAbort(""); }                                                                                                                                     \
 } while (0)                                                                                               
 
-#define utlGlobalAssert(cond,expout)                                                                                         \
-do                                                                                                                           \
-{                                                                                                                            \
-  if (!(cond))                                                                                                               \
-    { std::cerr << "\n"<<__UTL_ERROR_STRING<<": " << __utlConditionFailPrint(cond) << expout << "\n" << std::flush;          \
-    utlAbort(""); }                                                                                                          \
+
+#define utlGlobalAssert(cond,expout)                                                                                                                    \
+do                                                                                                                                                      \
+{                                                                                                                                                       \
+  if (!(cond))                                                                                                                                          \
+    { std::cerr << "\n"<<__UTL_ERROR_STRING<<": " << __utlConditionFailPrint(cond) << __UTL_BOLD("msg")<<": '"<<expout << "\n" << std::flush;           \
+    utlAbort(""); }                                                                                                                                     \
 } while (0)
 
-#define utlOSGlobalWarning(cond,expout,os)                                                                                   \
-do                                                                                                                           \
-{  if ((cond))                                                                                                               \
-    { os << "\n"<<__UTL_WARNING_STRING<<": "<< __utlConditionSucceedPrint(cond) <<  expout << "\n" << std::flush;   }        \
+
+#define utlOSGlobalWarning(cond,expout,os)                                                                                                              \
+do                                                                                                                                                      \
+{  if ((cond))                                                                                                                                          \
+    { os << "\n"<<__UTL_WARNING_STRING<<": "<< __utlConditionSucceedPrint(cond) <<  __UTL_BOLD("msg")<<": '"<<expout << "\n" << std::flush;   }         \
 } while(0)
+
 
 #define utlGlobalWarning(cond,expout)                         utlOSGlobalWarning(cond,expout,std::cout)               
 
@@ -232,12 +403,14 @@ do                                                                              
     { os << #var <<" = " << #val1 << std::endl << std::flush; }                                          \
 } while(0)
 
+
 #define PrintEnum2(cond,var,val1,val2,os)                                                                \
 do                                                                                                       \
 { PrintEnum1(cond,var,val1,os);                                                                          \
   if ((cond) && ((var)==(val2)))                                                                         \
     { os << #var <<" = " << #val2 << std::endl << std::flush; }                                          \
 } while(0)
+
 
 #define PrintEnum3(cond,var,val1,val2,val3,os)                                                           \
 do                                                                                                       \
@@ -246,12 +419,14 @@ do                                                                              
     { os << #var <<" = " << #val3 << std::endl << std::flush; }                                          \
 } while(0)
 
+
 #define PrintEnum4(cond,var,val1,val2,val3,val4,os)                                                      \
 do                                                                                                       \
 { PrintEnum3(cond,var,val1,val2,val3,os);                                                                \
   if ((cond) && ((var)==(val4)))                                                                         \
     { os << #var <<" = " << #val4 << std::endl << std::flush; }                                          \
 } while(0)
+
 
 #define PrintEnum5(cond,var,val1,val2,val3,val4,val5,os)                                                 \
 do                                                                                                       \
@@ -260,6 +435,7 @@ do                                                                              
     { os << #var <<" = " << #val5 << std::endl << std::flush; }                                          \
 } while(0)
 
+
 #define PrintEnum6(cond,var,val1,val2,val3,val4,val5,val6,os)                                            \
 do                                                                                                       \
 { PrintEnum5(cond,var,val1,val2,val3,val4,val5,os);                                                      \
@@ -267,49 +443,54 @@ do                                                                              
     { os << #var <<" = " << #val6 << std::endl << std::flush; }                                          \
 } while(0)
 
+
 #define PrintVar1(cond,var,os)                                                                           \
 do                                                                                                       \
 { if ((cond))                                                                                            \
-    { os << #var <<" = " <<  (var) << std::endl << std::flush; }                                         \
+    { os << std::boolalpha << #var <<" = " <<  (var) << std::endl << std::flush << std::noboolalpha; }   \
 } while(0)
+
 
 #define PrintVar2(cond,var1,var2,os)                                                                     \
 do                                                                                                       \
 { if ((cond))                                                                                            \
-    { os << "("<<#var1<<", "<< #var2<<") = (" <<  (var1) << ", " << (var2) << ")"                        \
-    << std::endl << std::flush; }                                                                        \
+    { os << std::boolalpha << "("<<#var1<<", "<< #var2<<") = (" <<  (var1) << ", " << (var2) << ")"      \
+    << std::endl << std::flush << std::noboolalpha; }                                                    \
 } while(0)
 
-#define PrintVar3(cond,var1,var2,var3,os)                                                                \
-do                                                                                                       \
-{ if ((cond))                                                                                            \
-    { os << "("<<#var1<<", "<<#var2<<", "<<#var3<<") = ("                                                \
-    <<  (var1) << ", " << (var2) << ", " << (var3) << ")" << std::endl << std::flush; }                  \
+
+#define PrintVar3(cond,var1,var2,var3,os)                                                                                     \
+do                                                                                                                            \
+{ if ((cond))                                                                                                                 \
+    { os << std::boolalpha << "("<<#var1<<", "<<#var2<<", "<<#var3<<") = ("                                                   \
+    <<  (var1) << ", " << (var2) << ", " << (var3) << ")" << std::endl << std::flush << std::noboolalpha; }                   \
 } while(0)
 
-#define PrintVar4(cond,var1,var2,var3,var4,os)                                                           \
-do                                                                                                       \
-{ if ((cond))                                                                                            \
-    { os << "("<<#var1<<", "<<#var2<<", "<<#var3<<", "<<#var4<<") = ("                                   \
-    <<  (var1) << ", " << (var2) << ", " << (var3) << ", " << (var4) << ")" << std::endl << std::flush; }\
+
+#define PrintVar4(cond,var1,var2,var3,var4,os)                                                                                \
+do                                                                                                                            \
+{ if ((cond))                                                                                                                 \
+    { os << std::boolalpha << "("<<#var1<<", "<<#var2<<", "<<#var3<<", "<<#var4<<") = ("                                      \
+    <<  (var1) << ", " << (var2) << ", " << (var3) << ", " << (var4) << ")" << std::endl << std::flush << std::noboolalpha; } \
 } while(0)
+
 
 #define PrintVar5(cond,var1,var2,var3,var4,var5,os)                                                      \
 do                                                                                                       \
 { if ((cond))                                                                                            \
-    { os << "("<<#var1<<", "<<#var2<<", "<<#var3<<", "<<#var4<<", "<<#var5<<") = ("                      \
+    { os << std::boolalpha << "("<<#var1<<", "<<#var2<<", "<<#var3<<", "<<#var4<<", "<<#var5<<") = ("    \
     <<  (var1) << ", " << (var2) << ", " << (var3) << ", " << (var4) << ", " << (var5) <<")"             \
-    << std::endl << std::flush; }                                                                        \
+    << std::endl << std::flush << std::noboolalpha; }                                                    \
 } while(0)
 
-#define PrintVar6(cond,var1,var2,var3,var4,var5,var6,os)                                                         \
-do                                                                                                               \
-{ if ((cond))                                                                                                    \
-    { os << "("<<#var1<<", "<<#var2<<", "<<#var3<<", "<<#var4<<", "<<#var5<<", "<<#var6<<") = ("                 \
-    <<  (var1) << ", " << (var2) << ", " << (var3) << ", " << (var4) << ", " << (var5) <<", " << (var6) <<")"    \
-    << std::endl << std::flush; }                                                                                \
-} while(0)
 
+#define PrintVar6(cond,var1,var2,var3,var4,var5,var6,os)                                                                  \
+do                                                                                                                        \
+{ if ((cond))                                                                                                             \
+    { os << std::boolalpha << "("<<#var1<<", "<<#var2<<", "<<#var3<<", "<<#var4<<", "<<#var5<<", "<<#var6<<") = ("        \
+    <<  (var1) << ", " << (var2) << ", " << (var3) << ", " << (var4) << ", " << (var5) <<", " << (var6) <<")"             \
+    << std::endl << std::flush << std::noboolalpha; }                                                                     \
+} while(0)
 
 
 
@@ -328,19 +509,15 @@ do                                                                              
 #define utlOSWarning(cond,expout,os) utlOSGlobalWarning(cond,expout,os)
 #define utlWarning(cond,expout)      utlGlobalWarning(cond,expout)
 
-#define utlDebug(cond,expout)                                                                                                \
-do                                                                                                                           \
-{  if ((cond))                                                                                                               \
-    { std::cerr << "\n"<<__UTL_DEBUG_STRING<<": " << __utlConditionSucceedPrint(cond) << expout << "\n" << std::flush; }     \
+
+#define utlDebug(cond,expout)                                                                                                                          \
+do                                                                                                                                                     \
+{  if ((cond))                                                                                                                                         \
+    { std::cerr << "\n"<<__UTL_DEBUG_STRING<<": " << __utlConditionSucceedPrint(cond) << __UTL_BOLD("msg")<<": '"<<expout << "\n" << std::flush; }     \
 } while(0)
 
-#define utlOSShowPosition(cond,os)                                                                                             \
-do                                                                                                                             \
-{  if ((cond))                                                                                                                 \
-    { os << "\n"<<"Work Flow"<<": In File: " <<__FILE__<< ", Line: " << __LINE__ << "\n"                                       \
-    << "Function: " << __utl_LOCATION__ << "\n" << std::flush;                                                                 \
-    }                                                                                                                          \
-} while(0)
+
+#define utlOSShowPosition(cond,os)    utlVLogOSPosition_IF(cond, 0,  os)                                                          
 
 #define utlShowPosition(cond)   utlOSShowPosition(cond,std::cout)                                                                     
 
@@ -392,6 +569,26 @@ do                                                                              
 
 #endif
 
+#define utlSetMacro(name, type)                     \
+  virtual void Set##name (const type _arg)          \
+    {                                               \
+    if ( this->m_##name != _arg )                   \
+      {                                             \
+      this->m_##name = _arg;                        \
+      }                                             \
+    }
+
+
+#define utlGetMacro(name, type)                     \
+  virtual type Get##name () const                   \
+    {                                               \
+    return this->m_##name;                          \
+    }
+
+
+#define utlSetGetMacro(name, type) \
+  utlSetMacro(name, type);         \
+  utlGetMacro(name, type);
 
     /** @} */
 

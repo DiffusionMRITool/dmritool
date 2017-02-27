@@ -926,7 +926,7 @@ void coreLARS(Vector<T>& Rdnv, Vector<T>& Xdnv, Vector<T>& Av,
 
       if (ols == 0) {
          const T t = gamma*gamma - 2*gamma*potentNorm;
-         if (t > 0 || isnan(t) || isinf(t)) {
+         if (t > 0 || std::isnan(t) || std::isinf(t)) {
       //      cerr << "bad bad exit" << endl;
      //       cerr << t << endl;
             ind[j]=-1;

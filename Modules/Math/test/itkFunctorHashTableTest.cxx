@@ -67,7 +67,7 @@ main (int argc, char const* argv[])
     // int N=1e7, iter=1;
 
     {
-    typedef itk::FunctorHashTable<itk::Functor::EXP<double>, double, double> FunctorHashType;
+    typedef itk::FunctorHashTable<utl::Functor::Exp<double>, double, double> FunctorHashType;
     FunctorHashType::Pointer func = FunctorHashType::New();
     func->SetDebug(true);
 

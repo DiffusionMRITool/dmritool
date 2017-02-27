@@ -19,11 +19,9 @@
 #ifndef __itkSphericalPolarFourierGenerator_h
 #define __itkSphericalPolarFourierGenerator_h
 
-
-
-
 #include <itkObject.h>
 #include <itkObjectFactory.h>
+#include "itkDiffusionTensor.h"
 
 
 namespace itk 

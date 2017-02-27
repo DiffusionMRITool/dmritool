@@ -19,7 +19,10 @@
 #define __utlMKL_h
 
 #include <iostream>
+#include <complex>
 
+#define MKL_Complex16 std::complex<double>
+#define MKL_Complex8 std::complex<float>
 #include "mkl_service.h"
 #include "mkl.h"
 
@@ -47,6 +50,16 @@ mkl_imatcopy<float>(const char ordering, const char trans, const int rows, const
 {
   mkl_simatcopy(ordering,trans,rows,cols,alpha,A,lda,ldb);
 }
+template <> inline void 
+mkl_imatcopy<std::complex<double> >(const char ordering, const char trans, const int rows, const int cols, const std::complex<double> alpha, std::complex<double>* A, const int lda, const int ldb)
+{
+  mkl_zimatcopy(ordering,trans,rows,cols,alpha,A,lda,ldb);
+}
+template <> inline void 
+mkl_imatcopy<std::complex<float> >(const char ordering, const char trans, const int rows, const int cols, const std::complex<float> alpha, std::complex<float>* A, const int lda, const int ldb)
+{
+  mkl_cimatcopy(ordering,trans,rows,cols,alpha,A,lda,ldb);
+}
 
 template <> inline void 
 mkl_omatcopy<double>(const char ordering, const char trans, const int rows, const int cols, const double alpha, const double* A, const int lda, double* B, const int ldb)
@@ -57,6 +70,16 @@ template <> inline void
 mkl_omatcopy<float>(const char ordering, const char trans, const int rows, const int cols, const float alpha, const float* A, const int lda, float* B, const int ldb)
 {
   mkl_somatcopy(ordering,trans,rows,cols,alpha,A,lda,B,ldb);
+}
+template <> inline void 
+mkl_omatcopy<std::complex<double> >(const char ordering, const char trans, const int rows, const int cols, const std::complex<double> alpha, const std::complex<double>* A, const int lda, std::complex<double>* B, const int ldb)
+{
+  mkl_zomatcopy(ordering,trans,rows,cols,alpha,A,lda,B,ldb);
+}
+template <> inline void 
+mkl_omatcopy<std::complex<float> >(const char ordering, const char trans, const int rows, const int cols, const std::complex<float> alpha, const std::complex<float>* A, const int lda, std::complex<float>* B, const int ldb)
+{
+  mkl_comatcopy(ordering,trans,rows,cols,alpha,A,lda,B,ldb);
 }
 
     /** @} */

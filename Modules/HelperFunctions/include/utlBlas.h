@@ -40,6 +40,7 @@ extern "C"
 #include <vector>
 #include <cmath>
 #include <algorithm>
+#include <complex>
 
 namespace utl
 {
@@ -132,6 +133,16 @@ cblas_iamax<float>(const INTT N, const float *X, const INTT incX)
 {
   return cblas_isamax(N,X,incX);
 }
+template <> inline CBLAS_INDEX
+cblas_iamax<std::complex<double> >(const INTT N, const std::complex<double> *X, const INTT incX)
+{
+  return cblas_izamax(N,X,incX);
+}
+template <> inline CBLAS_INDEX
+cblas_iamax<std::complex<float> >(const INTT N, const std::complex<float> *X, const INTT incX)
+{
+  return cblas_icamax(N,X,incX);
+}
 
 #ifdef UTL_USE_MKL
 template <> inline CBLAS_INDEX
@@ -144,15 +155,38 @@ cblas_iamin<float>(const INTT N, const float *X, const INTT incX)
 {
   return cblas_isamin(N,X,incX);
 }
+template <> inline CBLAS_INDEX
+cblas_iamin<std::complex<double> >(const INTT N, const std::complex<double> *X, const INTT incX)
+{
+  return cblas_izamin(N,X,incX);
+}
+template <> inline CBLAS_INDEX
+cblas_iamin<std::complex<float> >(const INTT N, const std::complex<float> *X, const INTT incX)
+{
+  return cblas_icamin(N,X,incX);
+}
 #else
 template <typename T> inline CBLAS_INDEX
 cblas_iamin(const INTT N, const T *X, const INTT incX)
 {
   int iter;
-  std::vector<T> vec(N);
+  std::vector<double> vec(N);
   for ( int i = 0; i < N; i = i+incX ) 
-    vec[i]=std::fabs(X[i]);
+    vec[i]=std::abs(X[i]);
   iter = std::min_element(vec.begin(), vec.end());
+  int n=0;
+  for ( int ii = vec.begin();  ii!=iter; ++ii ) 
+    n++;
+  return n;
+}
+template <typename T> inline CBLAS_INDEX
+cblas_iamax(const INTT N, const T *X, const INTT incX)
+{
+  int iter;
+  std::vector<double> vec(N);
+  for ( int i = 0; i < N; i = i+incX ) 
+    vec[i]=std::abs(X[i]);
+  iter = std::max_element(vec.begin(), vec.end());
   int n=0;
   for ( int ii = vec.begin();  ii!=iter; ++ii ) 
     n++;
@@ -170,6 +204,16 @@ cblas_nrm2<float>( const INTT N, const float *X, const INTT incX)
 {
   return cblas_snrm2(N,X,incX);
 }
+inline double
+cblas_nrm2( const INTT N, const std::complex<double> *X, const INTT incX)
+{
+  return cblas_dznrm2(N,X,incX);
+}
+inline float
+cblas_nrm2( const INTT N, const std::complex<float> *X, const INTT incX)
+{
+  return cblas_scnrm2(N,X,incX);
+}
 
 template <> inline double
 cblas_asum<double>( const INTT N, const double *X, const INTT incX)
@@ -180,6 +224,16 @@ template <> inline float
 cblas_asum<float>( const INTT N, const float *X, const INTT incX)
 {
   return cblas_sasum(N,X,incX);
+}
+inline double
+cblas_asum( const INTT N, const std::complex<double> *X, const INTT incX)
+{
+  return cblas_dzasum(N,X,incX);
+}
+inline float
+cblas_asum( const INTT N, const std::complex<float> *X, const INTT incX)
+{
+  return cblas_scasum(N,X,incX);
 }
 
 
@@ -193,6 +247,14 @@ cblas_dot<float>( const INTT N, const float *X, const INTT incX, const float *Y,
 {
   return cblas_sdot(N,X,incX,Y,incY);
 }
+template <>
+inline std::complex<double>
+cblas_dot<std::complex<double> >( const INTT N, const std::complex<double> *X, const INTT incX, const std::complex<double> *Y, const INTT incY)
+{
+  std::complex<double> result;
+  cblas_zdotc_sub(N,X,incX,Y,incY, &result);
+  return result;
+}
 
 template <> inline void
 cblas_copy<double>( const INTT N, const double *X, const INTT incX, double *Y, const INTT incY)
@@ -203,6 +265,16 @@ template <> inline void
 cblas_copy<float>( const INTT N, const float *X, const INTT incX, float *Y, const INTT incY)
 {
   cblas_scopy(N,X,incX,Y,incY);
+}
+template <> inline void
+cblas_copy<std::complex<double> >( const INTT N, const std::complex<double> *X, const INTT incX, std::complex<double> *Y, const INTT incY)
+{
+  cblas_zcopy(N,X,incX,Y,incY);
+}
+template <> inline void
+cblas_copy<std::complex<float> >( const INTT N, const std::complex<float> *X, const INTT incX, std::complex<float> *Y, const INTT incY)
+{
+  cblas_ccopy(N,X,incX,Y,incY);
 }
 
 template <> inline void
@@ -225,6 +297,16 @@ template <> inline void
 cblas_scal<float>(const INTT N, const float alpha, float *X, const INTT incX)
 {
   cblas_sscal(N, alpha, X, incX);
+}
+template <> inline void
+cblas_scal<std::complex<double> >(const INTT N, const std::complex<double> alpha, std::complex<double> *X, const INTT incX)
+{
+  cblas_zscal(N, &alpha, X, incX);
+}
+template <> inline void
+cblas_scal<std::complex<float> >(const INTT N, const std::complex<float> alpha, std::complex<float> *X, const INTT incX)
+{
+  cblas_cscal(N, &alpha, X, incX);
 }
 
 
@@ -262,6 +344,16 @@ cblas_gemv<float>( const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA, const 
 {
    cblas_sgemv(order,TransA,M,N,alpha,A,lda,X,incX,beta,Y,incY);
 }
+template <> inline void 
+cblas_gemv<std::complex<double> >( const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA, const INTT M,  const INTT N,  const std::complex<double> alpha, const std::complex<double> *A,  const INTT lda, const std::complex<double> *X,  const INTT incX, const std::complex<double> beta, std::complex<double> *Y,  const INTT incY)
+{
+   cblas_zgemv(order,TransA,M,N,&alpha,A,lda,X,incX,&beta,Y,incY);
+}
+template <> inline void 
+cblas_gemv<std::complex<float> >( const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA, const INTT M,  const INTT N,  const std::complex<float> alpha, const std::complex<float> *A,  const INTT lda, const std::complex<float> *X,  const INTT incX, const std::complex<float> beta, std::complex<float> *Y,  const INTT incY)
+{
+   cblas_cgemv(order,TransA,M,N,&alpha,A,lda,X,incX,&beta,Y,incY);
+}
 
 
 
@@ -276,6 +368,11 @@ template <> inline void
 cblas_gemm<float>( const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA,  const CBLAS_TRANSPOSE TransB, const INTT M,  const INTT N,  const INTT K, const float alpha, const float *A,  const INTT lda,  const float *B, const  INTT ldb, const float beta, float *C,  const INTT ldc) 
 {
    cblas_sgemm(order,TransA,TransB,M,N,K,alpha,A,lda,B,ldb,beta,C,ldc);
+}
+template <> inline void 
+cblas_gemm<std::complex<double> >( const CBLAS_ORDER order, const CBLAS_TRANSPOSE TransA,  const CBLAS_TRANSPOSE TransB, const INTT M,  const INTT N,  const INTT K, const std::complex<double> alpha, const std::complex<double> *A,  const INTT lda,  const std::complex<double> *B, const  INTT ldb, const std::complex<double> beta, std::complex<double> *C,  const INTT ldc) 
+{
+   cblas_zgemm(order,TransA,TransB,M,N,K,&alpha,A,lda,B,ldb,&beta,C,ldc);
 }
 
 template <> inline void
@@ -301,6 +398,16 @@ cblas_axpby<float>(const INTT N, const float alpha, const float *X, const INTT i
 {
   cblas_saxpby(N,alpha,X,incX,beta,Y,incY);
 }
+template <> inline void 
+cblas_axpby<std::complex<double> >(const INTT N, const std::complex<double> alpha, const std::complex<double> *X, const INTT incX, const std::complex<double> beta, std::complex<double> *Y, const INTT incY)
+{
+  cblas_zaxpby(N,&alpha,X,incX,&beta,Y,incY);
+}
+template <> inline void 
+cblas_axpby<std::complex<float> >(const INTT N, const std::complex<float> alpha, const std::complex<float> *X, const INTT incX, const std::complex<float> beta, std::complex<float> *Y, const INTT incY)
+{
+  cblas_zaxpby(N,&alpha,X,incX,&beta,Y,incY);
+}
 #else
 template <typename T> inline void 
 cblas_axpby(const INTT N, const T alpha, const T *X, const INTT incX, const T beta, T *Y, const INTT incY)
@@ -323,111 +430,112 @@ cblas_axpby(const INTT N, const T alpha, const T *X, const INTT incX, const T be
 *  \f$ C = alpha * A * B + beta * C \f$
 *  \note: C should be pre-allocated
 * */
-#define __utl_gemm_MatrixTimesMatrix(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, GetDataFuncName, ReSizeFuncName) \
-template <class T> \
-inline bool \
-FuncName(const bool bATrans, const bool bBTrans, const T alpha, const RowMajorMatrixName& A, const RowMajorMatrixName& B, const T beta, RowMajorMatrixName& C)  \
-{ \
-  CBLAS_TRANSPOSE transA, transB; \
-  unsigned int M = 0, N = 0, K = 0; \
-  if(!bATrans && !bBTrans) \
-    { \
-    transA = CblasNoTrans; \
-    transB = CblasNoTrans; \
-    M = A.GetRowsFuncName(); \
-    N = B.GetColsFuncName(); \
-    K = A.GetColsFuncName(); \
-    utlSAException(A.GetColsFuncName() != B.GetRowsFuncName())(A.GetColsFuncName())(B.GetRowsFuncName()).msg("matrix dimension mismatch"); \
-    } \
-  else if(bATrans && !bBTrans)  \
-    { \
-    transA = CblasTrans; \
-    transB = CblasNoTrans; \
-    M = A.GetColsFuncName(); \
-    N = B.GetColsFuncName(); \
-    K = A.GetRowsFuncName(); \
-    utlSAException(A.GetRowsFuncName() != B.GetRowsFuncName())(A.GetRowsFuncName())(B.GetRowsFuncName()).msg("matrix dimension mismatch"); \
-    } \
-  else if(!bATrans && bBTrans)  \
-    { \
-    transA = CblasNoTrans; \
-    transB = CblasTrans; \
-    M = A.GetRowsFuncName(); \
-    N = B.GetRowsFuncName(); \
-    K = A.GetColsFuncName(); \
-    utlSAException(A.GetColsFuncName() != B.GetColsFuncName())(A.GetColsFuncName())(B.GetColsFuncName()).msg("matrix dimension mismatch"); \
-    } \
-  else \
-    { \
-    transA = CblasTrans; \
-    transB = CblasTrans; \
-    M = A.GetColsFuncName(); \
-    N = B.GetRowsFuncName(); \
-    K = A.GetRowsFuncName(); \
-    utlSAException(A.GetRowsFuncName() != B.GetColsFuncName())(A.GetRowsFuncName())(B.GetColsFuncName()).msg("matrix dimension mismatch"); \
-    } \
-  utl::cblas_gemm(CblasRowMajor, transA, transB, M, N, K, alpha, A.GetDataFuncName(), A.GetColsFuncName(), B.GetDataFuncName(), B.GetColsFuncName(), beta, C.GetDataFuncName(), C.GetColsFuncName()); \
-  return true; \
-} \
-\
-template <class T>  \
-inline void \
-Product##FuncHelperName##MM(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  C.ReSizeFuncName(A.GetRowsFuncName(), B.GetColsFuncName()); \
-  FuncName<T>(false, false, alpha, A, B, beta, C); \
-} \
- \
-template <class T>  \
-inline void \
-Product##FuncHelperName##MM(const RowMajorMatrixName& A1, const RowMajorMatrixName& A2, const RowMajorMatrixName& A3, RowMajorMatrixName& C)  \
-{ \
-  RowMajorMatrixName tmp; \
-  Product##FuncHelperName##MM<T>(A1, A2, tmp); \
-  Product##FuncHelperName##MM<T>(tmp, A3, C); \
-} \
- \
-template <class T>  \
-inline void \
-Product##FuncHelperName##MM(const RowMajorMatrixName& A1, const RowMajorMatrixName& A2, const RowMajorMatrixName& A3, const RowMajorMatrixName& A4, RowMajorMatrixName& C)  \
-{ \
-  RowMajorMatrixName tmp; \
-  Product##FuncHelperName##MM<T>(A1, A2, A3, tmp); \
-  Product##FuncHelperName##MM<T>(tmp, A4, C); \
-} \
- \
-template <class T>  \
-inline void \
-Product##FuncHelperName##MM(const RowMajorMatrixName& A1, const RowMajorMatrixName& A2, const RowMajorMatrixName& A3, const RowMajorMatrixName& A4, const RowMajorMatrixName& A5, RowMajorMatrixName& C)  \
-{ \
-  RowMajorMatrixName tmp; \
-  Product##FuncHelperName##MM<T>(A1, A2, A3, A4, tmp); \
-  Product##FuncHelperName##MM<T>(tmp, A5, C); \
-} \
- \
-template <class T>  \
-inline void  \
-Product##FuncHelperName##MtM(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  C.ReSizeFuncName(A.GetColsFuncName(), B.GetColsFuncName()); \
-  FuncName<T>(true, false, alpha, A, B, beta, C); \
-} \
- \
-template <class T>  \
-inline void  \
-Product##FuncHelperName##MMt(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  C.ReSizeFuncName(A.GetRowsFuncName(), B.GetRowsFuncName()); \
-  FuncName<T>(false, true, alpha, A, B, beta, C); \
-} \
- \
-template <class T>  \
-inline void  \
-Product##FuncHelperName##MtMt(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  C.ReSizeFuncName(A.GetColsFuncName(), B.GetRowsFuncName()); \
-  FuncName<T>(true, true, alpha, A, B, beta, C); \
-} \
+#define __utl_gemm_MatrixTimesMatrix(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, GetDataFuncName, ReSizeFuncName)                                                     \
+template <class T>                                                                                                                                                                                           \
+inline bool                                                                                                                                                                                                  \
+FuncName(const bool bATrans, const bool bBTrans, const T alpha, const RowMajorMatrixName& A, const RowMajorMatrixName& B, const T beta, RowMajorMatrixName& C)                                               \
+{                                                                                                                                                                                                            \
+  CBLAS_TRANSPOSE transA, transB;                                                                                                                                                                            \
+  unsigned int M = 0, N = 0, K = 0;                                                                                                                                                                          \
+  if(!bATrans && !bBTrans)                                                                                                                                                                                   \
+    {                                                                                                                                                                                                        \
+    transA = CblasNoTrans;                                                                                                                                                                                   \
+    transB = CblasNoTrans;                                                                                                                                                                                   \
+    M = A.GetRowsFuncName();                                                                                                                                                                                 \
+    N = B.GetColsFuncName();                                                                                                                                                                                 \
+    K = A.GetColsFuncName();                                                                                                                                                                                 \
+    utlSAException(A.GetColsFuncName() != B.GetRowsFuncName())(A.GetColsFuncName())(B.GetRowsFuncName()).msg("matrix dimension mismatch");                                                                   \
+    }                                                                                                                                                                                                        \
+  else if(bATrans && !bBTrans)                                                                                                                                                                               \
+    {                                                                                                                                                                                                        \
+    transA = CblasTrans;                                                                                                                                                                                     \
+    transB = CblasNoTrans;                                                                                                                                                                                   \
+    M = A.GetColsFuncName();                                                                                                                                                                                 \
+    N = B.GetColsFuncName();                                                                                                                                                                                 \
+    K = A.GetRowsFuncName();                                                                                                                                                                                 \
+    utlSAException(A.GetRowsFuncName() != B.GetRowsFuncName())(A.GetRowsFuncName())(B.GetRowsFuncName()).msg("matrix dimension mismatch");                                                                   \
+    }                                                                                                                                                                                                        \
+  else if(!bATrans && bBTrans)                                                                                                                                                                               \
+    {                                                                                                                                                                                                        \
+    transA = CblasNoTrans;                                                                                                                                                                                   \
+    transB = CblasTrans;                                                                                                                                                                                     \
+    M = A.GetRowsFuncName();                                                                                                                                                                                 \
+    N = B.GetRowsFuncName();                                                                                                                                                                                 \
+    K = A.GetColsFuncName();                                                                                                                                                                                 \
+    utlSAException(A.GetColsFuncName() != B.GetColsFuncName())(A.GetColsFuncName())(B.GetColsFuncName()).msg("matrix dimension mismatch");                                                                   \
+    }                                                                                                                                                                                                        \
+  else                                                                                                                                                                                                       \
+    {                                                                                                                                                                                                        \
+    transA = CblasTrans;                                                                                                                                                                                     \
+    transB = CblasTrans;                                                                                                                                                                                     \
+    M = A.GetColsFuncName();                                                                                                                                                                                 \
+    N = B.GetRowsFuncName();                                                                                                                                                                                 \
+    K = A.GetRowsFuncName();                                                                                                                                                                                 \
+    utlSAException(A.GetRowsFuncName() != B.GetColsFuncName())(A.GetRowsFuncName())(B.GetColsFuncName()).msg("matrix dimension mismatch");                                                                   \
+    }                                                                                                                                                                                                        \
+  utl::cblas_gemm(CblasRowMajor, transA, transB, M, N, K, alpha, A.GetDataFuncName(), A.GetColsFuncName(), B.GetDataFuncName(), B.GetColsFuncName(), beta, C.GetDataFuncName(), C.GetColsFuncName());        \
+  return true;                                                                                                                                                                                               \
+}                                                                                                                                                                                                            \
+                                                                                                                                                                                                             \
+template <class T>                                                                                                                                                                                           \
+inline void                                                                                                                                                                                                  \
+Product##FuncHelperName##MM(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)                                                  \
+{                                                                                                                                                                                                            \
+  C.ReSizeFuncName(A.GetRowsFuncName(), B.GetColsFuncName());                                                                                                                                                \
+  FuncName<T>(false, false, alpha, A, B, beta, C);                                                                                                                                                           \
+}                                                                                                                                                                                                            \
+                                                                                                                                                                                                             \
+template <class T>                                                                                                                                                                                           \
+inline void                                                                                                                                                                                                  \
+Product##FuncHelperName##MM(const RowMajorMatrixName& A1, const RowMajorMatrixName& A2, const RowMajorMatrixName& A3, RowMajorMatrixName& C)                                                                 \
+{                                                                                                                                                                                                            \
+  RowMajorMatrixName tmp;                                                                                                                                                                                    \
+  Product##FuncHelperName##MM<T>(A1, A2, tmp);                                                                                                                                                               \
+  Product##FuncHelperName##MM<T>(tmp, A3, C);                                                                                                                                                                \
+}                                                                                                                                                                                                            \
+                                                                                                                                                                                                             \
+template <class T>                                                                                                                                                                                           \
+inline void                                                                                                                                                                                                  \
+Product##FuncHelperName##MM(const RowMajorMatrixName& A1, const RowMajorMatrixName& A2, const RowMajorMatrixName& A3, const RowMajorMatrixName& A4, RowMajorMatrixName& C)                                   \
+{                                                                                                                                                                                                            \
+  RowMajorMatrixName tmp;                                                                                                                                                                                    \
+  Product##FuncHelperName##MM<T>(A1, A2, A3, tmp);                                                                                                                                                           \
+  Product##FuncHelperName##MM<T>(tmp, A4, C);                                                                                                                                                                \
+}                                                                                                                                                                                                            \
+                                                                                                                                                                                                             \
+template <class T>                                                                                                                                                                                           \
+inline void                                                                                                                                                                                                  \
+Product##FuncHelperName##MM(const RowMajorMatrixName& A1, const RowMajorMatrixName& A2, const RowMajorMatrixName& A3, const RowMajorMatrixName& A4, const RowMajorMatrixName& A5, RowMajorMatrixName& C)     \
+{                                                                                                                                                                                                            \
+  RowMajorMatrixName tmp;                                                                                                                                                                                    \
+  Product##FuncHelperName##MM<T>(A1, A2, A3, A4, tmp);                                                                                                                                                       \
+  Product##FuncHelperName##MM<T>(tmp, A5, C);                                                                                                                                                                \
+}                                                                                                                                                                                                            \
+                                                                                                                                                                                                             \
+template <class T>                                                                                                                                                                                           \
+inline void                                                                                                                                                                                                  \
+Product##FuncHelperName##MtM(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)                                                 \
+{                                                                                                                                                                                                            \
+  C.ReSizeFuncName(A.GetColsFuncName(), B.GetColsFuncName());                                                                                                                                                \
+  FuncName<T>(true, false, alpha, A, B, beta, C);                                                                                                                                                            \
+}                                                                                                                                                                                                            \
+                                                                                                                                                                                                             \
+template <class T>                                                                                                                                                                                           \
+inline void                                                                                                                                                                                                  \
+Product##FuncHelperName##MMt(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)                                                 \
+{                                                                                                                                                                                                            \
+  C.ReSizeFuncName(A.GetRowsFuncName(), B.GetRowsFuncName());                                                                                                                                                \
+  FuncName<T>(false, true, alpha, A, B, beta, C);                                                                                                                                                            \
+}                                                                                                                                                                                                            \
+                                                                                                                                                                                                             \
+template <class T>                                                                                                                                                                                           \
+inline void                                                                                                                                                                                                  \
+Product##FuncHelperName##MtMt(const RowMajorMatrixName& A, const RowMajorMatrixName& B, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0)                                                \
+{                                                                                                                                                                                                            \
+  C.ReSizeFuncName(A.GetColsFuncName(), B.GetRowsFuncName());                                                                                                                                                \
+  FuncName<T>(true, true, alpha, A, B, beta, C);                                                                                                                                                             \
+}                                                                                                                                                                                                            \
+
 
 
 /** 
@@ -440,88 +548,89 @@ Product##FuncHelperName##MtMt(const RowMajorMatrixName& A, const RowMajorMatrixN
 *  \note: Y should be pre-allocated
 * */
 
-#define __utl_gemv_MatrixTimesVector(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, MatrixGetDataFuncName, VectorName, GetSizeFuncName, VectorGetDataFuncName, ReSizeFuncName) \
-template <class T>  \
-inline bool  \
-FuncName(const bool bATrans, const T alpha, const RowMajorMatrixName& A, const VectorName& X, const T beta, VectorName& Y)  \
-{ \
-  CBLAS_TRANSPOSE TransA; \
-  if(bATrans)  \
-    { \
-    TransA = CblasTrans; \
-    utlSAException(A.GetRowsFuncName() != X.GetSizeFuncName())(A.GetRowsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch"); \
-    } \
-  else  \
-    { \
-    TransA = CblasNoTrans; \
-    utlSAException(A.GetColsFuncName() != X.GetSizeFuncName())(A.GetColsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch"); \
-    } \
-  utl::cblas_gemv<T>(CblasRowMajor, TransA, A.GetRowsFuncName(), A.GetColsFuncName(), alpha, A.MatrixGetDataFuncName(), A.GetColsFuncName(), X.VectorGetDataFuncName(), 1, beta, Y.VectorGetDataFuncName(), 1); \
-  return true; \
-} \
- \
-template <class T>  \
-inline void  \
-Product##FuncHelperName##Mv(const RowMajorMatrixName& A, const VectorName& b, VectorName& c, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  c.ReSizeFuncName(A.GetRowsFuncName()); \
-  FuncName<T>(false, alpha, A, b, beta, c); \
-} \
- \
-template <class T>  \
-inline void  \
-Product##FuncHelperName##Mtv(const RowMajorMatrixName& A, const VectorName& b, VectorName& c, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  c.ReSizeFuncName(A.GetColsFuncName()); \
-  FuncName<T>(true, alpha, A, b, beta, c); \
-} \
- \
+#define __utl_gemv_MatrixTimesVector(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, MatrixGetDataFuncName, VectorName, GetSizeFuncName, VectorGetDataFuncName, ReSizeFuncName)        \
+template <class T>                                                                                                                                                                                                        \
+inline bool                                                                                                                                                                                                               \
+FuncName(const bool bATrans, const T alpha, const RowMajorMatrixName& A, const VectorName& X, const T beta, VectorName& Y)                                                                                                \
+{                                                                                                                                                                                                                         \
+  CBLAS_TRANSPOSE TransA;                                                                                                                                                                                                 \
+  if(bATrans)                                                                                                                                                                                                             \
+    {                                                                                                                                                                                                                     \
+    TransA = CblasTrans;                                                                                                                                                                                                  \
+    utlSAException(A.GetRowsFuncName() != X.GetSizeFuncName())(A.GetRowsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch");                                                                     \
+    }                                                                                                                                                                                                                     \
+  else                                                                                                                                                                                                                    \
+    {                                                                                                                                                                                                                     \
+    TransA = CblasNoTrans;                                                                                                                                                                                                \
+    utlSAException(A.GetColsFuncName() != X.GetSizeFuncName())(A.GetColsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch");                                                                     \
+    }                                                                                                                                                                                                                     \
+  utl::cblas_gemv<T>(CblasRowMajor, TransA, A.GetRowsFuncName(), A.GetColsFuncName(), alpha, A.MatrixGetDataFuncName(), A.GetColsFuncName(), X.VectorGetDataFuncName(), 1, beta, Y.VectorGetDataFuncName(), 1);           \
+  return true;                                                                                                                                                                                                            \
+}                                                                                                                                                                                                                         \
+                                                                                                                                                                                                                          \
+template <class T>                                                                                                                                                                                                        \
+inline void                                                                                                                                                                                                               \
+Product##FuncHelperName##Mv(const RowMajorMatrixName& A, const VectorName& b, VectorName& c, const double alpha=1.0, const double beta=0.0)                                                                               \
+{                                                                                                                                                                                                                         \
+  c.ReSizeFuncName(A.GetRowsFuncName());                                                                                                                                                                                  \
+  FuncName<T>(false, alpha, A, b, beta, c);                                                                                                                                                                               \
+}                                                                                                                                                                                                                         \
+                                                                                                                                                                                                                          \
+template <class T>                                                                                                                                                                                                        \
+inline void                                                                                                                                                                                                               \
+Product##FuncHelperName##Mtv(const RowMajorMatrixName& A, const VectorName& b, VectorName& c, const double alpha=1.0, const double beta=0.0)                                                                              \
+{                                                                                                                                                                                                                         \
+  c.ReSizeFuncName(A.GetColsFuncName());                                                                                                                                                                                  \
+  FuncName<T>(true, alpha, A, b, beta, c);                                                                                                                                                                                \
+}                                                                                                                                                                                                                         \
+
 
 
 /** 
 *  \f$ Y = alpha X^T * A + beta * Y \f$ 
 *  \note: Y should be pre-allocated 
 * */ 
-#define __utl_gevm_MatrixTimesVector(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, MatrixGetDataFuncName, VectorName, GetSizeFuncName, VectorGetDataFuncName, ReSizeFuncName) \
-template <class T>  \
-inline bool  \
-FuncName(const bool bATrans, const T alpha, const VectorName& X, const RowMajorMatrixName& A, const T beta, VectorName& Y)  \
-{ \
-  CBLAS_TRANSPOSE transA; \
-  unsigned int M = 1, N = 0, K = 0; \
-  if(bATrans)  \
-    { \
-    transA = CblasTrans; \
-    N = A.GetRowsFuncName(); \
-    K = A.GetColsFuncName(); \
-    utlSAException(A.GetColsFuncName() != X.GetSizeFuncName())(A.GetColsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch"); \
-    } \
-  else  \
-    { \
-    N = A.GetColsFuncName(); \
-    K = A.GetRowsFuncName(); \
-    transA = CblasNoTrans; \
-    utlSAException(A.GetRowsFuncName() != X.GetSizeFuncName())(A.GetRowsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch"); \
-    } \
-  utl::cblas_gemm<T>(CblasRowMajor, CblasNoTrans, transA, M, N, K, alpha, X.VectorGetDataFuncName(), X.GetSizeFuncName(), A.MatrixGetDataFuncName(), A.GetColsFuncName(), beta, Y.VectorGetDataFuncName(), Y.GetSizeFuncName()); \
-  return true; \
-} \
- \
-template <class T>  \
-inline void  \
-Product##FuncHelperName##vM(const VectorName& b, const RowMajorMatrixName& A, VectorName& c, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  c.ReSizeFuncName(A.GetColsFuncName()); \
-  FuncName<T>(false, alpha, b, A, beta, c); \
-} \
- \
-template <class T>  \
-inline void  \
-Product##FuncHelperName##vMt(const VectorName& b, const RowMajorMatrixName& A, VectorName& c, const double alpha=1.0, const double beta=0.0)  \
-{ \
-  c.ReSizeFuncName(A.GetRowsFuncName()); \
-  FuncName<T>(true, alpha, b, A, beta, c); \
-} 
+#define __utl_gevm_MatrixTimesVector(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, MatrixGetDataFuncName, VectorName, GetSizeFuncName, VectorGetDataFuncName, ReSizeFuncName)                          \
+template <class T>                                                                                                                                                                                                                          \
+inline bool                                                                                                                                                                                                                                 \
+FuncName(const bool bATrans, const T alpha, const VectorName& X, const RowMajorMatrixName& A, const T beta, VectorName& Y)                                                                                                                  \
+{                                                                                                                                                                                                                                           \
+  CBLAS_TRANSPOSE transA;                                                                                                                                                                                                                   \
+  unsigned int M = 1, N = 0, K = 0;                                                                                                                                                                                                         \
+  if(bATrans)                                                                                                                                                                                                                               \
+    {                                                                                                                                                                                                                                       \
+    transA = CblasTrans;                                                                                                                                                                                                                    \
+    N = A.GetRowsFuncName();                                                                                                                                                                                                                \
+    K = A.GetColsFuncName();                                                                                                                                                                                                                \
+    utlSAException(A.GetColsFuncName() != X.GetSizeFuncName())(A.GetColsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch");                                                                                       \
+    }                                                                                                                                                                                                                                       \
+  else                                                                                                                                                                                                                                      \
+    {                                                                                                                                                                                                                                       \
+    N = A.GetColsFuncName();                                                                                                                                                                                                                \
+    K = A.GetRowsFuncName();                                                                                                                                                                                                                \
+    transA = CblasNoTrans;                                                                                                                                                                                                                  \
+    utlSAException(A.GetRowsFuncName() != X.GetSizeFuncName())(A.GetRowsFuncName())(X.GetSizeFuncName()).msg("matrix and vector dimension mismatch");                                                                                       \
+    }                                                                                                                                                                                                                                       \
+  utl::cblas_gemm<T>(CblasRowMajor, CblasNoTrans, transA, M, N, K, alpha, X.VectorGetDataFuncName(), X.GetSizeFuncName(), A.MatrixGetDataFuncName(), A.GetColsFuncName(), beta, Y.VectorGetDataFuncName(), Y.GetSizeFuncName());            \
+  return true;                                                                                                                                                                                                                              \
+}                                                                                                                                                                                                                                           \
+                                                                                                                                                                                                                                            \
+template <class T>                                                                                                                                                                                                                          \
+inline void                                                                                                                                                                                                                                 \
+Product##FuncHelperName##vM(const VectorName& b, const RowMajorMatrixName& A, VectorName& c, const double alpha=1.0, const double beta=0.0)                                                                                                 \
+{                                                                                                                                                                                                                                           \
+  c.ReSizeFuncName(A.GetColsFuncName());                                                                                                                                                                                                    \
+  FuncName<T>(false, alpha, b, A, beta, c);                                                                                                                                                                                                 \
+}                                                                                                                                                                                                                                           \
+                                                                                                                                                                                                                                            \
+template <class T>                                                                                                                                                                                                                          \
+inline void                                                                                                                                                                                                                                 \
+Product##FuncHelperName##vMt(const VectorName& b, const RowMajorMatrixName& A, VectorName& c, const double alpha=1.0, const double beta=0.0)                                                                                                \
+{                                                                                                                                                                                                                                           \
+  c.ReSizeFuncName(A.GetRowsFuncName());                                                                                                                                                                                                    \
+  FuncName<T>(true, alpha, b, A, beta, c);                                                                                                                                                                                                  \
+}                                                                                                                                                                                                                                           \
+
 
 
 /**
@@ -534,56 +643,56 @@ Product##FuncHelperName##vMt(const VectorName& b, const RowMajorMatrixName& A, V
  * \param C MxM or NxN symmetric matrix
  */
 
-#define __utl_syrk_Matrix(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, GetDataFuncName, ReSizeFuncName) \
-template <class T> \
-inline void  \
-FuncName( const bool trans, const T alpha, const RowMajorMatrixName& A, const T beta, RowMajorMatrixName& C ) \
-{ \
-  int size = C.GetRowsFuncName()*C.GetColsFuncName(); \
-  utlSAException(size>0 && C.GetRowsFuncName()!=C.GetColsFuncName())(C.GetRowsFuncName())(C.GetColsFuncName()).msg("C should be symmetric matrix or empty matrix"); \
-  CBLAS_TRANSPOSE transBlas; \
-  int K, N; \
-  if (!trans) \
-    { \
-    utlSAException(size>0 && A.GetRowsFuncName()!=C.GetRowsFuncName())(A.GetRowsFuncName())(C.GetRowsFuncName()).msg("wrong size"); \
-    transBlas=CblasNoTrans; \
-    N = A.GetRowsFuncName(); \
-    K = A.GetColsFuncName(); \
-    } \
-  else  \
-    { \
-    utlSAException(size>0 && A.GetColsFuncName()!=C.GetRowsFuncName())(A.GetColsFuncName())(C.GetRowsFuncName()).msg("wrong size"); \
-    transBlas=CblasTrans; \
-    N = A.GetColsFuncName(); \
-    K = A.GetRowsFuncName(); \
-    } \
-  utlException(size>0 && (C.GetRowsFuncName()!=N || C.GetColsFuncName()!=N), "wrong size of C"); \
-  if (size==0) \
-    { \
-    utlSAException(std::fabs(beta)>1e-10)(beta)(C.GetRowsFuncName())(C.GetColsFuncName()).msg("when C is empty matrix, beta should be zero"); \
-    C.ReSizeFuncName(N,N); \
-    } \
-  RowMajorMatrixName B=A; \
-  utl::cblas_syrk<T>(CblasRowMajor, CblasUpper, transBlas, N, K, alpha, B.GetDataFuncName(), B.GetColsFuncName(), beta, C.GetDataFuncName(), N); \
- \
-  T* data = C.GetDataFuncName(); \
-  for ( int i = 0; i < C.GetRowsFuncName(); ++i )  \
-    for ( int j = 0; j < i; ++j )  \
-      data[i*N+j] = data[j*N+i]; \
-} \
- \
-template <class T> \
-void  \
-Product##FuncHelperName##XXt ( const RowMajorMatrixName& A, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0 ) \
-{ \
-  FuncName<T>(false, alpha, A, beta, C); \
-} \
-template <class T> \
-void  \
-Product##FuncHelperName##XtX ( const RowMajorMatrixName& A, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0 ) \
-{ \
-  FuncName<T>(true, alpha, A, beta, C); \
-}
+#define __utl_syrk_Matrix(T, FuncName, FuncHelperName, RowMajorMatrixName, GetRowsFuncName, GetColsFuncName, GetDataFuncName, ReSizeFuncName)                               \
+template <class T>                                                                                                                                                          \
+inline void                                                                                                                                                                 \
+FuncName( const bool trans, const T alpha, const RowMajorMatrixName& A, const T beta, RowMajorMatrixName& C )                                                               \
+{                                                                                                                                                                           \
+  int size = C.GetRowsFuncName()*C.GetColsFuncName();                                                                                                                       \
+  utlSAException(size>0 && C.GetRowsFuncName()!=C.GetColsFuncName())(C.GetRowsFuncName())(C.GetColsFuncName()).msg("C should be symmetric matrix or empty matrix");         \
+  CBLAS_TRANSPOSE transBlas;                                                                                                                                                \
+  int K, N;                                                                                                                                                                 \
+  if (!trans)                                                                                                                                                               \
+    {                                                                                                                                                                       \
+    utlSAException(size>0 && A.GetRowsFuncName()!=C.GetRowsFuncName())(A.GetRowsFuncName())(C.GetRowsFuncName()).msg("wrong size");                                         \
+    transBlas=CblasNoTrans;                                                                                                                                                 \
+    N = A.GetRowsFuncName();                                                                                                                                                \
+    K = A.GetColsFuncName();                                                                                                                                                \
+    }                                                                                                                                                                       \
+  else                                                                                                                                                                      \
+    {                                                                                                                                                                       \
+    utlSAException(size>0 && A.GetColsFuncName()!=C.GetRowsFuncName())(A.GetColsFuncName())(C.GetRowsFuncName()).msg("wrong size");                                         \
+    transBlas=CblasTrans;                                                                                                                                                   \
+    N = A.GetColsFuncName();                                                                                                                                                \
+    K = A.GetRowsFuncName();                                                                                                                                                \
+    }                                                                                                                                                                       \
+  utlException(size>0 && (C.GetRowsFuncName()!=N || C.GetColsFuncName()!=N), "wrong size of C");                                                                            \
+  if (size==0)                                                                                                                                                              \
+    {                                                                                                                                                                       \
+    utlSAException(std::fabs(beta)>1e-10)(beta)(C.GetRowsFuncName())(C.GetColsFuncName()).msg("when C is empty matrix, beta should be zero");                               \
+    C.ReSizeFuncName(N,N);                                                                                                                                                  \
+    }                                                                                                                                                                       \
+  RowMajorMatrixName B=A;                                                                                                                                                   \
+  utl::cblas_syrk<T>(CblasRowMajor, CblasUpper, transBlas, N, K, alpha, B.GetDataFuncName(), B.GetColsFuncName(), beta, C.GetDataFuncName(), N);                            \
+                                                                                                                                                                            \
+  T* data = C.GetDataFuncName();                                                                                                                                            \
+  for ( int i = 0; i < C.GetRowsFuncName(); ++i )                                                                                                                           \
+    for ( int j = 0; j < i; ++j )                                                                                                                                           \
+      data[i*N+j] = data[j*N+i];                                                                                                                                            \
+}                                                                                                                                                                           \
+                                                                                                                                                                            \
+template <class T>                                                                                                                                                          \
+void                                                                                                                                                                        \
+Product##FuncHelperName##XXt ( const RowMajorMatrixName& A, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0 )                                          \
+{                                                                                                                                                                           \
+  FuncName<T>(false, alpha, A, beta, C);                                                                                                                                    \
+}                                                                                                                                                                           \
+template <class T>                                                                                                                                                          \
+void                                                                                                                                                                        \
+Product##FuncHelperName##XtX ( const RowMajorMatrixName& A, RowMajorMatrixName& C, const double alpha=1.0, const double beta=0.0 )                                          \
+{                                                                                                                                                                           \
+  FuncName<T>(true, alpha, A, beta, C);                                                                                                                                     \
+}                                                                                                                                                                           \
 
     /** @} */
 

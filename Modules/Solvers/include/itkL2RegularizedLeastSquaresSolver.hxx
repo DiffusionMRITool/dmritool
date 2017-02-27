@@ -121,9 +121,9 @@ L2RegularizedLeastSquaresSolver<TPrecision>
     m_ConditionNumber = m_LS->GetInfNorm();
     MatrixPointer tmp(new MatrixType());
     if (m_IsLambdaSymmetric)
-      m_LS->PInverseSymmericMatrix(*tmp);
+      *tmp = m_LS->PInverseSymmericMatrix();
     else
-      m_LS->PInverseMatrix(*tmp);
+      *tmp = m_LS->PInverseMatrix();
     m_ConditionNumber *= tmp->GetInfNorm();
     utl::ProductUtlMMt(*tmp, *m_A, *m_LS);
     }

@@ -68,10 +68,16 @@ public:
 
   /** if x is not set, evaluate the cost function for m_x  */
   virtual ValueType EvaluateCostFunction(const VectorType& x=VectorType()) const {return ValueType(0.0);}
+  virtual ValueType EvaluateCostFunction(const MatrixType& x=MatrixType()) const {return ValueType(0.0);}
   /** if x is not set, evaluate the gradients of the cost function for m_x  */
   virtual VectorType EvaluateGradientOfCostFunction(const VectorType& x) const {return VectorType(); }
   
   virtual void Solve(const VectorType& xInitial=VectorType()); 
+  
+  virtual void Solve(const MatrixType& xInitial=MatrixType())
+    {
+    this->VerifyInputs();
+    }
 
   virtual void Clear();
 

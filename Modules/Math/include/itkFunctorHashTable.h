@@ -19,6 +19,7 @@
 #define __itkFunctorHashTable_h
 
 #include "itkFunctorTableBase.h"
+#include "utlSTDHeaders.h"
 
 namespace itk
 {
@@ -30,7 +31,7 @@ namespace itk
  *   \ingroup Math
  *   \author  Jian Cheng (JC), jian.cheng.1983@gmail.com
  */
-template < class TFunctor, class TParameters, class TFunctorValue = double, class THash=std::tr1::hash<TParameters> >
+template < class TFunctor, class TParameters, class TFunctorValue = double, class THash=utl_hash<TParameters> >
 class ITK_EXPORT FunctorHashTable
   : public FunctorTableBase<TFunctor, TParameters, TFunctorValue>
 {
@@ -87,7 +88,7 @@ public:
       // if (this->GetDebug())
       //   std::cout << "parameter = " << param << ", is not in the table" << std::endl << std::flush;
       FunctorValueType val = m_Functor(param);
-      m_Hash->insert(std::make_pair<ParametersType, FunctorValueType> (param, val));
+      m_Hash->insert(std::pair<ParametersType, FunctorValueType> (param, val));
       // (*m_Hash)[param]=val;
       return val;
       }
@@ -114,7 +115,6 @@ protected:
       itkExceptionMacro(<< "downcast to type " << this->GetNameOfClass()<< " failed.");
       }
     rval->m_Hash = m_Hash;
-    rval->m_Functor = m_Functor;
     return loPtr;
     }
   

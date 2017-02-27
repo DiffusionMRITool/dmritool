@@ -1,6 +1,6 @@
 /* from
  * @article{MollerHughes99,
-  author = "Tomas Möller and John F. Hughes",
+  author = "Tomas Moller and John F. Hughes",
   title = "Efficiently Building a Matrix to Rotate One Vector to Another",
   journal = "journal of graphics tools",
   volume = "4",
@@ -28,7 +28,7 @@ namespace utl
  *  "from" into another vector called "to".
  *  Input : from[3], to[3] which both must be *normalized* non-zero vectors
  *  Output: mtx[3][3] -- a 3x3 matrix in colum-major form
- *  Authors: Tomas Möller, John Hughes
+ *  Authors: Tomas Moller, John Hughes
  *          "Efficiently Building a Matrix to Rotate One Vector to Another"
  *          Journal of Graphics Tools, 4(4):1-4, 1999
  **/
@@ -53,7 +53,7 @@ RotationMatrixFromUnitNormVectors(const VectorType& from, const VectorType& to, 
     {
     VectorType ut(from), vt(from);     /* temporary storage vectors */
     VectorType x(from);          /* vector most nearly orthogonal to "from" */
-    float      c1, c2, c3; /* coefficients for later use */
+    double      c1, c2, c3; /* coefficients for later use */
     int        i, j;
 
     x[0] = (from[0] > 0.0) ? from[0] : -from[0];
@@ -102,7 +102,7 @@ RotationMatrixFromUnitNormVectors(const VectorType& from, const VectorType& to, 
   else  /* the most common case, unless "from"="to", or "from"=-"to" */
     {
     /* ...otherwise use this hand optimized version (9 mults less) */
-    float hvx, hvz, hvxy, hvxz, hvyz;
+    double hvx, hvz, hvxy, hvxz, hvyz;
     /* h = (1.0 - e)/DOT(v, v); old code */
     h = 1.0 / (1.0 + e);      /* optimization by Gottfried Chen */
     hvx = h * v[0];
@@ -158,22 +158,22 @@ RotationMatrixFromVectors(const VectorType& from, const VectorType& to, MatrixTy
 //  * "from" into another vector called "to".
 //  * Input : from[3], to[3] which both must be *normalized* non-zero vectors
 //  * Output: mtx[3][3] -- a 3x3 matrix in colum-major form
-//  * Authors: Tomas Möller, John Hughes
+//  * Authors: Tomas Moller, John Hughes
 //  *          "Efficiently Building a Matrix to Rotate One Vector to Another"
 //  *          Journal of Graphics Tools, 4(4):1-4, 1999
 //  */
-// void fromToRotation(float from[3], float to[3], float mtx[3][3]) {
-//   float v[3];
-//   float e, h, f;
+// void fromToRotation(double from[3], double to[3], double mtx[3][3]) {
+//   double v[3];
+//   double e, h, f;
 
 //   CROSS(v, from, to);
 //   e = DOT(from, to);
 //   f = (e < 0)? -e:e;
 //   if (f > 1.0 - epsilon)     /* "from" and "to"-vector almost parallel */
 //   {
-//     float u[3], v[3]; /* temporary storage vectors */
-//     float x[3];       /* vector most nearly orthogonal to "from" */
-//     float c1, c2, c3; /* coefficients for later use */
+//     double u[3], v[3]; /* temporary storage vectors */
+//     double x[3];       /* vector most nearly orthogonal to "from" */
+//     double c1, c2, c3; /* coefficients for later use */
 //     int i, j;
 
 //     x[0] = (from[0] > 0.0)? from[0] : -from[0];
@@ -238,7 +238,7 @@ RotationMatrixFromVectors(const VectorType& from, const VectorType& to, MatrixTy
 //     mtx[2][2] = e + h * v[2] * v[2];
 // #else
 //     /* ...otherwise use this hand optimized version (9 mults less) */
-//     float hvx, hvz, hvxy, hvxz, hvyz;
+//     double hvx, hvz, hvxy, hvxz, hvyz;
 //     /* h = (1.0 - e)/DOT(v, v); old code */
 //     h = 1.0/(1.0 + e);      /* optimization by Gottfried Chen */
 //     hvx = h * v[0];

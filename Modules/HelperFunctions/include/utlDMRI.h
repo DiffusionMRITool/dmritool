@@ -11,7 +11,7 @@
 #define __utlDMRI_h
 
 #include "utlCore.h"
-#include "utlMatrix.h"
+#include "utlNDArray.h"
 #include "utlSTDHeaders.h"
 
 /** @addtogroup utlHelperFunctions
@@ -20,8 +20,15 @@
 enum {
   CARTESIAN_TO_CARTESIAN=0,
   CARTESIAN_TO_SPHERICAL=1,
-  SPHERICAL_TO_CARTESIAN=3,
-  SPHERICAL_TO_SPHERICAL=4
+  SPHERICAL_TO_CARTESIAN=2,
+  SPHERICAL_TO_SPHERICAL=3
+};
+
+enum {
+  RADIAN_TO_DEGREE=0,
+  RADIAN_TO_RADIAN=1,
+  DEGREE_TO_RADIAN=2,
+  DEGREE_TO_DEGREE=3
 };
 
 enum {
@@ -34,6 +41,20 @@ enum {
   DIRECTION_FLIP=1
 };
 
+// enum {
+//   CARTESIAN=0, 
+//   SPHERICAL=1
+// };
+
+enum{
+  // [xx, xy, xz, yy, yz, zz], fsl
+  TENSOR_UPPER_TRIANGULAR=0,
+  // [xx, yx, yy, zx, zy, zz]
+  TENSOR_LOWER_TRIANGULAR, 
+  // [xx, yy, zz, sqrt(2)*xy, sqrt(2)*xz, sqrt(2)*yz], embed 3x3 matrix into 6x1 vector
+  TENSOR_EMBED6D 
+};
+
 namespace utl
 {
 
@@ -44,7 +65,7 @@ DimToRankSH ( const int dimm )
 {
   double result = -1.5 + std::sqrt(0.25 + 2.0*dimm);
   
-  utlAssert(IsInt(result), "Logical ERROR! Wrong dimension! dimm = " << dimm);
+  utlGlobalAssert(IsInt(result), "Logical ERROR! Wrong dimension! dimm = " << dimm);
   
   return (int) result;
 }
@@ -53,6 +74,7 @@ DimToRankSH ( const int dimm )
 inline int
 RankToDimSH (const int shRank)
 {
+  utlSAGlobalException(!utl::IsEven(shRank))(shRank).msg("shRank should be even");
   if (shRank<0)
     return 0;
   else
@@ -85,15 +107,151 @@ GetIndexSHlm(const int j)
   return lm;
 }
 
-/** for symmetric tensor with eigenvalues (e1,e2,e2), get (e1,e2) from the fa and (e1+e2+e3)/3  */
+/** 
+ * If isE2E3Equal==true, for symmetric tensor with eigenvalues (e1,e2,e2), get (e1,e2) from the fa and (e1+e2+e2)/3.
+ * If isE2E3Equal==false, for symmetric tensor with eigenvalues (e1,e1,e2), get (e1,e2) from the fa and (e1+e1+e2)/3.
+ * \note: when isE2E3Equal==false, fa cannot be larger than 1/sqrt(2), otherwise e3 is negative. 
+ * */
 template < typename T >
 std::vector<T>
-GetE1E2FromFAMD ( const T fa, const T meanEigenValue )
+GetE1E2FromFAMD ( const T fa, const T meanEigenValue, const bool isE2E3Equal=true )
 {
-  std::vector<T> e1e2(2);
-  e1e2[1] = meanEigenValue*(1.0 - fa/std::sqrt(3.0-2.0*fa*fa));
-  e1e2[0] = 3.0*meanEigenValue - 2.0*e1e2[1];
-  return e1e2;
+  std::vector<T> eigenValues(2);
+  double tmp = fa/std::sqrt(3.0-2.0*fa*fa);
+  if (isE2E3Equal)
+    {
+    eigenValues[0] = meanEigenValue*(1.0 + 2.0*tmp);
+    eigenValues[1] = meanEigenValue*(1.0 - tmp);
+    }
+  else
+    {
+    utlSAException(fa>1.0/utl::SQRT2)(fa).msg("fa is too large so that e3 is negative");
+    eigenValues[0] = meanEigenValue*(1.0 + tmp);
+    eigenValues[1] = meanEigenValue*(1.0 - 2.0*tmp);
+    }
+  return eigenValues;
+}
+
+/** Covert 6D tensor format to 9D format (3x3 symmetric matrix).  
+ * v9d is in ROW_MAJOR.*/
+template<typename V1Type, typename V2Type>
+void 
+ConvertTensor6DTo9D(const V1Type& v6d, V2Type& v9d, int v6dStoreWay)
+{
+  if (v6dStoreWay==TENSOR_LOWER_TRIANGULAR)
+    {
+    v9d[0] = v6d[0]; // xx
+    v9d[1] = v6d[1]; // xy
+    v9d[2] = v6d[3]; // xz
+    v9d[3] = v6d[1]; // yx
+    v9d[4] = v6d[2]; // yy
+    v9d[5] = v6d[4]; // yz
+    v9d[6] = v6d[3]; // zx
+    v9d[7] = v6d[4]; // zy
+    v9d[8] = v6d[5]; // zz
+    }
+  else if (v6dStoreWay==TENSOR_UPPER_TRIANGULAR)
+    {
+    v9d[0] = v6d[0]; // xx
+    v9d[1] = v6d[1]; // xy
+    v9d[2] = v6d[2]; // xz
+    v9d[3] = v6d[1]; // yx
+    v9d[4] = v6d[3]; // yy
+    v9d[5] = v6d[4]; // yz
+    v9d[6] = v6d[2]; // zx
+    v9d[7] = v6d[4]; // zy
+    v9d[8] = v6d[5]; // zz
+    }
+  else if (v6dStoreWay==TENSOR_EMBED6D)
+    {
+    v9d[0] = v6d[0]; // xx
+    v9d[1] = v6d[3]*utl::SQRT1_2; // xy
+    v9d[2] = v6d[4]*utl::SQRT1_2; // xz
+    v9d[3] = v6d[3]*utl::SQRT1_2; // yx
+    v9d[4] = v6d[1]; // yy
+    v9d[5] = v6d[5]*utl::SQRT1_2; // yz
+    v9d[6] = v6d[4]*utl::SQRT1_2; // zx
+    v9d[7] = v6d[5]*utl::SQRT1_2; // zy
+    v9d[8] = v6d[2]; // zz
+    }
+  else
+    utlException(true, "wrong v1StoreWay");
+}
+
+/** Covert 9D tensor format to 6D format (3x3 symmetric matrix).  
+ * v9d is in ROW_MAJOR.*/
+template<typename V1Type, typename V2Type>
+void 
+ConvertTensor9DTo6D(const V1Type& v9d, V2Type& v6d, int v6dStoreWay)
+{
+  if (v6dStoreWay==TENSOR_LOWER_TRIANGULAR)
+    {
+    v6d[0] = v9d[0]; // xx
+    v6d[1] = v9d[3]; // yx
+    v6d[2] = v9d[4]; // yy
+    v6d[3] = v9d[6]; // zx
+    v6d[4] = v9d[7]; // zy
+    v6d[5] = v9d[8]; // zz
+    }
+  else if (v6dStoreWay==TENSOR_UPPER_TRIANGULAR)
+    {
+    v6d[0] = v9d[0]; // xx
+    v6d[1] = v9d[1]; // xy
+    v6d[2] = v9d[2]; // xz
+    v6d[3] = v9d[4]; // yy
+    v6d[4] = v9d[5]; // yz
+    v6d[5] = v9d[8]; // zz
+    }
+  else if (v6dStoreWay==TENSOR_EMBED6D)
+    {
+    v6d[0] = v9d[0]; // xx
+    v6d[1] = v9d[4]; // yy
+    v6d[2] = v9d[8]; // zz
+    v6d[3] = v9d[1]*utl::SQRT2; // sqrt(2)*xy
+    v6d[4] = v9d[2]*utl::SQRT2; // sqrt(2)*xz
+    v6d[5] = v9d[5]*utl::SQRT2; // sqrt(2)*yz
+    }
+  else
+    utlException(true, "wrong v1StoreWay");
+}
+
+/** The function only works for 2th order tensors which are in 3D and are symmetric.  */
+template <class T>
+inline void
+Convert2To1Tensor(const utl::NDArray<T,2>& mat, utl::NDArray<T,1>& vec)
+{
+  utlException(mat.Rows()!=3 || mat.Cols()!=3, "It should be in 3D space");
+  vec.ReSize(6);
+  utl::ConvertTensor9DTo6D(mat, vec, TENSOR_EMBED6D);
+}
+
+template <class T>
+inline void
+Convert1To2Tensor(const utl::NDArray<T,1>& vec, utl::NDArray<T,2>& mat)
+{
+  utlException(vec.Size()!=6, "It should be in 3D space");
+  mat.ReSize(3,3);
+  utl::ConvertTensor6DTo9D(vec, mat, TENSOR_EMBED6D);
+}
+
+template <class T>
+inline void
+NormalizeGrad(const utl::NDArray<T,2>& grad)
+{
+  if (grad.Size()==0)
+    return;
+  utlSAException(grad.Cols()!=3)(grad.Rows())(grad.Cols())("grad should be Nx3 matrix");
+  utl::NDArray<T,1> vec;
+  for ( int i = 0; i < grad.Rows(); ++i ) 
+    {
+    vec = grad.GetRow(i);
+    double norm = vec.GetTwoNorm();
+    if (norm>1e-10)
+      {
+      vec /= norm;
+      grad.SetRow(i, vec);
+      }
+    }
 }
 
 template <class T>

@@ -14,11 +14,12 @@
  * =====================================================================================
  */
 
+#include "utlGTest.h"
+
 #include "utlCore.h"
 #include "utlCoreMKL.h"
 #include "utlVNL.h"
 
-#include "utlGTest.h"
 
 typedef vnl_vector<double>         VectorType;
 

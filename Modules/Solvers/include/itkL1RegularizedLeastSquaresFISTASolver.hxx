@@ -55,7 +55,7 @@ L1RegularizedLeastSquaresFISTASolver<TPrecision>
     *this->m_A = *mat;
     // utl::MatrixCopy(*mat, *this->m_A, 1.0, 'N');
     this->Modified();
-    this->m_A->GetTranspose(*this->m_At);
+    *this->m_At = this->m_A->GetTranspose();
     // utl::MatrixCopy(*this->m_A, *m_At, 1.0, 'T');
     utl::ProductUtlXtX(*m_A, *m_AtA);
     m_Step = 0.5/m_AtA->GetTwoNorm();
