@@ -25,19 +25,19 @@ MeanDiffusivityEstimator dwi.txt D_sh4_ra1.nii.gz --sh 4 --ra 1
 SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --lambdaSH 0 --lambdaRA 0 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-7  --mdImage D_sh4_ra1.nii.gz 
 
 # estimate eap profiles
-SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4  --fourier --mdImage D_sh4_ra1.nii.gz
-MeshFromSHCoefficientsConverter eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 8e-6
+SPFToProfile signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4  --fourier --mdImage D_sh4_ra1.nii.gz
+MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 8e-6
 vtkviewer eap_r0.015_vis.vtk &
 
 # estimate odfs
-SPFToODFConverter signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
-MeshFromSHCoefficientsConverter odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
+SPFToODF signalSPF.nii.gz odf.nii.gz --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+MeshFromSHCoefficients odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
 vtkviewer odf_vis.vtk &
 
 # estimate scalar maps
-SPFToScalarMapConverter  signalSPF.nii.gz rto.nii.gz  --mapType RTO --sh 8 --ra 4  --mdImage D_sh4_ra1.nii.gz
-SPFToScalarMapConverter  signalSPF.nii.gz msd.nii.gz  --mapType MSD --sh 8 --ra 4  --mdImage D_sh4_ra1.nii.gz
-SPFToScalarMapConverter  signalSPF.nii.gz pfa.nii.gz  --mapType PFA --sh 8 --ra 4  --mdImage D_sh4_ra1.nii.gz
+SPFToScalarMap  signalSPF.nii.gz rto.nii.gz  --mapType RTO --sh 8 --ra 4  --mdImage D_sh4_ra1.nii.gz
+SPFToScalarMap  signalSPF.nii.gz msd.nii.gz  --mapType MSD --sh 8 --ra 4  --mdImage D_sh4_ra1.nii.gz
+SPFToScalarMap  signalSPF.nii.gz pfa.nii.gz  --mapType PFA --sh 8 --ra 4  --mdImage D_sh4_ra1.nii.gz
 
 cd ..
 
