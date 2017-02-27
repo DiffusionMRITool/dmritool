@@ -31,8 +31,8 @@ Required Packages
 -----------------
 
 -  CMake_ (Version 2.8 or newer)
--  GCC_ (4.6 or newer)
--  `Insight Toolkit`_ (ITK, version 4 or newer)
+-  GCC_ (4.8 or newer. DMRITool uses C++11, thus it cannot work for old gcc)
+-  `Insight Toolkit`_ (ITK, version 4.9 or newer)
 -  `Visualization Toolkit`_ (VTK, version 6 or newer)
 -  SlicerExecutionModel_ (GenerateCLP, for command line interface):
 -  `OpenBLAS`_ + Lapack_ or MKL_ (at least one is required)
@@ -56,7 +56,7 @@ Build Souce Code
 Linux and Mac
 --------------
 
-1. build/install CMake_, GCC_, Git_, SVN_, GSL_, VTK_, ITK_, Qt_ (optional), Doxygen_ (optional).
+1. build/install CMake_, GCC_, Git_, GSL_, VTK_, ITK_, Qt_ (optional), Doxygen_ (optional).
 2. build/install OpenBlas_ + Lapack_ or MKL_ .
 
    MKL_ is free for students, educators, academic researchers and open source contributors. 
@@ -87,7 +87,7 @@ Linux and Mac
        ccmake ../SlicerExecutionModel
        make
 
-4. build DMRITOOL_ source ::
+4. build DMRITool_ source ::
 
        git clone https://github.com/DiffusionMRITool/dmritool
        mkdir dmritool-build
@@ -95,12 +95,12 @@ Linux and Mac
        ccmake ../dmritool
        make
 
-  -  When building DMRITOOL_ with ``ccmake``, ``GenerateCLP_DIR`` needs to be set as ``SlicerExecutionModel-build/GenerateCLP``.
+  -  When building DMRITool_ with ``ccmake``, ``GenerateCLP_DIR`` needs to be set as ``SlicerExecutionModel-build/GenerateCLP``.
   -  The code uses OpenBlas_ + Lapack_ if ``DMRITOOL_USE_MKL`` is set ``OFF``, it uses MKL_ if ``DMRITOOL_USE_MKL`` is ``ON``.
   -  If ``DMRITOOL_USE_FASTLAPACK=ON``, then the codes use fast versions for SVD and eigen-decomposition, 
      but it may have errors for openblas_. 
      You can check whether ``utlVNLLapackGTest`` and ``utlVNLBlasGTest`` can successfully pass. 
-     If these two tests do not passed, you may need to build OpenBlas_ manually or build DMRITOOL_ with ``DMRITOOL_USE_FASTLAPACK=OFF``
+     If these two tests do not passed, you may need to build OpenBlas_ manually or build DMRITool_ with ``DMRITOOL_USE_FASTLAPACK=OFF``
   -  If you want to build matlab_ mex files, please set ``DMRITOOL_WRAP_MATLAB=ON``.
   -  If ``BUILD_TESTING`` is set ``ON``, some tests based on GTest_ will be built. 
      We suggest you set it ``ON``. GTest_ will be automatically downloaded and built if you do not have it in system. 
@@ -108,6 +108,8 @@ Linux and Mac
   -  ``VERBOSITY_LEVEL`` is used for debug. The default value is 0. 
      If you set it as 1, the routines can provide more logging information and perform more condition checking, 
      but it may make the built executables a little bit slower.
+  -  If you use an old version of ITK (<4.9), you may have to set ``CMAKE_CXX_FLAGS=-fpermissive`` to build the codes. 
+     That is `a known issue of ITK with c++11 support <https://itk.org/pipermail/insight-developers/2015-December/024705.html>`_, which is solved after ITK 4.9. 
 
 
 5. build tests (optional, but suggested) ::
@@ -139,7 +141,7 @@ Linux and Mac
 Windows
 --------
 
-We did not test the building of DMRITOOL_ in windows. 
+We did not test the building of DMRITool_ in windows. 
 You can try it by yourself. 
 
 
