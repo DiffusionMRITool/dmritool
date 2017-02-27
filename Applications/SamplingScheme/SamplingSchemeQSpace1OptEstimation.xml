@@ -2,7 +2,10 @@
 <executable>
   <category>Sampling Scheme</category>
   <title>1-Opt Sampling Scheme Estimation</title>
-  <description>1-Opt estimation for single and multiple shell sampling scheme</description>
+  <description>1-Opt estimation for single and multiple shell sampling scheme \n\
+    Examples: \n\
+      SamplingSchemeQSpace1OptEstimation grad_28x3_IMOC1Opt.txt --initial grad_28x3_IMOC_shell1.txt,grad_28x3_IMOC_shell2.txt,grad_28x3_IMOC_shell3.txt --tessOrder 7 -v 2 
+  </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 
@@ -23,7 +26,7 @@
 
     <string-vector> 
       <name>_InitialOrientations</name>
-      <description>A given orientations for an intialization.</description>
+      <description>A given single or multi-shell scheme (vector of file names) for an intialization.</description>
       <longflag>initial</longflag>
     </string-vector>>
     

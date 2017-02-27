@@ -4,8 +4,8 @@
   <title>Random generator for schemes </title>
   <description>Random generator for multi-shell schemes.\n\
     Examples: \n\
-    SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 60  \n\
-    SamplingSchemeQSpaceIMOCEstimation grad.txt --numberOfSamples 28,28,28
+    SamplingSchemeQSpaceRandomEstimation grad.txt --numberOfSamples 60 \n\
+    SamplingSchemeQSpaceRandomEstimation grad.txt --numberOfSamples 28,28,28
   </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>

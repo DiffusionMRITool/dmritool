@@ -57,13 +57,13 @@
     <element>UNIT_INTEGRAL</element>
     </string-enumeration>
 
-    <float>
+    <double>
     <name>_Pow</name>
     <label>Pow</label>
     <description>Power factor.</description>
     <longflag>pow</longflag>
     <default>1.0</default>
-    </float>
+    </double>
     
     <integer-vector>
       <name>_BoxView</name>
@@ -73,13 +73,13 @@
       <default>-1,-1,-1,-1,-1,-1</default>
     </integer-vector>
 
-    <float>
+    <double>
     <name>_Scale</name>
     <label>Scale</label>
     <description>Scale factor.</description>
     <longflag>scale</longflag>
     <default>1.0</default>
-    </float>
+    </double>
 
     <integer>
     <name>_TessellationOrder</name>

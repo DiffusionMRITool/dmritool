@@ -2,7 +2,11 @@
 <executable>
   <category>Sampling Scheme</category>
   <title>Inremental Sampling Scheme Estimation</title>
-  <description>Incrementatl estimation for single and multiple shell sampling scheme</description>
+  <description>Incrementatl estimation for single and multiple shell sampling scheme. \n\
+    Examples: \n\
+    SamplingSchemeQSpaceIncrementalEstimation grad_90_ISC.txt --numberOfSamples 90 \n\
+    SamplingSchemeQSpaceIncrementalEstimation grad_90x3_ISC.txt --numberOfSamples 90,90,90
+  </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
 
