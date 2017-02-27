@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>File Operations</category>
+  <title>File Operations</title>
+  <description>Operations for text files.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    <label>IO</label>
+    <description>Input/output parameters</description>
+
+    <string>
+    <name>_InputFile</name>
+    <label>Input File</label>
+    <description>Input file.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </string>
+
+    <string>
+    <name>_Outputfile</name>
+    <label>Output File</label>
+    <description>Output file.</description>
+    <flag>-o</flag>
+    <channel>output</channel>
+    </string>
+
+  </parameters>
+
+  <parameters>
+    
+    <boolean>
+    <name>_Info</name>
+    <label>information</label>
+    <description>File information.</description>
+    <longflag>--info</longflag>
+    <default>true</default>
+    </boolean>
+
+    <boolean>
+    <name>_Transpose</name>
+    <label>Transpose</label>
+    <description>File transpose.</description>
+    <longflag>--transpose</longflag>
+    <default>true</default>
+    </boolean>
+  
+    <integer-vector>
+    <name>_ExtractSubMatrix</name>
+    <label>Extract a submatrix</label>
+    <description>Extract submatrix based on 4 indices rowStart,rowEnd,columnStart,columnEnd</description>
+    <longflag>--extract</longflag>
+    </integer-vector>
+
+    <string>
+    <name>_FileConnectRow</name>
+    <label>Connect Row</label>
+    <description>The file which is appended after all rows in theh input file.</description>
+    <longflag>--connectRow</longflag>
+    </string>
+    
+    <string>
+    <name>_FileConnectColumn</name>
+    <label>Connect Row</label>
+    <description>The file which is appended after all columns in theh input file.</description>
+    <longflag>--connectColumn</longflag>
+    </string>
+    
+    <string>
+    <name>_FileIndexRows</name>
+    <description>Index file to select rows.</description>
+    <longflag>indexRow</longflag>
+    </string>
+
+    <double>
+      <name>_Scale</name>
+      <label>Scale</label>
+      <description>Scale value.</description>
+      <longflag>scale</longflag>
+    </double> 
+    
+    <!-- <double> -->
+    <!--   <name>_ScaleRow</name> -->
+    <!--   <description>Scale value for each row.</description> -->
+    <!--   <longflag>scaleRow</longflag> -->
+    <!-- </double>  -->
+        
+  </parameters>
+
+</executable>
