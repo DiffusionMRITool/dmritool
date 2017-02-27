@@ -53,6 +53,9 @@ processOrientation ( const itk::SamplingScheme3D<double>::Pointer scheme, const 
     std::cout << "electrostaticEnergy (order=2) = " << electrostaticEnergy << std::endl << std::flush;
     electrostaticEnergy = scheme->CalculateElectrostaticEnergy(1.0, !_Asymmetric);
     std::cout << "electrostaticEnergy (order=1) = " << electrostaticEnergy << std::endl << std::flush;
+
+    double packing_density = scheme->CalculatePackingDensity(!_Asymmetric);
+    std::cout << "Spherical packing density = " << packing_density << std::endl << std::flush;
     }
 
   return stats[0];
