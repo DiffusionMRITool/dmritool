@@ -170,7 +170,7 @@ private:
 };
 
 template<>
-typename SHCoefficientsRotation<double>::Pointer SHCoefficientsRotation<double>::m_Instance = ITK_NULLPTR;  
+typename SHCoefficientsRotation<double>::Pointer SHCoefficientsRotation<double>::m_Instance = NULL;  
 
 inline void 
 InitializeSHRotation(const int rank, const int tess)

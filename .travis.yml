@@ -9,6 +9,8 @@ before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo add-apt-repository ppa:staticfloat/julia-deps -y
   - sudo apt-get update -qq
+  - sudo apt-get install -qq g++-4.8
+  - export CXX="g++-4.8"
   - sudo apt-get install -qq libinsighttoolkit4-dev 
   - sudo apt-get install -qq libvtk6-dev 
   - sudo apt-get install -qq cmake 
@@ -28,9 +30,10 @@ script:
   - mkdir build
   - cd build
 
-  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_FASTLAPACK=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF  ..
   - export OPENBLAS_NUM_THREADS=1 && export OMP_NUM_THREADS=1 
-  - make -j 2 gtest_test SphericalPolarFourierImaging 
+  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_FASTLAPACK=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF -DCMAKE_CXX_FLAGS=-fpermissive -DVCL_CAN_STATIC_CONST_INIT_FLOAT=0 ..
+  - make gtest_test -j 4 
+  - make SphericalPolarFourierImaging 
   - make -j 3 utlVNLBlasGTest utlVNLLapackGTest utlNDArrayGTest
   - cd ./Modules/HelperFunctions/test/
   - ./utlVNLBlasGTest && ./utlVNLLapackGTest && ./utlNDArrayGTest 

@@ -23,7 +23,6 @@
 #include <vtkPolyData.h>
 #include <vtkPolygon.h>
 #include <vtkSmartPointer.h>
-#include <vtkMath.h>
 #include <vtkRenderer.h>
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
