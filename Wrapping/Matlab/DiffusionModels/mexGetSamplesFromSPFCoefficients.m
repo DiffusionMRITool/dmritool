@@ -18,12 +18,12 @@
 %   params.ra  :           order in radial part
 %   params.fourier :       Use Fourier transform. 
 %   params.inqspace :      If it is true, the basis is in q-space (default). If it is false, the basis is in r-space. 
-%   params.scaleImage  :   scale image.
+%   params.mdImage  :      Mean diffusivity Image for adaptive scale. 
 %   params.basisType :     SPF: use SPF basis (default). 
 %   params.mask :          Mask file. 2D or 3D matrix. 
 %
-%   params.debug :         If it is true, show debug information.
 %   params.thread :        Number of thread. Default is -1, which means it is automatically determined.
+%   params.verbose :       Verbose level. 0: no output log. 1: normal log. 2: large log for debug.
 %
 % Outputs:
 %   isoDWI:                each column is a dwi sample

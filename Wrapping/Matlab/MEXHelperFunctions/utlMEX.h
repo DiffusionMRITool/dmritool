@@ -23,8 +23,7 @@
 #include "mexVNL.h"
 #include "mexITK.h"
 
-#include "utlMatrix.h"
-#include "utlVector.h"
+#include "utlNDArray.h"
 
 namespace utl
 {

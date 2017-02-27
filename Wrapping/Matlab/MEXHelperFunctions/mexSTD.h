@@ -56,7 +56,7 @@ template <class T>
 inline void 
 GetMXArrayFromSTDVector ( const std::vector<T>* vec, mxArray*& pr  )
 {
-  utlException (!vec || vec && vec->size()==0, "the vector is null");
+  utlException (!vec || (vec && vec->size()==0), "the vector is null");
 
   int row = vec->size();
   int column = 1;

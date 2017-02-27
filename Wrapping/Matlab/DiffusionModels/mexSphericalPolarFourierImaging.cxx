@@ -34,12 +34,15 @@ template <typename T>
   utlGlobalException(!utl::mexCheckType<T>(prhs[0]),"type of argument 1 is not consistent");
   utlGlobalException(!utl::mexCheckType<T>(prhs[1]),"type of argument 2 is not consistent");
   utlGlobalException(!utl::mexCheckType<T>(prhs[2]),"type of argument 3 is not consistent");
-
+  
   typedef itk::VectorImage<T, 3>  VectorImageType;
   typedef itk::Image<double, 3>  ImageType;
   typedef itk::SphericalPolarFourierEstimationImageFilter<VectorImageType, VectorImageType> SPFIFilterBaseType;
 
   utlException(mxGetNumberOfDimensions(prhs[0])!=4, "the input should have 4 dimension");
+  
+  int verbose = utl::GetScalarStructDef<int>(prhs[3],"verbose",1);
+  utl::LogLevel = verbose;
 
   const mwSize* dimsDWIs = mxGetDimensions(prhs[0]);
   int Nx = static_cast<int>(dimsDWIs[0]);
@@ -63,7 +66,6 @@ template <typename T>
   utlGlobalException(sh<=0, "need to set sh");
   int ra = utl::GetScalarStructDef<int>(prhs[3],"ra",-1);
   utlGlobalException(ra<=0, "need to set ra");
-  // std::string basisType = utl::GetScalarStructDef<std::string>(prhs[3],"basisType","SPF");
   std::string estimation = utl::GetScalarStructDef<std::string>(prhs[3],"estimation","LS");
   std::string solver = utl::GetScalarStructDef<std::string>(prhs[3],"solver","SPAMS");
   double lambdaSH = utl::GetScalarStructDef<double>(prhs[3],"lambdaSH",0.0);
@@ -79,8 +81,7 @@ template <typename T>
   int maxIter = utl::GetScalarStructDef<int>(prhs[3],"maxIter",1000);
   double minChange = utl::GetScalarStructDef<double>(prhs[3],"minChange",0.0001);
   mxArray* maskArray = utl::GetArrayStruct(prhs[3], "mask" );
-  bool debug = utl::GetScalarStructDef<bool>(prhs[3],"debug",false);
-  int thread = utl::GetScalarStructDef<double>(prhs[3],"thread",-1.0);
+  int thread = utl::GetScalarStructDef<int>(prhs[3],"thread",-1.0);
 
 
   typename SPFIFilterBaseType::Pointer spfiFilter=NULL;
@@ -175,7 +176,8 @@ template <typename T>
   utl::InitializeThreadedLibraries(thread);
   if (thread>0)
     spfiFilter->SetNumberOfThreads(thread);
-  spfiFilter->SetDebug(debug);
+  spfiFilter->SetDebug(utl::LogLevel>=LOG_DEBUG);
+  spfiFilter->SetLogLevel(utl::LogLevel);
 
   std::cout << "SPF estimation starts" << std::endl << std::flush;
   spfiFilter->Update();
@@ -184,11 +186,11 @@ template <typename T>
   typename VectorImageType::Pointer spf = spfiFilter->GetOutput();
   itk::GetMXArrayFromITKVectorImage(spf, plhs[0]);
   
-  if (nlhs==2)
-    {
-    typename ImageType::Pointer scaleImage = spfiFilter->GetScaleImage();
-    itk::GetMXArrayFromITKImage(scaleImage, plhs[1]);
-    }
+  // if (nlhs==2)
+  //   {
+  //   typename ImageType::Pointer scaleImage = spfiFilter->GetScaleImage();
+  //   itk::GetMXArrayFromITKImage(scaleImage, plhs[1]);
+  //   }
 }
 
 
@@ -196,10 +198,10 @@ void mexFunction(int nlhs, mxArray *plhs[],
     int nrhs, const mxArray *prhs[])
 {
   utlGlobalException(nrhs!=4, "Bad number of inputs arguments");
-  utlGlobalException(nlhs!=1 && nlhs!=2, "Bad number of outputs arguments");
+  utlGlobalException(nlhs!=1, "Bad number of outputs arguments");
 
-  if (mxGetClassID(prhs[0]) == mxSINGLE_CLASS) 
-    callFunction<float>(plhs,prhs,nlhs,nrhs);
-  else
+  // if (mxGetClassID(prhs[0]) == mxSINGLE_CLASS) 
+  //   callFunction<float>(plhs,prhs,nlhs,nrhs);
+  // else
     callFunction<double>(plhs,prhs,nlhs,nrhs);
 } 

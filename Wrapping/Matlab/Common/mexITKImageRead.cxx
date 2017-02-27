@@ -102,7 +102,8 @@ void mexFunction(int nlhs, mxArray *plhs[],
   // itk::PrintVectorImage(image,"image");
   MultiVolumeVectorImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
   int dim = Dimension;
-  for ( int i = Dimension-1; i >= 0 ; i-- ) 
+  // if size=[1,1,1,1], dim=3. dim is 3 or 4.
+  for ( int i = Dimension-1; i > 2 ; i-- ) 
     {
     if (size[i]==1)
       dim--;
@@ -110,16 +111,13 @@ void mexFunction(int nlhs, mxArray *plhs[],
       break;
     }
 
-  // if (mxGetClassID(prhs[0]) == mxSINGLE_CLASS) 
-  //   callFunction<float>(plhs,prhs,nlhs,nrhs);
-  // else
   if (dim==4)
     isVectorImage? callFunction<double,4,true>(plhs,prhs,nlhs,nrhs) : callFunction<double,4,false>(plhs,prhs,nlhs,nrhs);
   else if (dim==3)
     isVectorImage? callFunction<double,3,true>(plhs,prhs,nlhs,nrhs) : callFunction<double,3,false>(plhs,prhs,nlhs,nrhs);
-  else if (dim==2)
-    isVectorImage? callFunction<double,2,true>(plhs,prhs,nlhs,nrhs) : callFunction<double,2,false>(plhs,prhs,nlhs,nrhs);
-  else if (dim==1)
-    isVectorImage? callFunction<double,1,true>(plhs,prhs,nlhs,nrhs) : callFunction<double,1,false>(plhs,prhs,nlhs,nrhs);
+  // else if (dim==2)
+  //   isVectorImage? callFunction<double,2,true>(plhs,prhs,nlhs,nrhs) : callFunction<double,2,false>(plhs,prhs,nlhs,nrhs);
+  // else if (dim==1)
+  //   isVectorImage? callFunction<double,1,true>(plhs,prhs,nlhs,nrhs) : callFunction<double,1,false>(plhs,prhs,nlhs,nrhs);
 } 
 

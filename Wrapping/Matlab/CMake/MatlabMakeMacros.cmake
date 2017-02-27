@@ -8,19 +8,6 @@
 # $Rev$
 # $Date$
 
-MACRO(LOAD_REQUIRED_PACKAGE Package)
-  LOADPACKAGE(${Package})
-  IF(NOT ${Package}_FOUND)
-    MESSAGE(FATAL_ERROR "Required package ${Package} was not found.\n
-    Look at Find${Package}.cmake in the CMake module directory for clues
-    on what you're supposed to do to help find this package.  Good luck.\n")
-  ENDIF(NOT ${Package}_FOUND)
-ENDMACRO(LOAD_REQUIRED_PACKAGE)
-
-MACRO(LOAD_OPTIONAL_PACKAGE Package)
-  LOADPACKAGE(${Package} QUIET)
-ENDMACRO(LOAD_OPTIONAL_PACKAGE)
-
 MACRO(ADD_MEX_FILE Target mainFile)
   INCLUDE_DIRECTORIES("${MATLAB_INCLUDE_DIR}")
 
@@ -141,95 +128,4 @@ MACRO(SD_APPEND_TARGET_PROPERTIES TARGET_TO_CHANGE PROP_TO_CHANGE)
 ENDMACRO(SD_APPEND_TARGET_PROPERTIES TARGET_TO_CHANGE PROP_TO_CHANGE)
 
 
-MACRO(SD_ADD_LINK_LIBRARIES Target)
-  FOREACH (currentLib ${ARGN})
-    IF (${currentLib}_LIBRARIES)
-      TARGET_LINK_LIBRARIES(${Target} ${${currentLib}_LIBRARIES})
-    ELSEIF (${currentLib}_LIBRARY)
-      TARGET_LINK_LIBRARIES(${Target} ${${currentLib}_LIBRARY})
-    ELSE (${currentLib}_LIBRARIES)
-      #MESSAGE("WARNING: ${currentLib}_LIBRARY and ${currentLib}_LIBRARIES are undefined. Using ${currentLib} in linker")
-      TARGET_LINK_LIBRARIES(${Target} ${currentLib})
-    ENDIF (${currentLib}_LIBRARIES)
-    
-    IF (${currentLib}_INCLUDE_DIRS)
-      INCLUDE_DIRECTORIES(${${currentLib}_INCLUDE_DIRS})
-    ELSEIF (${currentLib}_INCLUDE_DIR)
-      INCLUDE_DIRECTORIES(${${currentLib}_INCLUDE_DIR})
-    ELSE (${currentLib}_INCLUDE_DIRS)
-      #MESSAGE("WARNING: ${currentLib}_INCLUDE_DIR and ${currentLib}_INCLUDE_DIR are undefined. No specific include dir will be used for ${currentLib}")
-    ENDIF (${currentLib}_INCLUDE_DIRS)
-  ENDFOREACH (currentLib)
-ENDMACRO(SD_ADD_LINK_LIBRARIES)
 
-
-MACRO(SD_UNIT_TEST Src)
-  # remove extension
-  STRING(REGEX REPLACE "[.][^.]*$" "" Target ${Src})
-
-  # parse arguments
-  SET(currentPos "")
-  SET(testLibs "")
-  SET(testExtLibs "")
-  SET(testArgs "")
-
-  FOREACH (arg ${ARGN})
-    IF (arg STREQUAL "LIBS")
-      SET(currentPos "LIBS")
-    ELSEIF (arg STREQUAL "EXTLIBS")
-      SET(currentPos "EXTLIBS")
-    ELSEIF (arg STREQUAL "ARGS")
-      SET(currentPos "ARGS")
-    ELSE (arg STREQUAL "LIBS")
-      IF (currentPos STREQUAL "LIBS")
-        SET(testLibs ${testLibs} ${arg})
-      ELSEIF (currentPos STREQUAL "EXTLIBS")
-        SET(testExtLibs ${testExtLibs} ${arg})
-      ELSEIF (currentPos STREQUAL "ARGS")
-        SET(testArgs ${testArgs} ${arg})
-      ELSE (currentPos STREQUAL "ARGS")
-         MESSAGE(FATAL_ERROR "Unknown argument")
-      ENDIF (currentPos STREQUAL "LIBS")
-    ENDIF (arg STREQUAL "LIBS")
-  ENDFOREACH (arg ${ARGN})
-
-  # setup target
-  ADD_EXECUTABLE(${Target} ${Src})
-  SD_ADD_LINK_LIBRARIES(${Target} ${testExtLibs})
-  TARGET_LINK_LIBRARIES(${Target} ${testLibs})
-  SET_TARGET_PROPERTIES(${Target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/tests" ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/tests")
-  ADD_TEST(${Target} "${PROJECT_BINARY_DIR}/tests/${Target}" ${testArgs})
-ENDMACRO(SD_UNIT_TEST)
-
-
-MACRO(SD_EXECUTABLE Src)
-  # remove extension
-  STRING(REGEX REPLACE "[.][^.]*$" "" Target ${Src})
-
-  # parse arguments
-  SET(currentPos "")
-  SET(appLibs "")
-  SET(appExtLibs "")
-
-  FOREACH (arg ${ARGN})
-    IF (arg STREQUAL "LIBS")
-      SET(currentPos "LIBS")
-    ELSEIF (arg STREQUAL "EXTLIBS")
-      SET(currentPos "EXTLIBS")
-    ELSE (arg STREQUAL "LIBS")
-      IF (currentPos STREQUAL "LIBS")
-        SET(appLibs ${appLibs} ${arg})
-      ELSEIF (currentPos STREQUAL "EXTLIBS")
-        SET(appExtLibs ${appExtLibs} ${arg})
-      ELSE (currentPos STREQUAL "LIBS")
-         MESSAGE(FATAL_ERROR "Unknown argument")
-      ENDIF (currentPos STREQUAL "LIBS")
-    ENDIF (arg STREQUAL "LIBS")
-  ENDFOREACH (arg ${ARGN})
-
-  # setup target
-  ADD_EXECUTABLE(${Target} ${Src})
-  SD_ADD_LINK_LIBRARIES(${Target} ${appExtLibs})
-  TARGET_LINK_LIBRARIES(${Target} ${appLibs})
-  SET_TARGET_PROPERTIES(${Target} PROPERTIES RUNTIME_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin" ARCHIVE_OUTPUT_DIRECTORY "${PROJECT_BINARY_DIR}/bin")
-ENDMACRO(SD_EXECUTABLE)

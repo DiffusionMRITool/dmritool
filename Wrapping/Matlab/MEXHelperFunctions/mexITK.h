@@ -32,7 +32,8 @@ inline void
 GetMXArrayFromITKImage ( const SmartPointer<Image<T,VImageDimension> >& image, mxArray*& pr  )
 {
   typedef Image<T,VImageDimension> ImageType;
-  utlException(IsImageEmpty(image), "the image is empty");
+  // utlException(IsImageEmpty(image), "the image is empty");
+  utlException(!image, "the image point is NULL");
   
   typename ImageType::RegionType region = image->GetLargestPossibleRegion();
   typename ImageType::SizeType size = region.GetSize();
@@ -95,7 +96,8 @@ inline void
 GetMXArrayFromITKVectorImage ( const SmartPointer<VectorImage<T,VImageDimension> >& image, mxArray*& pr  )
 {
   typedef VectorImage<T,VImageDimension> ImageType;
-  utlException(IsImageEmpty(image), "the image is empty");
+  // utlException(IsImageEmpty(image), "the image is empty");
+  utlException(!image, "the image point is NULL");
   
   typename ImageType::RegionType region = image->GetLargestPossibleRegion();
   typename ImageType::SizeType size = region.GetSize();

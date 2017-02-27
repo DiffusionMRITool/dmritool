@@ -57,7 +57,7 @@ template <typename T>
 
   // utlPrintVar2(true, rowB, columnB);
   utlException(columnB!=1 && rowB!=1, "orientation matrix should have 1 column or 1 row");
-  utlException(columnB==1 && rowB!=row || rowB==1 && columnB!=column, "orientation matrix and B vector should have the same number of rows");
+  utlException((columnB==1 && rowB!=row) || (rowB==1 && columnB!=column), "orientation matrix and B vector should have the same number of rows");
 
   utl_shared_ptr<std::vector<double> > bVector (new std::vector<double>());
   utl::GetSTDVectorFromMXArray( prhs[3], bVector.get());

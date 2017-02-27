@@ -2,7 +2,6 @@
 %
 % Usage:
 %   [signal] = @MATLAB_FUNCTION_NAME@(dwi4DNoramlized, grad, bVec, params)
-%   [signal, scaleImage] = @MATLAB_FUNCTION_NAME@(dwi4DNoramlized, grad, bVec, params)
 % 
 % Inputs:
 %   dwi4DNoramlized:       4D DWI data, normalized by b0 image;
@@ -30,12 +29,11 @@
 %   params.minChange :     Minimal change percentage of the cost function and variable for l1 oprimization.
 %   params.mask :          Mask file. 2D or 3D matrix. 
 %
-%   params.debug :         If it is true, show debug information.
 %   params.thread :        Number of thread. Default is -1, which means it is automatically determined.
+%   params.verbose :       Verbose level. 0: no output log. 1: normal log. 2: large log for debug.
 %
 % Outputs:
 %   signal:                coefficient under a given basis, 4D image
-%   scaleImage :           3D image, where each voxel has a scale value for basis.
 %
 %
 % Copyright (c) 2013, Jian Cheng <jian.cheng.1983@gmail.com>

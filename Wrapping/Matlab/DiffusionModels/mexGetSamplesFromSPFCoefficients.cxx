@@ -29,7 +29,7 @@ template <typename T>
 {
   utlGlobalException(!utl::mexCheckType<T>(prhs[0]),"type of argument 1 is not consistent");
   utlGlobalException(!utl::mexCheckType<T>(prhs[1]),"type of argument 2 is not consistent");
-
+  
   typedef itk::VectorImage<T, 3>  VectorImageType;
   typedef itk::Image<double, 3>  ImageType;
   typedef utl::NDArray<T,2> MatrixType;
@@ -57,6 +57,9 @@ template <typename T>
     }
 
   const mxArray* params = nrhs==3?prhs[2]:prhs[3];
+  
+  int verbose = utl::GetScalarStructDef<int>(params,"verbose",1);
+  utl::LogLevel = verbose;
 
   double MD0 = utl::GetScalarStructDef<double>(params,"MD0",-1.0);
   double tau = utl::GetScalarStructDef<double>(params,"tau",ONE_OVER_4_PI_2);
@@ -67,13 +70,12 @@ template <typename T>
   utlGlobalException(ra<=0, "need to set ra");
   std::string basisType = utl::GetScalarStructDef<std::string>(params,"basisType","SPF");
   double radius = utl::GetScalarStructDef<double>(params,"radius",0.015);
-  mxArray* scaleImageArray = utl::GetArrayStruct(params, "scaleImage" );
+  mxArray* mdImageArray = utl::GetArrayStruct(params, "mdImage" );
   mxArray* maskArray = utl::GetArrayStruct(params, "mask" );
   bool fourier = utl::GetScalarStructDef<bool>(params,"fourier",false);
   bool inqspace = utl::GetScalarStructDef<bool>(params,"inqspace",true);
 
-  bool debug = utl::GetScalarStructDef<bool>(params,"debug",false);
-  int thread = utl::GetScalarStructDef<double>(params,"thread",-1);
+  int thread = utl::GetScalarStructDef<int>(params,"thread",-1);
 
   if (nrhs==4)
     {
@@ -103,10 +105,22 @@ template <typename T>
   else if (basisType=="DSPF")
     profEstimator->SetBasisType(ProfileFromSPFFilterType::DSPF);
 
-  if (scaleImageArray)
+  if (mdImageArray)
     {
+    typename ProfileFromSPFFilterType::ScalarImagePointer mdImage = ProfileFromSPFFilterType::ScalarImageType::New();
     typename ProfileFromSPFFilterType::ScalarImagePointer scaleImage = ProfileFromSPFFilterType::ScalarImageType::New();
-    itk::GetITKImageFromMXArray(scaleImageArray, scaleImage);
+    itk::GetITKImageFromMXArray(mdImageArray, mdImage);
+    typedef itk::SPFScaleFromMeanDiffusivityImageFilter<ImageType, ImageType>  ScaleFromMDfilterType;
+    ScaleFromMDfilterType::Pointer scaleFromMDfilter = ScaleFromMDfilterType::New();
+    scaleFromMDfilter->SetMD0(MD0);
+    scaleFromMDfilter->SetTau(tau);
+    if (basisType=="SPF" || basisType=="SHORE" || basisType=="DPI" || basisType=="QBI")
+      scaleFromMDfilter->SetIsOriginalBasis(true);
+    else if (basisType=="DSPF")
+      scaleFromMDfilter->SetIsOriginalBasis(false);
+    scaleFromMDfilter->SetInput(mdImage);
+    scaleFromMDfilter->Update();
+    scaleImage = scaleFromMDfilter->GetOutput();
     profEstimator->SetScaleImage(scaleImage);
     }
 
@@ -117,7 +131,8 @@ template <typename T>
     profEstimator->SetMaskImage(maskImage);
     }
 
-  profEstimator->SetDebug(debug);
+  profEstimator->SetDebug(utl::IsLogDebug());
+  profEstimator->SetLogLevel(utl::LogLevel);
   utl::InitializeThreadedLibraries(thread);
   if (thread>0)
     profEstimator->SetNumberOfThreads(thread);
