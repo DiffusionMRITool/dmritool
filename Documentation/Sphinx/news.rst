@@ -14,6 +14,29 @@ News
    :depth: 2
    :local:
 
+2017-02-28: DMRITool now uses C++11
+===================================
+
+* We use C++11 in DMRITool now. 
+
+  + NDArray now is more efficient with C++11. 
+  + The codes have to be built with gcc (>= 4.8), ITK (>= 4.9). Please check :doc:`the building instruction <building>`. 
+
+* Some algorithms and demos on sampling scheme design are released.
+
+  + Please check the :doc:`updated tutorial on sampling scheme design<tutorial_qspacesampling>`.
+  + 1-Opt: :doc:`SamplingSchemeQSpace1OptEstimation <commands/SamplingSchemeQSpace1OptEstimation>`, a new greedy algorithm which refines a given initialization. 
+    It can fix a known issue of :doc:`IMOC <commands/SamplingSchemeQSpaceIMOCEstimation>` when the number of samples is large. 
+    See `the tutorial <tutorial_qspacesampling.html#sampling-schemes-by-imoc-1-opt-cnlo>`__.
+  + CNLO: :doc:`OptimalSamplingSingleShellCNLO <matlabfiles/OptimalSamplingSingleSubset>` for single-shell scheme design. 
+  + CNLO: :doc:`OptimalSamplingMultiShellCNLO <matlabfiles/OptimalSamplingMultiShellCNLO>` for multiple-shell scheme design.
+  + jointly use IMOC + 1-Opt + CNLO for sampling scheme design:
+    
+    + `demo for single shell scheme <demos/demo_singleshell_IMOC_1Opt_CNLO.html>`__
+    + `demo for multiple shell scheme <demos/demo_mutishell_IMOC_1Opt_CNLO.html>`__
+
+
+
 2015-06-18: Some codes on sampling scheme design are released
 =============================================================
 
