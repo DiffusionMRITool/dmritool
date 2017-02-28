@@ -10,15 +10,16 @@ set (CMAKE_LIBRARY_OUTPUT_DIRECTORY
   "Library output directory")
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/CMake)
-include(ProjectCMakeFunctions)
-include(MatlabMakeMacros)
-
-option(BUILD_SHARED_LIBS "Build shared libs" ON)
-
 
 find_package(Matlab REQUIRED)
 include_directories(${MATLAB_INCLUDE_DIR})
+message("MATLAB_ROOT=${MATLAB_ROOT}")
 message("MATLAB_LIBRARIES=${MATLAB_LIBRARIES}")
+
+include(ProjectCMakeFunctions)
+include(MatlabMakeMacros)
+
+# option(BUILD_SHARED_LIBS "Build shared libs" ON)
 
 find_package(DMRITOOL REQUIRED)
 include(${DMRITOOL_USE_FILE})
