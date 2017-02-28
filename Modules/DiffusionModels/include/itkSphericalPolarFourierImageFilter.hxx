@@ -24,6 +24,7 @@
 #include "utlVNLBlas.h"
 #include "utl.h"
 
+#include <itkProgressReporter.h>
 
 namespace itk
 {

@@ -8,8 +8,10 @@
  * =====================================================================================
  */
 
-#include "itkScalarMapFromSPFImageFilter.h"
 #include "SPFToScalarMapCLP.h"
+#include "itkScalarMapFromSPFImageFilter.h"
+
+#include "itkCommandProgressUpdate.h"
 
 /**
  * \brief calculate RTO map from SPF coefficients  
@@ -30,7 +32,8 @@ main (int argc, char const* argv[])
   if (_MaskFileArg.isSet())
     itk::ReadImage<ScalarImageType>(_MaskFile, maskImage);
 
-  ScalarImageType::Pointer mdImage=NULL, scaleImage=NULL;
+  ScalarImageType::Pointer mdImage= ScalarImageType::New();
+  ScalarImageType::Pointer scaleImage= ScalarImageType::New();
   if (_MDImageFileArg.isSet())
     {
     itk::ReadImage<ScalarImageType>(_MDImageFile, mdImage);
@@ -72,9 +75,15 @@ main (int argc, char const* argv[])
   featureFromSPFFilter->SetInput(spf);
   if (_NumberOfThreads>0)
     featureFromSPFFilter->SetNumberOfThreads(_NumberOfThreads);
-  std::cout << "ODF estimation starts" << std::endl << std::flush;
+
+  itk::CommandProgressUpdate::Pointer observer =itk::CommandProgressUpdate::New();
+  if (_ShowProgressArg.isSet())
+    featureFromSPFFilter->AddObserver( itk::ProgressEvent(), observer );
+
+  std::cout << "Scalar map estimation starts" << std::endl << std::flush;
   featureFromSPFFilter->Update();
-  std::cout << "ODF estimation ends" << std::endl << std::flush;
+  std::cout << "Scalar map estimation ends" << std::endl << std::flush;
+
   ScalarImageType::Pointer p0 = featureFromSPFFilter->GetOutput();
   itk::SaveImage<ScalarImageType>(p0, _OutputFile);
   

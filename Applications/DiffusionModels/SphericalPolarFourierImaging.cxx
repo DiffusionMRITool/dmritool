@@ -16,18 +16,22 @@
  */
 
 #include "SphericalPolarFourierImagingCLP.h"
-#include "utl.h"
+
+#include "itkL1RegularizedLeastSquaresFISTASolver.h"
+
 #include "itkSphericalPolarFourierImageFilter.h"
 #include "itkDWIReader.h"
 #include "itkGeneralizedHighOrderTensorImageFilter.h"
 #include "itkFeaturesFromSPFImageFilter.h"
 #include "itkProfileFromSPFImageFilter.h"
 #include "itkODFFromSPFImageFilter.h"
-#include "itkL1RegularizedLeastSquaresFISTASolver.h"
 #include "itkSpamsWeightedLassoSolver.h"
 #include "itkSamplingSchemeQSpace.h"
 #include "itkSamplingScheme3D.h"
 
+#include "itkCommandProgressUpdate.h"
+
+#include "utl.h"
 
 /**
  * \brief  general SPFI using SPF basis
@@ -37,6 +41,9 @@ main (int argc, char const* argv[])
 {
   // GenerateCLP
   PARSE_ARGS;
+  
+  utl::LogLevel = _Verbose;
+  bool _Debug = _Verbose>=LOG_DEBUG;
 
   utlGlobalException(!_OutputEAPProfileFileArg.isSet() && !_OutputODFFileArg.isSet() && !_OutputSPFFileArg.isSet(), "no output");
 
@@ -45,18 +52,21 @@ main (int argc, char const* argv[])
   typedef itk::Image<PrecisionType, 3>  ImageType;
 
   typedef itk::DWIReader<PrecisionType>  DWIReaderType;
-
-  // read DWI, mdImage, mask
-  DWIReaderType::Pointer reader = DWIReaderType::New();
-  reader->GetSamplingSchemeQSpace()->SetTau(_Tau);
-  reader->SetConfigurationFile(_InputFile);
-  reader->Update();
-
+  
   ImageType::Pointer mdImage=NULL, maskImage=NULL;
   if (_MDImageFileArg.isSet())
     itk::ReadImage<ImageType>(_MDImageFile, mdImage);
   if (_MaskFileArg.isSet())
     itk::ReadImage<ImageType>(_MaskFile, maskImage);
+
+  // read DWI, mdImage, mask
+  DWIReaderType::Pointer reader = DWIReaderType::New();
+  reader->GetSamplingSchemeQSpace()->SetTau(_Tau);
+  reader->SetConfigurationFile(_InputFile);
+  if (_MaskFileArg.isSet())
+    reader->SetMaskImage(maskImage);
+  reader->Update();
+
 
 
   // SPFI
@@ -127,8 +137,11 @@ main (int argc, char const* argv[])
 
   spfiFilter->SetBasisEnergyPowerDL(1.0);
 
-  if (_Debug)
-    spfiFilter->DebugOn();
+  itk::CommandProgressUpdate::Pointer observer =itk::CommandProgressUpdate::New();
+  if (_ShowProgressArg.isSet())
+    spfiFilter->AddObserver( itk::ProgressEvent(), observer );
+  spfiFilter->SetDebug(_Verbose>=LOG_DEBUG);
+  spfiFilter->SetLogLevel(utl::LogLevel);
 
   std::cout << "SPF estimation starts" << std::endl << std::flush;
   spfiFilter->Update();

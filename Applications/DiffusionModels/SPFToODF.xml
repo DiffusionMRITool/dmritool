@@ -56,19 +56,19 @@
       <longflag>odfOrder</longflag>
     </integer-enumeration>
     
-    <float>
+    <double>
       <name>_BMax</name>
       <default>-1.0</default>
       <description>Maximal b value for disk integral. If it is -1, it is a plan integral.</description>
       <longflag>bMax</longflag>
-    </float>
+    </double>
     
-    <float>
+    <double>
       <name>_Scale</name>
       <default>-1.0</default>
       <description>Scale for SPF basis. If it is negative, the default value based on typical MD is used.</description>
       <longflag>scale</longflag>
-    </float>
+    </double>
     
     <image>
       <name>_MDImageFile</name>
@@ -91,19 +91,19 @@
       <default>-1</default>
     </integer>
     
-    <float>
+    <double>
       <name>_Tau</name>
       <default>ONE_OVER_4_PI_2</default>
       <description>Tau value. The default is calculated based on 4*pi*pi*tau=1. </description>
       <longflag>tau</longflag>
-    </float>
+    </double>
     
-    <float>
+    <double>
       <name>_MD0</name>
       <default>0.7e-3</default>
       <description>Typical MD value.</description>
       <longflag>md0</longflag>
-    </float>
+    </double>
     
 
     <boolean>

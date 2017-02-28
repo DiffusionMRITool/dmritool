@@ -4,9 +4,9 @@
   <title>Convert SPF coefficients to scalar maps.</title>
   <description>Estimate scalar maps using SPFI. \n\
     Examples: \n\
-    SPFToScalarMapConverter signalSPF.nii.gz rto.nii.gz --mapType RTO  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz \n\
-    SPFToScalarMapConverter signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz \n\
-    SPFToScalarMapConverter signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
+    SPFToScalarMap signalSPF.nii.gz rto.nii.gz --mapType RTO  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz \n\
+    SPFToScalarMap signalSPF.nii.gz msd.nii.gz --mapType MSD  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz \n\
+    SPFToScalarMap signalSPF.nii.gz pfa.nii.gz --mapType PFA  --sh 8 --ra 4 --mdImage D_sh4_ra1.nii.gz
   </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
@@ -48,12 +48,12 @@
       <default>1</default>
     </integer>
     
-    <float>
+    <double>
       <name>_Scale</name>
       <default>-1.0</default>
       <description>Scale for SPF basis. If it is negative, the default value based on typical MD is used.</description>
       <longflag>scale</longflag>
-    </float>
+    </double>
     
     <image>
       <name>_MDImageFile</name>
@@ -87,20 +87,28 @@
       <default>-1</default>
     </integer>
     
-    <float>
+    <double>
       <name>_Tau</name>
       <default>ONE_OVER_4_PI_2</default>
       <description>Tau value. The default is calculated based on 4*pi*pi*tau=1. </description>
       <longflag>tau</longflag>
-    </float>
+    </double>
     
-    <float>
+    <double>
       <name>_MD0</name>
       <default>0.7e-3</default>
       <description>Typical MD value.</description>
       <longflag>md0</longflag>
-    </float>
+    </double>
     
+    
+    <boolean>
+      <name>_ShowProgress</name>
+      <description>show progress of processing</description>
+      <longflag>progress</longflag>
+      <flag>p</flag>
+      <default>false</default>
+    </boolean>
 
     <boolean>
       <name>_Debug</name>
