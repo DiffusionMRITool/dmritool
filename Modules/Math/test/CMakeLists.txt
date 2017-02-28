@@ -5,6 +5,7 @@ add_test_application(itkFunctorHashTableTest itkFunctorHashTableTest ${BLAS_LIBR
 add_test_application(itkSphericalPolarFourierGeneratorTest itkSphericalPolarFourierGeneratorTest ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_test_application(itkSphericalHarmonicsGeneratorTest itkSphericalHarmonicsGeneratorTest ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 
+add_gtest_application(itkSpecialFunctionGeneratorGTest itkSpecialFunctionGeneratorGTest ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_gtest_application(itkSphericalHarmonicsGeneratorGTest itkSphericalHarmonicsGeneratorGTest ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_gtest_application(itkSHCoefficientsRotationGTest itkSHCoefficientsRotationGTest ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 add_gtest_application(itkUnaryFunctorLookUpTableGTest itkUnaryFunctorLookUpTableGTest ${ITK_LIBRARIES})
