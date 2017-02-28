@@ -154,14 +154,19 @@ public:
 
   const ValueType & operator()(unsigned int row, unsigned int col) const;
 
-  /** Return an array containing EigenValues in ascending order, and a matrix containing the corresponding Eigenvectors. 
+  /** 
+   * \brief Return an array containing EigenValues in ascending order, and a matrix containing the corresponding Eigenvectors. 
+   *
    * \param eigenVectors eigenvectors stored in vnl_matrix<TPrecision>, where each column is an eigenvector.
    * \note eigenvectors in \ref itk::SymmetricSecondRankTensor::ComputeEigenAnalysis stored as rows of \ref itk::Matrix
    * */
   void GetEigenValuesVectors(vnl_diag_matrix<TPrecision> & eigenValues, vnl_matrix<TPrecision> & eigenVectors) const;
   
-  /** analytic way to calculate eigenValues and eigenVectors.  
+  /** 
+   *  \brief analytic way to calculate eigenValues (in ascending order) and eigenVectors.  
    *  In mathematica, Eigenvectors[( { {a, b, c}, {b, d, e}, {c, e, f}  } )] 
+   *
+   * \param eigenVectors eigenvectors stored in vnl_matrix<TPrecision>, where each column is an eigenvector.
    *
    * \note: Eigenvalues can be obtained analytically. 
    * But there is a numerical issue when dividing a small number for calculating eigenvectors. 
@@ -181,7 +186,8 @@ public:
   /** Get a vnl_matrix with a copy of the internal memory  block. */
   inline vnl_matrix<TPrecision> GetVnlMatrix () const;
 
-  inline TPrecision GetDeterminant() const;
+  inline double GetDeterminant() const;
+  inline double GetNorm() const;
 
   /** Transform the tensor with a matrix */
   inline Self GetRotate (const typename Self::MatrixType& mat) const;
@@ -191,6 +197,12 @@ public:
   inline vnl_matrix<TPrecision> GetRotate (const vnl_matrix<TPrecision> & vec) const;
   
   double GetQuadraticForm( const double x, const double y, const double z) const;
+  
+  /** get spherical samples based on given gradients (Cartesian form).
+   * \note No boundary checking. The size of the input vec should be the same as the gradients.rows(), and vec should have the operator[].
+   * */
+  template <class TVectorType >
+  void GetSphericalSamples( TVectorType& vec, const utl::NDArray<TPrecision,2>& gradients) const;
 
   /** get the DWI samples based on given gradients (Cartesian form) and b values.
    * \note No boundary checking. The size of the input vec should be the same as the gradients.rows(), and vec should have the operator[].
@@ -219,6 +231,8 @@ public:
   RealValueType GetGA() const;
   /** FA  */
   RealValueType GetFA() const;
+  /** Mode  */
+  RealValueType GetMODE() const;
   /** RA  */
   RealValueType GetRA() const;
   /** Mean Diffusivity  */

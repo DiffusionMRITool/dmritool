@@ -309,6 +309,20 @@ template < class TPrecision>
 template < class TVectorType >
 void
 DiffusionTensor<TPrecision>
+::GetSphericalSamples ( TVectorType& samples, const utl::NDArray<TPrecision,2>& gradients) const
+{
+  for ( int i = 0; i < gradients.Rows(); i += 1 ) 
+    {
+    TPrecision x=gradients(i,0), y=gradients(i,1), z=gradients(i,2);
+    double quadratic = GetQuadraticForm(x,y,z);
+    samples[i] = GetQuadraticForm(x,y,z);
+    }
+}
+
+template < class TPrecision>
+template < class TVectorType >
+void
+DiffusionTensor<TPrecision>
 ::GetDWISamples ( TVectorType& dwisignal, const utl::NDArray<TPrecision,2>& gradients, const std::vector<TPrecision>& bValues) const
 {
   utlAssert(gradients.Rows()==bValues.size(), "wrong size! gradients.Rows()="<< gradients.Rows() << ", bValues.size()="<<bValues.size());
@@ -437,6 +451,23 @@ DiffusionTensor<TPrecision>
   return this->GetRelativeAnisotropy(); 
 }
 
+template < class TPrecision >
+typename DiffusionTensor<TPrecision>::RealValueType
+DiffusionTensor<TPrecision>
+::GetMODE () const
+{ 
+  double md = GetMD();
+  
+  Self dTensor(*this);
+  dTensor[0] -= md;
+  dTensor[3] -= md;
+  dTensor[5] -= md;
+
+  double dtNorm = dTensor.GetNorm();
+  dTensor /= dtNorm;
+  return 3.0*std::sqrt(6.0)*dTensor.GetDeterminant();
+}
+
 template<class TPrecision>
 bool
 DiffusionTensor<TPrecision>
@@ -514,12 +545,21 @@ DiffusionTensor<TPrecision>
 }
 
 template<class TPrecision>
-TPrecision
+double
 DiffusionTensor<TPrecision>
 ::GetDeterminant () const
 {
   const TPrecision* p = this->GetDataPointer();
   return -p[2]*p[2]*p[3] + 2.0*p[1]*p[2]*p[4] - p[0]*p[4]*p[4] - p[1]*p[1]*p[5] + p[0]*p[3]*p[5];
+}
+
+template<class TPrecision>
+double
+DiffusionTensor<TPrecision>
+::GetNorm () const
+{
+  const TPrecision* p = this->GetDataPointer();
+  return std::sqrt(p[0]*p[0]+2.0*p[1]*p[1]+2.0*p[2]*p[2] + p[3]*p[3]+ 2.0*p[4]*p[4] + p[5]*p[5]);
 }
 
 template<class TPrecision>
