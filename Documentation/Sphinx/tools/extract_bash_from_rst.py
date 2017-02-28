@@ -1,8 +1,14 @@
 #!/usr/bin/env python
 """
 Extract bash codes from a rst file.
+
 The extracted code bloacks must start with
 .. code-block:: shell
+
+or
+
+.. .. code-block:: shell
+
 """
 import argparse, re
 
@@ -29,9 +35,12 @@ def main():
 
     shstartcheck = re.compile(r'^.. code-block:: shell[ ]*$')
     shendcheck = re.compile(r'^[^\s]')
+
     shstart = False
+    shstart_c = False
     shlines = []
     for line in lines:
+
         if shstartcheck.match(line):
             shstart = True
             if with_comments:
@@ -39,8 +48,19 @@ def main():
             continue
         if shstart and line and shendcheck.match(line):
             shstart = False
+
+        if line[:24]=='.. .. code-block:: shell':
+            shstart_c = True
+            if with_comments:
+                shlines.append('#' + line.strip())
+            continue
+        if shstart_c and line.strip() and line[:4]!='..  ':
+            shstart_c = False
+
         if shstart :
             shlines.append(line.strip())
+        elif shstart_c :
+            shlines.append(line[5:].strip())
         else:
             if with_comments:
                 shlines.append('#' + line.strip())

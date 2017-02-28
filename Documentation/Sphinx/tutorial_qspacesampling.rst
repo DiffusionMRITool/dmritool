@@ -1,11 +1,24 @@
 ===================
-Sampling In Q-Space
+Sampling in Q-Space
 ===================
 
 .. meta::
    :description: tutorial on sampling in q-space for diffusion MRI
+
 .. include:: meta_keywords.txt
 .. include:: links.inc
+
+.. |single_shell| image:: .tutorial_qspacesampling/grad_single.png
+   :alt: single-shell scheme
+   :scale: 50%
+
+.. |multi_shell_1| image:: .tutorial_qspacesampling/grad_3shells.png
+   :alt: multi-shell scheme
+   :scale: 50%
+
+.. |multi_shell_2| image:: .tutorial_qspacesampling/grad_3shells_combine.png
+   :alt: multi-shell samples combined
+   :scale: 50%
 
 .. _uniformsampling:
 
@@ -21,11 +34,26 @@ Objectives
 ----------
 
 A good data sampling scheme is important for diffusion MRI acquisition and reconstruction. 
-Diffusion Weighted Imaging (DWI) data is normally acquired on single or multiple shells in q-space. 
+Diffusion Weighted Imaging (DWI) data is normally acquired on single or multiple shells in 3D q-space. 
 The samples in different shells are typically distributed uniformly, 
 because they should be invariant to the orientation of structures within tissue, or the laboratory coordinate frame. 
 These samples on single or multiple shells are better to be separated as far as possible.
 
+
+.. .. code-block:: shell
+   
+..   SamplingSchemeQSpaceIMOCEstimation grad_single.txt --numberOfSamples 60 --tessOrder 7
+..   OrientationsViewer grad_single_shell1.txt --png grad_single.png 
+  
+..   SamplingSchemeQSpaceIMOCEstimation grad_3shells.txt --numberOfSamples 30,30,30 --tessOrder 7
+..   OrientationsViewer grad_3shells_shell1.txt grad_3shells_shell2.txt grad_3shells_shell3.txt --radiusSphere 0.1 --png grad_3shells.png 
+..   OrientationsViewer grad_3shells_shell1.txt grad_3shells_shell2.txt grad_3shells_shell3.txt --combine --mesh --png grad_3shells_combine.png 
+
+
+===============================================    ===============================================     ===============================================
+          |single_shell|                                |multi_shell_1|                                 |multi_shell_2|
+        single-shell scheme                            multi-shell scheme                              multi-shell scheme (combined for visualization)
+===============================================    ===============================================     ===============================================
 
 
 In this tutorial, we are interested in two categories of spherical sampling problems in diffusion MRI, 
@@ -153,7 +181,7 @@ Thus you have to build C++ codes to run it.
 To generate a single shell scheme with 30 samples (P-C-S), you can run:
 
 .. code-block:: shell
-   
+
    SamplingSchemeQSpaceIMOCEstimation grad_30_IMOC.txt --numberOfSamples 30 --tessOrder 7 
    OrientationStatistics  grad_30_IMOC_shell1.txt
    OrientationsViewer grad_30_IMOC_shell1.txt --mesh --png grad_30_IMOC.png

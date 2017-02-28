@@ -49,9 +49,9 @@ utl::NDArray
 -  ``utl::NDArray<T,N>`` is an N-dimensional array based on `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__.
 -  ``utl::NDArray<T,1>`` and ``utl::NDArray<T,2>`` are more efficient than ``vnl_vector<T>`` and ``vnl_matrix<T>`` because
 
-  * ``utl::NDArray<T,N>`` were implemented based on openblas_, lapack_ or mkl_.
-  * ``utl::NDArray<T,N>`` use `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__ to avoid temporary copies.
-  * ``utl::NDArray<T,N>`` use `rvalue references and move constructors, move assignment from C++11 <https://en.wikipedia.org/wiki/C%2B%2B11#Rvalue_references_and_move_constructors>`__. 
+  * ``utl::NDArray<T,N>`` is implemented based on openblas_, lapack_ or mkl_.
+  * ``utl::NDArray<T,N>`` uses `expression template <http://en.wikipedia.org/wiki/Expression_templates>`__ to avoid temporary copies.
+  * ``utl::NDArray<T,N>`` uses `rvalue references and move constructors, move assignment from C++11 <https://en.wikipedia.org/wiki/C%2B%2B11#Rvalue_references_and_move_constructors>`__. 
 
 - You can run ``utlVNLBlasGTest`` and ``utlVNLLapackGTest`` to compare efficiency of ``utl::NDArray`` and ``vnl_vector``, ``vnl_matrix``.
 
