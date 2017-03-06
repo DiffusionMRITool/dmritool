@@ -15,6 +15,10 @@ DMRITool's documentation
     :target: https://travis-ci.org/DiffusionMRITool/dmritool
     :alt: travis-ci Status             
 
+.. image:: https://api.codacy.com/project/badge/Grade/13b3fe25b4b84ac6a413bb31e29d58fc    
+    :target: https://www.codacy.com/app/JianCheng/dmritool?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=DiffusionMRITool/dmritool&amp;utm_campaign=Badge_Grade
+    :alt: Codacy Status             
+
 
 Introduction
 ============
