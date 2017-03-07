@@ -3,7 +3,7 @@
 % This is a demo to generate a single-shell scheme with 81 samples
 % by using IMOC + 1-Opt + CNLO. 
 % 
-% OptimalSamplingMultiShellCNLO is in matlab. But to run IMOC and 1-Opt, you need to build the dmritool C++ codes.
+% OptimalSamplingSingleShellCNLO is in matlab. But to run IMOC and 1-Opt, you need to build the dmritool C++ codes.
 % 
 % Reference:
 %   "Novel single and multiple shell uniform sampling schemes for diffusion MRI using spherical codes", 
