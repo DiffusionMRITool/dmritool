@@ -72,8 +72,8 @@ main (int argc, char const* argv[])
     utlPrintVar2(_DebugArg.isSet(), iMax, jMax);
     }
 
-  std::cout << "maximal distance = " << maxDist << ", between " << iMax+1 << "-th sample ("<< grad1->GetRow(iMax) <<") in file " << _InputFile1 << 
-    " and " << jMax+1 << "-th sample (" << grad2->GetRow(jMax) << ") in file " << _InputFile2 << std::endl << std::flush;
+  std::cout << "maximal Euclidean distance = " << maxDist << ", angular distance = " << std::acos(1-maxDist*maxDist*0.5)/M_PI*180 << " degree, between the " << iMax+1 << "-th sample ["<< utl::UtlVectorToStdVector(grad1->GetRow(iMax)) <<"] in file " << _InputFile1 << 
+    " and the " << jMax+1 << "-th sample [" << utl::UtlVectorToStdVector(grad2->GetRow(jMax)) << "] in file " << _InputFile2 << std::endl << std::flush;
   
   return 0;
 }
