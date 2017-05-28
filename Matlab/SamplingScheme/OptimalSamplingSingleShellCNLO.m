@@ -1,4 +1,4 @@
-function [grad, xopt, fopt, retcode] = optimalSamplingSingleShell_nlopt(gradInitial, param)
+function [grad, xopt, fopt, retcode] = OptimalSamplingSingleShellCNLO(gradInitial, param)
 % update gradients from an initial gradient set, such that the updated gradients are evenly distributed. 
 %
 % INPUT
