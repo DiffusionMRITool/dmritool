@@ -216,7 +216,7 @@ TEST(utlCore, print)
     }
     {
     std::ostringstream oss;
-    utlOSPrintVar(true, oss, a_d, a_i, a_b);
+    PrintVar(true, oss, a_d, a_i, a_b);
     EXPECT_EQ(oss.str(), "(a_d, a_i, a_b) = (2, 1, true)\n");
     }
 }

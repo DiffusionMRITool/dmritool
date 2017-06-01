@@ -370,7 +370,7 @@ public:
 template<typename EType>                                                                         \
 inline NDArrayBase<T,Dim>& operator saver (const Expr<EType, typename EType::ValueType>& src){   \
   auto srcDim = Expr<EType, typename EType::ValueType>::GetDimension();                          \
-  utlSAException(srcDim>0 && srcDim!=Dimension)                                                  \
+  utlSAGlobalException(srcDim>0 && srcDim!=Dimension)                                            \
     (srcDim)(Dimension).msg("the expression has a difference size");                             \
   const EType &r = src.ConstRef();                                                               \
   const ShapeType rShape = r.GetShape();                                                         \

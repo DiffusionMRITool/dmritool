@@ -246,6 +246,11 @@ GetVectorImageVectorSize(const SmartPointer<ImageType>& image)
     typename ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
     return size[ImageType::ImageDimension-1];
     }
+  else
+    {
+    utlGlobalException(true, "not supported");
+    return -1;
+    }
 }
 
 template <class ImageType>

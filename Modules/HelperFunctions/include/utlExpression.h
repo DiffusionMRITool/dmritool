@@ -222,8 +222,8 @@ public:
     typedef typename Superclass::ShapeType        ShapeType;
 
     const TLeft& m_Left;
-    OP m_OP;
     ValueType m_Scalar;
+    OP m_OP;
 
     /** the two inputs should have the same shape, or at least one is a object of ScalarExpr  */
     BinaryOpExpr(const TLeft& lhs, const ScalarExprBase<ValueT>& rhs): m_Left(lhs), m_Scalar(rhs.m_Scalar), m_OP(OP())
@@ -256,8 +256,8 @@ public:
     typedef typename Superclass::ShapeType        ShapeType;
 
     const TRight& m_Right;
-    OP m_OP;
     ValueType m_Scalar;
+    OP m_OP;
 
     /** the two inputs should have the same shape, or at least one is a object of ScalarExpr  */
     BinaryOpExpr(const ScalarExprBase<ValueT>& lhs, const TRight& rhs): m_Right(rhs), m_Scalar(lhs.m_Scalar), m_OP(OP())
@@ -289,9 +289,9 @@ public:
     typedef typename Superclass::SizeType         SizeType;
     typedef typename Superclass::ShapeType        ShapeType;
 
-    OP m_OP;
     ValueType m_Scalar1;
     ValueType m_Scalar2;
+    OP m_OP;
 
     /** the two inputs should have the same shape, or at least one is a object of ScalarExpr  */
     BinaryOpExpr(const ScalarExprBase<ValueT1>& lhs, const ScalarExprBase<ValueT2>& rhs): m_Scalar1(lhs.m_Scalar), m_Scalar2(rhs.m_Scalar), m_OP(OP())
