@@ -158,7 +158,7 @@ SwapBytes(void *ptr, const int sizePerElement, const int count)
 }
 
 template <typename T>
-inline T median(std::vector<T> values) 
+inline T median_element(std::vector<T> values) 
 {
   // values does not change after median
   const unsigned int N = values.size();
@@ -167,13 +167,13 @@ inline T median(std::vector<T> values)
 }
 
 template <class T>
-inline T min(const std::vector<T> v)
+inline T min_element(const std::vector<T>& v)
 {
   return *std::min_element(v.begin(), v.end());
 }
 
 template <class T>
-inline T max(const std::vector<T> v)
+inline T max_element(const std::vector<T>& v)
 {
   return *std::max_element(v.begin(), v.end());
 }
@@ -236,6 +236,21 @@ template<typename T> inline const T& max(const T& a,const T& b) { return a>=b?a:
 template<typename T> inline const T& max(const T& a,const T& b,const T& c) { return max(max(a,b),c); }
 //! Return the maximum between \p a,\p b,\p c and \p d.
 template<typename T> inline const T& max(const T& a,const T& b,const T& c,const T& d) { return max(max(a,b,c),d); }
+
+#define __utl_minmax(T0_, T1_, T2_)  \
+  inline const T0_ min(const T1_ a, const T2_ b) {return a<=b?a:b; }  \
+  inline const T0_ min(const T2_ a, const T1_ b) {return a<=b?a:b; }  \
+  inline const T0_ max(const T1_ a, const T2_ b) {return a>=b?a:b; }  \
+  inline const T0_ max(const T2_ a, const T1_ b) {return a>=b?a:b; }
+
+__utl_minmax(unsigned int, unsigned int, size_t);
+__utl_minmax(int, unsigned int, int);
+__utl_minmax(int, int, size_t);
+__utl_minmax(double, double, float);
+__utl_minmax(double, double, int);
+__utl_minmax(double, float, int);
+
+#undef __utl_minmax
 
 //! Return the sign of \p x.
 template<typename T> inline int  sign(const T& x) { return (x<0)?-1:(x==0?0:1); }
