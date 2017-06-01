@@ -111,20 +111,11 @@ Linux and Mac
   -  If you use an old version of ITK (<4.9), you may have to set ``CMAKE_CXX_FLAGS=-fpermissive`` to build the codes. 
      That is `a known issue of ITK with c++11 support <https://itk.org/pipermail/insight-developers/2015-December/024705.html>`_, which is solved after ITK 4.9. 
 
-
-5. build tests (optional, but suggested) ::
-
-      make test
-
-  - Set ``BUILD_TESTING`` ``ON`` to build tests. 
-  - Make sure all tests are successfully passed. Otherwise the routines may not run correctly.  
-
-
-6. build doxygen_ document (optional) ::
+5. build doxygen_ document (optional) ::
 
       make doxygen
 
-7. Set environments. 
+6. Set environments. 
 
   - You can add ``dmritool-build/bin`` into your ``PATH`` to use the binary executables easily.
   - When ``DMRITOOL_WRAP_MATLAB`` is set ``ON``, the built mex executables are in ``dmritool-build/Wrapping/Matlab/bin``. 
@@ -137,6 +128,14 @@ Linux and Mac
     If you use openblas_, then set ``blas_version`` as ::
 
        export BLAS_VERSION="/usr/local/lib/libopenblas.so"
+
+7. build tests (optional, but suggested) ::
+
+      make test
+
+  - Set ``BUILD_TESTING`` ``ON`` to build tests. 
+  - Make sure all tests are successfully passed. Otherwise the routines may not run correctly.  
+
 
 Windows
 --------
