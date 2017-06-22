@@ -31,6 +31,9 @@ import utlVTK
 
 def arg_values(value, typefunc, numberOfValues):
     '''set arguments based using comma. If numberOfValues<0, it supports arbitrary number of inputs.'''
+    value = value.strip()
+    if value[0]=='(' and value[-1]==')':
+        value = value[1:-1]
     values = value.split(',')
     if numberOfValues > 0 and len(values) != numberOfValues:
         raise argparse.ArgumentError
@@ -39,8 +42,13 @@ def arg_values(value, typefunc, numberOfValues):
 
 def arg_bool(parser, boolarg, defaultbool, helpdoc):
     '''set bool argment'''
-    parser.add_argument('--' + boolarg, dest=boolarg, action='store_true', help='with ' + boolarg + '. ' + helpdoc)
-    parser.add_argument('--no-' + boolarg, dest=boolarg, action='store_false', help='without ' + boolarg + '. ' + helpdoc)
+    group = parser.add_mutually_exclusive_group()
+    if defaultbool:
+        group.add_argument('--' + boolarg, dest=boolarg, action='store_true', help='with ' + boolarg + ' (default). ' + helpdoc)
+        group.add_argument('--no-' + boolarg, dest=boolarg, action='store_false', help='without ' + boolarg + '. ' + helpdoc)
+    else:
+        group.add_argument('--no-' + boolarg, dest=boolarg, action='store_false', help='without ' + boolarg + ' (default). ' + helpdoc)
+        group.add_argument('--' + boolarg, dest=boolarg, action='store_true', help='with ' + boolarg + '. ' + helpdoc)
     exec ''.join(['parser.set_defaults(', boolarg, '=', 'True' if defaultbool else 'False', ')'])
 
 
@@ -54,7 +62,7 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__,  formatter_class=argparse.RawTextHelpFormatter)
 
     # vtk data
-    parser.add_argument('--vtk', help='.vtk PolyData input', nargs='*')
+    parser.add_argument('--vtk', help='VTK PolyData (.vtk, .vtp, etc) input, multiple inputs.', nargs='*')
     arg_bool(parser, 'frame', False, 'Visualize frame.')
     arg_bool(parser, 'surface', True, 'Visualize surface.')
     arg_bool(parser, 'normal', True, 'Use vtkPolyDataNormals for polydata visualization.')
@@ -68,9 +76,9 @@ def main():
     parser.add_argument('--sliceX', help='x-axis slices of the image', type=(lambda value: arg_values(value, int, -1)), metavar=('x1,x2,...'))
     parser.add_argument('--sliceY', help='y-axis slices of the image', type=(lambda value: arg_values(value, int, -1)), metavar=('y1,y2,...'))
     parser.add_argument('--sliceZ', help='z-axis slices of the image', type=(lambda value: arg_values(value, int, -1)), metavar=('z1,z2,...'))
-    parser.add_argument('--image-range', help='lowest and highest contrast value for the image visualization. If not set, use the minimal and maximal values in the image. \
-                        Default: (-1,-1) means the (min,max) from the image', default=(-1, -1),
-                        type=(lambda value: arg_values(value, float, 2)), metavar=('lowest value, highest value'))
+    parser.add_argument('--image-range', help='lowest and highest contrast value for the image visualization. If not set, use the minimal and maximal values in the image. \n\
+                        Default: (-1,-1) means the (min,max) from the image', default=(-1.0, -1.0),
+                        type=(lambda value: arg_values(value, float, 2)), metavar=('lowest,highest'))
 
     # camera
     parser.add_argument('--angle', help='azimuth and elevation for camera',
@@ -85,7 +93,7 @@ def main():
                         type=(lambda value: arg_values(value, float, 3)), metavar=('r,g,b'), default=(0, 0, 0))
     parser.add_argument('--size', help='Window size in pixels. Default: (600,600)', default=(600, 600),
                         type=(lambda value: arg_values(value, int, 2)), metavar=('width,height'))
-    parser.add_argument('--clipping-range', help='Window size in pixels',
+    parser.add_argument('--clipping-range', help='Camera clipping range',
                         type=(lambda value: arg_values(value, float, 2)), metavar=('near,far'))
 
     parser.add_argument('--png', help='Output PNG file',
@@ -142,6 +150,19 @@ def main():
                         surface_mapper.SetInputData(polyData)
                     except:
                         surface_mapper.SetInput(polyData)
+
+                # lut when scalar is used for colors
+                if polyData.GetPointData().GetScalars() and polyData.GetPointData().GetScalars().GetNumberOfComponents()==1:
+                    lut = vtk.vtkLookupTable()
+                    valueRange = polyData.GetScalarRange()
+                    lut.SetTableRange(valueRange[0], valueRange[1])
+                    lut.SetHueRange(0.6667, 0)
+                    #  lut.SetRange(0, 1)
+                    lut.SetRampToLinear()
+                    lut.Build()
+
+                    surface_mapper.SetLookupTable(lut)
+                    surface_mapper.SetScalarRange(valueRange[0], valueRange[1])
 
                 surface_actor = vtk.vtkLODActor()
                 surface_actor.SetMapper(surface_mapper)

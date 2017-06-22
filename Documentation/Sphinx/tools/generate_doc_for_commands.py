@@ -8,6 +8,10 @@ then generate rst file for sphinx.
 import argparse
 import os, subprocess, re, glob
 
+apps_added={
+    'Visualization' :
+        ['vtkviewer', 'VTKPolyData.py', 'VTKPolyData_gui.py', 'CombineVTKPolyData.py', 'MeshFromLocalFrame.py']
+}
 
 def which(exe):
     for dir in os.getenv("PATH").split(':'):
@@ -41,11 +45,9 @@ def generate_cmd_lists(appfolder):
             app_list = [os.path.splitext(os.path.basename(name))[0] for name in app_list]
 
         # add vtkviewer into Visualization
-        if app_category=='Visualization':
-            app_list.append('vtkviewer')
-            app_list.append('VTKPolyData.py')
-            app_list.append('CombineVTKPolyData.py')
-            app_list.append('MeshFromLocalFrame.py')
+        if app_category in apps_added:
+            for app_tmp in apps_added[app_category]:
+                app_list.append(app_tmp)
 
         app_list = [name for name in app_list if is_exe(name)]
         app_list = sorted(app_list)
