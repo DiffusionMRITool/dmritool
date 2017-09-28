@@ -19,6 +19,10 @@
 
 #include "VectorImageNormalizationCLP.h"
 
+#include "itkSpatiallyDenseSparseVectorImage.h"
+#include "itkSpatiallyDenseSparseVectorImageFileReader.h"
+#include "itkSpatiallyDenseSparseVectorImageFileWriter.h"
+
 /**
  * \brief  Normalize each voxel in a VectorImage or SparseVectorImage
  *
@@ -33,31 +37,66 @@ main (int argc, char const* argv[])
   utlGlobalException(_NormalizationType=="NONE", "need to set --type");
 
   typedef float PixelType;
+  bool isSparseImage = itk::IsSparseImage(_InputFile);
 
-  typedef itk::VectorImage<PixelType, 3> InputImageType;
-  typedef itk::VectorImage<PixelType, 3> OutputImageType;
+  if (isSparseImage)
+    {
+    typedef itk::SpatiallyDenseSparseVectorImage<PixelType, 3> InputImageType;
+    typedef itk::SpatiallyDenseSparseVectorImage<PixelType, 3> OutputImageType;
 
-  InputImageType::Pointer input = InputImageType::New();
-  OutputImageType::Pointer output = OutputImageType::New();
+    InputImageType::Pointer input = InputImageType::New();
+    OutputImageType::Pointer output = OutputImageType::New();
+    typedef itk::SpatiallyDenseSparseVectorImageFileReader<InputImageType> ReaderType;
+    typedef itk::SpatiallyDenseSparseVectorImageFileWriter<OutputImageType> WriterType;
 
-  itk::ReadImage(_InputFile, input);
+    itk::ReadImage<InputImageType, ReaderType>(_InputFile, input);
 
-  typedef itk::NormalizeVectorImageFilter<InputImageType, OutputImageType> FilterType;
-  FilterType::Pointer filter = FilterType::New();
+    typedef itk::NormalizeVectorImageFilter<InputImageType, OutputImageType> FilterType;
+    FilterType::Pointer filter = FilterType::New();
 
-  filter->SetInput(input);
-  if (_NormalizationType=="SUM")
-    filter->SetNormalizeType(FilterType::FunctorType::SUM);
-  else if (_NormalizationType=="L1NORM")
-    filter->SetNormalizeType(FilterType::FunctorType::L1NORM);
-  else if (_NormalizationType=="L2NORM")
-    filter->SetNormalizeType(FilterType::FunctorType::L2NORM);
+    filter->SetInput(input);
+    if (_NormalizationType=="SUM")
+      filter->SetNormalizeType(FilterType::FunctorType::SUM);
+    else if (_NormalizationType=="L1NORM")
+      filter->SetNormalizeType(FilterType::FunctorType::L1NORM);
+    else if (_NormalizationType=="L2NORM")
+      filter->SetNormalizeType(FilterType::FunctorType::L2NORM);
 
-  filter->Update();
+    // NOTE: SparseVectorImage only works for single thread
+    filter->SetNumberOfThreads(1);
+    filter->Update();
 
-  output = filter->GetOutput();
+    output = filter->GetOutput();
 
-  itk::SaveImage(output, _OutputFile);
+    itk::SaveImage<OutputImageType, WriterType>(output, _OutputFile);
+    }
+  else
+    {
+    typedef itk::VectorImage<PixelType, 3> InputImageType;
+    typedef itk::VectorImage<PixelType, 3> OutputImageType;
+
+    InputImageType::Pointer input = InputImageType::New();
+    OutputImageType::Pointer output = OutputImageType::New();
+
+    itk::ReadImage(_InputFile, input);
+
+    typedef itk::NormalizeVectorImageFilter<InputImageType, OutputImageType> FilterType;
+    FilterType::Pointer filter = FilterType::New();
+
+    filter->SetInput(input);
+    if (_NormalizationType=="SUM")
+      filter->SetNormalizeType(FilterType::FunctorType::SUM);
+    else if (_NormalizationType=="L1NORM")
+      filter->SetNormalizeType(FilterType::FunctorType::L1NORM);
+    else if (_NormalizationType=="L2NORM")
+      filter->SetNormalizeType(FilterType::FunctorType::L2NORM);
+
+    filter->Update();
+
+    output = filter->GetOutput();
+
+    itk::SaveImage(output, _OutputFile);
+    }
 
   return 0;
 }

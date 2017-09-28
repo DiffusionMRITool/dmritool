@@ -1,0 +1,2 @@
+project(ITKSpatiallyDenseSparseVectorImage)
+itk_module_impl()
