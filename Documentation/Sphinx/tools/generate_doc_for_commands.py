@@ -10,7 +10,7 @@ import os, subprocess, re, glob
 
 apps_added={
     'Visualization' :
-        ['vtkviewer', 'VTKPolyData.py', 'VTKPolyData_gui.py', 'CombineVTKPolyData.py', 'MeshFromLocalFrame.py']
+        ['vtkviewer', 'VTKPolyData.py', 'VTKPolyData_gui.py', 'CombineVTKPolyData.py']
 }
 
 def which(exe):

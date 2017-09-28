@@ -15,7 +15,7 @@ With DMRITool, you can:
 * perform reconstruction/estimation of diffusion data, including diffusion weighted signal, ensemble average propagator (EAP), diffusion orientation distribution function (dODF), and some meaningful scalar maps, etc.
 * generate spherically uniform sampling schemes for single or multiple shells.
 * perform diffusion MRI data simulation.
-* visualize spherical function field (e.g. dODF field, EAP profile field)
+* visualize spherical function fields (e.g. dODF fields, EAP profile fields)
 
 
 

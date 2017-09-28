@@ -165,9 +165,9 @@ But please set the scale in SPF basis correctly based the mean diffusivity used 
 
 .. code-block:: shell
   
-    MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 8e-6
+    MeshFromSHCoefficients eap_r0.015.nii.gz -o eap_r0.015_vis.vtk --tessorder 4 --scale 8e-6
     VTKPolyData.py --vtk eap_r0.015_vis.vtk --png synthetic_eap_r0.015.png --zoom 1.3
-    MeshFromSHCoefficients odf.nii.gz odf_vis.vtk --tessorder 4 --scale 1.5
+    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5
     VTKPolyData.py --vtk odf_vis.vtk --png synthetic_odf.png --zoom 1.3
 
 .. figure:: .tutorial_spfi/synthetic_eap_r0.015.png
@@ -291,13 +291,13 @@ Generate a coarse mesh (``--tessorder 3``) for visualization the EAP profiles in
 
 ::
 
-  MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_visall.vtk --tessorder 3 --scale 1e-5 
+  MeshFromSHCoefficients eap_r0.015.nii.gz -o eap_r0.015_visall.vtk --tessorder 3 --scale 1e-5 
 
 Generate a fine mesh (``--tessorder 4``) for visualization the EAP profiles in a ROI. 
 
 ::
 
-  MeshFromSHCoefficients eap_r0.015.nii.gz eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 --box 80,100,0,0,70,90
+  MeshFromSHCoefficients eap_r0.015.nii.gz -o eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 --box 80,100,0,0,70,90
 
 You can use :doc:`VTKPolyData.py <commands/VTKPolyData.py>` or paraview_ to visualize the vtk files.
 

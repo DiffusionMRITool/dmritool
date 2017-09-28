@@ -82,6 +82,9 @@ These two problem categories include the following application problems.
   how to uniformly select several subsets from these samples, 
   and meanwhile make all selected samples from all shells separated as far as possible? 
   It is related with P-C-M by discretizing the continuous sphere using many points. 
+* **Acquisition ordering problem (P-O)**.
+  Given a single or multiple shell scheme, how does one optimize the acquisition order of the samples, 
+  such that an interruption at any point of the acquisition can still yield a nearly uniform sampling scheme? 
 
   
 .. Note:: Considering the diffusion signal is antipodal symmetric, the antipodal symmetric samples have the same role. 
@@ -118,14 +121,14 @@ These schemes have been stored in ``Data/Packing`` folder in dmritool.
 
 .. Note:: The schemes by SC formulation in `Sloane's collection`_ have larger covering radii than the schemes by EEM in CAMINO_. 
 
-[Cheng2014]_ [Cheng2015]_ generalized the SC formulation to multi-shell case by solving:
+[ChengMICCAI2014]_, [ChengMICCAI2015]_, and [ChengTMI2017]_ generalized the SC formulation to multi-shell case by solving:
 
 .. math::
 
   \max_{\{\uu_{s,i} \in \mathbb{S}^2 \}} wS^{-1} \sum_{s=1}^{S}  d(\{\uu_{s,i}\}_{i=1}^{K_s})  + (1-w) d(\{\uu_{s,i}\}_{i=1,\dots,K_s; s=1,\dots, S}), 
 
 where :math:`w` is the weighting factor to balance the uniformity of each single shell and the global combined shell containing all samples. 
-[Cheng2014]_ and [Cheng2015]_ also proposed several methods for single and multi-shell sampling scheme design:
+[ChengTMI2017]_ also proposed several methods for single and multi-shell sampling scheme design:
 
 * a mixed integer linear programming (MILP) method to solve the discrete problems P-D-SS, P-D-MM, P-D-MS. 
 * an efficient greedy method called Iterative Maximum Overlap Construction (IMOC) to approximately solve the continuous problems P-C-S and P-C-M. 
@@ -192,7 +195,7 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
    :alt: grad_30_IMOC.png
 
 * The ``tessOrder`` option is the order of sphere tessellation to discretize the continuous sphere. 
-  [Cheng2015]_ showed that with a finer sphere tessellation IMOC obtains a larger covering radius. 
+  [ChengTMI2017]_ showed that with a finer sphere tessellation IMOC obtains a larger covering radius. 
   However finer sphere tessellation takes longer time for IMOC.  
   For ``--tessOrder 7``, which uses ``20481`` samples in the hemisphere, IMOC normally finishes in seconds. 
 * :doc:`OrientationStatistics <commands/OrientationStatistics>`  is to show the covering radius of the estimated scheme. 
@@ -201,7 +204,7 @@ To generate a single shell scheme with 30 samples (P-C-S), you can run:
 
 .. Note:: The single shell schemes by IMOC have larger covering radii than the schemes by EEM in CAMINO_. 
    With finer sphere tessellation, IMOC schemes approximately have the similar covering radii with the schemes in `Sloane's collection`_ 
-   Please see the experiments in [Cheng2015]_ and `this repository <https://github.com/DiffusionMRITool/dmritool-MultiShellSampling>`__.
+   Please see the experiments in [ChengTMI2017]_ and `this repository <https://github.com/DiffusionMRITool/dmritool-MultiShellSampling>`__.
 
 To generate a 3 shell scheme with 28 samples per shell (P-C-M), you can run:
 
@@ -268,8 +271,8 @@ Experiments in the papers
 -------------------------
  
 `This repository <https://github.com/DiffusionMRITool/dmritool-MultiShellSampling>`__ has some results and codes 
-to reproduce the results showed in the papers [Cheng2014]_ [Cheng2015]_. 
-To run the demos, you need to download matlab codes in dmritool_.
+to reproduce the results showed in the papers [ChengMICCAI2014]_, [ChengMICCAI2015]_, and [ChengTMI2017]_. 
+To run the demos, you need to download matlab codes in DMRITool_.
 
 ::
 
@@ -289,8 +292,10 @@ Then add ``dmritool/Matlab`` folder into the matlab path.
 .. [Toth1949]  L.F. Toth, On the densest packing of spherical caps, The American Mathematical Monthly 1949.
 .. [Conway1996] J. H. Conway, R. H. Hardin and N. J. A. Sloane, 
    `Packing Lines, Planes, etc., Packings in Grassmannian Spaces <http://neilsloane.com/doc/grass.pdf>`__, Experimental Mathematics, 1996. 
-.. [Cheng2014]  Jian Cheng, Dinggang Shen, Pew-Thian Yap, 
-   `Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code <https://hal.archives-ouvertes.fr/hal-01011897/file/sampling_MICCAI2014.pdf>`__, MICCAI 2014
-.. [Cheng2015]  Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, 
-   `Novel Single and Multiple Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes <https://hal.archives-ouvertes.fr/hal-01154774/file/sampling_MICCAI2015.pdf>`__, MICCAI 2015
+.. [ChengMICCAI2014]  Jian Cheng, Dinggang Shen, Pew-Thian Yap, 
+   `Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code <https://hal.archives-ouvertes.fr/hal-01011897/file/sampling_MICCAI2014.pdf>`__, MICCAI 2014.
+.. [ChengMICCAI2015]  Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, 
+   `Novel Single and Multiple Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes <https://hal.archives-ouvertes.fr/hal-01154774/file/sampling_MICCAI2015.pdf>`__, MICCAI 2015.
+.. [ChengTMI2017]  Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, 
+   `Single- and Multiple-Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes <https://arxiv.org/pdf/1706.06682.pdf>`__, IEEE Transactions on Medical Imaging (TMI), 2017.
 

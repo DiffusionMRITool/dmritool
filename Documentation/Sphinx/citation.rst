@@ -35,15 +35,10 @@ related references.
          `Regularized Spherical Polar Fourier Diffusion MRI with Optimal Dictionary Learning <https://hal.archives-ouvertes.fr/file/index/docid/824507/filename/DL_SPFI_MICCAI.pdf>`__, |br|
          16th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI'13), Nagoya, September 22-26, 2013 
    
-   *  -  MILP for sampling scheme design |br|
-         (combinatorial discrete problems)
-      -  Jian Cheng, Dinggang Shen, Pew-Thian Yap, |br|
-         `Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code <https://hal.archives-ouvertes.fr/hal-01011897/file/sampling_MICCAI2014.pdf>`__, |br|
-         17th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI'14), Boston, September 14-18, 2014. 
-
-   *  -  IMOC for sampling scheme design |br|
-         (continuous problems)
+   *  -  Sampling scheme design using Spherical Codes (SC) |br|
+         (continuous and discrete problems)
       -  Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, |br|
-         `Novel Single and Multiple Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes <https://hal.archives-ouvertes.fr/hal-01154774/file/sampling_MICCAI2015.pdf>`__, |br|
-         18th International Conference on Medical Image Computing and Computer Assisted Intervention (MICCAI'15), Munich, October 5-9, 2015. 
+         `Single- and Multiple-Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes <https://arxiv.org/pdf/1706.06682.pdf>`__, |br|
+         IEEE Transactions on Medical Imaging (TMI), 2017.
+
 
