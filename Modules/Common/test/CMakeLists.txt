@@ -1,1 +1,4 @@
 
+add_test_application(itkVectorImageRegionIteratorWithIndexTest itkVectorImageRegionIteratorWithIndexTest ${ITK_LIBRARIES})
+
+add_clp_test_application(itkUnaryFunctorVectorImageFilterTest  itkUnaryFunctorVectorImageFilterTest ${ITK_LIBRARIES} ${BLAS_LIBRARIES})

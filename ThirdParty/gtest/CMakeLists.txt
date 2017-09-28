@@ -29,4 +29,4 @@ set(GTEST_LIBS_DIR ${binary_dir}/googlemock/gtest)
 
 include_directories(${GTEST_INCLUDE_DIRS})
 
-add_subdirectory(test)
+# add_subdirectory(test)

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Image Operator</category>
+  <title>Print image</title>
+  <description>print image (4D image, tensors, SH coefficients).</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    <image type="vector">
+      <name>_InputImageFile</name>
+      <description>Input image file (VectorImage or 4D image).</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+
+    <image type="vector">
+      <name>_BaseImageFile</name>
+      <description>Input baseline image file (VectorImage or 4D image). If provided, show the differnece between two images. </description>
+      <longflag>baseline</longflag>
+      <flag>b</flag>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_MaskImageFile</name>
+      <description>Mask image file.</description>
+      <longflag>mask</longflag>
+      <flag>m</flag>
+      <channel>input</channel>
+    </image>
+    
+    <integer-vector>
+      <name>_Box</name>
+      <label>views</label>
+      <description>only generate mesh from a given box (x0,x1,y0,y1,z0,z1).</description>
+      <longflag>--box</longflag>
+      <default>-1,-1,-1,-1,-1,-1</default>
+    </integer-vector>
+    
+    <double>
+      <name>_Power</name>
+      <description>Power argument. 1.0: original value on mesh, 2.0: pow 2, 0.5: sqrt.</description>
+      <longflag>power</longflag>
+      <default>1.0</default>
+    </double>
+
+    <file>
+    <name>_OrientationsFile</name>
+    <label>Orientations File</label>
+    <description>Text file that contains the gradient orientations of the data. It is to generate spherical function samples when the input image is SH coefficients.</description>
+    <longflag>grad</longflag>
+    <flag>g</flag>
+    <channel>input</channel>
+    </file>
+    
+    <boolean>
+      <name>_PrintAllVoxels</name>
+      <description>If set, print all voxels. Otherwise, print only non-zero voxels</description>
+      <longflag>all</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <integer-enumeration>
+      <name>_DifferencePercent</name>
+      <description>0: do not show difference percentage; 1: show percentage of the diff when -b is given; 2: show only the summary of percentage.</description>
+      <longflag>percentage</longflag>
+      <flag>p</flag>
+      <default>0</default>
+      <element>0</element>
+      <element>1</element>
+      <element>2</element>
+    </integer-enumeration>
+    
+    <string-enumeration>
+      <name>_TensorStorageFormat</name>
+      <description>Print 9D tensor image from input 6D image. \n\
+        UPPER_TRIANGULAR: [xx, xy, xz, yy, yz, zz], fsl format; \n\
+        LOWER_TRIANGULAR: [xx, yx, yy, zx, zy, zz]; \n\
+        EMBED6D: [xx, yy, zz, sqrt(2)*xy, sqrt(2)*xz, sqrt(2)*yz], embed 3x3 matrix into 6x1 vector; 
+      </description>
+      <longflag>tensorformat</longflag>
+      <default>UPPER_TRIANGULAR</default>
+      <element>UPPER_TRIANGULAR</element>
+      <element>LOWER_TRIANGULAR</element>
+      <element>EMBED6D</element>
+    </string-enumeration>
+
+    <boolean>
+    <name>_Debug</name>
+    <label>debug</label>
+    <description>debug</description>
+    <longflag>--debug</longflag>
+    <default>false</default>
+    </boolean>
+                
+  </parameters>
+   
+</executable>

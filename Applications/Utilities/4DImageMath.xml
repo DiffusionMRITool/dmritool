@@ -1,0 +1,302 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Image Operator</category>
+  <title>Image operator</title>
+  <description>Perform math operators on 4D image (4D itk::Image or 3D itk::VectorImage).\n\
+    Examples: \n\
+    4DImageMath image1.nii.gz out.nii.gz -f "cos(x)+3*x+sqrt(abs(x))+sqrt(2) +x^3" -m mask.nii.gz  \n\
+    4DImageMath image1.nii.gz out.nii.gz -f "if (x>0.5) 1.0; else 0.0;" -m mask.nii.gz  \n\
+    4DImageMath image1.nii.gz out.nii.gz --abs -m mask.nii.gz  \n\
+    4DImageMath image1.nii.gz out.nii.gz --exp -m mask.nii.gz  \n\
+    4DImageMath image1.nii.gz out.nii.gz --add image2.nii.gz -m mask.nii.gz  \n\
+    4DImageMath image1.nii.gz out.nii.gz --add 2.0 -m mask.nii.gz  \n\
+    4DImageMath image1.nii.gz image2.nii.gz out.nii.gz -f "x[0]+x[1]" -m mask.nii.gz   \n\
+    4DImageMath image1.nii.gz image2.nii.gz out.nii.gz -f "x[0]^2+cos(x[1])" -m mask.nii.gz    \n\
+    4DImageMath image1.nii.gz image2.nii.gz out.nii.gz --axis t --dotproduct  \n\
+    4DImageMath image1.nii.gz image2.nii.gz image3.nii.gz  out.nii.gz -f "max(x[0],x[1],x[2]/2.0)" -m mask.nii.gz   \n\
+    4DImageMath image1.nii.gz out.nii.gz --axis t --mean -m mask.nii.gz   \n\
+    4DImageMath image1.nii.gz out.nii.gz --axis x --norm L2 -m mask.nii.gz   \n\
+    4DImageMath image1.nii.gz image2.nii.gz image3.nii.gz  out.nii.gz  --axis t --compose  
+  </description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    <label>Basic</label>
+    <description>Basic IO</description>
+
+    <file multiple="true">
+      <name>_ImageFiles</name>
+      <description>Image list. At least two files (one or more input images, and one output image)</description>
+      <index>0</index>
+    </file>
+
+    <image>
+      <name>_MaskImageFile</name>
+      <description>Mask image file (3d or 4d image). Set zero out of the region.</description>
+      <longflag>mask</longflag>
+      <flag>m</flag>
+      <longflag>mask</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <integer-vector>
+      <name>_Box</name>
+      <description>only perform calculation in a given box (x0,x1,y0,y1,z0,z1). Set zero out of the region.</description>
+      <longflag>--box</longflag>
+      <default>-1,-1,-1,-1,-1,-1</default>
+    </integer-vector>
+    
+    <string-enumeration>
+      <name>_OutputFormat</name>
+      <description>Output format. NONE: same as the input. 4D: itk 4D image, VECTOR: 3D vector image. </description>
+      <longflag>outformat</longflag>
+      <default>NONE</default>
+      <element>NONE</element>
+      <element>4D</element>
+      <element>VECTOR</element>
+      <channel>input</channel>
+    </string-enumeration>
+    
+    <integer>
+      <name>_NumberOfThreads</name>
+      <description>Number of threads. If it not positive, then the default number for multiple threads is used.</description>
+      <longflag>nt</longflag>
+      <default>-1</default>
+    </integer>
+
+    <integer>
+      <name>_Verbose</name>
+      <description>Verbose level. 0: no output log. 1: normal log. 2: log for debug log. 3: log for large matrix or vectors.</description>
+      <longflag>verbose</longflag>
+      <flag>v</flag>
+      <default>LOG_NORMAL</default>
+    </integer>
+    
+  </parameters>
+
+  <parameters>
+    <label>Binary operations (pixelwise)</label>
+    <description>Binary operations (pixelwise, work for image or scalar value), faster than string expression in -f</description>
+    
+    <image>
+      <name>_AddImageFile</name>
+      <description>Add image file or a constant.</description>
+      <longflag>add</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_MinusImageFile</name>
+      <description>Substract (minus) image file or a constant.</description>
+      <longflag>sub</longflag>
+      <channel>input</channel>
+    </image>
+
+    <image>
+      <name>_DivideImageFile</name>
+      <description>Divide image file or a constant.</description>
+      <longflag>div</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_MultiplyImageFile</name>
+      <description>Multiply image file or a constant.</description>
+      <longflag>mul</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_MaxImageFile</name>
+      <description>Take maximum of the input and the following image or constant.</description>
+      <longflag>max</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_MinImageFile</name>
+      <description>Take minimum of the input and the following image or constant.</description>
+      <longflag>min</longflag>
+      <channel>input</channel>
+    </image>
+    
+  </parameters>
+
+  <parameters>
+    <label>math expression</label>
+    <description>Perform math expression on inputs (elementwise). </description>
+
+    <string>
+      <name>_Functor</name>
+      <description>Perform functions on elements of the input images (one or more inputs). Input images should have the same size, and it does not change the size in the output image. \n\
+        Note: it is slower (-f "abs") than functions (--abs). \n\
+        Example: cos(x)+3*x+abs(x)+2 +x^3 \n\
+                 x[0]+x[1]*x[1]+3*x[2] \n\
+                 max(x[0],x[1],x[2])  </description>
+      <longflag>func</longflag>
+      <flag>f</flag>
+      <channel>input</channel>
+    </string>
+
+  </parameters>
+
+  <parameters>
+    <label>Unary operations (pixelwise)</label>
+    <description>Unary operations (elementwise). It can be relaced by math expression, but it is faster.</description>
+    
+    <boolean>
+      <name>_Abs</name>
+      <description>absolute value, i.e., -f "abs(x)"</description>
+      <longflag>abs</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Exp</name>
+      <description>exponential, i.e., -f "exp(x)"</description>
+      <longflag>exp</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Log</name>
+      <description>natural logarithm, i.e., -f "log(x)"</description>
+      <longflag>log</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_Square</name>
+      <description>square, i.e., -f "x*x"</description>
+      <longflag>square</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Sqrt</name>
+      <description>sqrt: square root, i.e., -f "sqrt(x)"</description>
+      <longflag>sqrt</longflag>
+      <default>false</default>
+    </boolean>
+    
+  </parameters>
+
+  <parameters>
+    <label>Unary operations (t/x/y/z-axis vector)</label>
+    <description>Unary operations (t/x/y/z-axis vector)</description>
+    
+    <string-enumeration>
+      <name>_Axis</name>
+      <description>Axis (x/y/z/t, i.e., 0/1/2/3).</description>
+      <longflag>axis</longflag>
+      <flag>a</flag>
+      <element>x</element>
+      <element>y</element>
+      <element>z</element>
+      <element>t</element>
+      <element>0</element>
+      <element>1</element>
+      <element>2</element>
+      <element>3</element>
+      <channel>input</channel>
+    </string-enumeration>
+
+    <string-enumeration>
+      <name>_Norm</name>
+      <description>Calculate norm of vector along axis.</description>
+      <longflag>norm</longflag>
+      <default>L2</default>
+      <element>L2</element>
+      <element>L1</element>
+      <element>L0</element>
+      <element>INF</element>
+      <channel>input</channel>
+    </string-enumeration>
+    
+    <boolean>
+      <name>_Mean</name>
+      <description>Mean along axis</description>
+      <longflag>mean</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Median</name>
+      <description>Median along axis</description>
+      <longflag>median</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Sum</name>
+      <description>Sum along axis</description>
+      <longflag>sum</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Max_Axis</name>
+      <description>maximal value along axis</description>
+      <longflag>amax</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <boolean>
+      <name>_Min_Axis</name>
+      <description>minimal value along axis</description>
+      <longflag>amin</longflag>
+      <default>false</default>
+    </boolean>
+                
+  </parameters>
+  
+  <parameters>
+    <label>Binary operations (t/x/y/z-axis vector)</label>
+    <description>Binary operations (t/x/y/z-axis vector)</description>
+    
+    <boolean>
+      <name>_DotProduct</name>
+      <description>Dot product along axis (2 input images)</description>
+      <longflag>dotproduct</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+  
+  <parameters>
+    <label>Multiple variable operations (t/x/y/z-axis vector)</label>
+    <description>Multiple variable operations (t/x/t/z-axis vector)</description>
+
+    <boolean>
+      <name>_Compose</name>
+      <description>Compose images along axis (>2 input images).</description>
+      <longflag>compose</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+   
+  <parameters>
+    <label>Complex manipulation operations (t/x/y/z-axis vector)</label>
+    <description>Unary operations (t/x/t/z-axis vector)</description>
+
+    <integer-vector>
+      <name>_Shred</name>
+      <label>Shred Vector Elements along axis</label>
+      <description>Shred vector elements along axis according to offset, chunk size, and space specified by parameters 1 to 3.</description>
+      <longflag>shred</longflag>
+      <default>0,0,0</default>
+    </integer-vector>
+    
+    <integer-vector>
+      <name>_Crop</name>
+      <description>Crop image by 8 parameters (x0,x1,y0,y1,z0,z1,t0,t1).</description>
+      <longflag>crop</longflag>
+      <default>-1,-1,-1,-1,-1,-1,-1,-1</default>
+    </integer-vector>
+
+  </parameters>
+
+</executable>
+

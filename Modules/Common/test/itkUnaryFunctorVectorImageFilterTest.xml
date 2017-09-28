@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Image Operator</category>
+  <title>Image operator</title>
+  <description>Perform math operators on 4D image (4D itk::Image or 3D itk::VectorImage).</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+    <label>Basic</label>
+    <description>Basic IO</description>
+
+    <image type="vector">
+      <name>_InputImageFile</name>
+      <description>Input image file (VectorImage or 4D image).</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+    
+    <image type="vector">
+      <name>_OutputImageFile</name>
+      <description>Output image file (VectorImage or 4D image, same as input).</description>
+      <index>1</index>
+      <channel>output</channel>
+    </image>
+
+    <image>
+      <name>_MaskImageFile</name>
+      <description>Mask image file. Set zero out of the region.</description>
+      <longflag>mask</longflag>
+      <flag>m</flag>
+      <longflag>mask</longflag>
+      <channel>input</channel>
+    </image>
+    
+    <integer-vector>
+      <name>_Box</name>
+      <description>only perform calculation in a given box (x0,x1,y0,y1,z0,z1). Set zero out of the region.</description>
+      <longflag>--box</longflag>
+      <default>-1,-1,-1,-1,-1,-1</default>
+    </integer-vector>
+    
+    <string-enumeration>
+      <name>_OutputFormat</name>
+      <description>Output format. NONE: same as the input. 4D: itk 4D image, VECTOR: 3D vector image. </description>
+      <longflag>outformat</longflag>
+      <default>NONE</default>
+      <element>NONE</element>
+      <element>4D</element>
+      <element>VECTOR</element>
+      <channel>input</channel>
+    </string-enumeration>
+    
+    <integer>
+      <name>_NumberOfThreads</name>
+      <description>Number of threads. If it not positive, then the default number for multiple threads is used.</description>
+      <longflag>nt</longflag>
+      <default>-1</default>
+    </integer>
+
+    <boolean>
+    <name>_Debug</name>
+    <label>debug</label>
+    <description>debug</description>
+    <longflag>--debug</longflag>
+    <default>false</default>
+    </boolean>
+    
+  </parameters>
+
+  <parameters>
+    <label>Unary operations (pixelwise)</label>
+    <description>Unary operations (pixelwise)</description>
+
+    <boolean>
+      <name>_Square</name>
+      <description>square</description>
+      <longflag>square</longflag>
+      <default>false</default>
+    </boolean>
+    
+  </parameters>
+
+  <parameters>
+    <label>Unary operations (t/x/y/z-axis vector)</label>
+    <description>Unary operations (t/x/y/z-axis vector)</description>
+
+    <string-enumeration>
+      <name>_TNorm</name>
+      <description>Calculate norm of vector in t-axis.</description>
+      <longflag>tnorm</longflag>
+      <default>L2</default>
+      <element>L2</element>
+      <element>L1</element>
+      <element>L0</element>
+      <element>INF</element>
+      <channel>input</channel>
+    </string-enumeration>
+    
+    <string-enumeration>
+      <name>_XNorm</name>
+      <description>Calculate norm of vector in x-axis.</description>
+      <longflag>xnorm</longflag>
+      <default>L2</default>
+      <element>L2</element>
+      <element>L1</element>
+      <element>L0</element>
+      <element>INF</element>
+      <channel>input</channel>
+    </string-enumeration>
+                
+  </parameters>
+  
+  <parameters>
+    <label>Complex manipulation operations (t/x/y/z-axis vector)</label>
+    <description>Unary operations (t/x/t/z-axis vector)</description>
+    
+    <file multiple="true">
+      <name>_TCompose</name>
+      <description>Compose images along t-axis.</description>
+      <longflag>--tcompose</longflag>
+      <default>""</default>
+    </file>
+    <file multiple="true">
+      <name>_XCompose</name>
+      <description>Compose images along x-axis.</description>
+      <longflag>--xcompose</longflag>
+      <default>""</default>
+    </file>
+    <file multiple="true">
+      <name>_YCompose</name>
+      <description>Compose images along y-axis.</description>
+      <longflag>--ycompose</longflag>
+      <default>""</default>
+    </file>
+    <file multiple="true">
+      <name>_ZCompose</name>
+      <description>Compose images along z-axis.</description>
+      <longflag>--zcompose</longflag>
+      <default>""</default>
+    </file>
+
+    <integer-vector>
+      <name>_TShred</name>
+      <label>Shred Vector Elements in t-axis</label>
+      <description>Shred vector elements according to offset, chunk size, and space specified by parameters 1 to 3.</description>
+      <longflag>--tshred</longflag>
+      <default>0,0,0</default>
+    </integer-vector>
+    <integer-vector>
+      <name>_XShred</name>
+      <label>Shred Vector Elements in x-axis</label>
+      <description>Shred vector elements according to offset, chunk size, and space specified by parameters 1 to 3.</description>
+      <longflag>--xshred</longflag>
+      <default>0,0,0</default>
+    </integer-vector>
+    <integer-vector>
+      <name>_YShred</name>
+      <label>Shred Vector Elements in y-axis</label>
+      <description>Shred vector elements according to offset, chunk size, and space specified by parameters 1 to 3.</description>
+      <longflag>--yshred</longflag>
+      <default>0,0,0</default>
+    </integer-vector>
+    <integer-vector>
+      <name>_ZShred</name>
+      <label>Shred Vector Elements in z-axis</label>
+      <description>Shred vector elements according to offset, chunk size, and space specified by parameters 1 to 3.</description>
+      <longflag>--zshred</longflag>
+      <default>0,0,0</default>
+    </integer-vector>
+    
+    <integer-vector>
+      <name>_Crop</name>
+      <description>Crop image by 8 parameters (x0,x1,y0,y1,z0,z1,t0,t1).</description>
+      <longflag>crop</longflag>
+      <default>-1,-1,-1,-1,-1,-1,-1,-1</default>
+    </integer-vector>
+
+  </parameters>
+   
+
+</executable>
+
+
