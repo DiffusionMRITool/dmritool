@@ -157,9 +157,18 @@ subdirlist(DMRITOOL_MODULE_DIRECTORIES ${DMRITOOL_SOURCE_DIR}/Modules)
 
 
 set(THIRDPARTY_DIRECTORIES
+  gtest
   Spams
+  exprtk
   )
 
+add_subdirectory(ThirdParty/exprtk)
+include_directories(${EXPRTK_INCLUDE_DIRS})
+set(EXPRTK_LIBRARY exprtk_lib)
+
+set(DMRITOOL_ITK_MODULE_DIRECTORIES
+  ThirdParty/SpatiallyDenseSparseVectorImage
+  )
 
 set(DMRITOOL_INCLUDE_DIRECTORIES ${DMRITOOL_BINARY_DIR} ${DMRITOOL_SOURCE_DIR})
 
@@ -167,6 +176,9 @@ foreach(dir ${DMRITOOL_MODULE_DIRECTORIES})
   set(DMRITOOL_INCLUDE_DIRECTORIES ${DMRITOOL_INCLUDE_DIRECTORIES} ${DMRITOOL_SOURCE_DIR}/Modules/${dir}/include)
 endforeach(dir)
 
+foreach(dir ${DMRITOOL_ITK_MODULE_DIRECTORIES})
+  set(DMRITOOL_INCLUDE_DIRECTORIES ${DMRITOOL_INCLUDE_DIRECTORIES} ${DMRITOOL_SOURCE_DIR}/${dir}/include)
+endforeach(dir)
 
 foreach(dir ${THIRDPARTY_DIRECTORIES})
   set(DMRITOOL_INCLUDE_DIRECTORIES ${DMRITOOL_INCLUDE_DIRECTORIES} ${DMRITOOL_SOURCE_DIR}/ThirdParty/${dir}/include)
@@ -185,9 +197,16 @@ foreach(dir ${DMRITOOL_MODULE_DIRECTORIES})
   endif()
 endforeach(dir)
 
+foreach(dir ${DMRITOOL_ITK_MODULE_DIRECTORIES})
+  set(dir_abs ${PROJECT_SOURCE_DIR}/ThirdParty/${dir})
+  if (EXISTS "${dir_abs}/src" AND EXISTS "${dir_abs}/src/CMakeLists.txt")
+    add_subdirectory(${dir}/src)
+  endif()
+endforeach(dir)
+
 foreach(dir ${THIRDPARTY_DIRECTORIES})
   set(dir_abs ${PROJECT_SOURCE_DIR}/ThirdParty/${dir})
-  if (EXISTS "${dir_abs}}/src" AND EXISTS "${dir_abs}/src/CMakeLists.txt")
+  if (EXISTS "${dir_abs}/src" AND EXISTS "${dir_abs}/src/CMakeLists.txt")
     add_subdirectory(${dir_abs}/src)
   endif()
   if(BUILD_TESTING AND EXISTS "${dir_abs}/test" AND EXISTS "${dir_abs}/test/CMakeLists.txt")
@@ -212,6 +231,7 @@ endif(APPLE)
 # Applications
 #
 add_subdirectory(Applications)
+add_subdirectory(ThirdPartyApplications)
 add_subdirectory(Utilities)
 
 if (BUILD_QT_APPLICATIONS)

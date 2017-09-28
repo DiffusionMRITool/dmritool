@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Visualization</category>
+  <title>Mesh From Tensor Image</title>
+  <description>Create a mesh from tensors for visualization.\n\
+    Examples: \n\
+    MeshFromPeaks tensors.nii.gz -o tensors_vis.vtk --scale 1000  \n\
+    MeshFromPeaks tensors.nii.gz  --scale 1000 --slice -1,-1,25 \n\
+    MeshFromPeaks tensors.nii.gz  --scale 1000 --box 50,100,50,100,50,50 
+  </description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+  
+    <image>
+    <name>_InputFile</name>
+    <label>Input File</label>
+    <description>Input file.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </image>
+
+    <file>
+    <name>_OutputFile</name>
+    <label>Output File</label>
+    <description>Output vtk file. If it is not set, visualize the vtk file.</description>
+    <default>""</default>
+    <longflag>output</longflag> 
+    <flag>o</flag> 
+    <channel>output</channel>
+    </file>
+
+    <string-enumeration>
+    <name>_GlyphType</name>
+    <label>Glyph Type</label>
+    <description>Glyph type/</description>
+    <default>ELLIPSOID</default>
+    <element>LINE</element>
+    <element>ARROW</element>
+    <element>DISK</element>
+    <element>CYLINDER</element>
+    <element>CUBE</element>
+    <element>ELLIPSOID</element>
+    <element>SUPERQUADRIC</element>
+    <longflag>glyph</longflag>
+    </string-enumeration> 
+
+    <string-enumeration>
+    <name>_ColorScheme</name>
+    <label>Color Scheme</label>
+    <description>Color scheme.</description>
+    <default>DIRECTION</default>
+    <element>FA</element>
+    <element>MD</element>
+    <element>IMAGE</element>
+    <element>DIRECTION</element>
+    <element>NONE</element>
+    <longflag>colorscheme</longflag>
+    </string-enumeration> 
+    
+    <double>
+    <name>_GlyphResolution</name>
+    <description>Glyph resolution. </description>
+    <longflag>resolution</longflag>
+    <default>10</default>
+    </double>
+    
+    <double-vector>
+      <name>_ScalarRange</name>
+      <description>Range of scalar used for coloring. If they are -1.0, then use minimal and maximal values. </description>
+      <longflag>scalarrange</longflag>
+      <default>-1.0,-1.0</default>
+    </double-vector>
+    
+    <image>
+      <name>_ScalarImageFile</name>
+      <label>Input scalar image file. There is a scalar value in each voxel for coloring.</label>
+      <description>Input file.</description>
+      <longflag>scalarimage</longflag>
+      <default>""</default>
+    </image>
+
+    <integer-vector>
+      <name>_Flip</name>
+      <label>views</label>
+      <description>Flip x/y/z-axis for spherical functions. 1 means flip, 0 means no-flip.</description>
+      <longflag>--flip</longflag>
+      <default>0,0,0</default>
+    </integer-vector>
+
+    <integer-vector>
+      <name>_BoxView</name>
+      <label>views</label>
+      <description>only generate mesh from a given box (x0,x1,y0,y1,z0,z1). When -1 is used, then x0/y0/z0 will be 0, x1/y1/z1 will be the maximal number in the x/y/z-axis.</description>
+      <longflag>--box</longflag>
+      <default>-1,-1,-1,-1,-1,-1</default>
+    </integer-vector>
+
+    <integer-vector>
+      <name>_SliceView</name>
+      <label>views</label>
+      <description>coordinates for coronal, sagittal and transverse views. When -1 is used for x/y/z, then the voxel is visible in the x/y/z-axis.</description>
+      <longflag>--slice</longflag>
+      <default>-1,-1,-1</default>
+    </integer-vector>
+
+    <double>
+    <name>_Scale</name>
+    <label>Scale</label>
+    <description>Scale factor: length of the peaks.</description>
+    <longflag>--scale</longflag>
+    <default>1000</default>
+    </double>
+
+    <integer-vector>
+      <name>_WindowSize</name>
+      <description>window size. Used when visualzing the vtk file.</description>
+      <longflag>--size</longflag>
+      <default>600,600</default>
+    </integer-vector>
+    
+    <double-vector>
+      <name>_Angle</name>
+      <description>azimuth,elevation. Used when visualzing the vtk file.</description>
+      <longflag>--angle</longflag>
+      <default>0.0,0.0</default>
+    </double-vector>
+    
+    <string>
+      <name>_PNGFile</name>
+      <description>output png file. Used when visualzing the vtk file.</description>
+      <longflag>--png</longflag>
+      <default></default>
+    </string>
+    
+    <double>
+      <name>_Zoom</name>
+      <description>zoom factor. Used when visualzing the vtk file.</description>
+      <longflag>--zoom</longflag>
+    </double>
+    
+    <boolean>
+      <name>_NoNormal</name>
+      <description>Do not use vtkPolyDataNormals.</description>
+      <longflag>nonormal</longflag>
+      <default>false</default>
+    </boolean>
+    
+    <!-- <boolean> -->
+    <!--   <name>_SingleThread</name> -->
+    <!--   <description>Use single thread.</description> -->
+    <!--   <longflag>st</longflag> -->
+    <!--   <default>false</default> -->
+    <!-- </boolean> -->
+    
+    <boolean>
+      <name>_ShowProgress</name>
+      <description>show progress of processing</description>
+      <longflag>progress</longflag>
+      <flag>p</flag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+    
+  </parameters>
+   
+</executable>
+
+
