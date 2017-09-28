@@ -7,7 +7,7 @@ compiler:
 
 before_install:
   - sudo apt-get update -qq
-  - sudo apt-get install -qq libinsighttoolkit4-dev 
+  # - sudo apt-get install -qq libinsighttoolkit4-dev 
   - sudo apt-get install -qq libvtk6-dev libvtk6 
   - sudo apt-get install -qq cmake 
   - sudo apt-get install -qq gsl-bin libgsl0-dev 
@@ -19,28 +19,45 @@ before_install:
   - sudo find /usr/lib -name libpq.so 
   - sudo find /usr/lib -name libpq.so -exec ln -s {} /usr/lib/libpq.so ';' 
 
+  - export DMRITOOL_SOURCE_DIR=$(pwd)
+
 install:
+  # build itk
+  - export NUM_THREADS=4
+  - export ITK_VERSION=v4.9.0 
+  - export ITK_SOURCE_DIR=${HOME}/itk-${ITK_VERSION}
+  - export ITK_BUILD_DIR=${ITK_SOURCE_DIR}-build
+  - export ITK_DIR=${ITK_BUILD_DIR}
+  - cd $HOME
+  - git clone --depth 1 --branch ${ITK_VERSION} https://github.com/InsightSoftwareConsortium/ITK.git ${ITK_SOURCE_DIR}
+  - mkdir ${ITK_BUILD_DIR}
+  - cd ${ITK_BUILD_DIR}
+  - cmake ${ITK_SOURCE_DIR} -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DBUILD_EXAMPLES=OFF -DBUILD_TESTING=OFF -DModule_ITKReview=OFF
+  - make --jobs=$NUM_THREADS --keep-going
+
+  # build SlicerExecutionModel
+  - cd $HOME
   - git clone https://github.com/Slicer/SlicerExecutionModel.git 
   - mkdir SlicerExecutionModel-build 
   - cd SlicerExecutionModel-build 
   - cmake ../SlicerExecutionModel
-  - make -j 4
-  - cd ..
+  - make -j ${NUM_THREADS}
 
 script:
-  - mkdir build
-  - cd build
+  - cd ${DMRITOOL_SOURCE_DIR}
+  - mkdir ../dmritool-build
+  - cd ../dmritool-build
 
   - export OPENBLAS_NUM_THREADS=1 && export OMP_NUM_THREADS=1 
-  - cmake -DGenerateCLP_DIR=$(pwd)/../SlicerExecutionModel-build/GenerateCLP -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_FASTLAPACK=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF -DCMAKE_CXX_FLAGS=-fpermissive -DVCL_CAN_STATIC_CONST_INIT_FLOAT=0 ..
-  - make gtest_test -j 4 
+  - cmake -DGenerateCLP_DIR=${HOME}/SlicerExecutionModel-build/GenerateCLP  -DCMAKE_BUILD_TYPE=Release -DBUILD_SHARED_LIBS=ON -DDMRITOOL_USE_MKL=OFF -DDMRITOOL_USE_FASTLAPACK=OFF -DDMRITOOL_USE_OPENMP=OFF -DBUILD_QT_APPLICATIONS=OFF -DDMRITOOL_WRAP_MATLAB=OFF  ${DMRITOOL_SOURCE_DIR}
+  - make gtest_test -j ${NUM_THREADS} 
   - make SphericalPolarFourierImaging 
   - make OrientationsViewer
   - make -j 3 utlVNLBlasGTest utlVNLLapackGTest utlNDArrayGTest
   - cd ./Modules/HelperFunctions/test/
   - ./utlVNLBlasGTest && ./utlVNLLapackGTest && ./utlNDArrayGTest 
   - cd ../../..
-  - make -j 4
+  - make -j ${NUM_THREADS}
 
 after_script:
   - ctest -VV

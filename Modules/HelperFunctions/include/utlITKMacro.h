@@ -24,6 +24,40 @@
 /** @addtogroup utlHelperFunctions
 @{ */
 
+#ifndef ITK_OVERRIDE
+
+// Copied from itkMacro.h. It is used for old version of ITK without definition of the macros.
+#if __cplusplus >= 201103L
+// In c++11 the override keyword allows you to explicity define that a function
+// is intended to override the base-class version.  This makes the code more
+// managable and fixes a set of common hard-to-find bugs.
+#define ITK_OVERRIDE override
+// In functions that should not be implemented, use the C++11 mechanism
+// to ensure that thye are purposely not implemented
+#define ITK_DELETE_FUNCTION =delete
+// In c++11 there is an explicit nullptr type that introduces a new keyword to
+// serve as a distinguished null pointer constant: nullptr. It is of type
+// nullptr_t, which is implicitly convertible and comparable to any pointer type
+// or pointer-to-member type. It is not implicitly convertible or comparable to
+// integral types, except for bool.
+#define ITK_NULLPTR  nullptr
+// In C++11 the throw-list specification has been deprecated,
+// replaces with the noexcept specifier. Using this function
+// specification adds the run-time check that the method does not
+// throw, if it does throw then std::terminate will be called.
+// Use cautiously.
+#define ITK_NOEXCEPT noexcept
+#define ITK_HAS_CXX11_STATIC_ASSERT
+#define ITK_HAS_CXX11_RVREF
+#else
+#define ITK_OVERRIDE
+#define ITK_DELETE_FUNCTION
+#define ITK_NULLPTR  NULL
+#define ITK_NOEXCEPT throw()
+#endif
+
+#endif
+
 
 #define itkSetNoConstMacro(name, type)                      \
   virtual void Set##name (type _arg)                        \

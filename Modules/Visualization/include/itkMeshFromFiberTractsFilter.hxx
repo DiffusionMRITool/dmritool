@@ -18,6 +18,7 @@
 #include <vtkDoubleArray.h>
 #include <vtkPointData.h>
 #include <vtkTubeFilter.h>
+#include <vtkCellArray.h>
 
 #include "utlNDArray.h"
 #include "utlCore.h"
