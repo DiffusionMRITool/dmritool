@@ -96,8 +96,9 @@ public:
       (m_DataOrientations->Rows())(inputDimension).msg("inconsistent size between input orientations and input image with spherical samples (whole sphere or hemisphere).");
     utlSAGlobalException(numberOfSamples!=inputDimension && numberOfSamples!=2*inputDimension)
       (numberOfSamples)(inputDimension).msg("inconsistent size between tessellation and input image with spherical samples (whole sphere or hemisphere).");
-
-    *this->m_BasisMatrix = (*this->m_Orientations) * m_DataOrientations->GetTranspose();
+    
+    auto orientationsFliped = utl::FlipOrientations(*m_DataOrientations, this->m_Flip);
+    *this->m_BasisMatrix = (*this->m_Orientations) * orientationsFliped.GetTranspose();
     // utl::PrintUtlMatrix(*this->m_Orientations, "m_Orientations");
     // utl::PrintUtlMatrix(*this->m_DataOrientations, "m_DataOrientations");
     // utl::PrintUtlMatrix(*this->m_BasisMatrix, "m_BasisMatrix");

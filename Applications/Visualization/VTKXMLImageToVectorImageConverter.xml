@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  
+  <category>Visualization</category>
+  <title>VTK XML Image to Image Converter</title>
+  <description>Convert a VTK XML image to an ITK image.</description>
+  
+  <documentation-url>http://www.unc.edu/~ptyap</documentation-url>
+  
+  <contributor>Pew-Thian Yap (ptyap@med.unc.edu)</contributor>
+  <acknowledgements/>
+  
+  <license>http://www.unc.edu/~ptyap</license>
+  
+  <parameters>
+    
+    <image>
+      <name>_InputFile</name>
+      <label>Input File</label>
+      <description>Input image data (.vti) file.</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Output file.</description>
+      <index>1</index>
+      <channel>output</channel>
+    </image>
+    
+  </parameters>
+  
+</executable>

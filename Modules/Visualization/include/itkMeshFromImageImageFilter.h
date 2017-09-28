@@ -18,8 +18,6 @@
 #ifndef __itkMeshFromImageImageFilter_h
 #define __itkMeshFromImageImageFilter_h
 
-// #include "vnl/vnl_matrix.h"
-// #include "vnl/vnl_math.h"
 #include "vtkPoints.h"
 #include "vtkPolyData.h"
 #include "vtkCellArray.h"
@@ -97,6 +95,7 @@ public:
   typedef utl_shared_ptr<STDVectorType >          STDVectorPointer;
   
   typedef  enum {UNKNOWN=0, FIXED, DIRECTION, MAGNITUDE} ColorSchemeType;
+
   itkSetMacro(ColorScheme, ColorSchemeType);
   itkGetMacro(ColorScheme, ColorSchemeType);
   
@@ -110,11 +109,6 @@ public:
   //   return itkDynamicCastInDebugMode< const TInputImage * >( this->GetPrimaryInput() );
   //   }
 
-  
-  /** Set/Get whether to remove negative values  */
-  itkSetMacro(RemoveNegativeValues, bool);
-  itkGetMacro(RemoveNegativeValues, bool);
-  itkBooleanMacro(RemoveNegativeValues);
 
   void SetBoxView(const int x0, const int x1, const int y0, const int y1, const int z0, const int z1 )
     {
@@ -125,18 +119,32 @@ public:
     m_BoxView[4]=z0;
     m_BoxView[5]=z1;
     }
-  std::vector<int> GetBoxView()
+  std::vector<int> GetBoxView() const
     {
     return m_BoxView;
+    }
+
+  void SetSliceView(const int coronal, const int sagittal, const int transverse )
+    {
+    m_SliceView[0]=coronal, m_SliceView[1]=sagittal, m_SliceView[2]=transverse;
+    }
+  std::vector<int> GetSliceView() const
+    {
+    return m_SliceView;
+    }
+
+  void SetFlip(const int flipx, const int flipy, const int flipz )
+    {
+    m_Flip[0]=flipx, m_Flip[1]=flipy, m_Flip[2]=flipz;
+    }
+  std::vector<int> GetFlip() const
+    {
+    return m_Flip;
     }
 
   /** Set/Get scale factor */
   itkSetMacro(Scale, double);
   itkGetMacro(Scale, double);
-  
-  /** Set/Get pow factor  */
-  itkSetMacro(Pow, double);
-  itkGetMacro(Pow, double);
 
 
   /** Access to Mesh */
@@ -149,12 +157,6 @@ protected:
   MeshFromImageImageFilter()
     {
     this->SetNumberOfRequiredInputs(1);
-    m_RemoveNegativeValues = false;
-    m_Scale = 1.0;
-    m_Pow = 1.0;
-    m_ColorScheme = UNKNOWN;
-    m_BoxView = std::vector<int>(6,-1);
-    m_Mesh = OutputMeshPolyDataType::New();
     // TODO: multi-thread
     this->SetNumberOfThreads(1);
     }
@@ -168,12 +170,17 @@ protected:
     {
     if (this->IsMaskUsed() && this->m_MaskImage->GetPixel(index)==0)
       return false;
+
     if ( (m_BoxView[0]>=0 || m_BoxView[1]>=0) && (index[0]<m_BoxView[0] || index[0]>m_BoxView[1]) )
       return false;
     if ( (m_BoxView[2]>=0 || m_BoxView[3]>=0) && (index[1]<m_BoxView[2] || index[1]>m_BoxView[3]) )
       return false;
     if ( (m_BoxView[4]>=0 || m_BoxView[5]>=0) && (index[2]<m_BoxView[4] || index[2]>m_BoxView[5]) )
       return false;
+
+    if ( (m_SliceView[0]>=0 || m_SliceView[1]>=0 || m_SliceView[2]>=0) && index[0]!=m_SliceView[0] && index[1]!=m_SliceView[1] && index[2]!=m_SliceView[2])
+      return false;
+
     return true;
     }
 
@@ -183,9 +190,11 @@ protected:
 
   void PrintSelf(std::ostream& os, Indent indent) const
     {
-    PrintVar3(true, m_Scale, m_Pow, m_RemoveNegativeValues, os<<indent);
+    PrintVar(true, os<<indent, m_Scale );
     utl::PrintVector(m_BoxView, "m_BoxView");
-    PrintVar1(true, m_ColorScheme, os<<indent);
+    utl::PrintVector(m_SliceView, "m_SliceView");
+    utl::PrintVector(m_Flip, "m_Flip");
+    PrintVar(true, os<<indent, m_ColorScheme);
     m_Mesh->Print(std::cout<<"m_Mesh=");
     }
 
@@ -198,11 +207,14 @@ protected:
       {
       itkExceptionMacro(<< "downcast to type " << this->GetNameOfClass()<< " failed.");
       }
-    rval->m_RemoveNegativeValues = m_RemoveNegativeValues;
     rval->m_Scale = m_Scale;
-    rval->m_Pow = m_Pow;
     rval->m_ColorScheme = m_ColorScheme;
+
     rval->m_BoxView = m_BoxView;
+    rval->m_SliceView = m_SliceView;
+    
+    rval->m_Flip = m_Flip;
+
     return loPtr;
     }
 
@@ -221,16 +233,20 @@ protected:
     {
     }
 
-  OutputMeshPolyDataPointer m_Mesh;
+  OutputMeshPolyDataPointer m_Mesh = OutputMeshPolyDataType::New();
 
-  bool m_RemoveNegativeValues;
+  double m_Scale=1.0;
 
-  double m_Scale;
-  double m_Pow;
+  ColorSchemeType m_ColorScheme=UNKNOWN;
 
-  ColorSchemeType m_ColorScheme;
+  /** 3D box view (xmin, xmax, ymin, ymax, zmin, zmax)  */
+  std::vector<int> m_BoxView = std::vector<int>(6,-1);
 
-  std::vector<int> m_BoxView;
+  /** slice view (x,y,z), 3 orthogonal slices  */
+  std::vector<int> m_SliceView = std::vector<int>(3,-1);
+  
+  /** flips in x/y/z-axis. 0 means no flip, 1 means flip  */
+  std::vector<int> m_Flip = std::vector<int>(3, 0);
 
 private:
   MeshFromImageImageFilter(const Self&); //purposely not implemented

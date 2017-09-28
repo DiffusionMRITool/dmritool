@@ -20,7 +20,9 @@
 #include "itkCommandProgressUpdate.h"
 
 #include "utl.h"
-#include "utlVTKMacro.h"
+#include "utlVTK.h"
+
+#include "vtkPolyDataViewer.h"
 
 int
 main(int argc, char *argv[])
@@ -29,6 +31,10 @@ main(int argc, char *argv[])
 
   // Time Probe
   itk::TimeProbe clock;
+
+  utlGlobalException(_BoxView.size()!=6, "need 6 parameters in --box");
+  utlGlobalException(_SliceView.size()!=3, "need 3 parameters in --box");
+  utlGlobalException(_Flip.size()!=3, "need 3 parameters in --flip");
   
   // Define Variables
   typedef double PixelType;
@@ -60,7 +66,10 @@ main(int argc, char *argv[])
   filter->SetRemoveNegativeValues(_RemoveNegativeValuesArg.isSet());
   filter->SetMaxOrder( _MaxOrder );
   filter->SetInput( inputImage );
+
+  filter->SetFlip(_Flip[0], _Flip[1], _Flip[2]);
   filter->SetBoxView(_BoxView[0], _BoxView[1], _BoxView[2], _BoxView[3], _BoxView[4], _BoxView[5]);
+  filter->SetSliceView(_SliceView[0], _SliceView[1], _SliceView[2]);
    
   if (_BasicShape == "TETRAHEDRON") { filter->SetBasicShape(MeshCreatorType::SphereTessellatorType::TETRAHEDRON); }
   if (_BasicShape == "OCTAHEDRON")  { filter->SetBasicShape(MeshCreatorType::SphereTessellatorType::OCTAHEDRON); }
@@ -84,13 +93,17 @@ main(int argc, char *argv[])
   std::cout << clock.GetMean() << "s elapsed" << std::endl;
   
   MeshCreatorType::OutputMeshPolyDataType* mesh = filter->GetOutput();
-  
-  // Write Output
-  std::cout << "Writing file: " << _OutputFile << std::endl;
-  vtkSmartPointer<vtkPolyDataWriter> polyDataWriter = vtkSmartPointer<vtkPolyDataWriter>::New();
-  polyDataWriter->SetFileName(_OutputFile.c_str());
-  vtkSetInputData(polyDataWriter, mesh);
-  polyDataWriter->Write();
+
+  if (_OutputFileArg.isSet())
+    {
+    utl::WriteVtkPolyData(mesh, _OutputFile);
+    }
+  else
+    {
+    utlGlobalException(_WindowSize.size()!=2, "wrong window size");
+    utlGlobalException(_Angle.size()!=2, "wrong angle size");
+    vtk::VisualizePolyData(mesh, _Angle, _WindowSize, !_NoNormalArg.isSet(), _Zoom, _PNGFile);
+    }
 
   return EXIT_SUCCESS;
 }

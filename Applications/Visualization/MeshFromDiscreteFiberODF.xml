@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
   <category>Visualization</category>
-  <title>Mesh From SH Coefficients</title>
-  <description>Create a mesh from spherical harmonics coefficients for visualization.\n\
+  <title>Mesh From Discrete Fiber ODF</title>
+  <description>Create mesh (a spherical profile of DWI/EAP/ODF) from discrete fiber ODF for visualization.\n\
     Examples: \n\
-    MeshFromSHCoefficients eap_r0.015.nii.gz -o eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 \n\
-    MeshFromSHCoefficients eap_r0.015.nii.gz --tessorder 4 --scale 1e-5 \n\
-    MeshFromSHCoefficients eap_r0.015.nii.gz --tessorder 4 --scale 1e-5 --png out.png \n\
-    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 \n\
-    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 --slice -1,-1,25 \n\
-    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 --box 20,40,20,40,25,25 
+    MeshFromDiscreteFiberODF dwi_bw.spr -o dwi_odf_vis.vtk --tessorder 4 --basisType TENSOR --tensor 0.0017,0.0002  --scale 1.5 --colorscheme MAGNITUDE --outputType ODF --tensorISO 0.7e-3  --iso \n\
+    MeshFromDiscreteFiberODF dwi_bw.spr --tessorder 4 --basisType TENSOR --tensor 0.0017,0.0002  --scale 1.5 --colorscheme MAGNITUDE --outputType ODF --tensorISO 0.7e-3  --iso
   </description>
   
-  <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   
   <parameters>
   
@@ -33,23 +29,21 @@
     <flag>o</flag> 
     <channel>output</channel>
     </file>
+    
+    <image>
+      <name>_MaskFile</name>
+      <label>Mask File</label>
+      <description>Mask file.</description>
+      <longflag>mask</longflag>
+    </image>
+    
+    <file>
+      <name>_OrientationsFile</name>
+      <description>text file which contains orientations. If it is not set, the output is SH coefficients. If set, the output is EAP/DWI samples</description>
+      <default></default>
+      <longflag>orientations</longflag>
+    </file>
  
-    <integer>
-    <name>_MaxOrder</name>
-    <default>0</default>
-    <label>Maximum Order</label>
-    <description>Maximum order of spherical harmonic basis functions. If it is not set, it is calculated from the input SH image. If it is set as a smaller value than the order calculated from input image, then only truncated orders are used to generate mesh.</description>
-    <longflag>--maxorder</longflag> 
-    </integer>
- 
-    <boolean>
-    <name>_RemoveNegativeValues</name>
-    <label>Remove Negative Values</label>
-    <description>Remove negative values if set.</description>
-    <longflag>--removenegative</longflag>
-    <default>true</default>
-    </boolean>
-
     <string-enumeration>
     <name>_Normalization</name>
     <label>Normalization</label>
@@ -62,6 +56,55 @@
     <element>UNIT_MAX</element>
     <element>UNIT_INTEGRAL</element>
     </string-enumeration>
+    
+    <double>
+      <name>_Radius</name>
+      <default>-1</default>
+      <description>Radius for DWI/EAP profile. \
+        It is b value if outputType==DWI. \
+      It is r value if outputType==EAP or outputType==ODF.</description>
+      <longflag>radius</longflag>
+    </double>
+    
+    <string-enumeration>
+      <name>_OutputType</name>
+      <description>Type of output.</description>
+      <default>DWI</default>
+      <element>DWI</element>
+      <element>EAP</element>
+      <element>ODF</element>
+      <longflag>outputType</longflag>
+    </string-enumeration>
+    
+    <integer>
+      <name>_ODFOrder</name>
+      <description>Order for the ODF output.</description>
+      <longflag>odfOrder</longflag>
+      <default>2</default>
+    </integer>
+
+    <double-vector>
+      <name>_TensorEigenValues</name>
+      <default>0.0017,0.0002,0.0002</default>
+      <label>Tensor EigenValues</label>
+      <description>Three eigenvalues for tensor basis. If two are given, then the last two eigenvalues are the same.</description>
+      <longflag>tensor</longflag>
+    </double-vector>
+    
+    <double>
+      <name>_IsotroipicEigenValue</name>
+      <default>-1</default>
+      <description>Isotropic component for tensor. If it is negative, do not use isotropic component.</description>
+      <longflag>tensorISO</longflag>
+    </double>
+    
+    <boolean>
+      <name>_UseIsotropicComponent</name>
+      <label>Isotropic Component</label>
+      <description>If set, use isotropic component.</description>
+      <longflag>iso</longflag>
+      <default>false</default>
+    </boolean>
 
     <double>
     <name>_Pow</name>
@@ -123,6 +166,24 @@
     </string-enumeration> 
 
     <string-enumeration>
+      <name>_BasisType</name>
+      <description>Type of basis.</description>
+      <default>TENSOR</default>
+      <element>TENSOR</element>
+      <element>CYLINDER</element>
+      <longflag>basisType</longflag>
+    </string-enumeration>
+
+    
+    <boolean>
+    <name>_RemoveNegativeValues</name>
+    <label>Remove Negative Values</label>
+    <description>Remove negative values if set.</description>
+    <longflag>--removenegative</longflag>
+    <default>true</default>
+    </boolean>
+
+    <string-enumeration>
     <name>_ColorScheme</name>
     <label>Color Scheme</label>
     <description>Color scheme.</description>
@@ -131,6 +192,13 @@
     <element>MAGNITUDE</element>
     <longflag>--colorscheme</longflag>
     </string-enumeration> 
+    
+    <double>
+      <name>_Tau</name>
+      <default>ONE_OVER_4_PI_2</default>
+      <description>Tau value. The default is calculated based on 4*pi*pi*tau=1. </description>
+      <longflag>tau</longflag>
+    </double>
 
     <integer-vector>
       <name>_WindowSize</name>
@@ -187,7 +255,8 @@
       <longflag>debug</longflag>
       <default>false</default>
     </boolean>
-    
+
   </parameters>
    
 </executable>
+

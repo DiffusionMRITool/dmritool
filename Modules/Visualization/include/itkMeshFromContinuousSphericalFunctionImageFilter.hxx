@@ -262,7 +262,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
       
     ScaleSamples(b);
     
-    for (unsigned int k=0;k<numberOfPoints;k++) //isotropic component?
+    for (unsigned int k=0;k<numberOfPoints;k++) 
       {
       if ( this->m_ColorScheme == Superclass::MAGNITUDE )
         {
@@ -310,7 +310,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
       outputMeshRGB->InsertNextTupleValue(RGB);
       }
     
-    for (vtkIdType c=0;c<numberOfCells;c++) //isotropic component?
+    for (vtkIdType c=0;c<numberOfCells;c++) 
       {
       outputMeshCellArray->InsertNextCell(numberOfCellPoints);
       

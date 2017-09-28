@@ -130,6 +130,7 @@ public:
       }
 
     // m_BasisMatrixGenerator->Print(std::cout<<"m_BasisMatrixGenerator");
+    m_BasisMatrixGenerator->Flip(this->m_Flip[0], this->m_Flip[1], this->m_Flip[2]);
     m_BasisMatrixGenerator->ComputeBasisMatrix();
     this->m_BasisMatrix = m_BasisMatrixGenerator->GetBasisMatrix();
     return this->m_BasisMatrix;

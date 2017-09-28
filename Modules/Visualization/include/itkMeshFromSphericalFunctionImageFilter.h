@@ -90,6 +90,15 @@ public:
 
   itkSetMacro(Orientations, MatrixPointer);
   itkGetMacro(Orientations, MatrixPointer);
+  
+  /** Set/Get pow factor  */
+  itkSetMacro(Pow, double);
+  itkGetMacro(Pow, double);
+  
+  /** Set/Get whether to remove negative values  */
+  itkSetMacro(RemoveNegativeValues, bool);
+  itkGetMacro(RemoveNegativeValues, bool);
+  itkBooleanMacro(RemoveNegativeValues);
 
   unsigned int GetNumberOfOrientations() const
     {
@@ -101,6 +110,8 @@ protected:
   MeshFromSphericalFunctionImageFilter() : Superclass(), 
     m_Orientations(new MatrixType())
   {
+  m_Pow = 1.0;
+  m_RemoveNegativeValues = false;
   m_Normalization = NONE;
   this->m_RemoveNegativeValues = false;
 
@@ -112,6 +123,7 @@ protected:
 
   void PrintSelf(std::ostream& os, Indent indent) const
     {
+    PrintVar(true, os<<indent, m_Pow, m_RemoveNegativeValues);
     PrintEnum4(true, m_Normalization, NONE, MIN_MAX, UNIT_MAX, UNIT_INTEGRAL, os<<indent);
     utl::PrintUtlMatrix(*m_Orientations, "m_Orientations", " ", os<<indent);
     }
@@ -126,6 +138,8 @@ protected:
       itkExceptionMacro(<< "downcast to type " << this->GetNameOfClass()<< " failed.");
       }
 
+    rval->m_Pow = m_Pow;
+    rval->m_RemoveNegativeValues = m_RemoveNegativeValues;
     rval->m_Orientations = m_Orientations;
     rval->m_Normalization = m_Normalization;
 
@@ -135,6 +149,10 @@ protected:
   // virtual void GenerateData();
   // void ThreadedGenerateData(const typename TInputImage::RegionType& regionForThread,ThreadIdType threadId );
   // void BeforeThreadedGenerateData();
+
+  bool m_RemoveNegativeValues;
+
+  double m_Pow;
 
   MatrixPointer m_Orientations;
   

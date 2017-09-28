@@ -154,6 +154,16 @@ public:
 
   const ValueType & operator()(unsigned int row, unsigned int col) const;
 
+  void Flip(const int flipx, const int flipy, const int flipz)
+    {
+    double sign_xy = flipx^flipy ? -1 : 1;
+    double sign_xz = flipx^flipz ? -1 : 1;
+    double sign_yz = flipy^flipz ? -1 : 1;
+    (*this)[1] = sign_xy*(*this)[1];
+    (*this)[2] = sign_xz*(*this)[2];
+    (*this)[4] = sign_yz*(*this)[4];
+    }
+
   /** 
    * \brief Return an array containing EigenValues in ascending order, and a matrix containing the corresponding Eigenvectors. 
    *

@@ -93,7 +93,8 @@ public:
       m_MaxOrder = utl::DimToRankSH(maxNumberOfBasis);
 
     utlGlobalException(this->m_Orientations->Rows()==0, "need to set m_Orientations");
-    this->m_BasisMatrix = utl::ComputeSHMatrix(m_MaxOrder, *this->m_Orientations, CARTESIAN_TO_SPHERICAL);
+    auto orientationsFliped = utl::FlipOrientations(*this->m_Orientations, this->m_Flip);
+    this->m_BasisMatrix = utl::ComputeSHMatrix(m_MaxOrder, orientationsFliped, CARTESIAN_TO_SPHERICAL);
     // utl::PrintVnlMatrix(*this->m_BasisMatrix, "m_BasisMatrix 0");
     return this->m_BasisMatrix;
     }

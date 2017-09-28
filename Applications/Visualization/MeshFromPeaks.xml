@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <executable>
   <category>Visualization</category>
-  <title>Mesh From SH Coefficients</title>
-  <description>Create a mesh from spherical harmonics coefficients for visualization.\n\
+  <title>Mesh From Peaks</title>
+  <description>Create a mesh from peaks for visualization.\n\
     Examples: \n\
-    MeshFromSHCoefficients eap_r0.015.nii.gz -o eap_r0.015_vis.vtk --tessorder 4 --scale 1e-5 \n\
-    MeshFromSHCoefficients eap_r0.015.nii.gz --tessorder 4 --scale 1e-5 \n\
-    MeshFromSHCoefficients eap_r0.015.nii.gz --tessorder 4 --scale 1e-5 --png out.png \n\
-    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 \n\
-    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 --slice -1,-1,25 \n\
-    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 --box 20,40,20,40,25,25 
+    MeshFromPeaks eap_r0.015_peaks.nii.gz -o eap_r0.015_peaks_vis.vtk --scale 1.0  --color 255,255,0 --radius 0.05 \n\
+    MeshFromPeaks eap_r0.015_peaks.nii.gz --scale 1.0  --color 255,255,0 --radius 0.05 \n\
+    MeshFromPeaks eap_r0.015_peaks.nii.gz -o eap_r0.015_peaks_vis.vtk --scale 1.0  --color 255,255,0 --radius -1.0 \n
   </description>
   
-  <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   
   <parameters>
   
@@ -34,42 +31,49 @@
     <channel>output</channel>
     </file>
  
-    <integer>
-    <name>_MaxOrder</name>
-    <default>0</default>
-    <label>Maximum Order</label>
-    <description>Maximum order of spherical harmonic basis functions. If it is not set, it is calculated from the input SH image. If it is set as a smaller value than the order calculated from input image, then only truncated orders are used to generate mesh.</description>
-    <longflag>--maxorder</longflag> 
-    </integer>
- 
-    <boolean>
-    <name>_RemoveNegativeValues</name>
-    <label>Remove Negative Values</label>
-    <description>Remove negative values if set.</description>
-    <longflag>--removenegative</longflag>
-    <default>true</default>
-    </boolean>
-
     <string-enumeration>
-    <name>_Normalization</name>
-    <label>Normalization</label>
-      <description>Perform normalization after removing negative values (if set); NONE: No normalization; MIN_MAX: Min-max normalization; UNIT_MAX: Unit maximum; UNIT_INTEGRATION: Unit integration.
+      <name>_PeakType</name>
+      <label>Peak Type</label>
+      <longflag>--type</longflag>
+      <description>Peak Type. XYZV: peak direction vector (x,y,z) + peak magnitude v; XYZ: peak direction vector; NXYZV: number of peaks + peak direction vectors + peak magnitudes; NXYZ: number of peaks + peak direction vectors.
       </description>
-    <longflag>--normalize</longflag>
-    <default>NONE</default>
-    <element>NONE</element>
-    <element>MIN_MAX</element>
-    <element>UNIT_MAX</element>
-    <element>UNIT_INTEGRAL</element>
+      <default>XYZV</default>
+      <element>XYZV</element>
+      <element>XYZ</element>
+      <element>NXYZV</element>
+      <element>NXYZ</element>
     </string-enumeration>
-
+    
+    <string-enumeration>
+    <name>_ColorScheme</name>
+    <label>Color Scheme</label>
+    <description>Color scheme. DIRECTION: r,g,b determined by direction. FIXED: fixed color in --color.</description>
+    <default>FIXED</default>
+    <element>DIRECTION</element>
+    <element>FIXED</element>
+    <longflag>colorscheme</longflag>
+    </string-enumeration> 
+    
     <double>
-    <name>_Pow</name>
-    <label>Pow</label>
-    <description>Power factor.</description>
-    <longflag>--pow</longflag>
-    <default>1.0</default>
+    <name>_TubeRadius</name>
+    <description>Tube radius. If it is negative or zero, use lines instead of tubes. </description>
+    <longflag>radius</longflag>
+    <default>0.02</default>
     </double>
+    
+    <integer>
+      <name>_MaxNumber</name>
+      <description>If it is positive, the given maximum number of peaks are used for visualization (first several peaks). Otherwise, visualize all peaks.</description>
+      <longflag>--maxnumber</longflag>
+      <default>-1</default>
+    </integer>
+    
+    <integer-vector>
+      <name>_ColorPeak</name>
+      <description>Use fixed color for peaks when --colorscheme FIXED is set.</description>
+      <longflag>color</longflag>
+      <default>255,255,0</default>
+    </integer-vector>
 
     <integer-vector>
       <name>_Flip</name>
@@ -78,7 +82,7 @@
       <longflag>--flip</longflag>
       <default>0,0,0</default>
     </integer-vector>
-    
+
     <integer-vector>
       <name>_BoxView</name>
       <label>views</label>
@@ -98,39 +102,10 @@
     <double>
     <name>_Scale</name>
     <label>Scale</label>
-    <description>Scale factor.</description>
+    <description>Scale factor: length of the peaks.</description>
     <longflag>--scale</longflag>
     <default>1.0</default>
     </double>
-
-    <integer>
-    <name>_TessellationOrder</name>
-    <label>Tessellation Order</label>
-    <description>Tessellation order.</description>
-    <longflag>--tessorder</longflag>
-    <default>4</default>
-    </integer>
-
-    <string-enumeration>
-    <name>_BasicShape</name>
-    <label>Basic Shape</label>
-    <description>Basic shape for subdivision.</description>
-    <default>ICOSAHEDRON</default>
-    <element>TETRAHEDRON</element>
-    <element>OCTAHEDRON</element>
-    <element>ICOSAHEDRON</element>
-    <longflag>--basicshape</longflag>
-    </string-enumeration> 
-
-    <string-enumeration>
-    <name>_ColorScheme</name>
-    <label>Color Scheme</label>
-    <description>Color scheme.</description>
-    <default>DIRECTION</default>
-    <element>DIRECTION</element>
-    <element>MAGNITUDE</element>
-    <longflag>--colorscheme</longflag>
-    </string-enumeration> 
 
     <integer-vector>
       <name>_WindowSize</name>
@@ -191,3 +166,4 @@
   </parameters>
    
 </executable>
+
