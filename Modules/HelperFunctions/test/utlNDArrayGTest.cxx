@@ -14,6 +14,15 @@
 #include "utlFunctors.h"
 
 template <class T>
+void
+__GenerateRandomUtlVector ( const int N, const double val1, const double val2,  utl::Vector<T>& vec)
+{
+  vec.ReSize(N);
+  for ( int i = 0; i < N; i += 1 ) 
+    vec[i] = utl::Random<double>(val1,val2);
+}
+
+template <class T>
 vnl_vector<T> 
 __GenerateRandomVector ( const int N, const double val1, const double val2 )
 {
@@ -694,5 +703,62 @@ TEST(utlNDArray, Functor_TimeCost)
   for ( int i = 0; i < N; ++i ) 
     vec5[i] = vec3[i]*vec3[i];
   EXPECT_NEAR_VECTOR(vec4, vec5, N, 1e-10);
+}
+
+TEST(utlNDArray, Functor_ScalarFunctorWrapper)
+{
+  utl::Functor::ScalarFunctorWrapper<utl::Functor::Square<double> > func;
+  int N=10;
+  utl::Vector<double> vec, vec1, vec2;
+  __GenerateRandomUtlVector(N, -1.0, 1.0, vec);
+
+  vec1 = func(vec);
+  vec2 = utl::Square(vec);
+  EXPECT_NEAR_VECTOR(vec1, vec2, N, 1e-10);
+  
+  utl::Functor::ScalarFunctorWrapper<utl::Functor::Square<double> > func2 = func;
+}
+
+TEST(utlNDArray, Functor_VectorUnaryFunctionWrapper)
+{
+  typedef utl::Functor::VectorUnaryFunctionWrapper<> functorWrapper;
+  auto unaryFunc = 
+    [](double xval)
+      {
+      return xval*xval +1;
+      }; 
+  functorWrapper func(unaryFunc);
+  
+  int N=10;
+  utl::Vector<double> vec, vec1, vec2;
+  __GenerateRandomUtlVector(N, -1.0, 1.0, vec);
+  vec1 = vec%vec +1.0;
+  vec2 = func(vec);
+  EXPECT_NEAR_VECTOR(vec1, vec2, N, 1e-10);
+}
+
+TEST(utlNDArray, Functor_VectorMultiVariableFunctionWrapper)
+{
+  typedef utl::Functor::VectorMultiVariableFunctionWrapper<> functorWrapper;
+  auto autoFunc = 
+    [](const std::vector<double>& vec)
+      {
+      double sum=0;
+      for ( int i = 0; i < vec.size(); ++i ) 
+        sum += vec[i];
+      return sum;
+      }; 
+  functorWrapper func(autoFunc);
+  
+  int N=10;
+  utl::Vector<double> vec, vec1, vec2, vec3;
+  __GenerateRandomUtlVector(N, -1.0, 1.0, vec);
+  __GenerateRandomUtlVector(N, -1.0, 1.0, vec1);
+  std::vector<utl::Vector<double> > vecs;
+  vecs.push_back(vec);
+  vecs.push_back(vec1);
+  vec2 = func(vecs);
+  vec3 = vec+vec1;
+  EXPECT_NEAR_VECTOR(vec3, vec2, N, 1e-10);
 }
 

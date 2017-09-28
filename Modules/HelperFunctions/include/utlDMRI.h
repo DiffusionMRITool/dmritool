@@ -55,6 +55,13 @@ enum{
   TENSOR_EMBED6D 
 };
 
+enum{
+  TRACTS_UNKNOWN=0,
+  TRACTS_TRK=1,
+  TRACTS_TCK=2,
+  TRACTS_VTK=3
+};
+
 namespace utl
 {
 
@@ -360,7 +367,56 @@ MatchBVectorAndGradientMatrix ( std::vector<T>& vec, NDArray<T,2>& grad )
   return;
 }
 
-/* Function taken from 3D Slicer, SuperquadricTensorGlyph
+int GetFiberTractsFormatFromFileExtension(const std::string& filename)
+{
+  std::string ext, fileNoExt;
+  utl::GetFileExtension(filename, ext, fileNoExt);
+  int format = TRACTS_UNKNOWN;
+  if (ext=="trk")
+    format = TRACTS_TRK;
+  else if (ext=="tck")
+    format = TRACTS_TCK;
+  else if (ext=="vtk")
+    format = TRACTS_VTK;
+  else
+    format = TRACTS_UNKNOWN;
+  return format;
+}
+
+int GetFiberTractsFormat(const std::string& filename)
+{
+  std::string ext, fileNoExt;
+  utl::GetFileExtension(filename, ext, fileNoExt);
+
+  FILE* file;
+  file = fopen(filename.c_str(), "rb");
+  if (!file)
+    utlGlobalException(true, "Unable to open file " + filename);
+
+  int format = TRACTS_UNKNOWN;
+  if (ext=="trk")
+    {
+    format = TRACTS_TRK;
+    char code[6];
+    fseek (file, 0, SEEK_SET);  
+    fread(code, 1, 6, file);
+    utlGlobalException(strcmp(code,"TRACK")!=0, "Wrong data format TRACTS_TRK. Magic code is wrong. It is " + std::string(code) +". Should be 'TRACK'");
+    }
+  else if (ext=="tck")
+    {
+    format = TRACTS_TCK;
+    }
+  else if (ext=="vtk")
+    {
+    format = TRACTS_VTK;
+    }
+  else
+    format = TRACTS_UNKNOWN;
+  fclose(file);
+  return format;
+}
+
+/* Function taken from 3D Slicer, vtkDiffusionTensorMathematics
  *
  * This is sort of the inverse of code from Gordon Kindlmann for mapping
  * the mode (index value) to RGB. See vtkTensorMathematics for that code.

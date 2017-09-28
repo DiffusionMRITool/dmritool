@@ -147,6 +147,32 @@ CartesianToSpherical ( const NDArray<T,2>& in )
   return out;
 }
 
+template <class T>
+NDArray<T,2> 
+FlipOrientations ( const NDArray<T,2>& in, const std::vector<int>& flip )
+{
+  utlAssert(in.Columns()==3 || in.Rows()==3, "wrong dimension");
+  utlAssert(flip.size()==3, "flip should have 3 elements");
+  NDArray<T,2> out(in);
+  if (in.Columns()==3)
+    {
+    for ( int i = 0; i < in.Rows(); i += 1 ) 
+      {
+      for ( int j = 0; j < 3; ++j ) 
+        out(i,j)= flip[j]? -in(i,j) : in(i,j);
+      }
+    }
+  else
+    {
+    for ( int i = 0; i < in.Columns(); i += 1 ) 
+      {
+      for ( int j = 0; j < 3; ++j ) 
+        out(j,i)= flip[j]? -in(j,i) : in(j,i);
+      }
+    }
+  return out;
+}
+
 /** The function only works for 4th order tensors which are in 3D space and have minor symmetry.  
  *  
  *  When \f$ A_{i,j,k,l} \f$ is minor symmetric, it can be mapped to a 2D  matrix 

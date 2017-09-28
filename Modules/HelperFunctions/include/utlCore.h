@@ -497,17 +497,10 @@ CreateExpandedPath(const std::string & path)
 
 
 inline bool 
-IsFileExist ( const std::string file )
+IsFileExist ( const std::string& file )
 {
-  std::fstream ii;
-  ii.open(file.c_str(), std::fstream::in);
-  if (ii)
-    {
-    ii.close();
-    return true;
-    }
-  else
-    return false;
+  std::ifstream ii(file.c_str());
+  return ii.good();
 }
 
 /** path with the last "/" 
@@ -1603,6 +1596,14 @@ GetAbsoluteVector( const VectorType& vec, const int N )
   VectorType result(vec);
   AbsoluteVector(result, N);
   return result;
+}
+
+template <class T1, class T2>
+void 
+FlipVector ( T1& vec,  const T2& flip, const int N)
+{
+  for ( int i = 0; i < N; i += 1 ) 
+    vec[i] = flip[i]? -vec[i] : vec[i];
 }
 
 /** copy a vector to another vector with different type.  */

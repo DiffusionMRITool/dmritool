@@ -234,21 +234,32 @@ Is3DImage(const std::string filename)
 
 template <class ImageType>
 int 
-GetVectorImageVectorSize(const SmartPointer<ImageType>& image)
+GetVectorImageVectorSize(const SmartPointer<ImageType>& image, const int axis=-1)
 {
   std::string name = image->GetNameOfClass();
-  if (name=="VectorImage")
+  if (name=="VectorImage" || name=="SpatiallyDenseSparseVectorImage")
     {
-    return image->GetNumberOfComponentsPerPixel(); 
+    if (axis<0 || axis==ImageType::ImageDimension)
+      return image->GetNumberOfComponentsPerPixel(); 
+    else
+      {
+      typename ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
+      return size[axis]; 
+      }
     }
   else if (name=="Image")
     {
     typename ImageType::SizeType size = image->GetLargestPossibleRegion().GetSize();
-    return size[ImageType::ImageDimension-1];
+    if (axis==ImageType::ImageDimension || (axis<0 && ImageType::ImageDimension<=3))
+      return 1;
+    else if (axis<0 || axis==ImageType::ImageDimension-1)
+      return size[ImageType::ImageDimension-1];
+    else
+      return size[axis];
     }
   else
     {
-    utlGlobalException(true, "not supported");
+    utlGlobalException(true, "not supported type: " + name);
     return -1;
     }
 }
@@ -258,7 +269,7 @@ void
 SetVectorImageVectorSize(const SmartPointer<ImageType>& image, const int vecsize)
 {
   std::string name = image->GetNameOfClass();
-  if (name=="VectorImage")
+  if (name=="VectorImage" || name=="SpatiallyDenseSparseVectorImage")
     {
     image->SetNumberOfComponentsPerPixel(vecsize); 
     }
@@ -270,6 +281,8 @@ SetVectorImageVectorSize(const SmartPointer<ImageType>& image, const int vecsize
     region.SetSize(size);
     image->SetRegions(region);
     }
+  else
+    utlGlobalException(true, "not supported type: " + name);
 }
 
 template <class ImageType>
@@ -279,7 +292,7 @@ GetVectorImage3DVolumeSize(const SmartPointer<ImageType>& image)
   std::string name = image->GetNameOfClass();
   std::vector<int> size(3, 1);
   typename ImageType::SizeType imagesize = image->GetLargestPossibleRegion().GetSize();
-  if (name=="VectorImage")
+  if (name=="VectorImage" || name=="SpatiallyDenseSparseVectorImage")
     {
     for ( int i = 0; i < ImageType::ImageDimension; ++i ) 
       {
@@ -294,6 +307,8 @@ GetVectorImage3DVolumeSize(const SmartPointer<ImageType>& image)
     for ( int i = 4; i < ImageType::ImageDimension; ++i ) 
       utlException(imagesize[i]!=1, "the image has more than 3D. Image size = " << imagesize);
     }
+  else
+    utlGlobalException(true, "not supported type: " + name);
   return size;
 }
 
@@ -320,7 +335,7 @@ GetVectorImageFullSize(const SmartPointer<ImageType>& image)
   std::vector<int> size;
   typename ImageType::SizeType imagesize = image->GetLargestPossibleRegion().GetSize();
   const int dim = ImageType::ImageDimension;
-  if (name=="VectorImage")
+  if (name=="VectorImage" || name=="SpatiallyDenseSparseVectorImage")
     {
     size.resize(dim+1);
     for ( int i = 0; i < dim; ++i ) 
@@ -333,6 +348,8 @@ GetVectorImageFullSize(const SmartPointer<ImageType>& image)
     for ( int i = 0; i < dim; ++i ) 
       size[i] = imagesize[i];
     }
+  else
+    utlGlobalException(true, "not supported type: " + name);
   return size;
 }
 
@@ -345,7 +362,7 @@ SetVectorImageFullSize(SmartPointer<ImageType>& image, const std::vector<int>& s
   typename ImageType::RegionType region = image->GetLargestPossibleRegion();
   typename ImageType::SizeType imagesize = region.GetSize();
   const int dim = ImageType::ImageDimension;
-  if (name=="VectorImage")
+  if (name=="VectorImage" || name=="SpatiallyDenseSparseVectorImage")
     {
     utlSAException(size.size()!=dim+1)(size.size())(dim).msg("wrong size");
     for ( int i = 0; i < dim; ++i ) 
@@ -358,6 +375,8 @@ SetVectorImageFullSize(SmartPointer<ImageType>& image, const std::vector<int>& s
     for ( int i = 0; i < dim; ++i ) 
       imagesize[i] = size[i];
     }
+  else
+    utlGlobalException(true, "not supported type: " + name);
   region.SetSize(imagesize);
   image->SetRegions(region);
 }

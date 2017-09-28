@@ -65,6 +65,7 @@ template <class PixelType>
 inline void 
 ReadVectorImage ( const std::string filename, SmartPointer<VectorImage<PixelType,3> > &image, const std::string printInfo="Reading Image:" )
 {
+  utlGlobalException(!utl::IsFileExist(filename), filename + " does not exist");
   typedef VectorImage<PixelType,3> VectorImageType;
   if (itk::IsVectorImage(filename))
     itk::ReadImage<VectorImageType>(filename, image, printInfo);

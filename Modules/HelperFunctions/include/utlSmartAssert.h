@@ -593,7 +593,7 @@ namespace smart_assert {
 
     // warn : just dump summary to console
     inline void default_warn_handler( const assert_context & context) {
-        dump_context_summary( context, std::cout);
+        dump_context_detail( context, std::cout);
     }
 
 

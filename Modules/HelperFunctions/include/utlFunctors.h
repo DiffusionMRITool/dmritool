@@ -17,9 +17,8 @@
 #include <cmath>
 
 
-/** macro to define unary functors in utl::Functor, 
- * then define functions in utl which can be used elementwisely for expressions. */
-#define utlUnaryFunctorMacro(name, realFunc)                                                                             \
+/** macro to define unary functors in utl::Functor */
+#define utlUnaryFunctorBaseMacro(name, realFunc)                                                                         \
 namespace Functor{                                                                                                       \
 template<typename T>                                                                                                     \
 struct name                                                                                                              \
@@ -31,7 +30,12 @@ struct name                                                                     
     UTL_ALWAYS_INLINE bool operator==(const name & other) const                                                          \
       { return !( *this != other ); }                                                                                    \
 };                                                                                                                       \
-}                                                                                                                        \
+}                                                                                                                        
+
+
+/** macro to define unary functors in utl::Functor, then define functions in utl which can be used elementwisely for expressions. */
+#define utlUnaryFunctorMacro(name, realFunc)                                                                             \
+  utlUnaryFunctorBaseMacro(name, realFunc)                                                                               \
                                                                                                                          \
 template<class ExprT>                                                                                                    \
 auto name(const ExprT& expr) -> decltype(utl::F<utl::Functor::name<typename ExprT::ValueType> >(expr))                   \
@@ -61,9 +65,8 @@ public:                                                                         
 
 
 
-/** macro to define binary functors in utl::Functor, 
- * then define functions in utl which can be used elementwisely for expressions. */
-#define utlBinaryFunctorMacro(name, realFunc)                                                                                                         \
+/** macro to define binary functors in utl::Functor */
+#define utlBinaryFunctorBaseMacro(name, realFunc)                                                                                                     \
 namespace Functor{                                                                                                                                    \
 template<typename T>                                                                                                                                  \
 struct name                                                                                                                                           \
@@ -75,7 +78,13 @@ struct name                                                                     
     UTL_ALWAYS_INLINE bool operator==(const name & other) const                                                                                       \
       { return !( *this != other ); }                                                                                                                 \
 };                                                                                                                                                    \
-}                                                                                                                                                     \
+}                                                                                                                                                     
+
+
+/** macro to define binary functors in utl::Functor, then define functions in utl which can be used elementwisely for expressions. */
+#define utlBinaryFunctorMacro(name, realFunc)                                                                                                         \
+  utlBinaryFunctorBaseMacro(name, realFunc)                                                                                                           \
+                                                                                                                                                      \
 template<class TLeft, class TRight>                                                                                                                   \
 auto name(const TLeft& lhs, const TRight& rhs) -> decltype(utl::F<utl::Functor::name<Expr2ValueType<TLeft,TRight>> >(lhs, rhs))                       \
   {                                                                                                                                                   \
@@ -167,6 +176,161 @@ public:
 protected:
   int m_LogLevel=1;
 };
+
+
+template< class TFunctor, class TVector=utl::NDArray<double,1>, class TOutput=TVector >  
+class ScalarFunctorWrapper : public VectorFunctorBase<TVector, TOutput>
+{ 
+public:
+  typedef ScalarFunctorWrapper Self;
+  bool operator==(const Self & other) const  
+  { return false; }
+  bool operator!=(const Self & other) const 
+  { return ! (*this==other); } 
+  void operator=(const Self & other)   
+    {m_Functor = other.m_Functor;}    
+
+  ScalarFunctorWrapper()
+    {
+    m_Functor = TFunctor();
+    }
+
+  inline TOutput operator()( const TVector & A) const 
+  {
+  int inputSize = A.Size();
+  TOutput out(inputSize);
+  for ( int i = 0; i < inputSize; ++i ) 
+    {
+    out[i]= m_Functor(A[i]);
+    }
+  return out;
+  }
+  
+  int GetOutputDimension(const int inputSize) const
+    {
+    return 1;
+    } 
+protected:
+  TFunctor m_Functor;
+};
+
+template< class TFunctor, class TVector=utl::NDArray<double,1>, class TOutput=TVector >  
+class VectorFunctorWrapper : public VectorFunctorBase<TVector, TOutput>
+{ 
+public:
+  typedef VectorFunctorWrapper Self;
+  bool operator==(const Self & other) const  
+  { return false; }
+  bool operator!=(const Self & other) const 
+  { return ! (*this==other); } 
+  void operator=(const Self & other)    
+    {m_Functor = other.m_Functor;}    
+
+  VectorFunctorWrapper()
+    {
+    m_Functor = TFunctor();
+    }
+
+  inline TOutput operator()( const TVector & A) const 
+  {
+  int inputSize = A.Size();
+  TOutput out(inputSize);
+  out= m_Functor(A);
+  return out;
+  }
+  
+  int GetOutputDimension(const int inputSize) const
+    {
+    return inputSize;
+    } 
+protected:
+  TFunctor m_Functor;
+};
+
+template< class TFunction=std::function<double(double)> , class TVector=utl::NDArray<double,1>, class TOutput=TVector >  
+class VectorUnaryFunctionWrapper : public VectorFunctorBase<TVector, TOutput>
+{ 
+public:
+  typedef VectorUnaryFunctionWrapper Self;
+  bool operator==(const Self & other) const  
+  { return false; }
+  bool operator!=(const Self & other) const 
+  { return ! (*this==other); } 
+  void operator=(const Self & other)  
+    {m_Function = other.m_Function;}    
+
+  VectorUnaryFunctionWrapper(TFunction func=nullptr)
+    {
+    m_Function = func; 
+    }
+
+  inline TOutput operator()( const TVector & A) const 
+  {
+  int inputSize = A.Size();
+  TOutput out(inputSize);
+  for ( int i = 0; i < inputSize; ++i ) 
+    {
+    out[i]= m_Function(A[i]);
+    }
+  return out;
+  }
+  
+  int GetOutputDimension(const int inputSize) const
+    {
+    return inputSize;
+    } 
+protected:
+  TFunction m_Function;
+};
+
+template< class TFunction=std::function<double(std::vector<double>)> , class TVector=utl::NDArray<double,1>, class TOutput=TVector >  
+class VectorMultiVariableFunctionWrapper : public VectorFunctorBase<TVector, TOutput>
+{ 
+public:
+  typedef VectorMultiVariableFunctionWrapper Self;
+  bool operator==(const Self & other) const  
+  { return false; }
+  bool operator!=(const Self & other) const 
+  { return ! (*this==other); } 
+  void operator=(const Self & other)  
+    {m_Function = other.m_Function;}    
+
+  VectorMultiVariableFunctionWrapper(TFunction func=nullptr)
+    {
+    m_Function = func; 
+    }
+
+  inline TOutput operator()( const std::vector<TVector>& vec) const 
+  {
+  int N = vec.size();
+  utlException(N==0, "cannot be empty vector");
+  int inputSize = vec[0].Size();
+  TOutput out(inputSize);
+  std::vector<double> values;
+  for ( int i = 0; i < inputSize; ++i ) 
+    {
+    values.clear();
+    for ( int j = 0; j < N; ++j ) 
+      {
+      values.push_back(vec[j][i]);
+      }
+    out[i]= m_Function(values);
+    }
+  return out;
+  }
+  
+  int GetOutputDimension(const int inputSize) const
+    {
+    return inputSize;
+    } 
+  int GetOutputDimension(const std::vector<int>& sizeVec) const
+    {
+    return sizeVec[0];
+    } 
+protected:
+  TFunction m_Function;
+};
+
 }
 
 
@@ -329,7 +493,25 @@ public:
   return out;
   }
   
+  inline TOutput operator()(const std::vector<TVector>& vec) const 
+  {
+  utlException(vec.size()!=2, "need to set only 2 vectors");
+  TVector A = vec[0];
+  TVector B = vec[1];
+  int inputSize = A.Size();
+  utlSAException(B.Size()!=inputSize)(inputSize)(B.Size()).msg("two vectors have different sizes");
+  TOutput out(GetOutputDimension(inputSize));
+  out[0]=0;
+  for ( int i = 0; i < inputSize; ++i ) 
+    out[0] += A[i]*B[i];
+  return out;
+  }
+  
   int GetOutputDimension(const int inputSize) const
+    {
+    return 1;
+    } 
+  int GetOutputDimension(const std::vector<int>& sizeVec) const
     {
     return 1;
     } 
