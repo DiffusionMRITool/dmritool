@@ -399,8 +399,9 @@ int GetFiberTractsFormat(const std::string& filename)
     format = TRACTS_TRK;
     char code[6];
     fseek (file, 0, SEEK_SET);  
-    fread(code, 1, 6, file);
+    size_t rsize = fread(code, 1, 6, file);
     utlGlobalException(strcmp(code,"TRACK")!=0, "Wrong data format TRACTS_TRK. Magic code is wrong. It is " + std::string(code) +". Should be 'TRACK'");
+    utlGlobalException(rsize!=6, "wrong size read");
     }
   else if (ext=="tck")
     {
