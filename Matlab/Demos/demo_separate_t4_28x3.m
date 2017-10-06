@@ -23,7 +23,7 @@ params.numSamples = [28, 28, 28];
 % sos constraint
 params.sos = 1;
 % set a lower bound, it can be 0 or covering radius from an existing scheme
-params.lbCost = [0.38,0.38,0.38,0.23];
+params.lbCost = [0.35,0.35,0.35,0.2];
 
 
 params.w=0.5;

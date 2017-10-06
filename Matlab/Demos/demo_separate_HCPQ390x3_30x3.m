@@ -31,6 +31,8 @@ params.w=0.5;
 % MIPFocus 1
 grbParams.MIPFocus=1;
 grbParams.TimeLimit=600;
+grbParams.OutputFlag=true;
+% grbParams.DisplayInterval=1;
 
 % run
 [grad,grb, indexMatrix] = OptimalSamplingMultiSubsetsFromDifferentSets(grad_hcp_all, params, grbParams);

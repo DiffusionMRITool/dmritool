@@ -17,7 +17,7 @@ Some wonderful contributors:
 * **Pew-Thian Yap**, `MIND Lab`_, `IDEA Group`_, `University of North Carolina at Chapel Hill`_
 
 
-People who are interested in diffusion MRI methodology are welcome to join the development team. 
+People who are interested in diffusion MRI methodologies are welcome to join the development team. 
 We can collaborate via `github <https://github.com/DiffusionMRITool/dmritool>`__. 
 
 Online web statistics on the DMRITool_ development activity are available below:

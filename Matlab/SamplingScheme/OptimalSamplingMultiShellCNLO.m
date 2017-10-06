@@ -26,8 +26,10 @@ function [gradCell, xopt, fopt, retcode] = OptimalSamplingMultiShellCNLO(gradCel
 %
 %
 % Reference:
-%   "Novel single and multiple shell uniform sampling schemes for diffusion MRI using spherical codes", 
-%   Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, MICCAI 2015.  
+%   1. "Single- and Multiple-Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes", 
+%       Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, IEEE Transactions on Medical Imaging, 2017.  
+%   2. "Novel single and multiple shell uniform sampling schemes for diffusion MRI using spherical codes", 
+%       Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, MICCAI 2015.  
 %
 % Copyright (c) 2015, Jian Cheng <jian.cheng.1983@gmail.com>
 

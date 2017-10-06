@@ -21,9 +21,12 @@ function [gradCell,grb_result,indexMatrix] = OptimalSamplingMultiSubsetsFromSame
 %   gradCell           :  Kx1 cell, each element is a gradient matrix. 
 %   grb_result         :  output from GUROBI
 %
+%
 % Reference:
-%   "Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code", 
-%   Jian Cheng, Dinggang Shen, Pew-Thian Yap, MICCAI 2014.  
+%   1. "Single- and Multiple-Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes", 
+%       Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, IEEE Transactions on Medical Imaging, 2017.  
+%   2. "Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code", 
+%       Jian Cheng, Dinggang Shen, Pew-Thian Yap, MICCAI 2014.  
 %
 % Copyright (c) 2013, Jian Cheng <jian.cheng.1983@gmail.com>
 %

@@ -14,7 +14,9 @@ function ub = CoveringRadiusUpperBound(N)
 % 
 % References: 
 %   1.  http://mathworld.wolfram.com/SphericalCode.html
-%   2. "Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code", 
+%   2. "Single- and Multiple-Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes", 
+%       Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, IEEE Transactions on Medical Imaging, 2017.  
+%   3. "Designing Single- and Multiple-Shell Sampling Schemes for Diffusion MRI Using Spherical Code", 
 %       Jian Cheng, Dinggang Shen, Pew-Thian Yap, MICCAI 2014.  
 % 
 %

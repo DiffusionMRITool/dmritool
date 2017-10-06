@@ -10,7 +10,15 @@ function [grad, xopt, fopt, retcode] = OptimalSamplingSingleShellCNLO(gradInitia
 % OUTPUT
 %   grad              :  updated N x 3 gradient matrix. 
 %
+%
+% Reference:
+%   1. "Single- and Multiple-Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes", 
+%       Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, IEEE Transactions on Medical Imaging, 2017.  
+%   2. "Novel single and multiple shell uniform sampling schemes for diffusion MRI using spherical codes", 
+%       Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, MICCAI 2015.  
+%
 % Copyright (c) 2014, Jian Cheng <jian.cheng.1983@gmail.com>
+%
 
 %% sampling parameters
 paramDefault.w=0.5;

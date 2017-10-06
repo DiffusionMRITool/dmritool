@@ -9,3 +9,6 @@ Documentation/Sphinx/matlabfiles/
 Documentation/Sphinx/.tutorial*
 
 Matlab/Demos/html
+Matlab/Demos/*.txt
+Matlab/Demos/*.mps
+

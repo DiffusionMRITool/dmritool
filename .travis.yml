@@ -7,7 +7,7 @@ compiler:
 
 before_install:
   - sudo apt-get update -qq
-  # - sudo apt-get install -qq libinsighttoolkit4-dev 
+  # - sudo apt-get install -qq libinsighttoolkit4-dev  # ubuntu trusty has ITK 4.5 as default, while we need ITK >4.9  
   - sudo apt-get install -qq libvtk6-dev libvtk6 
   - sudo apt-get install -qq cmake 
   - sudo apt-get install -qq gsl-bin libgsl0-dev 
