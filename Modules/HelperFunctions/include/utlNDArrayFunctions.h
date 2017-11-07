@@ -269,9 +269,9 @@ PrintUtlMatrix(const NDArray<T,2>& mat, const std::string str="", const char* se
 
 template <class T>
 inline void
-PrintUtlVector(const NDArray<T,1>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintUtlVector(const NDArray<T,1>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
-  PrintContainer(vec.Begin(), vec.End(), str, separate, os);
+  PrintContainer(vec.Begin(), vec.End(), str, separate, os, showStats);
 }
 
 template <class T, unsigned int Dim>
@@ -816,16 +816,31 @@ OuterProduct ( const NDArray<T,1>& v1, const NDArray<T,1>& v2, NDArray<T,2>& mat
       }
 }
 
+// use CrossProduct in utlMath.h
+// template <class T>
+// void 
+// CrossProduct ( const NDArray<T,1>& v1, const NDArray<T,1>& v2, NDArray<T,1>& v3 )
+// {
+//   utlException(v1.Size()!=3, "wrong size");
+//   utlException(v2.Size()!=3, "wrong size");
+//   v3.ReSize(3);
+//   v3[0]=v1[1]*v2[2] - v1[2]*v2[1];
+//   v3[1]=v1[2]*v2[0] - v1[0]*v2[2];
+//   v3[2]=v1[0]*v2[1] - v1[1]*v2[0];
+// }
+
 template <class T>
-void 
-CrossProduct ( const NDArray<T,1>& v1, const NDArray<T,1>& v2, NDArray<T,1>& v3 )
+NDArray<T,1> 
+DifferenceOfDirection(const NDArray<T,1> v1, const NDArray<T,1>& v0)
 {
-  utlException(v1.Size()!=3, "wrong size");
-  utlException(v2.Size()!=3, "wrong size");
-  v3.ReSize(3);
-  v3[0]=v1[1]*v2[2] - v1[2]*v2[1];
-  v3[1]=v1[2]*v2[0] - v1[0]*v2[2];
-  v3[2]=v1[0]*v2[1] - v1[1]*v2[0];
+  double norm1, norm2;
+  utl::NDArray<T,1> tmp1, tmp2;
+  tmp1 = v1-v0; norm1 = tmp1.GetTwoNorm();
+  tmp2 = v1+v0; norm2 = tmp2.GetTwoNorm();
+  if (norm1 > norm2)
+    return tmp2;
+  else
+    return tmp1;
 }
 
 template< typename T >

@@ -47,10 +47,14 @@ enum {
 // };
 
 enum{
+  // 9d [xx, xy, xz, yx, yy, yz, zx, zy, zz]
+  TENSOR_9D=0,
   // [xx, xy, xz, yy, yz, zz], fsl
-  TENSOR_UPPER_TRIANGULAR=0,
+  TENSOR_UPPER_TRIANGULAR,
   // [xx, yx, yy, zx, zy, zz]
   TENSOR_LOWER_TRIANGULAR, 
+  // [xx, yy, zz, xy, xz yz],  internal in vistasoft, AFQ
+  TENSOR_DIAGONAL_FIRST, 
   // [xx, yy, zz, sqrt(2)*xy, sqrt(2)*xz, sqrt(2)*yz], embed 3x3 matrix into 6x1 vector
   TENSOR_EMBED6D 
 };
@@ -66,13 +70,115 @@ namespace utl
 {
 
 
+// [>* The name and dimention map for vectors.  <]
+// typedef utl_unordered_map<std::string, int>  VecDimType;
+// static VecDimType vectorNameDimMap{
+//     {"scalar",1},
+//     {"frame", 9}, 
+//     {"point",3}
+// };  
+
+/** 
+* We define a name of scalar vector with its dimension, if the dimension is not 1. 
+* For example, the name "frame_9" means a frame with 9 dimensions. 
+* The name "orientational order" means a scalar value with 1 dimension. 
+* It is used to determine the dimension of scalars in a fiber track.
+* */
+inline int
+GetScalarsDimentionByName(const std::string& name)
+{
+  // auto ii = vectorNameDimMap.find(name);
+  // if (ii!=vectorNameDimMap.end())
+  //   return ii->second;
+  // else
+  //   return 1;
+
+  size_t found = name.find_last_of("_");
+  if (found==std::string::npos)
+    return 1;
+
+  std::string dim = name.substr(found+1);
+  if (utl::IsInt(dim))
+    return utl::ConvertStringToNumber<int>(dim);
+  else
+    return 1;
+}
+
+/** Get scalar vector by its name. The name-dimention map is in vectorNameDimMap */
+template <class T>
+inline std::vector<T>
+GetScalarsByName(const std::vector<T>& vec, const std::vector<std::string>& nameVec, const std::string& name)
+{
+  int start=0;
+  std::vector<T> result;
+  for ( int i = 0; i < nameVec.size(); ++i ) 
+    {
+    int len = GetScalarsDimentionByName(nameVec[i]);
+    if (nameVec[i]==name)
+      {
+      for ( int j = 0; j < len; ++j ) 
+        result.push_back(vec[start+j]);
+      return result;
+      }
+    start += len;
+    }
+  return result;
+}
+
+template <class T>
+inline void
+SetScalarsByName(const std::vector<T>& vec, const std::vector<std::string>& nameVec, const std::vector<T>& scalars, const std::string& name)
+{
+  int start=0;
+  for ( int i = 0; i < nameVec.size(); ++i ) 
+    {
+    int len = GetScalarsDimentionByName(nameVec[i]);
+    utlSAException(len!=scalars.size())(nameVec[i])(len)(scalars.size()).msg("the size of scalars is not consistent");
+    if (nameVec[i]==name)
+      {
+      for ( int j = 0; j < len; ++j ) 
+        vec[start+j] = scalars[j];
+      }
+    start += len;
+    }
+}
+
+template <class T>
+inline void
+RemoveScalarsByName(std::vector<T>& vec, const std::vector<std::string>& nameVec, const std::string& name)
+{
+  int start=0, len=0, i;
+  for ( i = 0; i < nameVec.size(); ++i ) 
+    {
+    len = GetScalarsDimentionByName(nameVec[i]);
+    if (nameVec[i]==name)
+      break;
+    start += len;
+    }
+
+  // no name found
+  if (i==nameVec.size())
+    return;
+
+  // // remove name
+  // int jj = i;
+  // nameVec.erase(nameVec.begin()+jj);
+
+  // remove scalars
+  for ( i = start; i+len < vec.size(); ++i ) 
+    vec[i] = vec[i+len];
+
+  vec.resize(vec.size()-len);
+}
+ 
+
 /** get the maximal rank of spherical harmonic coefficient vector with a given dimension  */
 inline int
 DimToRankSH ( const int dimm ) 
 {
   double result = -1.5 + std::sqrt(0.25 + 2.0*dimm);
   
-  utlGlobalAssert(IsInt(result), "Logical ERROR! Wrong dimension! dimm = " << dimm);
+  utlGlobalAssert(IsInt(result) && IsEven(result), "Logical ERROR! Rank of SH here must be an even integer. Wrong dimension! rank=" << result <<", dimm = " << dimm);
   
   return (int) result;
 }
@@ -181,6 +287,18 @@ ConvertTensor6DTo9D(const V1Type& v6d, V2Type& v9d, int v6dStoreWay)
     v9d[7] = v6d[5]*utl::SQRT1_2; // zy
     v9d[8] = v6d[2]; // zz
     }
+  else if (v6dStoreWay==TENSOR_DIAGONAL_FIRST)
+    {
+    v9d[0] = v6d[0]; // xx
+    v9d[1] = v6d[3]; // xy
+    v9d[2] = v6d[4]; // xz
+    v9d[3] = v6d[3]; // yx
+    v9d[4] = v6d[1]; // yy
+    v9d[5] = v6d[5]; // yz
+    v9d[6] = v6d[4]; // zx
+    v9d[7] = v6d[5]; // zy
+    v9d[8] = v6d[2]; // zz
+    }
   else
     utlException(true, "wrong v1StoreWay");
 }
@@ -218,8 +336,34 @@ ConvertTensor9DTo6D(const V1Type& v9d, V2Type& v6d, int v6dStoreWay)
     v6d[4] = v9d[2]*utl::SQRT2; // sqrt(2)*xz
     v6d[5] = v9d[5]*utl::SQRT2; // sqrt(2)*yz
     }
+  else if (v6dStoreWay==TENSOR_DIAGONAL_FIRST)
+    {
+    v6d[0] = v9d[0]; // xx
+    v6d[1] = v9d[4]; // yy
+    v6d[2] = v9d[8]; // zz
+    v6d[3] = v9d[1]; // xy
+    v6d[4] = v9d[2]; // xz
+    v6d[5] = v9d[5]; // yz
+    }
   else
     utlException(true, "wrong v1StoreWay");
+}
+
+template<typename V1Type, typename V2Type>
+void 
+ConvertTensor6DTo6D(const V1Type& v6d1, V2Type& v6d2, int s1, int s2)
+{
+  if (s1==s2)
+    {
+    for ( int i = 0; i < 6; ++i ) 
+      v6d2[i] = v6d1[i];
+    }
+  else
+    {
+    std::vector<double> v9d(9);
+    ConvertTensor6DTo9D(v6d1, v9d, s1);
+    ConvertTensor9DTo6D(v9d, v6d2, s2);
+    }
 }
 
 /** The function only works for 2th order tensors which are in 3D and are symmetric.  */
@@ -263,7 +407,7 @@ NormalizeGrad(const utl::NDArray<T,2>& grad)
 
 template <class T>
 inline utl_shared_ptr<NDArray<T,2> >
-ReadGrad(const std::string grad_str, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, const int mode=CARTESIAN_TO_SPHERICAL, 
+ReadGrad(const std::string& grad_str, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, const int mode=CARTESIAN_TO_SPHERICAL, 
   const int flipx=DIRECTION_NOFLIP, const int flipy=DIRECTION_NOFLIP, const int flipz=DIRECTION_NOFLIP, const bool need_normalize=true) 
 {
   std::vector < std::vector<std::string> > strVec;
@@ -272,7 +416,7 @@ ReadGrad(const std::string grad_str, const int NoSymmetricDuple=DIRECTION_NODUPL
   ReadLinesFirstlineCheck(grad_str, strVec, " \t,");
 
   for ( int i = 0; i < strVec.size(); i += 1 ) 
-    utlException(strVec[i].size()!=3, "wrong dimension in gradient file! strVec[i].size()="<< strVec[i].size() <<", grad_str="<<grad_str);
+    utlGlobalException(strVec[i].size()!=3, "wrong dimension in gradient file! strVec[i].size()="<< strVec[i].size() <<", grad_str="<<grad_str);
 
   utl_shared_ptr<NDArray<T,2> > grad (new NDArray<T,2>() );
   if (NoSymmetricDuple==DIRECTION_DUPLICATE)
@@ -284,7 +428,7 @@ ReadGrad(const std::string grad_str, const int NoSymmetricDuple=DIRECTION_NODUPL
   int jj=0;
   for (int i=0; i<strVec.size(); i++) 
     {
-    utlException(strVec[i].size()!=3, "wrong size for grad");
+    utlGlobalException(strVec[i].size()!=3, "wrong size for grad");
     std::istringstream ( strVec[i][0] ) >> xyz[0];
     std::istringstream ( strVec[i][1] ) >> xyz[1];
     std::istringstream ( strVec[i][2] ) >> xyz[2];
@@ -367,7 +511,8 @@ MatchBVectorAndGradientMatrix ( std::vector<T>& vec, NDArray<T,2>& grad )
   return;
 }
 
-int GetFiberTractsFormatFromFileExtension(const std::string& filename)
+inline int 
+GetFiberTractsFormatFromFileExtension(const std::string& filename)
 {
   std::string ext, fileNoExt;
   utl::GetFileExtension(filename, ext, fileNoExt);
@@ -383,7 +528,8 @@ int GetFiberTractsFormatFromFileExtension(const std::string& filename)
   return format;
 }
 
-int GetFiberTractsFormat(const std::string& filename)
+inline int 
+GetFiberTractsFormat(const std::string& filename)
 {
   std::string ext, fileNoExt;
   utl::GetFileExtension(filename, ext, fileNoExt);

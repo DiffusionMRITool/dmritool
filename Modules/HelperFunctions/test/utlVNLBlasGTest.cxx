@@ -84,6 +84,8 @@ TEST_F(utlVNLBlas_gtest, MatrixTimesMatrix)
   mat_mul = mat1*mat2;
   utl::ProductVnlMM(mat1, mat2, mat_mulBlas);
   EXPECT_NEAR_VNLMATRIX( mat_mul, mat_mulBlas, 1e-15 );
+  utl::ProductMM(mat1, mat1.rows(), mat1.cols(), mat2, mat2.cols(), mat_mulBlas);
+  EXPECT_NEAR_VNLMATRIX( mat_mul, mat_mulBlas, 1e-15 );
 
   vnl_matrix<double> mat2t = mat2.transpose();
   mat_mul = mat1*mat2t.transpose();
@@ -96,6 +98,8 @@ TEST_F(utlVNLBlas_gtest, MatrixTimesVector)
   vnl_vector<double> vec_mul, vec_mulBlas;
   vec_mul = mat1*vec1;
   utl::ProductVnlMv(mat1, vec1, vec_mulBlas);
+  EXPECT_NEAR_VNLVECTOR( vec_mul, vec_mulBlas, 1e-15 );
+  utl::ProductMv(mat1, mat1.rows(), mat1.cols(), vec1, vec_mulBlas);
   EXPECT_NEAR_VNLVECTOR( vec_mul, vec_mulBlas, 1e-15 );
 
   vnl_matrix<double> mat1t = mat1.transpose();
@@ -110,6 +114,8 @@ TEST_F(utlVNLBlas_gtest, VectorTimesMatrix)
   vec_mul = vec1*mat2;
   utl::ProductVnlvM(vec1, mat2, vec_mulBlas);
   EXPECT_NEAR_VNLVECTOR( vec_mul, vec_mulBlas, 1e-15 );
+  utl::ProductvM(vec1, vec1.size(), mat2, mat2.cols(), vec_mulBlas);
+  EXPECT_NEAR_VNLVECTOR( vec_mul, vec_mulBlas, 1e-15 );
 
   vnl_matrix<double> mat2t = mat2.transpose();
   vec_mul = vec1*mat2t.transpose();
@@ -119,43 +125,66 @@ TEST_F(utlVNLBlas_gtest, VectorTimesMatrix)
 
 TEST(utlVNLBlas, MatrixTimesMatrix_TimeCost)
 {
-  vnl_matrix<double> mat1 = __GenerateRandomMatrix(514, 180, -2.0,2.0);
-  vnl_matrix<double> mat2 = __GenerateRandomMatrix(180, 254, -2.0,2.0);
-  UtlMatrixType mat1Utl = utl::VnlMatrixToUtlMatrix(mat1);
-  UtlMatrixType mat2Utl = utl::VnlMatrixToUtlMatrix(mat2);
+  std::vector<std::array<double,4> > numVec;
+  std::array<double,4> arr1, arr2, arr3;
+  arr1[0]=514, arr1[1]=180, arr1[2]=254, arr1[3]=20;
+  arr2[0]=3, arr2[1]=3, arr2[2]=3, arr2[3]=60000;
+  arr3[0]=10, arr3[1]=10, arr3[2]=10, arr3[3]=30000;
+  numVec.push_back(arr1);
+  numVec.push_back(arr2);
+  numVec.push_back(arr3);
 
-  int N = 20;
+  for ( int kk = 0; kk < numVec.size(); ++kk ) 
     {
-    utl::Tic(std::cout<<"vnl matrix multiplization time: \n");
-    for ( int i = 0; i < N; i += 1 ) 
+    auto arr = numVec[kk];
+    utl::PrintContainer(arr.begin(), arr.end(), "arr");
+
+    vnl_matrix<double> mat1 = __GenerateRandomMatrix(arr[0], arr[1], -2.0,2.0);
+    vnl_matrix<double> mat2 = __GenerateRandomMatrix(arr[1], arr[2], -2.0,2.0);
+    UtlMatrixType mat1Utl = utl::VnlMatrixToUtlMatrix(mat1);
+    UtlMatrixType mat2Utl = utl::VnlMatrixToUtlMatrix(mat2);
+
+    int N = arr[3];
       {
       vnl_matrix<double> tmp;
-      tmp = mat1*mat2;
+      utl::Tic(std::cout<<"vnl matrix multiplization time: \n");
+      for ( int i = 0; i < N; i += 1 ) 
+        {
+        tmp = mat1*mat2;
+        }
+      utl::Toc();
       }
-    utl::Toc();
-    }
-    {
-    utl::Tic(std::cout<<"ProductVnlMM time:\n");
-    for ( int i = 0; i < N; i += 1 ) 
       {
-      vnl_matrix<double> tmp;
-      utl::ProductVnlMM(mat1, mat2, tmp);
-      }
-    utl::Toc();
-    utl::Tic(std::cout<<"ProductUtlMM time:\n");
-    for ( int i = 0; i < N; i += 1 ) 
-      {
+      vnl_matrix<double> tmp1;
+      utl::Tic(std::cout<<"ProductVnlMM time:\n");
+      for ( int i = 0; i < N; i += 1 ) 
+        {
+        utl::ProductVnlMM(mat1, mat2, tmp1);
+        }
+      utl::Toc();
+        
       UtlMatrixType tmp;
-      utl::ProductUtlMM(mat1Utl, mat2Utl, tmp);
+      utl::Tic(std::cout<<"ProductUtlMM time:\n");
+      for ( int i = 0; i < N; i += 1 ) 
+        {
+        utl::ProductUtlMM(mat1Utl, mat2Utl, tmp);
+        }
+      utl::Toc();
+        
+      utl::Tic(std::cout<<"utl::Matrix product time:\n");
+      for ( int i = 0; i < N; i += 1 ) 
+        {
+        tmp = mat1Utl*mat2Utl;
+        }
+      utl::Toc();
+
+      utl::Tic(std::cout<<"ProductMM time:\n");
+      for ( int i = 0; i < N; i += 1 ) 
+        {
+        utl::ProductMM(mat1Utl, mat1Utl.Rows(), mat1Utl.Cols(), mat2Utl, mat2Utl.Cols(), tmp);
+        }
+      utl::Toc();
       }
-    utl::Toc();
-    utl::Tic(std::cout<<"utl::Matrix product time:\n");
-    for ( int i = 0; i < N; i += 1 ) 
-      {
-      UtlMatrixType tmp;
-      tmp = mat1Utl*mat2Utl;
-      }
-    utl::Toc();
     }
 }
 

@@ -137,7 +137,7 @@ public:
   UTL_ALWAYS_INLINE SizeType Columns() const {return this->m_Shape[1];}
   UTL_ALWAYS_INLINE SizeType Cols() const {return this->m_Shape[1];}
   
-  inline bool ReSize(const SizeType rows, const SizeType cols)
+  UTL_ALWAYS_INLINE bool ReSize(const SizeType rows, const SizeType cols)
     {
     SizeType shape[2];
     shape[0]=rows, shape[1]=cols;

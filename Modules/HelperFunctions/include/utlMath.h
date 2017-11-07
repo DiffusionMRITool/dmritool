@@ -151,7 +151,7 @@ ExpNegtiveLUT(const double dist, const double distMax=30.0, const int precision=
 }
 
 inline double
-PowInteger(const double a, const long b)
+PowInteger(const double a, const int b)
 {
   if (b==0)
     return 1;
@@ -160,7 +160,7 @@ PowInteger(const double a, const long b)
     return 1.0/PowInteger(a, -b);
 
   double result = a;
-  for ( long i = 1; i < b; i += 1 ) 
+  for ( int i = 1; i < b; i += 1 ) 
     result *= a;
   return result;
 }
@@ -177,11 +177,11 @@ PowHalfInteger(const double a, const double b)
     return 1.0/PowHalfInteger(a, -b);
   
   if (utl::IsInt(b))
-    return PowInteger(a, (long)b);
+    return PowInteger(a, (int)b);
 
   utlException(!utl::IsInt(2*b), "b need to be an integer or a half integer.");
 
-  long b_int = long(b-0.5);
+  int b_int = int(b-0.5);
   return std::sqrt(a)*PowInteger(a, b_int);
 }
 
@@ -1289,6 +1289,110 @@ InverseSmallMatrix ( const TMatrixType& mat, TMatrixType& result, const int row 
     default :
      utlGlobalException(true, "size too big");
      return;
+    }
+}
+
+
+/** Outer project of two vectors. mat needs to be pre-allocated.  */
+template <class TVector1, class TVector2, class TMatrix>
+inline void 
+OuterProduct ( const TVector1& v1, const int N1, const TVector2& v2, const int N2, TMatrix& mat )
+{
+  for ( int i = 0; i < N1; ++i ) 
+    for ( int j = 0; j < N2; ++j ) 
+      mat(i,j) = v1[i]*v2[j];
+}
+
+/** Outer product of a product and itself.  */
+template <class TVector1, class TMatrix>
+inline void 
+OuterProduct ( const TVector1& v1, const int N1, TMatrix& mat )
+{
+  for ( int i = 0; i < N1; ++i ) 
+    for ( int j = i; j < N1; ++j ) 
+      {
+      double tmp = v1[i]*v1[j];
+      mat(i,j) = tmp;
+      mat(j,i) = tmp;
+      }
+}
+
+template <class TVector1, class TVector2>
+inline double
+InnerProduct ( const TVector1& v1, const TVector2& v2, const int N1 )
+{
+  double result=0.0;
+  for ( int i = 0; i < N1; ++i ) 
+    result += v1[i]*v2[i];
+  return result;
+}
+
+template <class TVector1, class TVector2>
+inline double
+DotProduct ( const TVector1& v1, const TVector2& v2, const int N1 )
+{
+  return InnerProduct(v1,v2,N1);
+}
+
+template <class TVector1>
+inline double
+SquaredTwoNorm ( const TVector1& v1, const int N1 )
+{
+  double result=0.0;
+  for ( int i = 0; i < N1; ++i ) 
+    result += v1[i]*v1[i];
+  return result;
+}
+
+/** Cross product of two 3d vectors. v3 needs to be pre-allocated.  */
+template <class TVector1, class TVector2, class TVector3>
+inline double
+CrossProduct ( const TVector1& v1, const TVector2& v2, TVector3& v3 )
+{
+  v3[0]=v1[1]*v2[2] - v1[2]*v2[1];
+  v3[1]=v1[2]*v2[0] - v1[0]*v2[2];
+  v3[2]=v1[0]*v2[1] - v1[1]*v2[0];
+}
+
+/** matrix vector product. Direct calculation, efficient for small 3x3 matrices.  */
+template <class TMatrix, class TVector1, class TVector2>
+inline void
+ProductMv ( const TMatrix& mat, int rows, int cols, const TVector1& v1, TVector2& v2 )
+{
+  for ( int i = 0; i < rows; ++i ) 
+    {
+    v2[i]=0;
+    for ( int j = 0; j < cols; ++j ) 
+      v2[i] += mat(i,j)*v1[j];
+    }
+}
+
+/** vector matrix product. Direct calculation, efficient for small 3x3 matrices.  */
+template <class TVector1, class TMatrix, class TVector2>
+inline void
+ProductvM ( const TVector1& v1, int rows, const TMatrix& mat, int cols, TVector2& v2 )
+{
+  for ( int j = 0; j < cols; ++j ) 
+    {
+    v2[j]=0;
+    for ( int i = 0; i < rows; ++i ) 
+      v2[j] += mat(i,j)*v1[i];
+    }
+}
+
+/** matrix matrix product. Direct calculation, efficient for small 3x3 matrices.  */
+template <class TMatrix1, class TMatrix2, class TMatrix3>
+inline void
+ProductMM ( const TMatrix1& mat1, int rows, int cols, const TMatrix2& mat2, int cols2, TMatrix3& mat3)
+{
+  for ( int i = 0; i < rows; ++i ) 
+    {
+    for ( int j = 0; j < cols2; ++j ) 
+      {
+      mat3(i,j)=0;
+      for ( int k = 0; k < cols; ++k ) 
+        mat3(i,j) += mat1(i,k)*mat2(k,j);
+      }
     }
 }
 

@@ -428,10 +428,10 @@ GenerateImageFromSingleVoxel(const typename ImageType::PixelType& pixel)
   typename ImageType::SizeType sizeVoxel;
   typename ImageType::IndexType indexVoxel;
   typedef typename ImageType::PixelType PixelType;
-  for ( int i = 0; i < sizeVoxel.Size(); ++i ) 
+  for ( int i = 0; i < ImageType::ImageDimension; ++i ) 
     {
-    sizeVoxel[i]=1.0;
-    indexVoxel[i]=0.0;
+    sizeVoxel[i] = 1;
+    indexVoxel[i] = 0;
     }
   typename ImageType::Pointer image = itk::GenerateImage<ImageType>(sizeVoxel, itk::NumericTraits<PixelType>::GetLength(pixel));
   image->SetPixel(indexVoxel, pixel);

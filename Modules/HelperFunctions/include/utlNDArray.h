@@ -368,7 +368,7 @@ public:
 
 #define __Array_Saver_Expr(saver, saverReal)                                                     \
 template<typename EType>                                                                         \
-inline NDArrayBase<T,Dim>& operator saver (const Expr<EType, typename EType::ValueType>& src){   \
+UTL_ALWAYS_INLINE NDArrayBase<T,Dim>& operator saver (const Expr<EType, typename EType::ValueType>& src){   \
   auto srcDim = Expr<EType, typename EType::ValueType>::GetDimension();                          \
   utlSAGlobalException(srcDim>0 && srcDim!=Dimension)                                            \
     (srcDim)(Dimension).msg("the expression has a difference size");                             \
@@ -700,7 +700,7 @@ inline NDArrayBase<T,Dim>& operator saver (const T val){   \
 
   /** If the current size is different from the size in shape, then data allocation happens. 
    * Otherwise, just change the shape using ReShape. */
-  bool ReSize(const ShapeType& shape)
+  UTL_ALWAYS_INLINE bool ReSize(const ShapeType& shape)
   {
   // if no change in shape or size, do not reallocate.
   if (IsSameShape(shape) && this->m_Data) 

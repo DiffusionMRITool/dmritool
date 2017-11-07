@@ -237,10 +237,10 @@ __NDArray_vector_constructor(long)
     double cosA = std::cos(alpha);
     double sinA = std::sin(alpha);
     NDArray<T,1> p1 = *this % cosA;
-    NDArray<T,1> p2;
+    NDArray<T,1> p2(3);
     CrossProduct(axis, *this, p2);
     p2.Scale(sinA);
-    NDArray<T,1> p3 = axis % (DotProduct(axis, *this)*(1-cosA));
+    NDArray<T,1> p3 = axis % (DotProduct(axis, *this, 3)*(1-cosA));
     return p1+p2+p3;
     }
 

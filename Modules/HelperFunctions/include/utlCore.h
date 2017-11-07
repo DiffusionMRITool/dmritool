@@ -503,6 +503,16 @@ IsFileExist ( const std::string& file )
   return ii.good();
 }
 
+/** Test if fullString is ending with ending  */
+inline bool
+IsEndingWith(const std::string& fullString, const std::string& ending )
+{
+  if (fullString.length() >= ending.length()) 
+    return (0 == fullString.compare (fullString.length() - ending.length(), ending.length(), ending));
+  else 
+    return false;
+}
+
 /** path with the last "/" 
 *  http://www.cplusplus.com/reference/string/string/find_last_of/ 
 *  GetPath("/home/my.cpp", path, file) will get path=="/home/", file=="my.cpp"
@@ -558,6 +568,38 @@ GetSequentialFileName(const std::string filePrefix, const unsigned int iteration
   std::stringstream padded;
   padded << filePrefix << "_" << ZeroPad(iteration, paddedLength) << "." << fileExtension;
   return padded.str();
+}
+
+/** convert a char array to a string vector  */
+template <size_t M >
+inline std::vector<std::string>
+CovertChar2DArrayToStringArray(const char arr[][M], int N)
+{
+  std::vector<std::string> vec;
+  for ( int i = 0; i < N; ++i ) 
+    {
+    std::string ss(arr[i]);
+    if (!ss.empty())
+      vec.push_back(ss);
+    }
+  return vec;
+}
+
+template <size_t M >
+inline void 
+CovertStringArrayToChar2DArray(const std::vector<std::string>& vec, char arr[][M], int N)
+{
+  for ( int i = 0; i < N; ++i ) 
+    {
+    if (i<vec.size())
+      {
+      strcpy(arr[i], vec[i].c_str());
+      }
+    else
+      {
+      strcpy(arr[i], "");
+      }
+    }
 }
 
 /** Normalize values into [0,1] using the minimal value and the maximal value  */
@@ -928,11 +970,16 @@ GetNumberOfNonZeroValues ( IteratorType v, IteratorType v2, const double thresho
 
 template <typename T>
 inline void 
-PrintVector ( const std::vector<T>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintVector ( const std::vector<T>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
-  std::vector<double> st = GetContainerStats(vec.begin(), vec.end());
   char tmp[1024];
-  sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), &vec, vec.size(), st[0], st[2], st[3], st[1] );
+  if (showStats)
+    {
+    std::vector<double> st = GetContainerStats(vec.begin(), vec.end());
+    sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), &vec, vec.size(), st[0], st[2], st[3], st[1] );
+    }
+  else
+    sprintf(tmp, "%-8s(%p):  size = %lu : ", str==""?"vector":str.c_str(), &vec, vec.size() );
   std::string strr(tmp);
   if (vec.size()>0)
     {
@@ -947,7 +994,7 @@ PrintVector ( const std::vector<T>& vec, const std::string str="", const char* s
 
 template <>
 inline void
-PrintVector<std::string> ( const std::vector<std::string>& vec, const std::string str, const char* separate, std::ostream& os)
+PrintVector<std::string> ( const std::vector<std::string>& vec, const std::string str, const char* separate, std::ostream& os, bool showStats)
 {
   char tmp[1024];
   sprintf(tmp, "%-8s(%p):  size = %lu, : ", str==""?"vector":str.c_str(), &vec, vec.size());
@@ -965,11 +1012,16 @@ PrintVector<std::string> ( const std::vector<std::string>& vec, const std::strin
 
 template <class VectorType>
 inline void 
-PrintVector ( const VectorType& vec, const int NSize, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintVector ( const VectorType& vec, const int NSize, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
   char tmp[1024];
-  std::vector<double> st = GetContainerStats(&vec[0], &vec[NSize]);
-  sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), &vec, (long unsigned int)NSize, st[0], st[2], st[3], st[1] );
+  if (showStats)
+    {
+    std::vector<double> st = GetContainerStats(&vec[0], &vec[NSize]);
+    sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), &vec, (long unsigned int)NSize, st[0], st[2], st[3], st[1] );
+    }
+  else
+    sprintf(tmp, "%-8s(%p):  size = %lu : ", str==""?"vector":str.c_str(), &vec, (long unsigned int)NSize );
   std::string strr(tmp);
   if (NSize>0)
     {
@@ -984,15 +1036,21 @@ PrintVector ( const VectorType& vec, const int NSize, const std::string str="", 
 
 template <class IteratorType>
 inline void 
-PrintContainer ( IteratorType v1, IteratorType v2, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintContainer ( IteratorType v1, IteratorType v2, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
-  char tmp[1024];
-  std::vector<double> st = GetContainerStats(v1, v2);
   long unsigned int NSize=0;
   IteratorType q = v1;
   for ( ; q!=v2; ++q ) 
     NSize++;
-  sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), v1, NSize, st[0], st[2], st[3], st[1] );
+
+  char tmp[1024];
+  if (showStats)
+    {
+    std::vector<double> st = GetContainerStats(v1, v2);
+    sprintf(tmp, "%-8s(%p):  size = %lu,  stat = { %g, %g [%g], %g } : ", str==""?"vector":str.c_str(), v1, NSize, st[0], st[2], st[3], st[1] );
+    }
+  else
+    sprintf(tmp, "%-8s(%p):  size = %lu : ", str==""?"vector":str.c_str(), v1, NSize );
 
   std::string strr(tmp);
   if (v1!=v2)
@@ -1069,13 +1127,13 @@ SetVector(const std::string s, std::vector<T>& vec, const int least_num=0, const
 
 template < class T >
 inline void
-ReadVector ( const std::string vectorStr, std::vector<T>& vec)
+ReadVector ( const std::string vectorStr, std::vector<T>& vec, const char* cc=" ")
 {
   utlException(vectorStr=="", "need to set vectorStr");
   vec.clear();
 
   std::vector<std::vector<std::string> > strVec;
-  ReadLinesFirstlineCheck(vectorStr, strVec, " ");
+  ReadLinesFirstlineCheck(vectorStr, strVec, cc);
   utlException(strVec.size()==0, "wrong file");
 
   bool isRowVector = strVec.size()==1;
@@ -1096,13 +1154,13 @@ ReadVector ( const std::string vectorStr, std::vector<T>& vec)
 
 template <>
 inline void
-ReadVector<std::string> ( const std::string vectorStr, std::vector<std::string>& vec)
+ReadVector<std::string> ( const std::string vectorStr, std::vector<std::string>& vec, const char* cc)
 {
   utlException(vectorStr=="", "need to set vectorStr");
   vec.clear();
 
   std::vector<std::vector<std::string> > strVec;
-  ReadLinesFirstlineCheck(vectorStr, strVec, " ");
+  ReadLinesFirstlineCheck(vectorStr, strVec, cc);
   utlException(strVec.size()==0, "wrong file");
   
   bool isRowVector = strVec.size()==1;
@@ -1640,11 +1698,16 @@ PrintMatrixStats ( const TMatrixType& matrix, const int NumberRows, const int Nu
 
 template <class TMatrixType>
 void
-PrintMatrix ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string str="", const char* separate=" ", std::ostream& os=std::cout )
+PrintMatrix ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true )
 {
   char tmp[1024];
-  std::vector<double> st = NumberRows*NumberColumns>0 ? GetContainerStats(&matrix(0,0), &matrix(0,0)+NumberRows*NumberColumns) : std::vector<double>(4,0);
-  sprintf(tmp, "%-8s(%p):  size = (%d, %d),  stat = { %g, %g [%g], %g } : ", str==""?"matrix":str.c_str(), &matrix, NumberRows, NumberColumns, st[0], st[2], st[3], st[1] );
+  if (showStats)
+    {
+    std::vector<double> st = NumberRows*NumberColumns>0 ? GetContainerStats(&matrix(0,0), &matrix(0,0)+NumberRows*NumberColumns) : std::vector<double>(4,0);
+    sprintf(tmp, "%-8s(%p):  size = (%d, %d),  stat = { %g, %g [%g], %g } : ", str==""?"matrix":str.c_str(), &matrix, NumberRows, NumberColumns, st[0], st[2], st[3], st[1] );
+    }
+  else
+    sprintf(tmp, "%-8s(%p):  size = (%d, %d) : ", str==""?"matrix":str.c_str(), &matrix, NumberRows, NumberColumns );
   std::string strr(tmp);
   
   if (NumberRows>0 && NumberColumns>0)
@@ -1802,7 +1865,7 @@ SaveMatrix ( const TMatrixType& matrix, const int NumberRows, const int NumberCo
 
 template <class TMatrixType>
 void
-ReadMatrix ( const std::string file, TMatrixType& matrix )
+ReadMatrix ( const std::string& file, TMatrixType& matrix )
 {
   std::vector<std::vector<std::string> > matrixStr;
   utl::ReadLines(file, matrixStr);

@@ -224,7 +224,7 @@ TEST(utlVector, Operators)
 
     {
     // cross product
-    UtlVectorType v1(3), v2(3), v3(3), v0;
+    UtlVectorType v1(3), v2(3), v3(3), v0(3);
     v1[0]=1, v1[1]=0, v1[2]=0;
     v2[0]=0, v2[1]=1, v2[2]=0;
     v3[0]=0, v3[1]=0, v3[2]=1;
@@ -323,4 +323,65 @@ TEST(utlVector, Operators_TimeCost)
     }
 }
 
+TEST(utlVector, Dot_size_TimeCost)
+{
+  std::vector<int> sizeVec;
+  sizeVec.push_back(3);
+  sizeVec.push_back(200);
+
+  for ( int kk = 0; kk < sizeVec.size(); ++kk ) 
+    {
+    int N = sizeVec[kk];
+    vnl_vector<double> vec0 = __GenerateRandomVector<double>(N, -2.0, 2.0), vec2(N);
+    vnl_vector<double> vec1 = __GenerateRandomVector<double>(N, -2.0, 2.0);
+
+    UtlVectorType d0(vec0.data_block(), vec0.size()); 
+    UtlVectorType d1(vec1.data_block(), vec1.size()), d2(N); 
+
+
+    int Iter=300000;
+
+      {
+      double sum =0;
+      utl::Tic(std::cout<<"utl vector norm2 (size="<< N <<"): \n");
+      sum =0;
+      for ( int i = 0; i < Iter; i += 1 ) 
+        {
+        sum += d0.GetSquaredTwoNorm();
+        }
+      utl::Toc();
+      std::cout << "sum=" <<sum << std::endl << std::flush;
+      
+      utl::Tic(std::cout<<"utl vector direct norm2 (size="<< N <<"): \n");
+      sum =0;
+      for ( int i = 0; i < Iter; i += 1 ) 
+        {
+        sum += utl::SquaredTwoNorm(d0, d0.Size());
+        }
+      utl::Toc();
+      std::cout << "sum=" <<sum << std::endl << std::flush;
+      }
+
+      {
+      double sum =0;
+      utl::Tic(std::cout<<"utl vector norm (size="<< N <<"): \n");
+      sum =0;
+      for ( int i = 0; i < Iter; i += 1 ) 
+        {
+        sum += d0.GetTwoNorm();
+        }
+      utl::Toc();
+      std::cout << "sum=" <<sum << std::endl << std::flush;
+      
+      utl::Tic(std::cout<<"utl vector direct norm (size="<< N <<"): \n");
+      sum =0;
+      for ( int i = 0; i < Iter; i += 1 ) 
+        {
+        sum += std::sqrt(utl::SquaredTwoNorm(d0, d0.Size()));
+        }
+      utl::Toc();
+      std::cout << "sum=" <<sum << std::endl << std::flush;
+      }
+    }
+}
 

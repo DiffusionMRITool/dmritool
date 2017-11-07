@@ -72,12 +72,12 @@ private:
   float m_LastProgress;
   
 public:
-  void Execute(Object *caller, const EventObject & event)
+  void Execute(Object *caller, const EventObject & event) ITK_OVERRIDE
     {
     Execute( (const Object *)caller, event );
     }
   
-  void Execute(const Object * object, const EventObject & event)
+  void Execute(const Object * object, const EventObject & event) ITK_OVERRIDE
     {
     const ProcessObject * filter =
       dynamic_cast< const ProcessObject * >(object);
@@ -220,7 +220,7 @@ public:
             << magentaPrefix
             << std::setiosflags(std::ios::fixed)
             << std::setprecision(3)
-            << secondsPerPercent << "s" << "/%"
+            << secondsPerPercent << " s" << "/%"
             << suffix
             << cyanPrefix
             << "  ETA "
