@@ -106,10 +106,8 @@ public:
 
 /** \class NormalizeODFImageFilter
  *
- * \brief Multiply input pixels by a constant.
- *
- * This filter is templated over the input image type
- * and the output image type.
+ * \brief Normalize the input ODF such that the output ODF has unit integral. 
+ * The input ODF can be represented using uniform spheircal samples or SH coefficients. 
  *
  * \ingroup IntensityImageFilters  Multithreaded DiffusionModels
  * \sa UnaryFunctorImageFilter
@@ -166,7 +164,7 @@ protected:
   {
   }
 
-  void PrintSelf(std::ostream & os, Indent indent ) const
+  void PrintSelf(std::ostream & os, Indent indent ) const ITK_OVERRIDE
   {
     Superclass::PrintSelf( os, indent );
 

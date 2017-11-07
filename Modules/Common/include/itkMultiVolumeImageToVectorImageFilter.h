@@ -68,12 +68,12 @@ protected:
   MultiVolumeImageToVectorImageFilter() {};
   virtual ~MultiVolumeImageToVectorImageFilter() {}
   
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
   
   /** Does the real work. */
-  virtual void GenerateData();
+  virtual void GenerateData() ITK_OVERRIDE;
 
-  virtual void GenerateOutputInformation();
+  virtual void GenerateOutputInformation() ITK_OVERRIDE;
 
 private:
   MultiVolumeImageToVectorImageFilter(const Self&); //purposely not implemented

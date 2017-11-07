@@ -84,7 +84,7 @@ public:
   itkGetObjectMacro(OutputOrientations, SamplingType);
   itkGetConstObjectMacro(OutputOrientations, SamplingType);
 
-  virtual void GenerateData(){}
+  virtual void GenerateData() ITK_OVERRIDE{}
 
   bool IsSetInitialization() const
     {

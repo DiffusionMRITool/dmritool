@@ -66,7 +66,7 @@ public:
   itkSetMacro(FineOrientations, MatrixPointer);
   itkGetMacro(FineOrientations, MatrixPointer);
 
-  void GenerateData();
+  void GenerateData() ITK_OVERRIDE;
 
   // static void IndicesOfMaximalDistance(const MatrixType& mat, unsigned int& r1, unsigned int& r2);
 
@@ -74,7 +74,7 @@ protected:
   SamplingSchemeQSpaceIncrementalEstimationFilter();
   ~SamplingSchemeQSpaceIncrementalEstimationFilter(){}
   
-  void Initialization();
+  void Initialization() ITK_OVERRIDE;
   
   /** the order of tessellation for the orignal fine mesh  */
   unsigned int m_TessellationOrder;

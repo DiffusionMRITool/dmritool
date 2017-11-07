@@ -69,7 +69,7 @@ public:
   itkSetMacro(RadiusVector, STDVectorPointer);
   itkGetMacro(RadiusVector, STDVectorPointer);
   
-  void ComputeSPFToFeatureTransform();
+  void ComputeSPFToFeatureTransform() ITK_OVERRIDE;
 
 protected:
   ProfileFromSPFImageFilter() : Superclass(), 
@@ -79,14 +79,14 @@ protected:
     }
   virtual ~ProfileFromSPFImageFilter() {};
   
-  void VerifyInputParameters();
-  void GenerateOutputInformation();
+  void VerifyInputParameters() const ITK_OVERRIDE;
+  void GenerateOutputInformation() ITK_OVERRIDE;
 
-  void BeforeThreadedGenerateData ();
-  void ThreadedGenerateData(const typename TOutputImage::RegionType& outputRegionForThread,ThreadIdType threadId );
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
+  void ThreadedGenerateData(const typename TOutputImage::RegionType& outputRegionForThread,ThreadIdType threadId ) ITK_OVERRIDE;
 
-  typename LightObject::Pointer InternalClone() const;
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
 private:
   ProfileFromSPFImageFilter(const Self&);  //purposely not implemented

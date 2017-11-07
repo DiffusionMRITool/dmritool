@@ -78,16 +78,16 @@ public:
   typedef typename Superclass::MaskImageType      MaskImageType;
   typedef typename Superclass::ScalarImageType    ScalarImageType;
   
-  void VerifyInputParameters() const;
+  void VerifyInputParameters() const ITK_OVERRIDE;
   
-  std::vector<int> DimToRank(const int dimm) const;
-  int RankToDim(const bool is_radial=false, const int radialRank=-1, const int shRank=-1) const; 
+  std::vector<int> DimToRank(const int dimm) const ITK_OVERRIDE;
+  int RankToDim(const bool is_radial=false, const int radialRank=-1, const int shRank=-1) const ITK_OVERRIDE; 
   
-  double ComputeScale(const bool setScale=true);
+  double ComputeScale(const bool setScale=true) ITK_OVERRIDE;
   
-  void ComputeRadialMatrix ();
-  void ComputeBasisMatrix ();
-  void ComputeRegularizationWeight ( );
+  void ComputeRadialMatrix () ITK_OVERRIDE;
+  void ComputeBasisMatrix () ITK_OVERRIDE;
+  void ComputeRegularizationWeight ( ) ITK_OVERRIDE;
 
   
 
@@ -95,11 +95,11 @@ protected:
   GeneralizedHighOrderTensorImageFilter();
   virtual ~GeneralizedHighOrderTensorImageFilter() {};
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
-  void BeforeThreadedGenerateData ();
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
 
-  void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,ThreadIdType threadId );
+  void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,ThreadIdType threadId ) ITK_OVERRIDE;
 
 
 private:

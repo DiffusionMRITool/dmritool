@@ -151,7 +151,7 @@ protected:
   SPFScaleFromMeanDiffusivityImageFilter() {};
   virtual ~SPFScaleFromMeanDiffusivityImageFilter() {};
    
-  void PrintSelf(std::ostream &os, Indent indent) const
+  void PrintSelf(std::ostream &os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     os << indent << "md0 = " << static_cast<double>(this->GetMD0()) 

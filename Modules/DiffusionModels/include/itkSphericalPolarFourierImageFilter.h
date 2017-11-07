@@ -86,22 +86,22 @@ public:
   
   itkGetMacro(Gn0, STDVectorPointer);
   
-  std::vector<int> GetIndexNLM(const int index) const;
-  int GetIndexJ(const int n, const int l, const int m) const;
+  std::vector<int> GetIndexNLM(const int index) const ITK_OVERRIDE;
+  int GetIndexJ(const int n, const int l, const int m) const ITK_OVERRIDE;
   
-  std::vector<int> DimToRank(const int dimm) const;
-  int RankToDim(const bool is_radial=false, const int radialRank=-1, const int shRank=-1) const; 
+  std::vector<int> DimToRank(const int dimm) const ITK_OVERRIDE;
+  int RankToDim(const bool is_radial=false, const int radialRank=-1, const int shRank=-1) const ITK_OVERRIDE; 
   
-  double ComputeScale(const bool setScale=true);
+  double ComputeScale(const bool setScale=true) ITK_OVERRIDE;
   
-  void ComputeRadialMatrix ();
-  void ComputeBasisMatrix ();
-  void ComputeRegularizationWeight ( );
+  void ComputeRadialMatrix () ITK_OVERRIDE;
+  void ComputeBasisMatrix () ITK_OVERRIDE;
+  void ComputeRegularizationWeight ( ) ITK_OVERRIDE;
   
   void ComputeRadialVectorForE0InBasis ( );
   void ComputeRadialVectorForE0InDWI ( );
   
-  void SetBasisScale(const double scale);
+  void SetBasisScale(const double scale) ITK_OVERRIDE;
 
 protected:
   SphericalPolarFourierImageFilter();
@@ -111,11 +111,11 @@ protected:
   
   // void VerifyInputParameters() const;
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
-  typename LightObject::Pointer InternalClone() const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
-  void BeforeThreadedGenerateData ();
-  void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,ThreadIdType threadId );
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
+  void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,ThreadIdType threadId ) ITK_OVERRIDE;
   
   STDVectorPointer m_Gn0;
   VectorPointer m_G0DWI;

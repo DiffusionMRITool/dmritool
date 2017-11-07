@@ -126,7 +126,7 @@ protected:
     }
   virtual ~SHCoefficientsRotation() {};
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     PrintVar2(true, m_MaxRank, m_TessOrder, os <<indent);
@@ -138,7 +138,7 @@ protected:
       }
     }
   
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
     typename Self::Pointer rval = dynamic_cast<Self *>(loPtr.GetPointer());

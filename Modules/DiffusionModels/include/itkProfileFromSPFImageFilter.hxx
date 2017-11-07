@@ -54,7 +54,7 @@ ProfileFromSPFImageFilter< TInputImage, TOutputImage >
 template< class TInputImage, class TOutputImage >
 void
 ProfileFromSPFImageFilter< TInputImage, TOutputImage >
-::VerifyInputParameters()
+::VerifyInputParameters() const
 {
   utlShowPosition(this->GetDebug());
   Superclass::VerifyInputParameters();

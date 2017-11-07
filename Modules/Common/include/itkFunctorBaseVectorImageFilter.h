@@ -106,14 +106,14 @@ protected:
 
 protected: 
   
-  void PrintSelf(std::ostream & os, Indent indent) const
+  void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     utlLogOSVar(os << indent, m_VectorAxis);
     m_Functor.Print(os <<indent << "m_Functor : "<<  utl::TypeName(m_Functor)<< " ("<< &m_Functor <<") = \n");
     }
   
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
 

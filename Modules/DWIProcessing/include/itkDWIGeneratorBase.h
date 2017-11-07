@@ -194,15 +194,15 @@ protected:
   DWIGeneratorBase();
   ~DWIGeneratorBase();
 
-  typename LightObject::Pointer InternalClone() const;
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
   
-  void GenerateData()=0;
+  void GenerateData() ITK_OVERRIDE =0;
   
   /** initialization, test  */
   virtual void Initialization();
   /** allocate all outputs  */
-  virtual void AllocateOutputs();
+  virtual void AllocateOutputs() ITK_OVERRIDE;
   
   SamplingSchemeQSpacePointer m_SamplingSchemeQSpace;
 

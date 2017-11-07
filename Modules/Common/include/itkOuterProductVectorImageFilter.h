@@ -111,7 +111,7 @@ protected:
   {
   }
 
-  virtual void GenerateOutputInformation()
+  virtual void GenerateOutputInformation() ITK_OVERRIDE
     {
     Superclass::GenerateOutputInformation();
     typename TInputImage::ConstPointer inputPtr = this->GetInput();

@@ -132,7 +132,7 @@ protected:
   MeanDiffusivityFromGHOTImageFilter() {};
   virtual ~MeanDiffusivityFromGHOTImageFilter() {};
    
-  void PrintSelf(std::ostream &os, Indent indent) const
+  void PrintSelf(std::ostream &os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     os << indent << "Scale = " << static_cast<double>(this->GetScale()) 

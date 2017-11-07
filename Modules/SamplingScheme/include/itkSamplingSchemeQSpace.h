@@ -74,7 +74,7 @@ public:
   std::vector<STDVectorType> GroupBValues();
   
   void CorrectBValues();
-  void CorrectRadiusValues();
+  void CorrectRadiusValues() ITK_OVERRIDE;
   
   /** remove samples not in m_IndicesInShells  */
   void RemoveSamplesNotIndexed();
@@ -86,9 +86,9 @@ protected:
     {
     }
   
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
  
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   /** b values whose distance is smallter the threshold will be considered in 
    * the same shell, and they will be replaced as their mean b value. */

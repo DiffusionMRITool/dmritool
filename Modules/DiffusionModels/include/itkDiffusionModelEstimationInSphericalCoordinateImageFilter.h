@@ -20,14 +20,7 @@
 #define __itkDiffusionModelEstimationInSphericalCoordinateImageFilter_h
 
 
-#include <tr1/memory>
-#include "itkImage.h"
-#include "itkVectorImage.h"
-#include "itkImageToImageFilter.h"
 #include "itkDiffusionModelEstimationImageFilter.h"
-
-#include "vnl/vnl_matrix.h"
-#include "utlITK.h"
 
 namespace itk
 {
@@ -93,8 +86,8 @@ public:
   // void SetBasisRadialMatrix(const MatrixPointer& mat);
   itkGetMacro(BasisRadialMatrix, MatrixPointer);
 
-  /** compute SH matrix, grad is in spherical format  */
-  void ComputeSHMatrix();
+  /** compute SH matrix  */
+  virtual void ComputeSHMatrix();
 
   /** compute radial matrix  */
   virtual void ComputeRadialMatrix () 
@@ -105,10 +98,10 @@ protected:
 
   virtual ~DiffusionModelEstimationInSphericalCoordinateImageFilter() {};
   
-  virtual void VerifyInputParameters() const;
+  virtual void VerifyInputParameters() const ITK_OVERRIDE;
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
-  typename LightObject::Pointer InternalClone() const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
   /** rank for spherical part (SH basis)  */
   int m_SHRank;

@@ -77,10 +77,10 @@ protected:
   FunctorFromStringImageFilter();
   virtual ~FunctorFromStringImageFilter() {}
 
-  void BeforeThreadedGenerateData ();
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
 
   /** Override Superclass::PropagateRequestedRegion. Otherwise, it may have region outside error.  */
-  virtual void PropagateRequestedRegion(DataObject *output)
+  virtual void PropagateRequestedRegion(DataObject *output) ITK_OVERRIDE
     {
     }
 

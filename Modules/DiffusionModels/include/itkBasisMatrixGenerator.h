@@ -140,8 +140,8 @@ protected:
   
   virtual void VerifyInputParameters() const; 
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
-  typename LightObject::Pointer InternalClone() const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
   /** Sampling Scheme in q-space  */
   SamplingSchemeQSpacePointer m_SamplingSchemeQSpace;

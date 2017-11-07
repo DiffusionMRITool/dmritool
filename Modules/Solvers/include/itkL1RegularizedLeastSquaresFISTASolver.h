@@ -78,14 +78,14 @@ public:
   itkGetMacro(UseL2SolverForInitialization,bool);
   itkBooleanMacro(UseL2SolverForInitialization);
   
-  int GetXDimension() const
+  int GetXDimension() const ITK_OVERRIDE
     {
     int N = m_A->Columns();
     utlException(N==0, "wrong size! m_A->Columns()="<<m_A->Columns());
     return N;
     }
 
-  void Clear() 
+  void Clear() ITK_OVERRIDE
     { 
     Superclass::Clear(); 
     m_A=MatrixPointer(new MatrixType()); 
@@ -115,24 +115,24 @@ public:
     }
   
   /** Update history information and monitor stop conditions  */
-  void HistoryUpdateAndConvergenceCheck();
+  void HistoryUpdateAndConvergenceCheck() ITK_OVERRIDE;
 
-  void VerifyInputs() const;
+  void VerifyInputs() const ITK_OVERRIDE;
   
-  void Solve(const VectorType& xInitial=VectorType()); 
-  void Iterate(); 
-  void Initialize(const VectorType& xInitial=VectorType()); 
+  void Solve(const VectorType& xInitial=VectorType()) ITK_OVERRIDE; 
+  void Iterate() ITK_OVERRIDE; 
+  void Initialize(const VectorType& xInitial=VectorType()) ITK_OVERRIDE; 
   
-  ValueType EvaluateCostFunction(const VectorType& x=VectorType()) const;
+  ValueType EvaluateCostFunction(const VectorType& x=VectorType()) const ITK_OVERRIDE;
   
 
 protected:
   L1RegularizedLeastSquaresFISTASolver();
   virtual ~L1RegularizedLeastSquaresFISTASolver() {}
   
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
-  virtual typename LightObject::Pointer InternalClone() const;
+  virtual typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
   /** MxN matrix  */
   MatrixPointer m_A;

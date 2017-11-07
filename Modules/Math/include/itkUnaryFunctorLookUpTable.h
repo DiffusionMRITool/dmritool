@@ -65,7 +65,7 @@ public:
   
   itkGetMacro(Table, STDVectorPointer);
 
-  void Initialize()
+  void Initialize() ITK_OVERRIDE
     {
     BuildTable();
     }
@@ -117,7 +117,7 @@ protected:
     }
   ~UnaryFunctorLookUpTable() {};
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     PrintVar4(true, m_VariableMax, m_VariableMin, m_NumberOfBins, m_Delta, os<<indent);
@@ -125,7 +125,7 @@ protected:
       utlPrintVar3(true, i, m_Delta*i+m_VariableMin, (*m_Table)[i]);
     }
   
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
     typename Self::Pointer rval = dynamic_cast<Self *>(loPtr.GetPointer());

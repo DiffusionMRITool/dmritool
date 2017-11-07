@@ -116,7 +116,7 @@ protected:
   //   Superclass::PrintSelf(os, indent);
   //   }
   
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
     typename Self::Pointer rval = dynamic_cast<Self *>(loPtr.GetPointer());

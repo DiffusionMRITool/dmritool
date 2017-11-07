@@ -92,22 +92,22 @@ public:
   itkSetMacro(NumberOfChangeLessThanThreshold, int);
   itkGetConstReferenceMacro(NumberOfChangeLessThanThreshold, int);
 
-  void Initialize(const VectorType& xInitial=VectorType()); 
+  void Initialize(const VectorType& xInitial=VectorType()) ITK_OVERRIDE; 
   virtual void Iterate() {}
   
   /** Update history information and monitor stop conditions  */
   virtual void HistoryUpdateAndConvergenceCheck() {}
   
-  virtual void Solve(const VectorType& xInitial=VectorType()); 
+  virtual void Solve(const VectorType& xInitial=VectorType()) ITK_OVERRIDE; 
 
-  virtual void Clear();
+  virtual void Clear() ITK_OVERRIDE;
 
 protected:
   IterativeSolverBase();
   virtual ~IterativeSolverBase() {};
   
-  void PrintSelf(std::ostream& os, Indent indent) const;
-  virtual typename LightObject::Pointer InternalClone() const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  virtual typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
   ValueContainerType m_CostFunction;
   ValueContainerType m_DifferenceNormOfPrimalResidual;

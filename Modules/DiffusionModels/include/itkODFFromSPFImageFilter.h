@@ -68,7 +68,7 @@ public:
   itkSetMacro(BMax, double);
   itkGetMacro(BMax, double);
   
-  void ComputeSPFToFeatureTransform();
+  void ComputeSPFToFeatureTransform() ITK_OVERRIDE;
   
 
 protected:
@@ -78,18 +78,18 @@ protected:
   m_ODFOrder=2;
   }
 
-  void VerifyInputParameters();
+  void VerifyInputParameters() const ITK_OVERRIDE;
 
   virtual ~ODFFromSPFImageFilter() {};
   
-  void GenerateOutputInformation();
+  void GenerateOutputInformation() ITK_OVERRIDE;
   
-  void BeforeThreadedGenerateData ();
-  void ThreadedGenerateData(const typename TOutputImage::RegionType& outputRegionForThread,ThreadIdType threadId );
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
+  void ThreadedGenerateData(const typename TOutputImage::RegionType& outputRegionForThread,ThreadIdType threadId ) ITK_OVERRIDE;
   
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
 private:
   ODFFromSPFImageFilter(const Self&);  //purposely not implemented

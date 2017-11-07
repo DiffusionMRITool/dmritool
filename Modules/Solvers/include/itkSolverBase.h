@@ -85,9 +85,9 @@ protected:
   SolverBase();
   virtual ~SolverBase() {};
   
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
-  virtual typename LightObject::Pointer InternalClone() const;
+  virtual typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
   /** Nx1 vector primal variable */
   VectorType m_x;

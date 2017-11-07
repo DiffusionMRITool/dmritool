@@ -59,7 +59,10 @@ public:
     else if (peakType==NXYZ) 
       return std::string("NXYZ");
     else
-      utlException(true, "wrong peakType");
+      {
+      utlGlobalException(true, "wrong peakType");
+      return "";
+      }
     }
   static PeakType GetPeakType(const std::string str)
     {
@@ -72,7 +75,9 @@ public:
     else if (str=="NXYZ") 
       return NXYZ;
     else
-      utlException(true, "wrong peakType");
+      {
+      utlGlobalException(true, "wrong peakType");
+      }
     }
   
   static int GetDimensionPerPeak(const PeakType peakType)
@@ -82,7 +87,10 @@ public:
     else if (peakType==XYZ || peakType==NXYZ) 
       return 3;
     else
-      utlException(true, "wrong peakType");
+      {
+      utlGlobalException(true, "wrong peakType");
+      return -1;
+      }
     }
 
   static int GetDimension(const PeakType peakType, const int numberOfPeaks)
@@ -93,7 +101,10 @@ public:
     else if (peakType==NXYZ || peakType==NXYZV)
       return d*numberOfPeaks+1;
     else
-      utlException(true, "wrong peakType");
+      {
+      utlGlobalException(true, "wrong peakType");
+      return -1;
+      }
     }
   
   static int GetNumberOfPeaks(const PeakType peakType, const int dimension)
@@ -105,7 +116,10 @@ public:
     else if (peakType==NXYZ || peakType==NXYZV)
       off = 1;
     else
-      utlException(true, "wrong peakType");
+      {
+      utlGlobalException(true, "wrong peakType");
+      return -1;
+      }
     utlSAException(!utl::IsInt((1.0*dimension-off)/double(d)))(d)(off)(dimension).msg("wrong size");
     return (dimension-off)/d;
     }
@@ -124,10 +138,10 @@ public:
     return num;
     }
   
-  template< class ContainerType >
-  static std::vector<double> GetPeak(const ContainerType& vec, const int index, const PeakType peakType)
+  template< class VectorType=std::vector<double>, class ContainerType >
+  static VectorType GetPeak(const ContainerType& vec, const int index, const PeakType peakType)
     {
-    std::vector<double> peak(3,-1);
+    VectorType peak(3);
     int d = GetDimensionPerPeak(peakType);
     int off=0;
     if (peakType==XYZ || peakType==XYZV)

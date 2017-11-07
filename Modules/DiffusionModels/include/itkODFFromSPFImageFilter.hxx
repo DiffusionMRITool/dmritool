@@ -41,7 +41,7 @@ ODFFromSPFImageFilter< TInputImage, TOutputImage >
 template< class TInputImage, class TOutputImage >
 void
 ODFFromSPFImageFilter< TInputImage, TOutputImage >
-::VerifyInputParameters()
+::VerifyInputParameters() const
 {
   Superclass::VerifyInputParameters();
   utlGlobalException(this->m_ODFOrder<-1, "m_ODFOrder should be -1, 0, 1, ...");

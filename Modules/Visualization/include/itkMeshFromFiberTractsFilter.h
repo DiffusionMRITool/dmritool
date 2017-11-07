@@ -119,9 +119,9 @@ protected:
   MeshFromFiberTractsFilter(){}
   ~MeshFromFiberTractsFilter(){}
   
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     m_FiberTracts->Print(os, indent);

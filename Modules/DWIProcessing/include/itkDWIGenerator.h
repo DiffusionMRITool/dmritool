@@ -86,8 +86,8 @@ protected:
   DWIGenerator();
   ~DWIGenerator();
 
-  typename LightObject::Pointer InternalClone() const;
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
   
   /** Does the real work. */
   void GenerateData();

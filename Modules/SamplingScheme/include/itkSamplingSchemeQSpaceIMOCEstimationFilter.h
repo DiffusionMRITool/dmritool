@@ -76,13 +76,13 @@ public:
   itkSetMacro(AngleMinChange, double);
   itkGetMacro(AngleMinChange, double);
 
-  void GenerateData();
+  void GenerateData() ITK_OVERRIDE;
 
 protected:
   SamplingSchemeQSpaceIMOCEstimationFilter();
   ~SamplingSchemeQSpaceIMOCEstimationFilter(){}
   
-  void Initialization();
+  void Initialization() ITK_OVERRIDE;
 
   bool IsSatisfiedSeparationAngles(const std::vector<double>& angles);
   

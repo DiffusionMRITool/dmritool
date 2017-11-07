@@ -121,16 +121,16 @@ protected:
   FeaturesFromSPFImageFilter();
   virtual ~FeaturesFromSPFImageFilter() {};
 
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
-  virtual void VerifyInputParameters();
+  virtual void VerifyInputParameters() const ITK_OVERRIDE;
 
-  void BeforeThreadedGenerateData ();
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
   // void ThreadedGenerateData(const OutputImageRegionType& outputRegionForThread,ThreadIdType threadId );
   
   void SetSPFIEstimator();
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
   
   double m_BasisScale;
   double m_MD0;

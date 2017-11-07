@@ -26,7 +26,7 @@
 namespace itk
 {
 
-/** \class ImageFileReaderException
+/** \class SpatiallyDenseSparseVectorImageFileReaderException
  *
  * \brief Base exception class for IO conflicts.
  *
@@ -120,7 +120,7 @@ public:
 protected:
   SpatiallyDenseSparseVectorImageFileReader();
   ~SpatiallyDenseSparseVectorImageFileReader();
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   /** Convert a block of pixels from one type to another. */
 //  void DoConvertBuffer(void* buffer, size_t numberOfPixels);
@@ -139,7 +139,7 @@ protected:
   typename ValueImageFileReaderType::Pointer m_ValueImageFileReader;
 
   /** Does the real work. */
-  virtual void GenerateData();
+  virtual void GenerateData() ITK_OVERRIDE;
 
   std::string m_FileName;
   bool m_UseStreaming;

@@ -79,7 +79,7 @@ protected:
   
   ~SamplingSchemeQSpaceWriter() {}
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   /** If it is set, save b values  */
   std::string m_BFile;

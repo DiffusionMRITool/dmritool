@@ -72,7 +72,7 @@ protected:
   UnaryFunctorVectorImageFilter();
   virtual ~UnaryFunctorVectorImageFilter() {}
 
-  void BeforeThreadedGenerateData ();
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
 
   /** UnaryFunctorVectorImageFilter can produce an image which is a different
    * resolution than its input image.  As such, UnaryFunctorVectorImageFilter

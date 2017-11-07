@@ -19,15 +19,12 @@
 #define __itkDiffusionModelEstimationImageFilter_h
 
 
-#include <tr1/memory>
 #include "itkImage.h"
 #include "itkVectorImage.h"
-#include "itkImageToImageFilter.h"
 #include "itkMaskedImageToImageFilter.h"
 
-#include "vnl/vnl_matrix.h"
 #include "utlITK.h"
-#include "utlMatrix.h"
+#include "utlNDArray.h"
 
 #include "itkSamplingSchemeQSpace.h"
 
@@ -114,8 +111,8 @@ protected:
   
   virtual void VerifyInputParameters() const;
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
-  typename LightObject::Pointer InternalClone() const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
   /** Sampling Scheme in q-space  */
   SamplingSchemeQSpacePointer m_SamplingSchemeQSpace;

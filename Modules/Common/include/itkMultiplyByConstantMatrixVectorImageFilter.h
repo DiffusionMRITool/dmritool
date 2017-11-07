@@ -139,7 +139,7 @@ protected:
   {
   }
 
-  virtual void GenerateOutputInformation()
+  virtual void GenerateOutputInformation() ITK_OVERRIDE
     {
     Superclass::GenerateOutputInformation();
     typename Superclass::OutputImagePointer outputPtr = this->GetOutput();
@@ -147,7 +147,7 @@ protected:
     outputPtr->SetNumberOfComponentsPerPixel(dim);
     }
 
-  void PrintSelf(std::ostream & os, Indent indent ) const
+  void PrintSelf(std::ostream & os, Indent indent ) const ITK_OVERRIDE
   {
     Superclass::PrintSelf( os, indent );
     os << indent << "Constant Matrix : " << this->GetConstantMatrix() << std::endl;

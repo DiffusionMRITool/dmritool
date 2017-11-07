@@ -98,7 +98,7 @@ FeaturesFromSPFImageFilter< TInputImage, TOutputImage >
 template< class TInputImage, class TOutputImage >
 void
 FeaturesFromSPFImageFilter< TInputImage, TOutputImage >
-::VerifyInputParameters ( )
+::VerifyInputParameters ( ) const
 {
   utlGlobalException(m_SHRank<0 || m_RadialRank<0, "negative rank");
   typename TInputImage::ConstPointer  inputPtr = this->GetInput();

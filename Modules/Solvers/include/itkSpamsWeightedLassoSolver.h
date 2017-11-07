@@ -107,7 +107,7 @@ public:
   itkBooleanMacro(Positive);
 
   
-  int GetXDimension() const
+  int GetXDimension() const ITK_OVERRIDE
     {
     int N = m_A->Columns();
     utlException(N==0, "wrong size! m_A.Columns()="<<m_A->Columns());
@@ -120,7 +120,7 @@ public:
     return M;
     }
 
-  void Clear() 
+  void Clear() ITK_OVERRIDE 
     { 
     Superclass::Clear(); 
     ClearA();
@@ -141,21 +141,21 @@ public:
     }
   
 
-  void VerifyInputs() const;
+  void VerifyInputs() const ITK_OVERRIDE;
   
-  void Solve(const VectorType& xInitial=VectorType()); 
+  void Solve(const VectorType& xInitial=VectorType()) ITK_OVERRIDE; 
   
   ValueType EvaluateCostFunctionInColumn(const VectorType& x, const int col) const;
-  ValueType EvaluateCostFunction(const MatrixType& x=MatrixType()) const;
+  ValueType EvaluateCostFunction(const MatrixType& x=MatrixType()) const ITK_OVERRIDE;
   
 
 protected:
   SpamsWeightedLassoSolver();
   virtual ~SpamsWeightedLassoSolver() {}
   
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
-  virtual typename LightObject::Pointer InternalClone() const;
+  virtual typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
   /** MxN matrix  */
   MatrixPointer m_A;

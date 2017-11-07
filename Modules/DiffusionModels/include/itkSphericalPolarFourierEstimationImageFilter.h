@@ -179,20 +179,20 @@ protected:
   virtual ~SphericalPolarFourierEstimationImageFilter()
     {};
   
-  void VerifyInputParameters() const;
+  void VerifyInputParameters() const ITK_OVERRIDE;
   
-  void InitializeThreadedLibraries();
+  void InitializeThreadedLibraries() ITK_OVERRIDE;
   
   /** The filter produces an image which is a different
    * size than its input image. As such, it needs to provide an
    * implemenation for GenerateOutputInformation() which set
    * the output information accordingly. */
-  void GenerateOutputInformation();
+  void GenerateOutputInformation() ITK_OVERRIDE;
 
-  void BeforeThreadedGenerateData ();
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
-  typename LightObject::Pointer InternalClone() const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
   
 
   /** scale for radial basis  */

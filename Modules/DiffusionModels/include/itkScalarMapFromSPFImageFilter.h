@@ -73,16 +73,16 @@ protected:
 
   virtual ~ScalarMapFromSPFImageFilter() {};
   
-  void VerifyInputParameters(){}
+  void VerifyInputParameters() const ITK_OVERRIDE{}
   
-  void GenerateOutputInformation();
+  void GenerateOutputInformation() ITK_OVERRIDE;
   
-  void BeforeThreadedGenerateData ();
-  void ThreadedGenerateData(const typename TOutputImage::RegionType& outputRegionForThread,ThreadIdType threadId );
+  void BeforeThreadedGenerateData () ITK_OVERRIDE;
+  void ThreadedGenerateData(const typename TOutputImage::RegionType& outputRegionForThread,ThreadIdType threadId ) ITK_OVERRIDE;
   
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   VectorType m_SumWeight;
   MapType m_MapType;

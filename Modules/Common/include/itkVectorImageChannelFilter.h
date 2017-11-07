@@ -69,11 +69,11 @@ protected:
   VectorImageChannelFilter();
   virtual ~VectorImageChannelFilter() {};
 
-  virtual void PrintSelf(std::ostream & os, Indent indent) const;
+  virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
 
-  void GenerateData();
+  void GenerateData() ITK_OVERRIDE;
 
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
   typename TFilter::Pointer m_Filter;
 

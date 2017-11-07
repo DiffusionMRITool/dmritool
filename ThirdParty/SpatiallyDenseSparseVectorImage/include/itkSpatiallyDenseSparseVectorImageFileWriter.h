@@ -95,7 +95,7 @@ public:
 
   /** Aliased to the Write() method to be consistent with the rest of the
    * pipeline. */
-  virtual void Update()
+  virtual void Update() ITK_OVERRIDE
     {
     this->Write();
     }
@@ -119,7 +119,7 @@ public:
 protected:
   SpatiallyDenseSparseVectorImageFileWriter();
   ~SpatiallyDenseSparseVectorImageFileWriter();
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   KeyImagePointer m_KeyImage;
   ValueImagePointer m_ValueImage;
@@ -130,7 +130,7 @@ protected:
 //  LengthImageFileWriterPointer m_ValueImageFileWriter;
 
   /** Does the actual work. */
-  void GenerateData(void);
+  void GenerateData(void) ITK_OVERRIDE;
 
 private:
   SpatiallyDenseSparseVectorImageFileWriter(const Self&); //purposely not implemented

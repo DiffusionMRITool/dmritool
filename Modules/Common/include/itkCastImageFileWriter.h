@@ -109,9 +109,9 @@ public:
 
   /** Aliased to the Write() method to be consistent with the rest of the
    * pipeline. */
-  virtual void Update()
+  virtual void Update() ITK_OVERRIDE
     {
-    this->Write();\
+    this->Write();
     }
 
   /** Set the compression On or Off */
@@ -136,10 +136,10 @@ public:
 protected:
   CastImageFileWriter();
   ~CastImageFileWriter();
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
 
   /** Does the real work. */
-  void GenerateData(void);
+  void GenerateData(void) ITK_OVERRIDE;
   
 private:
   CastImageFileWriter(const Self&); //purposely not implemented

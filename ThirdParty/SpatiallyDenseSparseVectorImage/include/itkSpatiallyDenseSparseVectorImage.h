@@ -133,14 +133,14 @@ public:
    *  BufferedRegion and RequestedRegion. Allocate must still be called.
    */
 //  using Superclass::SetRegions;
-  void SetRegions(const RegionType & region)
+  void SetRegions(const RegionType & region) ITK_OVERRIDE
     {
     this->SetLargestPossibleRegion(region);
     this->SetBufferedRegion(region);
     this->SetRequestedRegion(region);
     }
 
-  void SetRegions(const SizeType & size)
+  void SetRegions(const SizeType & size) ITK_OVERRIDE
     {
     RegionType region; region.SetSize(size);
     this->SetLargestPossibleRegion(region);
@@ -151,7 +151,7 @@ public:
   /** Buffered region has no meaning for sparse images.
    *  This method does nothing except for computing offset table
    * \sa ImageRegion, SetLargestPossibleRegion(), SetRequestedRegion() */
-  virtual void SetBufferedRegion(const RegionType &region)
+  virtual void SetBufferedRegion(const RegionType &region) ITK_OVERRIDE
     {
     this->ComputeOffsetTable();
     this->Modified();
@@ -160,12 +160,12 @@ public:
   /** Buffered region has no meaning for sparse images.
    *  This method always returns the largest possible region.
    * \sa ImageRegion, SetLargestPossibleRegion(), SetRequestedRegion() */
-  virtual const RegionType& GetBufferedRegion() const
+  virtual const RegionType& GetBufferedRegion() const ITK_OVERRIDE
   { return this->GetLargestPossibleRegion(); }
 
   /** Restore the data object to its initial state. This means releasing
    * memory. */
-  virtual void Initialize();
+  virtual void Initialize() ITK_OVERRIDE;
 
   OffsetValueType ComputeOffset(const IndexType &ind) const
   {
@@ -335,7 +335,7 @@ public:
    * simply calls CopyInformation() and copies the region ivars.
    * The implementation here refers to the superclass' implementation
    * and then copies over the pixel container. */
-  virtual void Graft(const DataObject *data);
+  virtual void Graft(const DataObject *data) ITK_OVERRIDE;
 
   /** Return the Pixel Accessor object */
   AccessorType GetPixelAccessor( void )
@@ -366,13 +366,13 @@ public:
   itkGetConstReferenceMacro(VectorLength, VectorLengthType);
 
   /** Get/Set the number of components each pixel has, ie the VectorLength */
-  virtual unsigned int GetNumberOfComponentsPerPixel() const;
+  virtual unsigned int GetNumberOfComponentsPerPixel() const ITK_OVERRIDE;
 
-  virtual void SetNumberOfComponentsPerPixel(unsigned int n);
+  virtual void SetNumberOfComponentsPerPixel(unsigned int n) ITK_OVERRIDE;
 
 protected:
   SpatiallyDenseSparseVectorImage();
-  void PrintSelf( std::ostream& os, Indent indent ) const;
+  void PrintSelf( std::ostream& os, Indent indent ) const ITK_OVERRIDE;
   virtual ~SpatiallyDenseSparseVectorImage() {};
 
 private:
