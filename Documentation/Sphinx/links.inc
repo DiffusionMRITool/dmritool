@@ -13,7 +13,7 @@
 .. _`National Institutes of Health`: http://www.nih.gov
 .. _`Athena project team`: https://team.inria.fr/athena
 .. _INRIA: https://www.inria.fr/en
-.. _`Brainnetome center`: http://www.brainnetome.org/en
+.. _`Brainnetome center`: http://www.brainnetome.org
 .. _`Institute of Automation, Chinese Academy of Sciences`: http://english.ia.cas.cn
 .. _`MIND Lab`: http://www.unc.edu/~ptyap
 .. _`IDEA Group`: https://www.med.unc.edu/bric/ideagroup

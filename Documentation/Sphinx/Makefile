@@ -61,7 +61,8 @@ matdemo:
 	@echo "copy published matlab demos from $(SRCDIR)/Matlab/Demos/html to $(BUILDDIR)/html/demos"
 	@echo "need to publish these demos first"
 	rm -rf $(MATDEMOSDIR)
-	cp -rp $(SRCDIR)/Matlab/Demos/html  $(MATDEMOSDIR)
+	mkdir $(MATDEMOSDIR)
+	cp -rp $(SRCDIR)/Matlab/Demos/html/*  $(MATDEMOSDIR)/
 
 tutorial: 
 	python ./tools/make_tutorial_outputs.py .

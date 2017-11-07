@@ -52,7 +52,7 @@ DMRITool is/was supported by the following research groups:
 * [Section on Quantitative Imaging and Tissue Sciences (SQITS)](https://science.nichd.nih.gov/confluence/display/sqits/Home), [National Institutes of Health](http://www.nih.gov/)
 * [MIND Lab](http://www.unc.edu/~ptyap/index.html), [IDEA Group](https://www.med.unc.edu/bric/ideagroup), [University of North Carolina at Chapel Hill](http://www.unc.edu/)
 * [Athena project team](https://team.inria.fr/athena/), [INRIA](http://www.inria.fr/)
-* [Brainnetome center](http://www.brainnetome.org/en/), [Institute of Automation, Chinese Academy of Sciences](http://english.ia.cas.cn/)
+* [Brainnetome center](http://www.brainnetome.org), [Institute of Automation, Chinese Academy of Sciences](http://english.ia.cas.cn/)
 
 License
 =======
