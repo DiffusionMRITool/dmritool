@@ -4,7 +4,9 @@
   <title>1-Opt Sampling Scheme Estimation</title>
   <description>1-Opt estimation for single and multiple shell sampling scheme \n\
     Examples: \n\
-      SamplingSchemeQSpace1OptEstimation grad_28x3_IMOC1Opt.txt --initial grad_28x3_IMOC_shell1.txt,grad_28x3_IMOC_shell2.txt,grad_28x3_IMOC_shell3.txt --tessOrder 7 -v 2 
+      SamplingSchemeQSpace1OptEstimation grad_28x3_IMOC1Opt.txt --initial grad_28x3_IMOC_shell1.txt,grad_28x3_IMOC_shell2.txt,grad_28x3_IMOC_shell3.txt --tessOrder 7 -v 2 \n\
+      Reference: \n\
+      Jian Cheng, Dinggang Shen, Pew-Thian Yap, Peter J. Basser, "Single- and Multiple-Shell Uniform Sampling Schemes for Diffusion MRI Using Spherical Codes", IEEE Transactions on Medical Imaging (TMI), 2017. 
   </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
