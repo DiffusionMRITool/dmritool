@@ -23,6 +23,13 @@
       <index>1</index>
       <channel>input</channel>
     </image>
+    
+    <double>
+      <name>_Power</name>
+      <description>Power argument. If the power is 2, we have closed form. For other power number, we use a numerical fitting of the powered spherical function.</description>
+      <longflag>power</longflag>
+      <default>1</default>
+    </double>
 
     <boolean>
     <name>_Debug</name>

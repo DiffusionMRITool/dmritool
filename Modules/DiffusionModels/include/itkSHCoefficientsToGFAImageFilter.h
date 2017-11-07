@@ -1,5 +1,5 @@
 /**
- *       @file  itkSHCoefficientsToGFAImaeFilter.h
+ *       @file  itkSHCoefficientsToGFAImageFilter.h
  *      @brief  In each vxoel, calculate gfa from SH coefficients
  *     Created  "02-12-2014
  *
@@ -8,15 +8,15 @@
  * =====================================================================================
  */
 
-#ifndef __itkSHCoefficientsToGFAImaeFilter_h
-#define __itkSHCoefficientsToGFAImaeFilter_h
+#ifndef __itkSHCoefficientsToGFAImageFilter_h
+#define __itkSHCoefficientsToGFAImageFilter_h
 
 #include "itkUnaryFunctorImageFilter.h"
 #include <cmath>
 
 namespace itk
 {
-/** \class SHCoefficientsToGFAImaeFilter
+/** \class SHCoefficientsToGFAImageFilter
  *
  * \brief In each vxoel, calculate gfa from SH coefficients.
  *
@@ -63,7 +63,7 @@ public:
 }
 
 template <class TInputImage, class TOutputImage=itk::Image<double,3> >
-class ITK_EXPORT SHCoefficientsToGFAImaeFilter :
+class ITK_EXPORT SHCoefficientsToGFAImageFilter :
   public
   UnaryFunctorImageFilter<TInputImage, TOutputImage,
                           Functor::SHCoefficientsToGFA<
@@ -72,7 +72,7 @@ class ITK_EXPORT SHCoefficientsToGFAImaeFilter :
 {
 public:
   /** Standard class typedefs. */
-  typedef SHCoefficientsToGFAImaeFilter Self;
+  typedef SHCoefficientsToGFAImageFilter Self;
   typedef UnaryFunctorImageFilter<
       TInputImage, TOutputImage,
       Functor::SHCoefficientsToGFA<
@@ -86,19 +86,19 @@ public:
   itkNewMacro( Self );
 
   /** Run-time type information (and related methods). */
-  itkTypeMacro( SHCoefficientsToGFAImaeFilter, UnaryFunctorImageFilter );
+  itkTypeMacro( SHCoefficientsToGFAImageFilter, UnaryFunctorImageFilter );
 
 protected:
-  SHCoefficientsToGFAImaeFilter()
+  SHCoefficientsToGFAImageFilter()
   {
   }
 
-  virtual ~SHCoefficientsToGFAImaeFilter()
+  virtual ~SHCoefficientsToGFAImageFilter()
   {
   }
 
 private:
-  SHCoefficientsToGFAImaeFilter(const Self &); // purposely not implemented
+  SHCoefficientsToGFAImageFilter(const Self &); // purposely not implemented
   void operator=(const Self &);                      // purposely not implemented
 };
 } // end namespace itk

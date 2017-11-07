@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>SH Operator</category>
+  <title>Spherical Harmonics fit</title>
+  <description>Spherical Harmonics fit from spherical function samples.\n\
+    Examples: \n\
+    SHCoefficientsPower sphericalSamples.nii.gz grad.txt 8 sh.nii.gz \n\
+    SHCoefficientsPower sphericalSamples.nii.gz grad.txt 8 sh.nii.gz --power 2.0  
+  </description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  <acknowledgements/>
+  
+  <parameters>
+    <image type="vector">
+    <name>_InputFile</name>
+    <description>Vector image that contains the sphericla function samples.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </image>
+
+    <file>
+      <name>_OrientationFile</name>
+      <description>Input orientation file.</description>
+      <index>1</index>
+      <channel>input</channel>
+    </file>
+    
+    <integer>
+      <name>_SHRank</name>
+      <description>SH Rank for output SH coefficients.</description>
+      <index>2</index>
+      <channel>input</channel>
+      <default>-1</default>
+    </integer>
+    
+    <image type="vector">
+    <name>_OutputFile</name>
+    <label>Output SH Coefficient File</label>
+    <description>Vector image that will contain the SH coefficients.</description>
+    <index>3</index>
+    <channel>output</channel>
+    </image>
+    
+    <double>
+      <name>_Lambda</name>
+      <description>Lambda for Laplacian-Beltrami regularization. No regularization if lambda=0. </description>
+      <longflag>lambda</longflag>
+      <default>0</default>
+    </double>
+
+    <image>
+      <name>_MaskImageFile</name>
+      <description>Mask image file.</description>
+      <longflag>mask</longflag>
+    </image>
+
+    <double>
+      <name>_Power</name>
+      <description>Power argument for input spherical samples.</description>
+      <longflag>power</longflag>
+      <default>1.0</default>
+    </double>
+    
+    
+    <integer>
+      <name>_NumberOfThreads</name>
+      <description>Number of threads. If it not positive, then the default number for multiple threads is used.</description>
+      <longflag>nt</longflag>
+      <default>-1</default>
+    </integer>
+    
+    <boolean>
+      <name>_ShowProgress</name>
+      <description>show progress of processing</description>
+      <longflag>progress</longflag>
+      <flag>p</flag>
+      <default>false</default>
+    </boolean>
+
+    <integer>
+      <name>_Verbose</name>
+      <description>Verbosity log level. Used for debug if >=2.</description>
+      <longflag>verbose</longflag>
+      <flag>v</flag>
+      <default>LOG_NORMAL</default>
+    </integer>
+
+  </parameters>
+   
+</executable>
+
+
+

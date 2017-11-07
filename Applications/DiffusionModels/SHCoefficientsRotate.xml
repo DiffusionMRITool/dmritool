@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>SH Operator</category>
+  <title>Spherical Harmonics Rotation</title>
+  <description>Spherical Harmonics Rotation. \n\
+    Examples: \n\
+    SHCoefficientsRotate odf.nii.gz odf_rotated.nii.gz --vFromTo 1,1,0,1,0,0 \n\
+    SHCoefficientsRotate odf.nii.gz odf_rotated.nii.gz --vFromTo 90,45,90,0  \n\
+      Reference: \n\
+      Jian Cheng, Peter J. Basser, "Director Field Analysis (DFA): Exploring Local White Matter Geometric Structure in diffusion MRI", Medical Image Analysis, 2017. 
+  </description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  <acknowledgements/>
+  
+  <parameters>
+    <image type="vector">
+    <name>_InputFile</name>
+    <label>Input SH Coefficient File</label>
+    <description>Vector image that contains the SH coefficients.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </image>
+    
+    <image type="vector">
+    <name>_OutputFile</name>
+    <label>Output SH Coefficient File</label>
+    <description>Vector image that will contain the rotated SH coefficients.</description>
+    <index>1</index>
+    <channel>output</channel>
+    </image>
+    
+    <double-vector>
+      <name>_VectorFromTo</name>
+      <label>3D Vector</label>
+      <description>Two 3D vector to determine the rotation matrix. It contains 6 float numbers in Catesian format or 4 float numbers in spherical format.</description>
+      <channel>input</channel>
+      <longflag>--vFromTo</longflag>
+    </double-vector>
+    
+    <integer>
+      <name>_NumberOfThreads</name>
+      <description>Number of threads. If it not positive, then the default number for multiple threads is used.</description>
+      <longflag>nt</longflag>
+      <default>-1</default>
+    </integer>
+
+  </parameters>
+   
+</executable>
+

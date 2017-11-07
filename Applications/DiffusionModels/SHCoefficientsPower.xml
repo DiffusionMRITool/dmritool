@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>SH Operator</category>
+  <title>Spherical Harmonics Power</title>
+  <description>Power of a spherical function represented by SH basis.\n\
+    Examples: \n\
+    SHCoefficientsPower odf.nii.gz odf_power.nii.gz --power 2.0  \n\
+    Reference: \n\
+    Jian Cheng, Rachid Deriche, Tianzi Jiang, Dinggang Shen, Pew-Thian Yap, "Non-Negative Spherical Deconvolution (NNSD) for estimation of fiber Orientation Distribution Function in single-/multi-shell diffusion MRI", NeuroImage, vol. 101, pp. 750–764, 2014. 
+  </description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  <acknowledgements/>
+  
+  <parameters>
+    <image type="vector">
+    <name>_InputFile</name>
+    <label>Input SH Coefficient File</label>
+    <description>Vector image that contains the SH coefficients.</description>
+    <index>0</index>
+    <channel>input</channel>
+    </image>
+    
+    <image type="vector">
+    <name>_OutputFile</name>
+    <label>Output SH Coefficient File</label>
+    <description>Vector image that will contain the rotated SH coefficients.</description>
+    <index>1</index>
+    <channel>output</channel>
+    </image>
+    
+    <double>
+      <name>_Power</name>
+      <description>Power argument. If the power is 2, we have closed form. For other power number, we use a numerical fitting of the powered spherical function.</description>
+      <longflag>power</longflag>
+      <default>1</default>
+    </double>
+    
+    <integer>
+      <name>_SHRank</name>
+      <description>SH Rank for output SH coefficients. It is needed for refitting if the power is not 2 or 1. If not set, it is set as the rank of the input SH image.</description>
+      <longflag>sh</longflag>
+      <default>-1</default>
+    </integer>
+    
+    <integer>
+      <name>_NumberOfThreads</name>
+      <description>Number of threads. If it not positive, then the default number for multiple threads is used.</description>
+      <longflag>nt</longflag>
+      <default>-1</default>
+    </integer>
+    
+    <boolean>
+      <name>_ShowProgress</name>
+      <description>show progress of processing</description>
+      <longflag>progress</longflag>
+      <flag>p</flag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_Debug</name>
+      <description>debug</description>
+      <longflag>debug</longflag>
+      <default>false</default>
+    </boolean>
+
+  </parameters>
+   
+</executable>
+
+
