@@ -21,7 +21,7 @@
 
 
 /**
- * \brief  mutiple a const to a image 
+ * \brief  mutiple a const to a image (replaced by 4DImageMath).  
  */
 int 
 main (int argc, char const* argv[])

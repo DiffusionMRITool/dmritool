@@ -133,7 +133,7 @@ PrintImage(int argc, char const* argv[])
         }
       diff = vec-vec0;
 
-      if (!_PrintAllVoxels && diff.GetNorm()<1e-8) 
+      if (!_PrintAllVoxels && (diff.GetNorm()<1e-8 || vec0.GetNorm()<1e-8 || vec.GetNorm()<1e-8)) 
         continue;
 
       if (_DifferencePercent!=2)
@@ -174,7 +174,7 @@ PrintImage(int argc, char const* argv[])
           }
         diff = vec-vec0;
 
-        if (!_PrintAllVoxels && diff.GetNorm()<1e-8) 
+        if (!_PrintAllVoxels && (diff.GetNorm()<1e-8 || vec0.GetNorm()<1e-8 || vec.GetNorm()<1e-8)) 
           continue;
         
         double diffPer = diff.GetNorm()/vec0.GetNorm();

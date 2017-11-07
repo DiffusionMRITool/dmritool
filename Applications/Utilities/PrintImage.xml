@@ -58,6 +58,7 @@
       <name>_PrintAllVoxels</name>
       <description>If set, print all voxels. Otherwise, print only non-zero voxels</description>
       <longflag>all</longflag>
+      <flag>a</flag>
       <default>false</default>
     </boolean>
     
