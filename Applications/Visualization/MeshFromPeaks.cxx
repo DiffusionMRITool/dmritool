@@ -82,7 +82,8 @@ main (int argc, char const* argv[])
     {
     utlGlobalException(_WindowSize.size()!=2, "wrong window size");
     utlGlobalException(_Angle.size()!=2, "wrong angle size");
-    vtk::VisualizePolyData(mesh, _Angle, _WindowSize, !_NoNormalArg.isSet(), _Zoom, _PNGFile);
+    utlGlobalException(_BackgroundColor.size()!=3, "wrong size of background color");
+    vtk::VisualizePolyData(mesh, _Angle, _WindowSize, !_NoNormalArg.isSet(), !_NoLightingArg.isSet(), _Zoom, _PNGFile, _BackgroundColor);
     }
 
   return EXIT_SUCCESS;

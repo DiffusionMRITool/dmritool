@@ -90,9 +90,16 @@ void MeshFromPeaksImageFilter<TInputImage, TOutputMesh>
 
   std::vector<double> peak(3);
   
+  inputIt.GoToBegin();
   while( !inputIt.IsAtEnd() )
   {
     inputIndex = inputIt.GetIndex();
+    if (!this->IsPixelIndexVisible(inputIndex))
+      {
+      ++inputIt;
+      continue;
+      }
+
     inputPtr->TransformIndexToPhysicalPoint(inputIndex, inputPhysicalPoint);
     inputPixel = inputIt.Get();
     
@@ -145,6 +152,7 @@ void MeshFromPeaksImageFilter<TInputImage, TOutputMesh>
     tubeFilter->SetInputData(this->m_Mesh);
     tubeFilter->SetRadius(m_TubeRadius);
     tubeFilter->SetNumberOfSides(6);
+    tubeFilter->SetCapping(1);
     tubeFilter->Update();
     this->m_Mesh = tubeFilter->GetOutput();
     }

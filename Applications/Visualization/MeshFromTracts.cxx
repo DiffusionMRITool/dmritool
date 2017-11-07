@@ -38,7 +38,7 @@ main (int argc, char const* argv[])
   reader->SetFileName(_InputFile);
   reader->Update();
 
-  auto fibers = reader->GetFiberTracts();
+  auto fibers = reader->GetOutput();
 
   // fibers->Print(std::cout<<"fibers=\n");
 
@@ -84,6 +84,6 @@ main (int argc, char const* argv[])
     {
     utlGlobalException(_WindowSize.size()!=2, "wrong window size");
     utlGlobalException(_Angle.size()!=2, "wrong angle size");
-    vtk::VisualizePolyDataWithScalarRange(mesh, _ScalarRange, {0.6667,0.0}, _Angle, _WindowSize, !_NoNormalArg.isSet(), _Zoom, _PNGFile);
+    vtk::VisualizePolyDataWithScalarRange(mesh, _ScalarRange, {0.6667,0.0}, _Angle, _WindowSize, !_NoNormalArg.isSet(), true, _Zoom, _PNGFile);
     }
 }

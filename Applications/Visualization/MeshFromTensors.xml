@@ -6,7 +6,8 @@
     Examples: \n\
     MeshFromPeaks tensors.nii.gz -o tensors_vis.vtk --scale 1000  \n\
     MeshFromPeaks tensors.nii.gz  --scale 1000 --slice -1,-1,25 \n\
-    MeshFromPeaks tensors.nii.gz  --scale 1000 --box 50,100,50,100,50,50 
+    MeshFromPeaks tensors.nii.gz  --scale 1000 --box 50,100,50,100,50,50 \n\
+    MeshFromTensors 2e-3,0,0,1e-3,0,1e-3 
   </description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
@@ -14,56 +15,60 @@
   <parameters>
   
     <image>
-    <name>_InputFile</name>
-    <label>Input File</label>
-    <description>Input file.</description>
-    <index>0</index>
-    <channel>input</channel>
+      <name>_InputFile</name>
+      <label>Input File</label>
+      <description>Input file. It is 1) an image file with tensors, \
+        or 2) a .txt file with tensor elements (6 or 9 values) of a single tensor; \
+        or 3) 6 or 9 float numbers as tensor elements. \
+        If 6 elements, these 6 values should be [xx, xy, xz, yy, yz, zz] \
+        If 9 elements, these 9 values should be [xx, xy, xz, yx, yy, yz, xz, yz, zz].</description>
+      <index>0</index>
+      <channel>input</channel>
     </image>
 
     <file>
-    <name>_OutputFile</name>
-    <label>Output File</label>
-    <description>Output vtk file. If it is not set, visualize the vtk file.</description>
-    <default>""</default>
-    <longflag>output</longflag> 
-    <flag>o</flag> 
-    <channel>output</channel>
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Output vtk file. If it is not set, visualize the vtk file.</description>
+      <default>""</default>
+      <longflag>output</longflag> 
+      <flag>o</flag> 
+      <channel>output</channel>
     </file>
 
     <string-enumeration>
-    <name>_GlyphType</name>
-    <label>Glyph Type</label>
-    <description>Glyph type/</description>
-    <default>ELLIPSOID</default>
-    <element>LINE</element>
-    <element>ARROW</element>
-    <element>DISK</element>
-    <element>CYLINDER</element>
-    <element>CUBE</element>
-    <element>ELLIPSOID</element>
-    <element>SUPERQUADRIC</element>
-    <longflag>glyph</longflag>
+      <name>_GlyphType</name>
+      <label>Glyph Type</label>
+      <description>Glyph type/</description>
+      <default>ELLIPSOID</default>
+      <element>LINE</element>
+      <element>ARROW</element>
+      <element>DISK</element>
+      <element>CYLINDER</element>
+      <element>CUBE</element>
+      <element>ELLIPSOID</element>
+      <element>SUPERQUADRIC</element>
+      <longflag>glyph</longflag>
     </string-enumeration> 
 
     <string-enumeration>
-    <name>_ColorScheme</name>
-    <label>Color Scheme</label>
-    <description>Color scheme.</description>
-    <default>DIRECTION</default>
-    <element>FA</element>
-    <element>MD</element>
-    <element>IMAGE</element>
-    <element>DIRECTION</element>
-    <element>NONE</element>
-    <longflag>colorscheme</longflag>
+      <name>_ColorScheme</name>
+      <label>Color Scheme</label>
+      <description>Color scheme.</description>
+      <default>DIRECTION</default>
+      <element>FA</element>
+      <element>MD</element>
+      <element>IMAGE</element>
+      <element>DIRECTION</element>
+      <element>NONE</element>
+      <longflag>colorscheme</longflag>
     </string-enumeration> 
-    
+
     <double>
-    <name>_GlyphResolution</name>
-    <description>Glyph resolution. </description>
-    <longflag>resolution</longflag>
-    <default>10</default>
+      <name>_GlyphResolution</name>
+      <description>Glyph resolution. </description>
+      <longflag>resolution</longflag>
+      <default>10</default>
     </double>
     
     <double-vector>
@@ -127,6 +132,13 @@
       <default>0.0,0.0</default>
     </double-vector>
     
+    <double-vector>
+      <name>_BackgroundColor</name>
+      <description>background color for the window</description>
+      <longflag>bg</longflag>
+      <default>0,0,0</default>
+    </double-vector> 
+    
     <string>
       <name>_PNGFile</name>
       <description>output png file. Used when visualzing the vtk file.</description>
@@ -144,6 +156,13 @@
       <name>_NoNormal</name>
       <description>Do not use vtkPolyDataNormals.</description>
       <longflag>nonormal</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_NoLighting</name>
+      <description>Set LightingOff.</description>
+      <longflag>nolighting</longflag>
       <default>false</default>
     </boolean>
     

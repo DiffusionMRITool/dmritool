@@ -129,9 +129,9 @@ MeshFromTensorImageFilter<TInputImage, TOutputMesh>
   this->m_ShapeMode = GLYPH_ARROW;
   this->m_Shape = vtkArrowSource::New();
   vtkArrowSource* arrow = vtkArrowSource::SafeDownCast (this->m_Shape);
-  arrow->SetTipLength (0.0);
-  arrow->SetTipRadius (0.0);
-  arrow->SetShaftRadius (0.18);
+  // arrow->SetTipLength (0.0);
+  // arrow->SetTipRadius (0.0);
+  // arrow->SetShaftRadius (0.18);
 
   this->m_Glyph->SetSourceConnection(this->m_Shape->GetOutputPort());
   this->m_Shape->Delete();
@@ -295,12 +295,13 @@ MeshFromTensorImageFilter<TInputImage, TOutputMesh>
 // ::GetRGBAFromTensorDirection(const DiffusionTensor<double>& tensor)
 // {
 
+//   // std::vector<double> rgba(3);
 //   // double fa = tensor.GetFA();
 //   // // if fa is close to 0, then the eigenvector is not reliable. Thus, we set ss=0, if fa=0.
 //   // if (fa<0.01)
 //   //   {
-//   //   rgba[0]=0, rgba[1]=0, rgba[2]=0, rgba[3]=0;
-//   //   return ;
+//   //   rgba[0]=0, rgba[1]=0, rgba[2]=0;
+//   //   return rgba;
 //   //   }
 
 //   // VectorType eigenValues(3), v1(3); 
@@ -333,22 +334,23 @@ MeshFromTensorImageFilter<TInputImage, TOutputMesh>
 //   //   rgba[d] = static_cast<VTK_TYPE_NAME_UNSIGNED_CHAR>( (rgba[d] - min_val)/(max_val - min_val) * 255.0 );
 //   //   }
       
-//   // rgba[3] = 255.0;
 
 //   double ss = GetScalarCodeFromTensor(tensor, COLOR_BY_DIRECTION);
 
 //   vtkSmartPointer<vtkLookupTable> lut = vtkLookupTable::New();
 //   lut->SetHueRange(0.0,1.0);
 //   lut->SetRampToLinear();
+//   lut->SetTableRange(0,255.0);
 //   lut->Build();
 
 //   // unsigned char* tmp = lut->MapValue(ss);
-//   std::vector<double> rgba(4);
+//   std::vector<double> rgba(3);
 //   // rgba[0]=tmp[0], rgba[1]=tmp[1], rgba[2]=tmp[2], rgba[3]=tmp[3];
 //   double tmp[3];
 //   lut->GetColor(ss, tmp);
-//   rgba[0]=tmp[0], rgba[1]=tmp[1], rgba[2]=tmp[2], rgba[3]=255;
-//   utlPrintVar(true, "a1", ss, rgba[0], rgba[1], rgba[2], rgba[3]);
+//   rgba[0]=tmp[0]*255, rgba[1]=tmp[1]*255, rgba[2]=tmp[2]*255;
+//   utlPrintVar(true, "a1", ss, rgba[0], rgba[1], rgba[2]);
+
 //   return rgba;
 // }
 
@@ -380,10 +382,11 @@ MeshFromTensorImageFilter<TInputImage, TOutputMesh>
   vtkSmartPointer<vtkFloatArray> scalars = vtkFloatArray::New();
   scalars->SetNumberOfComponents(1);
   scalars->SetName("scalar_color");
-  // vtkSmartPointer<vtkUnsignedCharArray> rgbaArray = vtkSmartPointer<vtkUnsignedCharArray>::New();
-  // rgbaArray->SetNumberOfComponents(4);
-  // rgbaArray->SetName("RGBA_color");
-  // double rgba[4]={0,0,0,0};
+
+  vtkSmartPointer<vtkUnsignedCharArray> rgbaArray = vtkSmartPointer<vtkUnsignedCharArray>::New();
+  rgbaArray->SetNumberOfComponents(3);
+  rgbaArray->SetName("RGBA_color");
+  double rgba[3]={0,0,0};
 
   InputImagePointType inputPhysicalPoint;
 
@@ -450,7 +453,7 @@ MeshFromTensorImageFilter<TInputImage, TOutputMesh>
 
         // auto colorVec = GetRGBAFromTensorDirection(tensor);
         // utl::PrintVector(colorVec, "colorVec");
-        // for ( int i = 0; i < 4; ++i ) 
+        // for ( int i = 0; i < colorVec.size(); ++i ) 
         //   rgba[i] = colorVec[i];
         // rgbaArray->InsertTuple(off, rgba);
         }

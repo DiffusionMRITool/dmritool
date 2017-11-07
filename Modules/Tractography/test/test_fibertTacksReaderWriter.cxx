@@ -28,7 +28,7 @@ main (int argc, char const* argv[])
 
   reader->Update();
 
-  itk::FiberTracts<>::Pointer fibers = reader->GetFiberTracts();
+  itk::FiberTracts<>::Pointer fibers = reader->GetOutput();
 
   fibers->Print(std::cout<<"fibers=\n");
 

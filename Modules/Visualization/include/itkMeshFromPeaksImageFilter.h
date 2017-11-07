@@ -101,22 +101,22 @@ protected:
   ~MeshFromPeaksImageFilter()
     {  };
   
-  void VerifyInputParameters() const
+  void VerifyInputParameters() const ITK_OVERRIDE
     {
     utlSAException(this->m_ColorScheme!=Superclass::FIXED && this->m_ColorScheme!=Superclass::DIRECTION)
       (this->m_ColorScheme).msg("wrong m_ColorScheme");
     }
 
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     std::string peaktypeStr = PeakContainerHelper::GetString(m_PeakType);
     PrintVar(true, os<<indent, peaktypeStr, m_TubeRadius, m_MaxNumberOfPeaks);
     PrintVar(true, os<<indent, m_ColorPeak[0], m_ColorPeak[1], m_ColorPeak[2]);
     }
 
-  virtual void GenerateData();
+  virtual void GenerateData() ITK_OVERRIDE;
 
   PeakType m_PeakType;
 
@@ -146,7 +146,7 @@ private:
 # include "Templates/itkMeshFromPeaksImageFilter+-.h"
 #endif
 
-#ifndef ITK_MANUAL_INSTANTIATION
+#if !defined(ITK_MANUAL_INSTANTIATION) && !defined(__itkMeshFromPeaksImageFilter_hxx)
 #include "itkMeshFromPeaksImageFilter.hxx"
 #endif
 

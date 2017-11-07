@@ -40,9 +40,10 @@ void FiberTractsReader::ReadTractsTRK()
   
   itk::ReadTrackVisHeader(m_FileName, *header);
 
-  int n_count = m_FiberTracts->GetNumberOfFibers();
-  int n_p = header->n_properties;
-  int n_s = header->n_scalars;
+  // int n_p = header->n_properties;
+  // int n_s = header->n_scalars;
+  int dim_p = itk::GetDimensionOfProperties(*header);
+  int dim_s = itk::GetDimensionOfScalars(*header);
 
   FILE* file;
   file = fopen(m_FileName.c_str(), "rb");
@@ -50,7 +51,7 @@ void FiberTractsReader::ReadTractsTRK()
   long fsize = ftell(file);
   long offset=1000;
   int numPoints;
-  float val[3+n_s], val2[n_p];
+  float val[3+dim_s], val2[dim_p];
   VertexType vertex;
   while (offset<fsize)
     {
@@ -64,24 +65,24 @@ void FiberTractsReader::ReadTractsTRK()
     auto scalars = fiber->GetScalars();
     for ( int i = 0; i < numPoints; ++i ) 
       {
-      fread((char*)&val, sizeof(float)*(3+n_s), 1, file);
+      fread((char*)&val, sizeof(float)*(3+dim_s), 1, file);
       vertex[0]=val[0];
       vertex[1]=val[1];
       vertex[2]=val[2];
       tract->AddVertex(vertex);
       STDVectorType vec;
-      for ( int j = 0; j < n_s; ++j ) 
+      for ( int j = 0; j < dim_s; ++j ) 
         vec.push_back(val[3+j]);
       scalars->push_back(vec);
       }
 
-    fread((char*)&val2, sizeof(float)*n_p, 1, file);
-    for ( int j = 0; j < n_p; ++j ) 
+    fread((char*)&val2, sizeof(float)*dim_p, 1, file);
+    for ( int j = 0; j < dim_p; ++j ) 
       properties->push_back(val[j]);
 
     fibers->InsertElement( fibers->Size(), fiber);
 
-    offset += 4+ numPoints*(3+n_s)*4 + n_p*4;
+    offset += 4+ numPoints*(3+dim_s)*4 + dim_p*4;
     }
 
   fclose (file);

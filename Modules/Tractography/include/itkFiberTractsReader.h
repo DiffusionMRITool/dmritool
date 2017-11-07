@@ -41,7 +41,7 @@ public:
   typedef typename FiberType::VertexType          VertexType;
 
   itkSetGetMacro(FileName, std::string);
-  itkSetGetMacro(FiberTracts, FiberTractsPointer);
+  // itkSetGetMacro(FiberTracts, FiberTractsPointer);
 
   /** Does the real work. */
   virtual void Update();
@@ -51,12 +51,17 @@ public:
   void ReadTractsTCK();
   
   void ReadTractsVTK();
+
+  FiberTractsPointer GetOutput() const
+    {
+    return m_FiberTracts;
+    }
     
 protected:
   FiberTractsReader(){}
   ~FiberTractsReader(){}
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     PrintVar(true, os<< indent, m_FileName);
@@ -74,6 +79,26 @@ private:
 
 };
 
+inline bool 
+ReadFibers (const std::string& filename, SmartPointer<FiberTracts<double> >& fibers, const std::string printInfo="Reading fibers:") 
+{
+  typename itk::FiberTractsReader::Pointer reader = itk::FiberTractsReader::New();
+  reader->SetFileName(filename);
+  try 
+    {
+    if (utl::IsLogNormal())
+      std::cout << printInfo << " " << filename << std::endl;
+    reader->Update(); 
+    } 
+  catch (itk::ExceptionObject & err) 
+    { 
+    std::cout << "ExceptionObject caught !" << std::endl; 
+    std::cout << err << std::endl; 
+    return false;
+    }
+  fibers = reader->GetOutput();
+  return true;
+}
 
 }
 

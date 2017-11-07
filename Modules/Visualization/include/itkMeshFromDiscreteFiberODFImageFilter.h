@@ -95,7 +95,7 @@ public:
   itkSetMacro(Radius, double);
   itkGetMacro(Radius, double);
   
-  MatrixPointer ComputeBasisMatrix()
+  MatrixPointer ComputeBasisMatrix() ITK_OVERRIDE
     {
     utlShowPosition(this->GetDebug());
     InputImageConstPointer inputPtr = this->GetInput();
@@ -145,7 +145,7 @@ protected:
   ~MeshFromDiscreteFiberODFImageFilter()
     {};
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     if (m_BasisMatrixGenerator)

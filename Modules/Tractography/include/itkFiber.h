@@ -23,7 +23,7 @@
 namespace itk 
 {
 
-template< typename TValueType=double >
+template< typename TValue=double >
 class Fiber: public DataObject
 {
 public:
@@ -37,7 +37,7 @@ public:
 
   itkTypeMacro(Fiber, DataObject );
 
-  typedef TValueType ValueType;
+  typedef TValue ValueType;
 
   typedef SlowPolyLineParametricPath< 3 >       TractType;
   typedef typename TractType::Pointer           TractPointer;
@@ -53,12 +53,12 @@ public:
     return m_Tract->GetVertexList()->Size();
     }
 
-  int GetNumberOfProperties() const
+  int GetDimensionOfProperties() const
     {
     return m_Properties->size();
     }
   
-  int GetNumberOfScalarsPerPoint() const
+  int GetDimensionOfScalarsPerPoint() const
     {
     return m_Scalars->size()>0? (*m_Scalars)[0].size() : 0;
     }
@@ -68,9 +68,12 @@ public:
     return m_Tract->GetVertexList()->GetElement(index);
     }
   
-  Vector<double,3> GetDirection(const double pos) const
+  void RemoveScalarsByName(const std::string& name, const std::vector<std::string>& nameVec);
+  void RemovePropertiesByName(const std::string& name, const std::vector<std::string>& nameVec);
+  
+  Vector<double,3> GetDirection(const double pos, bool isDerivativeNormalizedByDistance=false) const
     {
-    if (GetNumberOfPoints()==1)
+    if (GetNumberOfPoints()<=1)
       {
       // the fiber only has one point, then there is no direction for that point
       Vector<double,3> vec;
@@ -80,15 +83,21 @@ public:
     else
       {
       // for fiber with more than 2 points
-      return m_Tract->EvaluateDerivative(pos);
+      return m_Tract->EvaluateDerivative(pos, isDerivativeNormalizedByDistance);
       }
     }
+
+  double DistanceToPoint(double x, double y, double z) const;
+
+  std::vector<double> GetPointDistanceStats() const;
 
   itkSetGetMacro(Properties, STDVectorPointer);
 
   itkSetGetMacro(Scalars, STD2DVectorPointer);
 
   itkSetGetMacro(Tract, TractPointer);
+
+  typename Fiber<TValue>::Pointer DeepClone() const;
 
 protected:
   Fiber(): m_Properties(new STDVectorType()), m_Scalars(new STD2DVectorType())
@@ -97,7 +106,7 @@ protected:
 
   virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
   
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
   TractPointer m_Tract = TractType::New();
 
@@ -116,7 +125,7 @@ private:
 
 }
 
-#ifndef ITK_MANUAL_INSTANTIATION
+#if !defined(ITK_MANUAL_INSTANTIATION) && !defined(__itkFiber_hxx)
 #include "itkFiber.hxx"
 #endif
 

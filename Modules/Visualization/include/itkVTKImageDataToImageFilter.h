@@ -65,7 +65,7 @@ protected:
   VTKImageDataToImageFilter();
   virtual ~VTKImageDataToImageFilter() {};
 
-  virtual void GenerateData();
+  virtual void GenerateData() ITK_OVERRIDE;
 
 private:
   VTKImageDataToImageFilter(const Self&); //purposely not implemented

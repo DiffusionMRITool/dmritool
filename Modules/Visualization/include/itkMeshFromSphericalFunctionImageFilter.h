@@ -121,14 +121,14 @@ protected:
   ~MeshFromSphericalFunctionImageFilter()
     {};
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     PrintVar(true, os<<indent, m_Pow, m_RemoveNegativeValues);
     PrintEnum4(true, m_Normalization, NONE, MIN_MAX, UNIT_MAX, UNIT_INTEGRAL, os<<indent);
     utl::PrintUtlMatrix(*m_Orientations, "m_Orientations", " ", os<<indent);
     }
   
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
 

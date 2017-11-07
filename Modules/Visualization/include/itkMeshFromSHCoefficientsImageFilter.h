@@ -83,7 +83,7 @@ public:
   itkSetMacro(MaxOrder, int);
   itkGetMacro(MaxOrder, int);
   
-  MatrixPointer ComputeBasisMatrix()
+  MatrixPointer ComputeBasisMatrix() ITK_OVERRIDE
     {
     utlShowPosition(this->GetDebug());
 
@@ -99,7 +99,7 @@ public:
     return this->m_BasisMatrix;
     }
   
-  VectorType NormalizeUnitIntegral(const VectorType& x) const
+  VectorType NormalizeUnitIntegral(const VectorType& x) const ITK_OVERRIDE
     {
     VectorType result(x);
     if (std::fabs(x[0]>1e-8))
@@ -115,13 +115,13 @@ protected:
   ~MeshFromSHCoefficientsImageFilter()
     {};
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     PrintVar1(true, m_MaxOrder, os<<indent);
     }
   
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
 

@@ -9,7 +9,10 @@
     MeshFromSHCoefficients eap_r0.015.nii.gz --tessorder 4 --scale 1e-5 --png out.png \n\
     MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 \n\
     MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 --slice -1,-1,25 \n\
-    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 --box 20,40,20,40,25,25 
+    MeshFromSHCoefficients odf.nii.gz -o odf_vis.vtk --tessorder 4 --scale 1.5 --box 20,40,20,40,25,25 \n\
+    MeshFromSHCoefficients sh.txt --nonormal --colorscheme MAGNITUDE \n\
+    MeshFromSHCoefficients sh.txt --nonormal --colorscheme MAGNITUDE --nostretch \n\
+    MeshFromSHCoefficients sh_zonal.txt --zonal --nonormal --colorscheme MAGNITUDE 
   </description>
   
   <contributor>Pew-Thian Yap (ptyap@med.unc.edu), Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
@@ -17,58 +20,72 @@
   <parameters>
   
     <image>
-    <name>_InputFile</name>
-    <label>Input File</label>
-    <description>Input file.</description>
-    <index>0</index>
-    <channel>input</channel>
+      <name>_InputFile</name>
+      <label>Input File</label>
+      <description>Input file. It is 1) an image file with SH coefficients; 2) or a .txt file with SH coefficients of a single spheriacl function.</description>
+      <index>0</index>
+      <channel>input</channel>
     </image>
 
     <file>
-    <name>_OutputFile</name>
-    <label>Output File</label>
-    <description>Output vtk file. If it is not set, visualize the vtk file.</description>
-    <default>""</default>
-    <longflag>--output</longflag> 
-    <flag>o</flag> 
-    <channel>output</channel>
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Output vtk file. If it is not set, visualize the vtk file.</description>
+      <default>""</default>
+      <longflag>--output</longflag> 
+      <flag>o</flag> 
+      <channel>output</channel>
     </file>
- 
-    <integer>
-    <name>_MaxOrder</name>
-    <default>0</default>
-    <label>Maximum Order</label>
-    <description>Maximum order of spherical harmonic basis functions. If it is not set, it is calculated from the input SH image. If it is set as a smaller value than the order calculated from input image, then only truncated orders are used to generate mesh.</description>
-    <longflag>--maxorder</longflag> 
-    </integer>
- 
+    
     <boolean>
-    <name>_RemoveNegativeValues</name>
-    <label>Remove Negative Values</label>
-    <description>Remove negative values if set.</description>
-    <longflag>--removenegative</longflag>
-    <default>true</default>
+      <name>_ZonalSH</name>
+      <description>SH coefficients only contains even, m=0 terms, i.e., zonal SH. It is used for SH coefficients of a response function.</description>
+      <longflag>zonal</longflag>
+      <default>false</default>
+    </boolean>
+
+    <integer>
+      <name>_MaxOrder</name>
+      <default>0</default>
+      <label>Maximum Order</label>
+      <description>Maximum order of spherical harmonic basis functions. If it is not set, it is calculated from the input SH image. If it is set as a smaller value than the order calculated from input image, then only truncated orders are used to generate mesh.</description>
+      <longflag>--maxorder</longflag> 
+    </integer>
+
+    <boolean>
+      <name>_RemoveNegativeValues</name>
+      <label>Remove Negative Values</label>
+      <description>Remove negative values if set.</description>
+      <longflag>--removenegative</longflag>
+      <default>true</default>
     </boolean>
 
     <string-enumeration>
-    <name>_Normalization</name>
-    <label>Normalization</label>
+      <name>_Normalization</name>
+      <label>Normalization</label>
       <description>Perform normalization after removing negative values (if set); NONE: No normalization; MIN_MAX: Min-max normalization; UNIT_MAX: Unit maximum; UNIT_INTEGRATION: Unit integration.
       </description>
-    <longflag>--normalize</longflag>
-    <default>NONE</default>
-    <element>NONE</element>
-    <element>MIN_MAX</element>
-    <element>UNIT_MAX</element>
-    <element>UNIT_INTEGRAL</element>
+      <longflag>--normalize</longflag>
+      <default>NONE</default>
+      <element>NONE</element>
+      <element>MIN_MAX</element>
+      <element>UNIT_MAX</element>
+      <element>UNIT_INTEGRAL</element>
     </string-enumeration>
+    
+    <boolean>
+      <name>_NoStretch</name>
+      <description>If it is set, the mesh in each voxel is a sphere and the values of the spherical function are only for coloring.</description>
+      <longflag>nostretch</longflag>
+      <default>false</default>
+    </boolean>
 
     <double>
-    <name>_Pow</name>
-    <label>Pow</label>
-    <description>Power factor.</description>
-    <longflag>--pow</longflag>
-    <default>1.0</default>
+      <name>_Pow</name>
+      <label>Pow</label>
+      <description>Power factor.</description>
+      <longflag>--pow</longflag>
+      <default>1.0</default>
     </double>
 
     <integer-vector>
@@ -96,40 +113,40 @@
     </integer-vector>
 
     <double>
-    <name>_Scale</name>
-    <label>Scale</label>
-    <description>Scale factor.</description>
-    <longflag>--scale</longflag>
-    <default>1.0</default>
+      <name>_Scale</name>
+      <label>Scale</label>
+      <description>Scale factor.</description>
+      <longflag>--scale</longflag>
+      <default>1.0</default>
     </double>
 
     <integer>
-    <name>_TessellationOrder</name>
-    <label>Tessellation Order</label>
-    <description>Tessellation order.</description>
-    <longflag>--tessorder</longflag>
-    <default>4</default>
+      <name>_TessellationOrder</name>
+      <label>Tessellation Order</label>
+      <description>Tessellation order.</description>
+      <longflag>--tessorder</longflag>
+      <default>4</default>
     </integer>
 
     <string-enumeration>
-    <name>_BasicShape</name>
-    <label>Basic Shape</label>
-    <description>Basic shape for subdivision.</description>
-    <default>ICOSAHEDRON</default>
-    <element>TETRAHEDRON</element>
-    <element>OCTAHEDRON</element>
-    <element>ICOSAHEDRON</element>
-    <longflag>--basicshape</longflag>
+      <name>_BasicShape</name>
+      <label>Basic Shape</label>
+      <description>Basic shape for subdivision.</description>
+      <default>ICOSAHEDRON</default>
+      <element>TETRAHEDRON</element>
+      <element>OCTAHEDRON</element>
+      <element>ICOSAHEDRON</element>
+      <longflag>--basicshape</longflag>
     </string-enumeration> 
 
     <string-enumeration>
-    <name>_ColorScheme</name>
-    <label>Color Scheme</label>
-    <description>Color scheme.</description>
-    <default>DIRECTION</default>
-    <element>DIRECTION</element>
-    <element>MAGNITUDE</element>
-    <longflag>--colorscheme</longflag>
+      <name>_ColorScheme</name>
+      <label>Color Scheme</label>
+      <description>Color scheme.</description>
+      <default>DIRECTION</default>
+      <element>DIRECTION</element>
+      <element>MAGNITUDE</element>
+      <longflag>--colorscheme</longflag>
     </string-enumeration> 
 
     <integer-vector>
@@ -145,6 +162,13 @@
       <longflag>--angle</longflag>
       <default>0.0,0.0</default>
     </double-vector>
+    
+    <double-vector>
+      <name>_BackgroundColor</name>
+      <description>background color for the window</description>
+      <longflag>bg</longflag>
+      <default>0,0,0</default>
+    </double-vector> 
     
     <string>
       <name>_PNGFile</name>
@@ -163,6 +187,13 @@
       <name>_NoNormal</name>
       <description>Do not use vtkPolyDataNormals.</description>
       <longflag>nonormal</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_NoLighting</name>
+      <description>Set LightingOff.</description>
+      <longflag>nolighting</longflag>
       <default>false</default>
     </boolean>
     

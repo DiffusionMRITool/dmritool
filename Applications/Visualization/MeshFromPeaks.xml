@@ -121,6 +121,13 @@
       <default>0.0,0.0</default>
     </double-vector>
     
+    <double-vector>
+      <name>_BackgroundColor</name>
+      <description>background color for the window</description>
+      <longflag>bg</longflag>
+      <default>0,0,0</default>
+    </double-vector> 
+    
     <string>
       <name>_PNGFile</name>
       <description>output png file. Used when visualzing the vtk file.</description>
@@ -138,6 +145,13 @@
       <name>_NoNormal</name>
       <description>Do not use vtkPolyDataNormals.</description>
       <longflag>nonormal</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_NoLighting</name>
+      <description>Set LightingOff.</description>
+      <longflag>nolighting</longflag>
       <default>false</default>
     </boolean>
     

@@ -184,11 +184,11 @@ protected:
     return true;
     }
 
-  virtual void VerifyInputParameters() const
+  virtual void VerifyInputParameters() const ITK_OVERRIDE
     {
     }
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     PrintVar(true, os<<indent, m_Scale );
     utl::PrintVector(m_BoxView, "m_BoxView");
@@ -198,7 +198,7 @@ protected:
     m_Mesh->Print(std::cout<<"m_Mesh=");
     }
 
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
 
@@ -220,7 +220,7 @@ protected:
 
 
   /** the information of the output image is used for ThreadedGenerateData() in subclass */
-  virtual void GenerateOutputInformation()
+  virtual void GenerateOutputInformation() ITK_OVERRIDE
     {
     typename TInputImage::Pointer outputPtr = itkDynamicCastInDebugMode< TInputImage * >( this->GetPrimaryOutput() );
     InputImagePointer inputPtr = const_cast<InputImageType *>(this->GetInput());
@@ -229,7 +229,7 @@ protected:
     }
 
   /** The output is m_Mesh, do not allocate output image  */
-  virtual void AllocateOutputs()
+  virtual void AllocateOutputs() ITK_OVERRIDE
     {
     }
 

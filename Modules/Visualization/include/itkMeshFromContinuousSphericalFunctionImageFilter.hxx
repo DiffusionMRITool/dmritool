@@ -53,8 +53,9 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 ::PrintSelf(std::ostream& os, Indent indent) const
 {
   Superclass::PrintSelf(os, indent);
-  os << indent << "BasicShape: " << m_BasicShape << std::endl;
-  os << indent << "TessellationOrder: " << m_TessellationOrder << std::endl;
+  os << indent << "m_BasicShape: " << m_BasicShape << std::endl;
+  os << indent << "m_TessellationOrder: " << m_TessellationOrder << std::endl;
+  os << indent << "m_Stretch: " << m_Stretch << std::endl;
   utl::PrintUtlMatrix(*m_BasisMatrix, "m_BasisMatrix", " ", os<<indent);
 }
 
@@ -74,6 +75,9 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
   rval->m_SphereTessellator = m_SphereTessellator;
   rval->m_BasicShape = m_BasicShape;
   rval->m_TessellationOrder = m_TessellationOrder;
+
+  rval->m_Stretch = m_Stretch;
+
   rval->m_BasisMatrix = m_BasisMatrix;
 
   return loPtr;
@@ -107,7 +111,6 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 template <class TInputImage, class TOutputMesh>
 void 
 MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
-// ::GenerateData()
 ::ThreadedGenerateData(const typename TInputImage::RegionType& regionForThread,ThreadIdType threadId ) 
 {
   utlShowPosition(this->GetDebug());
@@ -142,7 +145,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
       
   // Matrices
   
-  VectorType b;
+  VectorType sf;
   VectorType x(numberOfBasis);
 
   // Output Mesh
@@ -171,7 +174,9 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
   // vtkSmartPointer<vtkFloatArray> newScalars= vtkSmartPointer<vtkFloatArray>::New();
   // newScalars->SetNumberOfComponents(1);
 
-  double bMax= -std::numeric_limits<double>::max();
+  // sfMax and sfMin are used to scale spherical function samples into [0,1]
+  double sfMax= -std::numeric_limits<double>::max();
+  double sfMin= std::numeric_limits<double>::max();
   if ( this->m_ColorScheme == Superclass::MAGNITUDE )
     {
     inputIt.GoToBegin();
@@ -186,7 +191,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 
       inputPixel = inputIt.Get(); 
 
-      for (unsigned int k=0;k<numberOfBasis;k++) //isotropic component?
+      for (unsigned int k=0;k<numberOfBasis;k++) 
         x(k) = inputPixel[k];
 
       if (x.GetRootMeanSquares() == 0)
@@ -206,19 +211,31 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
         x = this->NormalizeUnitIntegral(x);
         }
 
-      b = (*this->m_BasisMatrix) * x;
+      sf = (*this->m_BasisMatrix) * x;
       // if (this->GetDebug())
-      //   utl::PrintUtlVector(b, "b");
+      //   utl::PrintUtlVector(sf, "sf");
 
-      ScaleSamples(b);
+      ScaleSamples(sf);
 
-      double maxVal = b.MaxValue();
-      if (maxVal>bMax)
-        bMax = maxVal;
+      double maxVal = sf.MaxValue();
+      double minVal = sf.MinValue();
+      if (maxVal>sfMax)
+        sfMax = maxVal;
+      if (minVal<sfMin)
+        sfMin = minVal;
 
       ++inputIt;
       }
 
+    utlPrintVar(this->GetDebug(), sfMin, sfMax);
+
+    // If sfMin == sfMax, set sfMin=0.
+    if (sfMax-sfMin<1e-2*std::fabs(sfMin))
+      {
+      sfMin=0.0;
+      if (sfMax==sfMin || sfMax<0)
+        sfMax=1.0;
+      }
     }
   
   inputIt.GoToBegin();
@@ -235,7 +252,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
     inputPtr->TransformIndexToPhysicalPoint(inputIndex, inputPhysicalPoint);
     inputPixel = inputIt.Get(); 
 
-    for (unsigned int k=0;k<numberOfBasis;k++) //isotropic component?
+    for (unsigned int k=0;k<numberOfBasis;k++) 
       x(k) = inputPixel[k];
 
     if (x.GetRootMeanSquares() == 0)
@@ -256,20 +273,23 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
       x = this->NormalizeUnitIntegral(x);
       }
     
-    b = (*this->m_BasisMatrix) * x;
+    sf = (*this->m_BasisMatrix) * x;
     if (this->GetDebug())
-      utl::PrintUtlVector(b, "b");
+      utl::PrintUtlVector(sf, "sf");
       
-    ScaleSamples(b);
+    ScaleSamples(sf);
     
     for (unsigned int k=0;k<numberOfPoints;k++) 
       {
       if ( this->m_ColorScheme == Superclass::MAGNITUDE )
         {
-        colorTransferFunction->GetColor(b(k)/bMax, rgb);      
+        colorTransferFunction->GetColor((sf(k)-sfMin)/(sfMax-sfMin), rgb);
         for (unsigned int d=0;d<3;d++)
           {
-          outputMeshPoint[d] = b(k) * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
+          if (m_Stretch)
+            outputMeshPoint[d] = sf(k) * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
+          else
+            outputMeshPoint[d] = (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
           RGB[d] = static_cast<VTK_TYPE_NAME_UNSIGNED_CHAR>(rgb[d]*255.0);
           }
         }
@@ -277,7 +297,10 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
         {
         for (unsigned int d=0;d<3;d++)
           {
-          outputMeshPoint[d] = b(k) * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
+          if (m_Stretch)
+            outputMeshPoint[d] = sf(k) * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
+          else
+            outputMeshPoint[d] = (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
           RGB[d] = static_cast<VTK_TYPE_NAME_UNSIGNED_CHAR>(std::fabs( (*this->m_Orientations)(k,d))*255.0);
           }
 
@@ -339,36 +362,36 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
 template<class TInputImage, class TOutputMesh>
 void
 MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
-::ScaleSamples(VectorType& b) const
+::ScaleSamples(VectorType& sf) const
 {
   if (this->m_RemoveNegativeValues)
     {
-    for (unsigned int k=0; k<b.Size(); k++ )
+    for (unsigned int k=0; k<sf.Size(); k++ )
       {
-      if ( b(k) < 0 )
-        b(k) = 0;
+      if ( sf(k) < 0 )
+        sf(k) = 0;
       }
     }
 
   if (std::fabs(this->m_Pow-1.0)>1e-8)
     {
-    for ( int k = 0; k < b.Size(); k += 1 ) 
-      b(k) = std::pow(b(k), this->m_Pow);
+    for ( int k = 0; k < sf.Size(); k += 1 ) 
+      sf(k) = std::pow(sf(k), this->m_Pow);
     }
 
 
   if ( this->m_Normalization == Superclass::UNIT_MAX )
     {
-    b = b/( b.MaxValue() + vnl_math::eps );
+    sf = sf/( sf.MaxValue() + vnl_math::eps );
     }
 
-  // do not perform min-max normalization for isotropic SHs
-  if ( this->m_Normalization==Superclass::MIN_MAX && b.MaxValue()-b.MinValue()>1e-8)
+  // perform min-max normalization
+  if ( this->m_Normalization==Superclass::MIN_MAX && sf.MaxValue()-sf.MinValue()>1e-8)
     {
-    b = (b - b.MinValue())/( b.MaxValue() - b.MinValue() + vnl_math::eps );
+    sf = (sf - sf.MinValue())/( sf.MaxValue() - sf.MinValue() + vnl_math::eps );
     }
 
-  b %= this->m_Scale;
+  sf %= this->m_Scale;
 }
 
 } // end namespace itk

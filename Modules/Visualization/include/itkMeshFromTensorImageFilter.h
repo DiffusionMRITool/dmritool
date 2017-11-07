@@ -154,13 +154,13 @@ protected:
   ~MeshFromTensorImageFilter()
     {};
   
-  virtual void GenerateData();
+  virtual void GenerateData() ITK_OVERRIDE;
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     }
   
-  typename LightObject::Pointer InternalClone() const
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE
     {
     typename LightObject::Pointer loPtr = Superclass::InternalClone();
 
@@ -175,7 +175,7 @@ protected:
     return loPtr;
     }
 
-  void VerifyInputParameters() const
+  void VerifyInputParameters() const ITK_OVERRIDE
     {
     if (m_TensorColorScheme==COLOR_BY_IMAGE)
       {

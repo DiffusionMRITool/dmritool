@@ -67,6 +67,7 @@ def main():
     arg_bool(parser, 'frame', False, 'Visualize frame.')
     arg_bool(parser, 'surface', True, 'Visualize surface.')
     arg_bool(parser, 'normal', True, 'Use vtkPolyDataNormals for polydata visualization.')
+    arg_bool(parser, 'lighting', True, 'Lighting.')
     parser.add_argument('--scalar-range', help='lowest and highest scalar values for the vtk coloring. It is used when scalar dimention is 1. If not set, use the range of the scalar values. \n\
                         Default: (-1,-1) means the (min,max)', default=(-1.0, -1.0),
                         type=(lambda value: arg_values(value, float, 2)), metavar=('lowest,highest'))
@@ -80,6 +81,8 @@ def main():
     parser.add_argument('--image', help='nifti image file', nargs=1)
     parser.add_argument('--image-flip', help='flip x,y,z axis in image. Default: (1,1,1)', default=(1, 1, 1),
                         type=(lambda value: arg_values(value, int, 3)), metavar=('flipZ,flipY,flipZ'))
+    parser.add_argument('--image-origin', help='Set image origin as given values.',
+                        type=(lambda value: arg_values(value, float, 3)), metavar=('ox,oy,oz'))
     parser.add_argument('--image-opacity', help='image opacity', type=float, metavar=('opacity'), default=1.0)
     arg_bool(parser, 'interpolate', False, 'Image interpolation.')
     parser.add_argument('--sliceX', help='x-axis slices of the image', type=(lambda value: arg_values(value, int, -1)), metavar=('x1,x2,...'))
@@ -191,6 +194,8 @@ def main():
                 surface_actor.SetMapper(surface_mapper)
                 prop = surface_actor.GetProperty()
                 prop.SetRepresentationToSurface()
+                if not args.lighting:
+                    prop.LightingOff()
                 renderer.AddActor(surface_actor)
 
     if args.image:
@@ -204,10 +209,15 @@ def main():
         im = reader.GetOutput()
         niftiheader = reader.GetNIFTIHeader()
         #  print (niftiheader)
-        if (niftiheader.GetSFormCode()>0):
-            im.SetOrigin(niftiheader.GetSRowX()[3], niftiheader.GetSRowY()[3], niftiheader.GetSRowZ()[3]);
-        elif (niftiheader.GetQFormCode()>0):
-            im.SetOrigin(-niftiheader.GetQOffsetX(), -niftiheader.GetQOffsetY(), niftiheader.GetQOffsetZ())
+
+        if args.image_origin is None:
+            if (niftiheader.GetSFormCode()>0):
+                im.SetOrigin(niftiheader.GetSRowX()[3], niftiheader.GetSRowY()[3], niftiheader.GetSRowZ()[3]);
+            elif (niftiheader.GetQFormCode()>0):
+                im.SetOrigin(-niftiheader.GetQOffsetX(), -niftiheader.GetQOffsetY(), niftiheader.GetQOffsetZ())
+        else:
+            im.SetOrigin(args.image_origin[0], args.image_origin[1], args.image_origin[2]);
+
 
         # for 2D image, set sliceX or sliceY or slizeZ automatically
         x1, x2, y1, y2, z1, z2 = im.GetExtent()

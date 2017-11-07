@@ -24,7 +24,9 @@ namespace itk
 {
 
 /** \class MeshFromSphericalFunctionTessellatedSamplesImageFilter
- * \brief Compute mesh from SH coefficients.
+ * \brief Compute mesh from spherical samples in the pre-stored tessellated vertices.
+ *
+ * The linear basis is a NxN matrix which corresponds tessellated samples with correct indices of gradients. 
  *
  * \ingroup Visualization
  * \author  Jian Cheng (jian.cheng.1983@gmail.com)
@@ -84,7 +86,7 @@ public:
   itkSetMacro(DataOrientations, MatrixPointer);
   itkGetMacro(DataOrientations, MatrixPointer);
   
-  MatrixPointer ComputeBasisMatrix()
+  MatrixPointer ComputeBasisMatrix() ITK_OVERRIDE
     {
     utlShowPosition(this->GetDebug());
 
@@ -122,7 +124,7 @@ public:
     return this->m_BasisMatrix;
     }
   
-  VectorType NormalizeUnitIntegral(const VectorType& x) const
+  VectorType NormalizeUnitIntegral(const VectorType& x) const ITK_OVERRIDE
     {
     VectorType result(x);
     if (x.GetTwoNorm()>0)
@@ -143,12 +145,13 @@ protected:
   ~MeshFromSphericalFunctionTessellatedSamplesImageFilter()
     {};
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     utl::PrintUtlMatrix(*this->m_DataOrientations, "m_DataOrientations", " ", os<<indent);
     }
   
+  /** gradient table used to generate the tessellated samples.  */
   MatrixPointer m_DataOrientations;
 
 private:

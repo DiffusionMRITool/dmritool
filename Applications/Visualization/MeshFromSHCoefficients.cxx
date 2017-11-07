@@ -41,7 +41,33 @@ main(int argc, char *argv[])
   typedef itk::VectorImage<PixelType, 3> InputImageType;
 
   InputImageType::Pointer inputImage;
-  itk::ReadVectorImage(_InputFile, inputImage);
+  if (utl::IsEndingWith(_InputFile, ".txt"))
+    {
+    std::vector<double> shReadVec, shVec;
+    if (_ZonalSHArg.isSet())
+      {
+      utl::ReadVector(_InputFile, shReadVec, " \t,");
+      int shRank = (shReadVec.size()-1)*2;
+      shVec.resize(utl::RankToDimSH(shRank));
+      std::fill(shVec.begin(), shVec.end(), 0.0);
+      for ( int l = 0; l <= shRank; l=l+2 ) 
+        shVec[ utl::GetIndexSHj(l,0) ] = shReadVec[l/2];
+      }
+    else
+      {
+      utl::ReadVector(_InputFile, shVec, " \t,");
+      int shRank = utl::DimToRankSH(shVec.size());
+      }
+    if (_Debug)
+      utl::PrintVector(shVec, "shVec");
+
+    InputImageType::PixelType pixel(shVec.size());
+    utl::VectorToVector(shVec, pixel, shVec.size());
+    inputImage = itk::GenerateImageFromSingleVoxel<InputImageType>(pixel);
+    }
+  else
+    itk::ReadVectorImage(_InputFile, inputImage);
+  
 
   // Compute MaxOrder if not set
   if ( !_MaxOrderArg.isSet() )
@@ -64,6 +90,7 @@ main(int argc, char *argv[])
   
   filter->SetPow(_Pow);
   filter->SetRemoveNegativeValues(_RemoveNegativeValuesArg.isSet());
+  filter->SetStretch(!_NoStretchArg.isSet());
   filter->SetMaxOrder( _MaxOrder );
   filter->SetInput( inputImage );
 
@@ -102,7 +129,8 @@ main(int argc, char *argv[])
     {
     utlGlobalException(_WindowSize.size()!=2, "wrong window size");
     utlGlobalException(_Angle.size()!=2, "wrong angle size");
-    vtk::VisualizePolyData(mesh, _Angle, _WindowSize, !_NoNormalArg.isSet(), _Zoom, _PNGFile);
+    utlGlobalException(_BackgroundColor.size()!=3, "wrong size of background color");
+    vtk::VisualizePolyData(mesh, _Angle, _WindowSize, !_NoNormalArg.isSet(), !_NoLightingArg.isSet(), _Zoom, _PNGFile, _BackgroundColor);
     }
 
   return EXIT_SUCCESS;

@@ -57,7 +57,7 @@ protected:
   FiberTractsWriter(){}
   ~FiberTractsWriter(){}
 
-  void PrintSelf(std::ostream& os, Indent indent) const
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE
     {
     Superclass::PrintSelf(os, indent);
     PrintVar(true, os<< indent, m_FileName);
@@ -75,6 +75,26 @@ private:
 
 };
 
+inline bool
+SaveFibers ( const SmartPointer<FiberTracts<double> >& fibers, const std::string& filename, const std::string& printInfo="Writing fibers:" )
+{
+  typename itk::FiberTractsWriter::Pointer writer = itk::FiberTractsWriter::New();
+  writer->SetFileName(filename);
+  writer->SetFiberTracts(fibers);
+  try 
+    {
+    if (utl::IsLogNormal())
+      std::cout << printInfo << " " << filename << std::endl;
+    writer->Update(); 
+    } 
+  catch (itk::ExceptionObject & err) 
+    { 
+    std::cout << "ExceptionObject caught !" << std::endl; 
+    std::cout << err << std::endl; 
+    return false;
+    }
+  return true;
+}
 
 }
 

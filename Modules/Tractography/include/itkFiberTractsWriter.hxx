@@ -45,17 +45,21 @@ void FiberTractsWriter::WriteTractsTRK()
   itk::WriteTrackVisHeader(*header, file);
 
   int n_count = header->n_count;
-  int n_p = header->n_properties;
-  int n_s = header->n_scalars;
+  // int n_p = header->n_properties;
+  // int n_s = header->n_scalars;
+  int dim_p = itk::GetDimensionOfProperties(*header);
+  int dim_s = itk::GetDimensionOfScalars(*header);
 
   long offset=1000;
   fseek (file, offset, SEEK_SET);
   int numPoints;
-  float val[3+n_s], val2[n_p];
+  float val[3+dim_s], val2[dim_p];
   VertexType vertex;
   for ( int n = 0; n < n_count; ++n ) 
     {
     FiberPointer fiber = fibers->GetElement(n);
+    utlSAGlobalException(dim_p!=fiber->GetDimensionOfProperties())(n)(dim_p)(fiber->GetDimensionOfProperties()).msg("dim_p in header is different from dim_p in fiber");
+    utlSAGlobalException(dim_s!=fiber->GetDimensionOfScalarsPerPoint())(n)(dim_s)(fiber->GetDimensionOfScalarsPerPoint()).msg("dim_s in header is different from dim_s in fiber");
 
     numPoints = fiber->GetNumberOfPoints();
     fwrite((char*)&numPoints, sizeof(int), 1, file);
@@ -70,13 +74,13 @@ void FiberTractsWriter::WriteTractsTRK()
       const STDVectorType& ss = (*scalars)[i];
       for ( int j = 0; j < 3; ++j ) 
           val[j] = vertex[j];
-      for ( int j = 0; j < n_s; ++j ) 
+      for ( int j = 0; j < dim_s; ++j ) 
           val[j+3] = ss[j];
-      fwrite((char*)&val, sizeof(float)*(3+n_s), 1, file);
+      fwrite((char*)&val, sizeof(float)*(3+dim_s), 1, file);
       }
-    for ( int j = 0; j < n_p; ++j ) 
+    for ( int j = 0; j < dim_p; ++j ) 
       val2[j+3] = (*properties)[j];
-    fwrite((char*)&val2, sizeof(float)*n_p, 1, file);
+    fwrite((char*)&val2, sizeof(float)*dim_p, 1, file);
     }
 
   fclose (file);

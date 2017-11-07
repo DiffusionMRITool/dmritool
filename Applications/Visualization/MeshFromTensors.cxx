@@ -40,7 +40,37 @@ main (int argc, char const* argv[])
   utlGlobalException(_Flip.size()!=3, "need 3 parameters in --flip");
 
   InputImageType::Pointer inputImage;
-  itk::ReadVectorImage(_InputFile, inputImage);
+
+  if (utl::IsEndingWith(_InputFile, ".txt"))
+    {
+    std::vector<double> tensor;
+    utl::ReadVector(_InputFile, tensor, " \t,");
+    InputImageType::PixelType pixel(tensor.size());
+    utl::VectorToVector(tensor, pixel, tensor.size());
+    inputImage = itk::GenerateImageFromSingleVoxel<InputImageType>(pixel);
+    }
+  else if (utl::IsFileExist(_InputFile))
+    itk::ReadVectorImage(_InputFile, inputImage);
+  else
+    {
+    std::vector<double> tensor, tensor6d(6), tensor9d(9);
+    utl::SetVector(_InputFile, tensor);
+    utlGlobalException(tensor.size()!=6 && tensor.size()!=9, "size should be 6 or 9");
+    if (tensor.size()==9)
+      {
+      tensor9d = tensor;
+      utl::ConvertTensor9DTo6D(tensor9d, tensor6d, TENSOR_UPPER_TRIANGULAR);
+      }
+    else
+      {
+      tensor6d = tensor;
+      utl::ConvertTensor6DTo9D(tensor6d, tensor9d, TENSOR_UPPER_TRIANGULAR);
+      }
+    utl::PrintVector(tensor9d, "tensor");
+    InputImageType::PixelType pixel(tensor6d.size());
+    utl::VectorToVector(tensor6d, pixel, tensor6d.size());
+    inputImage = itk::GenerateImageFromSingleVoxel<InputImageType>(pixel);
+    }
 
   typedef itk::MeshFromTensorImageFilter<InputImageType> MeshCreatorType;
   MeshCreatorType::Pointer filter = MeshCreatorType::New();
@@ -96,15 +126,16 @@ main (int argc, char const* argv[])
     {
     utlGlobalException(_WindowSize.size()!=2, "wrong window size");
     utlGlobalException(_Angle.size()!=2, "wrong angle size");
+    utlGlobalException(_BackgroundColor.size()!=3, "wrong size of background color");
     if (_ColorScheme=="DIRECTION")
       {
       // huerange (0,1) used for direction coloring using RGBToIndex
-      vtk::VisualizePolyDataWithScalarRange(mesh, _ScalarRange, {0.0,1.0}, _Angle, _WindowSize, !_NoNormalArg.isSet(), _Zoom, _PNGFile);
+      vtk::VisualizePolyDataWithScalarRange(mesh, _ScalarRange, {0.0,1.0}, _Angle, _WindowSize, !_NoNormalArg.isSet(), !_NoLightingArg.isSet(), _Zoom, _PNGFile, _BackgroundColor);
       }
     else
       {
       // huerange (0.0667,0) used for scalars 
-      vtk::VisualizePolyDataWithScalarRange(mesh, _ScalarRange, {0.6667,0.0}, _Angle, _WindowSize, !_NoNormalArg.isSet(), _Zoom, _PNGFile);
+      vtk::VisualizePolyDataWithScalarRange(mesh, _ScalarRange, {0.6667,0.0}, _Angle, _WindowSize, !_NoNormalArg.isSet(), !_NoLightingArg.isSet(), _Zoom, _PNGFile, _BackgroundColor);
       }
     }
 

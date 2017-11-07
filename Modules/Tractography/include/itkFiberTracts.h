@@ -22,7 +22,7 @@ namespace itk
 {
 
 
-template< typename TValueType=double >
+template< typename TValue=double >
 class FiberTracts: public DataObject
 {
 public:
@@ -36,7 +36,7 @@ public:
 
   itkTypeMacro(FiberTracts, DataObject );
 
-  typedef TValueType ValueType;
+  typedef TValue ValueType;
 
   typedef TrackVisHeaderType  HeaderType;
   typedef std::shared_ptr<HeaderType>  HeaderPointer;
@@ -59,15 +59,48 @@ public:
     return m_Fibers->Size();
     }
 
+  int GetNumberOfPoints() const;
+
   FiberPointer GetFiber(const int index) const
     {
     return m_Fibers->GetElement(index);
     }
 
+  typename FiberTracts<TValue>::Pointer DeepClone() const;
+
   void PrintFibersHeader(std::ostream & os=std::cout, Indent indent=0) const
     {
     itk::PrintTractVisHeader(*m_Header, os <<indent);
     }
+
+  bool HasPropertyName(const std::string& name) const
+    {
+    return itk::HasPropertyName(*m_Header, name);
+    }
+  bool HasScalarName(const std::string& name) const
+    {
+    return itk::HasScalarName(*m_Header, name);
+    }
+
+  /** remove scalars by name  */
+  void RemoveScalarsByName(const std::string& name);
+  /** remove properties by name  */
+  void RemovePropertiesByName(const std::string& name);
+
+  /** Get the stats of the number of points in each tract, and the stats of distances between two points in each tract.  */
+  void GetPointStats(std::vector<double>& numPointsStats, std::vector<double>& pointDistStats) const;
+
+  /** Get fiber tracts based on indices  */
+  Pointer SelectByIndicesOfTracts(const std::vector<int>& indices);
+  
+  /** Get fiber tracts across in a ball ROI (origin x,y,z and radius)  */
+  Pointer SelectByBallROI(double x, double y, double z, double radius);
+
+  /** Append a fiber. Should have the same number of scalars and the same number of properties.   */
+  void AppendFiber(const FiberPointer fiber);
+
+  /** Append fibers. Should have the same number of scalars and the same number of properties.   */
+  void AppendFibers(const Pointer fibers);
 
 protected:
   FiberTracts(): m_Header(new HeaderType())
@@ -77,7 +110,7 @@ protected:
 
   virtual void PrintSelf(std::ostream & os, Indent indent) const ITK_OVERRIDE;
 
-  typename LightObject::Pointer InternalClone() const;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
   HeaderPointer m_Header;
 
@@ -93,7 +126,7 @@ private:
 
 }
 
-#ifndef ITK_MANUAL_INSTANTIATION
+#if !defined(ITK_MANUAL_INSTANTIATION) && !defined(__itkFiberTracts_hxx)
 #include "itkFiberTracts.hxx"
 #endif
 

@@ -14,21 +14,21 @@
   <parameters>
   
     <image>
-    <name>_InputFile</name>
-    <label>Input File</label>
-    <description>Input file.</description>
-    <index>0</index>
-    <channel>input</channel>
+      <name>_InputFile</name>
+      <label>Input File</label>
+      <description>Input file.</description>
+      <index>0</index>
+      <channel>input</channel>
     </image>
 
     <file>
-    <name>_OutputFile</name>
-    <label>Output File</label>
-    <description>Output vtk file. If it is not set, visualize the vtk file.</description>
-    <default>""</default>
-    <longflag>--output</longflag> 
-    <flag>o</flag> 
-    <channel>output</channel>
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Output vtk file. If it is not set, visualize the vtk file.</description>
+      <default>""</default>
+      <longflag>--output</longflag> 
+      <flag>o</flag> 
+      <channel>output</channel>
     </file>
     
     <file>
@@ -40,11 +40,11 @@
     </file>
  
     <boolean>
-    <name>_RemoveNegativeValues</name>
-    <label>Remove Negative Values</label>
-    <description>Remove negative values if set.</description>
-    <longflag>removenegative</longflag>
-    <default>false</default>
+      <name>_RemoveNegativeValues</name>
+      <label>Remove Negative Values</label>
+      <description>Remove negative values if set.</description>
+      <longflag>removenegative</longflag>
+      <default>false</default>
     </boolean>
 
     <string-enumeration>
@@ -59,13 +59,20 @@
     <element>UNIT_MAX</element>
     <element>UNIT_INTEGRAL</element>
     </string-enumeration>
+    
+    <boolean>
+      <name>_NoStretch</name>
+      <description>If it is set, the mesh in each voxel is a sphere and the values of the spherical function are only for coloring.</description>
+      <longflag>nostretch</longflag>
+      <default>false</default>
+    </boolean>
 
     <double>
-    <name>_Pow</name>
-    <label>Pow</label>
-    <description>Power factor.</description>
-    <longflag>pow</longflag>
-    <default>1.0</default>
+      <name>_Pow</name>
+      <label>Pow</label>
+      <description>Power factor.</description>
+      <longflag>pow</longflag>
+      <default>1.0</default>
     </double>
 
     <integer-vector>
@@ -93,40 +100,40 @@
     </integer-vector>
 
     <double>
-    <name>_Scale</name>
-    <label>Scale</label>
-    <description>Scale factor.</description>
-    <longflag>scale</longflag>
-    <default>1.0</default>
+      <name>_Scale</name>
+      <label>Scale</label>
+      <description>Scale factor.</description>
+      <longflag>scale</longflag>
+      <default>1.0</default>
     </double>
 
     <integer>
-    <name>_TessellationOrder</name>
-    <label>Tessellation Order</label>
-    <description>Tessellation order.</description>
-    <longflag>tessorder</longflag>
-    <default>4</default>
+      <name>_TessellationOrder</name>
+      <label>Tessellation Order</label>
+      <description>Tessellation order.</description>
+      <longflag>tessorder</longflag>
+      <default>4</default>
     </integer>
 
     <string-enumeration>
-    <name>_BasicShape</name>
-    <label>Basic Shape</label>
-    <description>Basic shape for subdivision.</description>
-    <default>ICOSAHEDRON</default>
-    <element>TETRAHEDRON</element>
-    <element>OCTAHEDRON</element>
-    <element>ICOSAHEDRON</element>
-    <longflag>--basicshape</longflag>
+      <name>_BasicShape</name>
+      <label>Basic Shape</label>
+      <description>Basic shape for subdivision.</description>
+      <default>ICOSAHEDRON</default>
+      <element>TETRAHEDRON</element>
+      <element>OCTAHEDRON</element>
+      <element>ICOSAHEDRON</element>
+      <longflag>--basicshape</longflag>
     </string-enumeration> 
 
     <string-enumeration>
-    <name>_ColorScheme</name>
-    <label>Color Scheme</label>
-    <description>Color scheme.</description>
-    <default>DIRECTION</default>
-    <element>DIRECTION</element>
-    <element>MAGNITUDE</element>
-    <longflag>colorscheme</longflag>
+      <name>_ColorScheme</name>
+      <label>Color Scheme</label>
+      <description>Color scheme.</description>
+      <default>DIRECTION</default>
+      <element>DIRECTION</element>
+      <element>MAGNITUDE</element>
+      <longflag>colorscheme</longflag>
     </string-enumeration> 
     
     <integer-vector>
@@ -142,6 +149,13 @@
       <longflag>--angle</longflag>
       <default>0.0,0.0</default>
     </double-vector>
+    
+    <double-vector>
+      <name>_BackgroundColor</name>
+      <description>background color for the window</description>
+      <longflag>bg</longflag>
+      <default>0,0,0</default>
+    </double-vector> 
     
     <string>
       <name>_PNGFile</name>
@@ -160,6 +174,13 @@
       <name>_NoNormal</name>
       <description>Do not use vtkPolyDataNormals.</description>
       <longflag>nonormal</longflag>
+      <default>false</default>
+    </boolean>
+
+    <boolean>
+      <name>_NoLighting</name>
+      <description>Set LightingOff.</description>
+      <longflag>nolighting</longflag>
       <default>false</default>
     </boolean>
     

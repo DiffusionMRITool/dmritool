@@ -68,7 +68,7 @@ public:
   virtual void SetInput(const InputImageType *image);
   const InputImageType * GetInput() const;
 
-  virtual void Update()
+  virtual void Update() ITK_OVERRIDE
     {
     this->GenerateData();
     }
@@ -77,7 +77,7 @@ protected:
   ImageToVTKImageDataFilter();
   virtual ~ImageToVTKImageDataFilter() {};
 
-  virtual void GenerateData();
+  virtual void GenerateData() ITK_OVERRIDE;
   
 private:
   ImageToVTKImageDataFilter(const Self&); //purposely not implemented

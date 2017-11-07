@@ -81,22 +81,32 @@ public:
    * WARNING:  This default implementation REQUIRES that the ND endpoint of
    * the path be either unique or coincident only with the startpoint, since it
    * uses the endpoint as a stopping condition. */
-  virtual OffsetType IncrementInput(InputType & input) const;
+  virtual OffsetType IncrementInput(InputType & input) const ITK_OVERRIDE;
 
+  /** Return the location of the parametric path at the specified location. */
+  virtual OutputType Evaluate(const InputType & input) const ITK_OVERRIDE;
   
-  ///** Evaluate the first derivative of the ND output with respect to the 1D
-  //  * input.  This is an exact, algebraic function. */
-  //virtual VectorType EvaluateDerivative(const InputType & input) const;
+  /** This function overrides the superclass EvaluateDerivative and instead
+   *  calculates the instantaneous derivative of input by taking the index
+   *  of the previous and next integral timepoints and subtracting them */
+  // virtual VectorType EvaluateDerivative(const InputType & input) const ITK_OVERRIDE;
+  VectorType EvaluateDerivative(const InputType & input, bool isDerivativeNormalizedByDistance=false) const;
   
   
   /** New() method for dynamic construction */
   itkNewMacro( Self );
 
+  itkSetMacro(UseCentralDifference, bool);
+  itkGetMacro(UseCentralDifference, bool);
+  itkBooleanMacro(UseCentralDifference);
   
 protected:
   SlowPolyLineParametricPath();
   ~SlowPolyLineParametricPath(){}
-  void PrintSelf(std::ostream& os, Indent indent) const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+
+  /** If true, use central difference for EvaluateDerivative  */
+  bool m_UseCentralDifference;
   
 private:
   SlowPolyLineParametricPath(const Self&); //purposely not implemented

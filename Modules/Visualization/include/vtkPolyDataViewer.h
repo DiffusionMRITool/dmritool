@@ -18,6 +18,7 @@
 #include <vtkSmartPointer.h>
 #include <vtkRenderer.h>
 #include <vtkNew.h>
+#include <vtkProperty.h>
 
 #include <vtkCamera.h>
 #include <vtkPolyDataMapper.h>
@@ -32,11 +33,14 @@
 #include <vtkRenderWindow.h>
 #include <vtkRenderWindowInteractor.h>
 
+#include "utlCoreMacro.h"
+
 namespace vtk
 {
 
+/** helper function from vtkPolyData to vtkLODActor  */
 inline vtkSmartPointer<vtkLODActor>
-vtkPolyDataToActor(const vtkSmartPointer<vtkPolyData>& mesh, const std::vector<double>& hueRange={0.6667,0.0}, bool useNormal=true, const std::vector<double>& scalarRange={-1.0,-1.0} )
+vtkPolyDataToActor(const vtkSmartPointer<vtkPolyData>& mesh, const double opacity=1.0, const std::vector<double>& hueRange={0.6667,0.0}, bool useNormal=true, const std::vector<double>& scalarRange={-1.0,-1.0}, bool lighting=true )
   {
   vtkSmartPointer<vtkPolyDataMapper> mapper = vtkSmartPointer<vtkPolyDataMapper>::New();
 
@@ -70,9 +74,18 @@ vtkPolyDataToActor(const vtkSmartPointer<vtkPolyData>& mesh, const std::vector<d
   vtkSmartPointer<vtkLODActor> actor = vtkSmartPointer<vtkLODActor>::New();
   actor->SetMapper(mapper);
 
+  actor->GetProperty()->SetLighting(lighting);
+  actor->GetProperty()->SetOpacity(opacity);
+
   return actor;
   }
 
+/** \class vtkPolyDataViewer
+ * \brief  helper class to visualize vtkPolyData.
+ *
+ * \ingroup Visualization
+ * \author  Jian Cheng (jian.cheng.1983@gmail.com)
+ */
 class vtkPolyDataViewer : public vtkObject
   {
 public:
@@ -88,6 +101,9 @@ public:
   
   vtkSetMacro (Zoom, double);
   vtkGetMacro (Zoom, double);
+  
+  vtkSetMacro (Lighting, bool);
+  vtkGetMacro (Lighting, bool);
 
   vtkSetVector2Macro(Angle, double);
   vtkGetVector2Macro(Angle, double);
@@ -95,11 +111,20 @@ public:
   vtkSetVector2Macro(WindowSize, int);
   vtkGetVector2Macro(WindowSize, int);
 
-  void Add(const vtkSmartPointer<vtkPolyData>& mesh);
+  /** add mesh  */
+  void Add(const vtkSmartPointer<vtkPolyData>& mesh, const double opacity=1.0);
+
+  /** add mesh with hueRange, useNormal */
+  void Add(const vtkSmartPointer<vtkPolyData>& mesh, const double opacity, const std::vector<double>& hueRange, bool useNormal, const std::vector<double>& scalarRange={-1.0,-1.0}, bool lighting=true );
   
   void Add(const vtkSmartPointer<vtkLODActor>& actor)
     {
     Renderer->AddActor(actor);
+    }
+
+  void SetBackground(double r, double g, double b)
+    {
+    Renderer->SetBackground(r,g,b);
     }
   
   void Show();
@@ -128,6 +153,8 @@ private:
 
   bool UseNormal=true;
 
+  bool Lighting=true;
+
   int WindowSize[2]={600,600};
 
   double Angle[2]={0.0,0.0};
@@ -140,8 +167,9 @@ private:
 
 vtkStandardNewMacro(vtkPolyDataViewer);
 
+/** helper function to visualize vtkPolyData  */
 inline void 
-VisualizePolyDataWithScalarRange ( vtkPolyData* mesh, const std::vector<double>& scalarRange={-1.0,-1.0}, const std::vector<double>& hueRange={0.6667,0.0}, const std::vector<double>& angle={0.0,0.0}, const std::vector<int>& windowSize={600,600}, const bool useNormal=true, const double zoom=1.0, const std::string& pngfile="" )
+VisualizePolyDataWithScalarRange (const std::vector<vtkPolyData*>& meshes, const std::vector<double>& opacity, const std::vector<double>& scalarRange={-1.0,-1.0}, const std::vector<double>& hueRange={0.6667,0.0}, const std::vector<double>& angle={0.0,0.0}, const std::vector<int>& windowSize={600,600}, const bool useNormal=true, const bool lighting=true, const double zoom=1.0, const std::string& pngfile="", const std::vector<double>& bgColor={0,0,0} )
 {
   vtkSmartPointer<vtkPolyDataViewer> viewer = vtkPolyDataViewer::New();
 
@@ -150,7 +178,38 @@ VisualizePolyDataWithScalarRange ( vtkPolyData* mesh, const std::vector<double>&
   viewer->SetAngle(angle[0], angle[1]);
   viewer->SetWindowSize(windowSize[0], windowSize[1]);
   viewer->SetUseNormal(useNormal);
+  viewer->SetLighting(lighting);
   viewer->SetZoom(zoom);
+  viewer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
+
+  utlException(meshes.size()!=opacity.size(), "meshes and opacity should have the same size");
+
+  for ( int i = 0; i < meshes.size(); ++i ) 
+    {
+    if (meshes[i])
+      viewer->Add(meshes[i], opacity[i]);
+    }
+
+  if (pngfile=="")
+    viewer->Show();
+  else
+    viewer->SavePNG(pngfile);
+}
+
+/** helper function to visualize vtkPolyData  */
+inline void 
+VisualizePolyDataWithScalarRange ( vtkPolyData* mesh, const std::vector<double>& scalarRange={-1.0,-1.0}, const std::vector<double>& hueRange={0.6667,0.0}, const std::vector<double>& angle={0.0,0.0}, const std::vector<int>& windowSize={600,600}, const bool useNormal=true, const bool lighting=true, const double zoom=1.0, const std::string& pngfile="", const std::vector<double>& bgColor={0,0,0} )
+{
+  vtkSmartPointer<vtkPolyDataViewer> viewer = vtkPolyDataViewer::New();
+
+  viewer->SetScalarRange(scalarRange[0], scalarRange[1]);
+  viewer->SetHueRange(hueRange[0], hueRange[1]);
+  viewer->SetAngle(angle[0], angle[1]);
+  viewer->SetWindowSize(windowSize[0], windowSize[1]);
+  viewer->SetUseNormal(useNormal);
+  viewer->SetLighting(lighting);
+  viewer->SetZoom(zoom);
+  viewer->SetBackground(bgColor[0], bgColor[1], bgColor[2]);
 
   viewer->Add(mesh);
 
@@ -160,10 +219,11 @@ VisualizePolyDataWithScalarRange ( vtkPolyData* mesh, const std::vector<double>&
     viewer->SavePNG(pngfile);
 }
 
+/** helper function to visualize vtkPolyData  */
 inline void 
-VisualizePolyData ( vtkPolyData* mesh, const std::vector<double>& angle={0.0,0.0}, const std::vector<int>& windowSize={600,600}, const bool useNormal=true, const double zoom=1.0, const std::string& pngfile="" )
+VisualizePolyData ( vtkPolyData* mesh, const std::vector<double>& angle={0.0,0.0}, const std::vector<int>& windowSize={600,600}, const bool useNormal=true, const bool lighting=true, const double zoom=1.0, const std::string& pngfile="", const std::vector<double>& bgColor={0,0,0} )
 {
-  VisualizePolyDataWithScalarRange(mesh, {-1.0,-1.0}, {0.6667,0.0}, angle, windowSize, useNormal, zoom, pngfile);
+  VisualizePolyDataWithScalarRange(mesh, {-1.0,-1.0}, {0.6667,0.0}, angle, windowSize, useNormal, lighting, zoom, pngfile, bgColor);
 }
 
 }
