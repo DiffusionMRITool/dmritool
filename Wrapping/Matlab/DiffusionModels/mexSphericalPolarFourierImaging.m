@@ -36,6 +36,12 @@
 %   signal:                coefficient under a given basis, 4D image
 %
 %
+% Reference: 
+%  1. "Model-Free, Regularized, Fast, and Robust Analytical Orientation Distribution Function Estimation",
+%     Jian Cheng, Aurobrata Ghosh, Rachid Deriche, Tianzi Jiang, Medical Image Computing and Computer-Assisted Intervention (MICCAI'10), vol. 6361, pp. 648–656, sep, 2010.
+%  2. "Model-free and Analytical EAP Reconstruction via Spherical Polar Fourier Diffusion MRI", 
+%     Jian Cheng, Aurobrata Ghosh, Tianzi Jiang, Rachid Deriche, Medical Image Computing and Computer-Assisted Intervention (MICCAI'10), vol. 6361, pp. 590–597, sep, 2010. 
+%
 % Copyright (c) 2013, Jian Cheng <jian.cheng.1983@gmail.com>
 %
 

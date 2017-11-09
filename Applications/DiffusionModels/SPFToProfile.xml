@@ -4,8 +4,11 @@
   <title>Convert SPF coefficients to DWI/EAP profile (represented by SH basis or discrete samples).</title>
   <description>Convert SPF coefficients to DWI/EAP profile (represented by SH basis or discrete samples).\n\
     Examples: \n\
-    SPFToProfileConverter signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier --mdImage MD.nii.gz \n\
-    SPFToProfileConverter signal.nii.gz dwiFromSignal.nii.gz --radius 1500 --sh 8 --ra 4 --mdImage MD.nii.gz
+    SPFToProfile signalSPF.nii.gz eap_r0.015.nii.gz --sh 8 --ra 4 --radius 0.015 --fourier --mdImage MD.nii.gz \n\
+    SPFToProfile signal.nii.gz dwiFromSignal.nii.gz --radius 1500 --sh 8 --ra 4 --mdImage MD.nii.gz \n\
+    Reference: \n\
+    Jian Cheng, Aurobrata Ghosh, Rachid Deriche, Tianzi Jiang, "Model-Free, Regularized, Fast, and Robust Analytical Orientation Distribution Function Estimation", Medical Image Computing and Computer-Assisted Intervention (MICCAI'10), vol. 6361, pp. 648–656, sep, 2010.  \n\
+    Jian Cheng, Aurobrata Ghosh, Tianzi Jiang, Rachid Deriche, "Model-free and Analytical EAP Reconstruction via Spherical Polar Fourier Diffusion MRI", Medical Image Computing and Computer-Assisted Intervention (MICCAI'10), vol. 6361, pp. 590–597, sep, 2010. 
   </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>

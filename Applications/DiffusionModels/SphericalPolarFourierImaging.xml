@@ -2,9 +2,12 @@
 <executable>
   <category>Diffusion Models</category>
   <title>Genralized SPFI using SPF/dSPF/SHORE basis</title>
-  <description>SPFI: estimate SPF coefficients from DWI signals. \n\
+  <description>Spherical Polar Fourier Imaging (SPFI): estimate SPF coefficients from DWI signals. \n\
     Examples: \n\
-    SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-6 --mdImage MD.nii.gz 
+    SphericalPolarFourierImaging dwi.txt --sh 8 --ra 4 --signal signalSPF.nii.gz --radius 0.015 --estimation L1_DL --lambdaL1 1e-6 --mdImage MD.nii.gz \n\
+    Reference: \n\
+    Jian Cheng, Aurobrata Ghosh, Rachid Deriche, Tianzi Jiang, "Model-Free, Regularized, Fast, and Robust Analytical Orientation Distribution Function Estimation", Medical Image Computing and Computer-Assisted Intervention (MICCAI'10), vol. 6361, pp. 648–656, sep, 2010.  \n\
+    Jian Cheng, Aurobrata Ghosh, Tianzi Jiang, Rachid Deriche, "Model-free and Analytical EAP Reconstruction via Spherical Polar Fourier Diffusion MRI", Medical Image Computing and Computer-Assisted Intervention (MICCAI'10), vol. 6361, pp. 590–597, sep, 2010. 
   </description>
 
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>

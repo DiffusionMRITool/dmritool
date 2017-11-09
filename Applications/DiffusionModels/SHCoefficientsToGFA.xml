@@ -4,7 +4,10 @@
   <title>Spherical Harmonic coefficients To GFA</title>
   <description>calculate GFA from SH coefficients.\n\
     Examples: \n\
-    SHCoefficientsToGFA eap_r0.015.nii.gz eap_r0.015_gfa.nii.gz
+    SHCoefficientsToGFA eap_r0.015.nii.gz eap_r0.015_gfa.nii.gz \n\
+    Reference: \n\
+    Tuch, David S. "Q‐ball imaging." Magnetic resonance in medicine 52.6 (2004): 1358-1372. \n\
+    Descoteaux, Maxime, Elaine Angelino, Shaun Fitzgibbons, and Rachid Deriche. "Regularized, fast, and robust analytical Q‐ball imaging", Magnetic resonance in medicine 58, no. 3 (2007): 497-510.
   </description>
   
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
