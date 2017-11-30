@@ -53,7 +53,7 @@ enum{
   TENSOR_UPPER_TRIANGULAR,
   // [xx, yx, yy, zx, zy, zz]
   TENSOR_LOWER_TRIANGULAR, 
-  // [xx, yy, zz, xy, xz yz],  internal in vistasoft, AFQ
+  // [xx, yy, zz, xy, xz yz],  mrtrix, internal in vistasoft, AFQ
   TENSOR_DIAGONAL_FIRST, 
   // [xx, yy, zz, sqrt(2)*xy, sqrt(2)*xz, sqrt(2)*yz], embed 3x3 matrix into 6x1 vector
   TENSOR_EMBED6D 
@@ -64,6 +64,11 @@ enum{
   TRACTS_TRK=1,
   TRACTS_TCK=2,
   TRACTS_VTK=3
+};
+
+enum{
+  DWI_NORMALIZE=0,
+  DWI_NONORMALIZE
 };
 
 namespace utl
@@ -561,6 +566,43 @@ GetFiberTractsFormat(const std::string& filename)
     format = TRACTS_UNKNOWN;
   fclose(file);
   return format;
+}
+
+/** 
+ * Get design matrix for DTI from gradient matrix and b values.  
+ *
+ * \param gradMat Nx3 gradient matrix in cartesian format. 
+ * \param dwi_normalize whether DWI samples are normalized using the b0 image. 
+ *                      For normalized DWI samples, b0 is not needed to re-estimated. 
+ * 
+ * \return Nx6 or Nx7 design matrix for DTI. First 6 values are for 
+ * \f$ -b*[g_x g_x, 2.0*g_x g_y, 2.0*g_x g_z, g_y g_y, 2.0*g_y g_z, g_z g_z] \f$.
+ * */
+template <class T>
+utl::Matrix<T> 
+GetDTIDesignMatrix ( const utl::Matrix<T>& gradMat, const std::vector<T>& bVec, int dwi_normalize )
+{
+  utlSAException(gradMat.Rows()!=bVec.size())(gradMat.Rows())(bVec.size()).msg("wrong size of gradMat and bVec");
+  utl::Matrix<T> mat;
+  if (dwi_normalize==DWI_NORMALIZE)
+    mat.ReSize(gradMat.Rows(), 6);
+  else if (dwi_normalize==DWI_NONORMALIZE)
+    mat.ReSize(gradMat.Rows(), 7);
+  else
+    utlException(true, "wrong dwi_normalize");
+
+  for ( int i = 0; i < gradMat.Rows(); ++i ) 
+    {
+    mat(i,0) = -1.0 * bVec[i] * gradMat(i,0) * gradMat(i,0);  // xx
+    mat(i,1) = -2.0 * bVec[i] * gradMat(i,0) * gradMat(i,1);  // xy
+    mat(i,2) = -2.0 * bVec[i] * gradMat(i,0) * gradMat(i,2);  // xz
+    mat(i,3) = -1.0 * bVec[i] * gradMat(i,1) * gradMat(i,1);  // yy
+    mat(i,4) = -2.0 * bVec[i] * gradMat(i,1) * gradMat(i,2);  // yz
+    mat(i,5) = -1.0 * bVec[i] * gradMat(i,2) * gradMat(i,2);  // zz
+    if (dwi_normalize==DWI_NONORMALIZE)
+      mat(i,6) = 1;                                           // S0
+    }
+  return mat;
 }
 
 /* Function taken from 3D Slicer, vtkDiffusionTensorMathematics

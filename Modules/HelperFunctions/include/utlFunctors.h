@@ -189,10 +189,19 @@ public:
   { return ! (*this==other); } 
   void operator=(const Self & other)   
     {m_Functor = other.m_Functor;}    
-
-  ScalarFunctorWrapper()
+  
+  ScalarFunctorWrapper(const TFunctor& func=TFunctor())
     {
-    m_Functor = TFunctor();
+    m_Functor = func;
+    }
+
+  TFunctor GetFunctor() const
+    {
+    return m_Functor;
+    }
+  void SetFunctor(const TFunctor& func)
+    {
+    m_Functor = func;
     }
 
   inline TOutput operator()( const TVector & A) const 
@@ -208,7 +217,7 @@ public:
   
   int GetOutputDimension(const int inputSize) const
     {
-    return 1;
+    return inputSize;
     } 
 protected:
   TFunctor m_Functor;
@@ -225,10 +234,19 @@ public:
   { return ! (*this==other); } 
   void operator=(const Self & other)    
     {m_Functor = other.m_Functor;}    
-
-  VectorFunctorWrapper()
+  
+  VectorFunctorWrapper(const TFunctor& func=TFunctor())
     {
-    m_Functor = TFunctor();
+    m_Functor = func;
+    }
+
+  TFunctor GetFunctor() const
+    {
+    return m_Functor;
+    }
+  void SetFunctor(const TFunctor& func)
+    {
+    m_Functor = func;
     }
 
   inline TOutput operator()( const TVector & A) const 

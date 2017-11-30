@@ -561,7 +561,7 @@ public:
   double GetInfNorm() const
     { return utl::lange(LAPACK_COL_MAJOR, 'O', this->m_Shape[1], this->m_Shape[0], this->m_Data, this->m_Shape[1]); }
 
-  void Save(const std::string file) const
+  void Save(const std::string& file) const
     {
     utl::SaveMatrix<Self>(*this, this->m_Shape[0], this->m_Shape[1], file);
     }

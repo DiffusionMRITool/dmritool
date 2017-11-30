@@ -262,21 +262,21 @@ Convert2To4Tensor(const utl::NDArray<T,2>& mat, utl::NDArray<T,4>& tensor)
 
 template <class T>
 inline void
-PrintUtlMatrix(const NDArray<T,2>& mat, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintUtlMatrix(const NDArray<T,2>& mat, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout)
 {
   utl::PrintMatrix<NDArray<T,2> >(mat, mat.Rows(), mat.Columns(), str, separate, os);
 }
 
 template <class T>
 inline void
-PrintUtlVector(const NDArray<T,1>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
+PrintUtlVector(const NDArray<T,1>& vec, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
   PrintContainer(vec.Begin(), vec.End(), str, separate, os, showStats);
 }
 
 template <class T, unsigned int Dim>
 inline void
-PrintUtlNDArray(const NDArrayBase<T,Dim>& arr, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintUtlNDArray(const NDArrayBase<T,Dim>& arr, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout)
 {
   arr.Print(os<< str, separate );
 }

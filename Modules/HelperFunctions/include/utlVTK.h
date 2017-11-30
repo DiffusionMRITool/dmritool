@@ -30,7 +30,7 @@ namespace utl
 
 template <typename WriterType>
 inline void 
-WriteVTK(vtkPolyData* mesh, const std::string filename)
+WriteVTK(vtkPolyData* mesh, const std::string& filename)
 {
   vtkSmartPointer< WriterType > writer = vtkSmartPointer< WriterType >::New();
   writer->SetInputData(mesh);

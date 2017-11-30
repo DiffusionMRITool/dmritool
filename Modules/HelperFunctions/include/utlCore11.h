@@ -42,7 +42,7 @@ PrintTuple(std::ostream& os, const Tuple& t, Int_<1> )
 
 template <class... Args>
 void
-PrintTuple(const std::tuple<Args...>& t, const std::string str="", std::ostream& os=std::cout)
+PrintTuple(const std::tuple<Args...>& t, const std::string& str="", std::ostream& os=std::cout)
 {
   os << (str==""?"tuple":str) << " = " << t << std::endl;
 }

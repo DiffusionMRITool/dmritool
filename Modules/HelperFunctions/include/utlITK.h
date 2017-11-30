@@ -42,7 +42,7 @@ namespace itk
 
 template <class T>
 void
-PrintVariableLengthVector(const VariableLengthVector<T>vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintVariableLengthVector(const VariableLengthVector<T>vec, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout)
 {
   char tmp[1024];
   int NSize=vec.GetSize();
@@ -84,7 +84,7 @@ VariableLengthVectorToVnlVector ( const VariableLengthVector<T>& vec )
 /** Read information of the image, not the data in image  */
 template <class ImageType>
 bool 
-ReadImageInformation (const std::string filename, SmartPointer<ImageType>& image) 
+ReadImageInformation (const std::string& filename, SmartPointer<ImageType>& image) 
 {
   typedef itk::ImageFileReader<ImageType> ReaderType;
   typename ReaderType::Pointer reader = ReaderType::New();
@@ -107,7 +107,7 @@ ReadImageInformation (const std::string filename, SmartPointer<ImageType>& image
 /** Read Image  */
 template <class ImageType>
 bool 
-ReadImage (const std::string filename, SmartPointer<ImageType>& image, const std::string printInfo="Reading Image:") 
+ReadImage (const std::string& filename, SmartPointer<ImageType>& image, const std::string& printInfo="Reading Image:") 
 {
   typedef itk::ImageFileReader<ImageType> ReaderType;
   typename ReaderType::Pointer reader = ReaderType::New();
@@ -131,7 +131,7 @@ ReadImage (const std::string filename, SmartPointer<ImageType>& image, const std
 
 template <class ImageType, class ReaderType>
 bool 
-ReadImage (const std::string filename, SmartPointer<ImageType>& image, const std::string printInfo="Reading Image:") 
+ReadImage (const std::string& filename, SmartPointer<ImageType>& image, const std::string& printInfo="Reading Image:") 
 {
   typename ReaderType::Pointer reader = ReaderType::New();
 
@@ -154,7 +154,7 @@ ReadImage (const std::string filename, SmartPointer<ImageType>& image, const std
 
 template <class ImageType>
 bool 
-SaveImage (const SmartPointer<ImageType>& image, const std::string filename, const std::string printInfo="Writing Image:")
+SaveImage (const SmartPointer<ImageType>& image, const std::string& filename, const std::string& printInfo="Writing Image:")
 {
   typedef itk::ImageFileWriter<ImageType> WriterType;
   typename WriterType::Pointer writer = WriterType::New();
@@ -178,7 +178,7 @@ SaveImage (const SmartPointer<ImageType>& image, const std::string filename, con
 
 template <class ImageType, class WriterType>
 bool 
-SaveImage (const SmartPointer<ImageType>& image, const std::string filename, const std::string printInfo="Writing Image:")
+SaveImage (const SmartPointer<ImageType>& image, const std::string& filename, const std::string& printInfo="Writing Image:")
 {
   typename WriterType::Pointer writer = WriterType::New();
   
@@ -199,23 +199,64 @@ SaveImage (const SmartPointer<ImageType>& image, const std::string filename, con
   return true;
 }
 
-inline bool
-IsVectorImage(const std::string filename)
+inline int
+GetImageType(const std::string& filename)
 {
-  typedef itk::VectorImage<float, 4> MultiVolumeVectorImageType;
-  typedef itk::ImageFileReader<MultiVolumeVectorImageType> ReaderType;
+  if (utl::IsEndingWith(filename, ".spr"))
+    return IMAGE_SPARSE;
+  else if (utl::IsEndingWith(filename, ".vlv"))
+    return IMAGE_VARIABLELENGTH;
+  else 
+    {
+    typedef itk::VectorImage<float, 4> MultiVolumeVectorImageType;
+    typedef itk::ImageFileReader<MultiVolumeVectorImageType> ReaderType;
 
-  ReaderType::Pointer reader = ReaderType::New();
-  reader->SetFileName(filename);
-  reader->UpdateOutputInformation();
-  MultiVolumeVectorImageType::Pointer image = reader->GetOutput();
+    ReaderType::Pointer reader = ReaderType::New();
+    reader->SetFileName(filename);
+    reader->UpdateOutputInformation();
+    MultiVolumeVectorImageType::Pointer image = reader->GetOutput();
 
-  unsigned int numberOfComponentsPerPixel = image->GetNumberOfComponentsPerPixel();
-  return numberOfComponentsPerPixel > 1;
+    unsigned int numberOfComponentsPerPixel = image->GetNumberOfComponentsPerPixel();
+    if (numberOfComponentsPerPixel > 1)
+      return IMAGE_VECTOR;
+    else
+      return IMAGE_ND;
+    }
+}
+
+template <class ImageType>
+inline int
+GetImageType(const SmartPointer<ImageType>& image)
+{
+  std::string name = image->GetNameOfClass();
+  if (name=="VectorImage")
+    return IMAGE_VECTOR;
+  else if (name=="Image")
+    {
+    typedef typename ImageType::PixelType PType;
+    if (std::is_scalar<PType>::value)
+      return IMAGE_ND;
+    else
+      {
+      PType p;
+      if (utl::IsInstanceOf<itk::VariableLengthVector<double>>(p) || utl::IsInstanceOf<itk::VariableLengthVector<float>>(p) || utl::IsInstanceOf<itk::VariableLengthVector<int>>(p))
+        return IMAGE_VARIABLELENGTH;
+      else
+        utlException(true, "wrong Image type");
+      }
+    }
+  else if (name=="SpatiallyDenseSparseVectorImage")
+    return IMAGE_SPARSE;
 }
 
 inline bool
-Is3DImage(const std::string filename)
+IsVectorImage(const std::string& filename)
+{
+  return GetImageType(filename)==IMAGE_VECTOR;
+}
+
+inline bool
+Is3DImage(const std::string& filename)
 {
   if (IsVectorImage(filename))
     return false;
@@ -382,7 +423,7 @@ SetVectorImageFullSize(SmartPointer<ImageType>& image, const std::vector<int>& s
 }
 
 inline bool
-IsSparseImage(const std::string filename)
+IsSparseImage(const std::string& filename)
 {
   std::string fileNoExt, ext;
   utl::GetFileExtension(filename, ext, fileNoExt);
@@ -568,7 +609,7 @@ CopyImageInformation ( const SmartPointer<ImageWithInfoType>& imageFrom, SmartPo
 /** print itk::VectorImage  */
 template <class TPixelType, unsigned int VImageDimension >
 void
-PrintVectorImage(const SmartPointer<VectorImage<TPixelType, VImageDimension> >& image, const std::string mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
+PrintVectorImage(const SmartPointer<VectorImage<TPixelType, VImageDimension> >& image, const std::string& mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
 {
   typedef VectorImage<TPixelType, VImageDimension> VectorImageType;
   if (isPrintHeader)
@@ -613,7 +654,7 @@ PrintVectorImage(const SmartPointer<VectorImage<TPixelType, VImageDimension> >& 
 /** print itk::Image with dimension no more than 3 */
 template <class TPixelType, unsigned int VImageDimension >
 void
-PrintImage3D(const SmartPointer<Image<TPixelType,VImageDimension> >& image, const std::string mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
+PrintImage3D(const SmartPointer<Image<TPixelType,VImageDimension> >& image, const std::string& mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
 {
   utlGlobalException(VImageDimension>3, "dimension should be no more than 3!");
   typedef Image<TPixelType, VImageDimension> ImageType;
@@ -648,7 +689,7 @@ PrintImage3D(const SmartPointer<Image<TPixelType,VImageDimension> >& image, cons
 /** print 4D itk::Image   */
 template <class TPixelType, unsigned int VImageDimension>
 void
-PrintImage4D(const SmartPointer<Image<TPixelType,VImageDimension> >& image, const std::string mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
+PrintImage4D(const SmartPointer<Image<TPixelType,VImageDimension> >& image, const std::string& mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
 {
   utlGlobalException(VImageDimension!=4, "wrong image dimension");
   typedef Image<TPixelType, VImageDimension> ImageType;
@@ -709,7 +750,7 @@ PrintImage4D(const SmartPointer<Image<TPixelType,VImageDimension> >& image, cons
 /** print itk::Image  */
 template <class TPixelType, unsigned int VImageDimension >
 void
-PrintImage(const SmartPointer<Image<TPixelType,VImageDimension> > image, const std::string mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
+PrintImage(const SmartPointer<Image<TPixelType,VImageDimension> > image, const std::string& mse="", std::ostream& os=std::cout, bool isPrintHeader=false)
 {
   if (VImageDimension==4)
     PrintImage4D<TPixelType, VImageDimension>(image, mse, os, isPrintHeader);
@@ -750,7 +791,7 @@ VerifyImageSize ( const SmartPointer<Image1Type>& image1, const SmartPointer<Ima
 /** Check Image Information */
 template <class Image1Type>
 bool
-VerifyImageSize ( const SmartPointer<Image1Type>& image1, const std::string file2, const bool isMinimalDimension=false )
+VerifyImageSize ( const SmartPointer<Image1Type>& image1, const std::string& file2, const bool isMinimalDimension=false )
 {
   if (isMinimalDimension)
     {
@@ -781,7 +822,7 @@ VerifyImageSize ( const SmartPointer<Image1Type>& image1, const std::string file
 
 /** Check Image Information */
 inline bool
-VerifyImageSize ( const std::string file1, const std::string file2, const bool isMinimalDimension=false )
+VerifyImageSize ( const std::string& file1, const std::string& file2, const bool isMinimalDimension=false )
 {
   static const unsigned int ImageDimension = 4;
   typedef double PixelType;
@@ -850,7 +891,7 @@ VerifyImageInformation ( const SmartPointer<Image1Type>& image1, const SmartPoin
 /** Check Image Information */
 template <class Image1Type>
 bool
-VerifyImageInformation ( const SmartPointer<Image1Type>& image1, const std::string file2, const bool isMinimalDimension=false )
+VerifyImageInformation ( const SmartPointer<Image1Type>& image1, const std::string& file2, const bool isMinimalDimension=false )
 {
   if (isMinimalDimension)
     {
@@ -881,7 +922,7 @@ VerifyImageInformation ( const SmartPointer<Image1Type>& image1, const std::stri
 
 /** Check Image Information */
 inline bool
-VerifyImageInformation ( const std::string file1, const std::string file2, const bool isMinimalDimension=false )
+VerifyImageInformation ( const std::string& file1, const std::string& file2, const bool isMinimalDimension=false )
 {
   static const unsigned int ImageDimension = 4;
   typedef double PixelType;

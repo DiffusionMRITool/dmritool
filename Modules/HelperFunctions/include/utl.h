@@ -63,7 +63,7 @@ namespace itk
 /** if it is a VectorImage, directly read it. If it is a 4D image, read it as Image, then convert it to a VectorImage  */
 template <class PixelType>
 inline void 
-ReadVectorImage ( const std::string filename, SmartPointer<VectorImage<PixelType,3> > &image, const std::string printInfo="Reading Image:" )
+ReadVectorImage ( const std::string& filename, SmartPointer<VectorImage<PixelType,3> > &image, const std::string& printInfo="Reading Image:" )
 {
   utlGlobalException(!utl::IsFileExist(filename), filename + " does not exist");
   typedef VectorImage<PixelType,3> VectorImageType;

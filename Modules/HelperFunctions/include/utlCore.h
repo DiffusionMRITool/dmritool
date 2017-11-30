@@ -140,7 +140,36 @@ Toc(std::ostream& os=std::cout)
   return TicToc(false, os);
 }
 
+template<class Parent>
+class __InstanceOf
+{
+	template<class T>
+	class Help 
+    {
+		bool is;
 
+	public:
+		Help(const void* object) : is(false) { }
+		Help(const T* object) : is(true) { }
+
+		operator bool() { return is; }
+  	};
+
+	Help<Parent> is;
+
+public:
+	template<class Object>
+	__InstanceOf(const Object& o) : is(Help<Parent>(&o)) { }
+
+	operator bool() { return is; }
+};
+
+template<class Parent, class Object>
+inline bool
+IsInstanceOf(const Object& o)
+{
+  return __InstanceOf<Parent>(o);
+}
 
 /** SwapBytes(ptr,sizeof(short),8)  */
 inline void 
@@ -260,7 +289,7 @@ template<typename T> inline T  square(const T& x) { return x*x; }
 template<typename T> inline T cube(const T& x) { return x*x*x; }
 
 inline std::string 
-StringToLowerCase(const std::string str)
+StringToLowerCase(const std::string& str)
 {
   std::string result(str);
   for (std::string::iterator c = result.begin(); c != result.end(); ++c) 
@@ -269,7 +298,7 @@ StringToLowerCase(const std::string str)
 }
 
 inline std::string 
-StringToUpperCase(const std::string str)
+StringToUpperCase(const std::string& str)
 {
   std::string result(str);
   for (std::string::iterator c = result.begin(); c != result.end(); ++c) 
@@ -279,7 +308,7 @@ StringToUpperCase(const std::string str)
 
 /** compare two std::string objects, ignore case */
 inline bool 
-StringCompareCaseIgnored(const std::string str1, const std::string str2) 
+StringCompareCaseIgnored(const std::string& str1, const std::string& str2) 
 {
   return StringToLowerCase(str1)==StringToLowerCase(str2);
 }
@@ -477,7 +506,7 @@ inline void ConvertToUnixSlashes(std::string& path)
 }
 
 inline std::string 
-CreateExpandedPath(const std::string & path)
+CreateExpandedPath(const std::string& path)
 {  
   // std::string result;
   // wordexp_t exp_result;
@@ -518,7 +547,7 @@ IsEndingWith(const std::string& fullString, const std::string& ending )
 *  GetPath("/home/my.cpp", path, file) will get path=="/home/", file=="my.cpp"
 *  */
 inline void 
-GetPath(const std::string fileNameAbsolute, std::string& path, std::string& file)
+GetPath(const std::string& fileNameAbsolute, std::string& path, std::string& file)
 {
   size_t found = fileNameAbsolute.find_last_of("/\\");
   path = fileNameAbsolute.substr( 0, found + 1);
@@ -527,7 +556,7 @@ GetPath(const std::string fileNameAbsolute, std::string& path, std::string& file
 
 /** GetFileExtension("/home/dwi.hdr", ext, file) will get ext=="hdr" and file=="/home/dwi"  */
 inline void 
-GetFileExtension(const std::string fileNameAbsolute, std::string& ext, std::string& fileNoExt)
+GetFileExtension(const std::string& fileNameAbsolute, std::string& ext, std::string& fileNoExt)
 {
   size_t found = fileNameAbsolute.find_last_of(".");
   ext = fileNameAbsolute.substr(found + 1); 
@@ -563,7 +592,7 @@ ZeroPad(const unsigned int number, const unsigned int paddedLength)
 
 /** getSequentialFileName("dwi", 3, "hdr") will generate dwi_000003.hdr */
 inline std::string 
-GetSequentialFileName(const std::string filePrefix, const unsigned int iteration, const std::string fileExtension, const unsigned int paddedLength=6)
+GetSequentialFileName(const std::string& filePrefix, const unsigned int iteration, const std::string& fileExtension, const unsigned int paddedLength=6)
 {
   std::stringstream padded;
   padded << filePrefix << "_" << ZeroPad(iteration, paddedLength) << "." << fileExtension;
@@ -694,7 +723,7 @@ NormalizeMax(const std::vector<T> & v)
 
 /** test if a string means a number   */
 inline bool 
-IsNumber( const std::string input)
+IsNumber( const std::string& input)
 {
   if (input.size()==0) 
     return false;
@@ -719,7 +748,7 @@ ConvertNumberToString ( const T value, const int precision=6 )
 /** convert string to number  */
 template <class T>
 inline T
-ConvertStringToNumber ( const std::string input )
+ConvertStringToNumber ( const std::string& input )
 {
   // // The first way also works
   // utlException(input.size()==0, input << " is null");
@@ -760,7 +789,7 @@ RoundNumber ( const T x )
 
 
 inline bool 
-IsInt( const std::string input, const double epss=1e-10)
+IsInt( const std::string& input, const double epss=1e-10)
 {
   if (input.size()==0) 
     return false;
@@ -813,7 +842,7 @@ IsContainsNaN(const VectorType& a, const int size)
 
 /** separate a string into a string vector based on given delimit  */
 inline void
-SplitString (const std::string str, std::vector<std::string>& strVec, const char* cc=" ")
+SplitString (const std::string& str, std::vector<std::string>& strVec, const char* cc=" ")
 {
   strVec.clear();
   char str2[str.size()+1];
@@ -830,7 +859,7 @@ SplitString (const std::string str, std::vector<std::string>& strVec, const char
 
 /** Read a file, put all strings into a string 2D vector, i.e. vector<vector<string> >  */
 inline void
-ReadLines ( const std::string filename, std::vector < std::vector<std::string> >& strVec, const char* cc=" ")
+ReadLines ( const std::string& filename, std::vector < std::vector<std::string> >& strVec, const char* cc=" ")
 {
   strVec.clear();
   std::string line;
@@ -858,7 +887,7 @@ ReadLines ( const std::string filename, std::vector < std::vector<std::string> >
 
 /** same with ReadLines(), ignore the first line if it is shows the number of rows.  */
 inline void 
-ReadLinesFirstlineCheck ( const std::string filename, std::vector < std::vector<std::string> >& strVec, const char* cc=" " )
+ReadLinesFirstlineCheck ( const std::string& filename, std::vector < std::vector<std::string> >& strVec, const char* cc=" " )
 {
   ReadLines(filename, strVec, cc);
   if (strVec.size()>0 && strVec[0].size()==1 && IsInt(strVec[0][0]))
@@ -970,7 +999,7 @@ GetNumberOfNonZeroValues ( IteratorType v, IteratorType v2, const double thresho
 
 template <typename T>
 inline void 
-PrintVector ( const std::vector<T>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
+PrintVector ( const std::vector<T>& vec, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
   char tmp[1024];
   if (showStats)
@@ -994,7 +1023,7 @@ PrintVector ( const std::vector<T>& vec, const std::string str="", const char* s
 
 template <>
 inline void
-PrintVector<std::string> ( const std::vector<std::string>& vec, const std::string str, const char* separate, std::ostream& os, bool showStats)
+PrintVector<std::string> ( const std::vector<std::string>& vec, const std::string& str, const char* separate, std::ostream& os, bool showStats)
 {
   char tmp[1024];
   sprintf(tmp, "%-8s(%p):  size = %lu, : ", str==""?"vector":str.c_str(), &vec, vec.size());
@@ -1012,7 +1041,7 @@ PrintVector<std::string> ( const std::vector<std::string>& vec, const std::strin
 
 template <class VectorType>
 inline void 
-PrintVector ( const VectorType& vec, const int NSize, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
+PrintVector ( const VectorType& vec, const int NSize, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
   char tmp[1024];
   if (showStats)
@@ -1036,7 +1065,7 @@ PrintVector ( const VectorType& vec, const int NSize, const std::string str="", 
 
 template <class IteratorType>
 inline void 
-PrintContainer ( IteratorType v1, IteratorType v2, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
+PrintContainer ( IteratorType v1, IteratorType v2, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true)
 {
   long unsigned int NSize=0;
   IteratorType q = v1;
@@ -1120,14 +1149,14 @@ SetVector(const char *s, std::vector<T>& vec, const int least_num=0, const char&
 
 template <typename T>
   int
-SetVector(const std::string s, std::vector<T>& vec, const int least_num=0, const char& c=',') 
+SetVector(const std::string& s, std::vector<T>& vec, const int least_num=0, const char& c=',') 
 {
   return SetVector(s.c_str(), vec, least_num, c);
 }
 
 template < class T >
 inline void
-ReadVector ( const std::string vectorStr, std::vector<T>& vec, const char* cc=" ")
+ReadVector ( const std::string& vectorStr, std::vector<T>& vec, const char* cc=" ")
 {
   utlException(vectorStr=="", "need to set vectorStr");
   vec.clear();
@@ -1154,7 +1183,7 @@ ReadVector ( const std::string vectorStr, std::vector<T>& vec, const char* cc=" 
 
 template <>
 inline void
-ReadVector<std::string> ( const std::string vectorStr, std::vector<std::string>& vec, const char* cc)
+ReadVector<std::string> ( const std::string& vectorStr, std::vector<std::string>& vec, const char* cc)
 {
   utlException(vectorStr=="", "need to set vectorStr");
   vec.clear();
@@ -1181,7 +1210,7 @@ ReadVector<std::string> ( const std::string vectorStr, std::vector<std::string>&
 
 template <typename VectorType>
 void 
-SaveVector ( const VectorType& vv, const int NSize, const std::string vectorStr, const bool is_save_number=false)
+SaveVector ( const VectorType& vv, const int NSize, const std::string& vectorStr, const bool is_save_number=false)
 {
   std::ofstream  out;                                // create ofstream object
   out.open ( vectorStr.c_str() );           // open ofstream
@@ -1196,7 +1225,7 @@ SaveVector ( const VectorType& vv, const int NSize, const std::string vectorStr,
 
 template <typename T>
 void 
-SaveVector ( const std::vector<T>& vv, const std::string vectorStr, const bool is_save_number=false)
+SaveVector ( const std::vector<T>& vv, const std::string& vectorStr, const bool is_save_number=false)
 {
   int NSize = vv.size();
   SaveVector<std::vector<T> >(vv, NSize, vectorStr, is_save_number);
@@ -1204,7 +1233,7 @@ SaveVector ( const std::vector<T>& vv, const std::string vectorStr, const bool i
 
 template <typename T>
 inline std::vector<int> 
-FindVector ( const std::vector<T>& vec, const T elem, const double gap=M_EPS )
+FindVector ( const std::vector<T>& vec, const T& elem, const double gap=M_EPS )
 {
   std::vector<int> index;
   for ( int i = 0; i < vec.size(); i += 1 ) 
@@ -1217,7 +1246,7 @@ FindVector ( const std::vector<T>& vec, const T elem, const double gap=M_EPS )
 
 template <>
 inline std::vector<int> 
-FindVector<std::string> ( const std::vector<std::string>& vec, const std::string elem, const double )
+FindVector<std::string> ( const std::vector<std::string>& vec, const std::string& elem, const double )
 {
   std::vector<int> index;
   for ( int i = 0; i < vec.size(); i += 1 ) 
@@ -1686,7 +1715,7 @@ MatrixToMatrix ( const T1& mat1,  T2& mat2, const int NRows, const int NColumns)
 /** print statistics from a matrix  */
 template <class TMatrixType>
 void
-PrintMatrixStats ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string str="", const char* separate=" ", std::ostream& os=std::cout )
+PrintMatrixStats ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout )
 {
   char tmp[1024];
   std::vector<double> st = NumberRows*NumberColumns>0 ? GetContainerStats(&matrix(0,0), &matrix(0,0)+NumberRows*NumberColumns) : std::vector<double>(4,0);
@@ -1698,7 +1727,7 @@ PrintMatrixStats ( const TMatrixType& matrix, const int NumberRows, const int Nu
 
 template <class TMatrixType>
 void
-PrintMatrix ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true )
+PrintMatrix ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout, bool showStats=true )
 {
   char tmp[1024];
   if (showStats)
@@ -1836,7 +1865,7 @@ Save2DVector ( const Vector2D& vv, std::ostream& out=std::cout)
 
 template <typename Vector2D>
 void 
-Save2DVector ( const Vector2D& vv, const std::string file)
+Save2DVector ( const Vector2D& vv, const std::string& file)
 {
   std::ofstream  out;                                // create ofstream object
   out.open ( file.c_str() );           // open ofstream
@@ -1848,7 +1877,7 @@ Save2DVector ( const Vector2D& vv, const std::string file)
 
 template <class TMatrixType>
 void
-SaveMatrix ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string file )
+SaveMatrix ( const TMatrixType& matrix, const int NumberRows, const int NumberColumns, const std::string& file )
 {
   std::ofstream  out;                                // create ofstream object
   out.open ( file.c_str() );           // open ofstream

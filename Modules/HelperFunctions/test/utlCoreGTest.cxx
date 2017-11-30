@@ -220,3 +220,16 @@ TEST(utlCore, print)
     EXPECT_EQ(oss.str(), "(a_d, a_i, a_b) = (2, 1, true)\n");
     }
 }
+
+TEST(utlCore, InstanceOf)
+{
+    {
+    std::vector<double> vec;
+    EXPECT_EQ(utl::IsInstanceOf<std::vector<double> >(vec), true);
+    EXPECT_EQ(utl::IsInstanceOf<std::vector<int> >(vec), false);
+
+    int intNum;
+    EXPECT_EQ(utl::IsInstanceOf<float >(intNum), false);
+    EXPECT_EQ(utl::IsInstanceOf<int >(intNum), true);
+    }
+}

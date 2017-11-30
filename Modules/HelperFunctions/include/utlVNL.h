@@ -225,7 +225,7 @@ GetVnlMatrixPInverse ( const vnl_matrix<T>& mat, const double eps=1e-8)
 
 template <class T>
 void
-SaveVnlMatrix ( const vnl_matrix<T>& matrix, const std::string file )
+SaveVnlMatrix ( const vnl_matrix<T>& matrix, const std::string& file )
 {
   int NumberRows = matrix.rows(), NumberColumns=matrix.columns();
   utl::SaveMatrix<vnl_matrix<T> >(matrix, NumberRows, NumberColumns, file);
@@ -234,7 +234,7 @@ SaveVnlMatrix ( const vnl_matrix<T>& matrix, const std::string file )
 
 template <class T>
 void 
-PrintVnlMatrixStats (  const vnl_matrix<T>& matrix, const std::string str="", const char* separate=" ", std::ostream& os=std::cout )
+PrintVnlMatrixStats (  const vnl_matrix<T>& matrix, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout )
 {
   int NumberRows = matrix.rows(), NumberColumns=matrix.columns();
   utl::PrintMatrixStats<vnl_matrix<T> >(matrix, NumberRows, NumberColumns, str, separate, os);
@@ -242,7 +242,7 @@ PrintVnlMatrixStats (  const vnl_matrix<T>& matrix, const std::string str="", co
 
 template <class T>
 void 
-PrintVnlMatrix (  const vnl_matrix<T>& matrix, const std::string str="", const char* separate=" ", std::ostream& os=std::cout )
+PrintVnlMatrix (  const vnl_matrix<T>& matrix, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout )
 {
   int NumberRows = matrix.rows(), NumberColumns=matrix.columns();
   utl::PrintMatrix<vnl_matrix<T> >(matrix, NumberRows, NumberColumns, str, separate, os);
@@ -250,7 +250,7 @@ PrintVnlMatrix (  const vnl_matrix<T>& matrix, const std::string str="", const c
 
 template <class T>
 void 
-PrintVnlVector ( const vnl_vector<T>& vec, const std::string str="", const char* separate=" ", std::ostream& os=std::cout)
+PrintVnlVector ( const vnl_vector<T>& vec, const std::string& str="", const char* separate=" ", std::ostream& os=std::cout)
 {
   int NSize = vec.size();
   utl::PrintContainer(vec.begin(), vec.end(), str, separate, os);

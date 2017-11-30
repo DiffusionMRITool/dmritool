@@ -26,7 +26,7 @@ namespace utl
 *  */
 template <class T=double>
 inline std::function<T(T)> 
-GetScalarFunctionFromString ( const std::string funcStr )
+GetScalarFunctionFromString ( const std::string& funcStr )
 {
   auto func = 
     [funcStr](T xval)
@@ -57,7 +57,7 @@ GetScalarFunctionFromString ( const std::string funcStr )
 *  */
 template <class T=double>
 inline std::function<T(std::vector<T>)> 
-GetVectorFunctionFromString ( const std::string funcStr )
+GetVectorFunctionFromString ( const std::string& funcStr )
 {
   auto func = 
     [funcStr](const std::vector<T>& xval)

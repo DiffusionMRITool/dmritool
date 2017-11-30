@@ -24,6 +24,18 @@
 /** @addtogroup utlHelperFunctions
 @{ */
 
+
+enum{
+  /** itk::Image<double, 4>, stored volume by volume  */
+  IMAGE_ND=0,
+  /** itk::VectorImage<double, 3>, stored continuously in each voxel, default image type used in dmritool  */
+  IMAGE_VECTOR,
+  /** itk::Image<itk::VariableLengthVector<double>, double>, a variable length vector in each voxel  */
+  IMAGE_VARIABLELENGTH,
+  /** itk::SpatiallyDenseSparseVectorImage<double, 3>, a sparse vector in each voxel  */
+  IMAGE_SPARSE
+};
+
 #ifndef ITK_OVERRIDE
 
 // Copied from itkMacro.h. It is used for old version of ITK without definition of the macros.
@@ -148,6 +160,32 @@ type Get##name() const                      \
 #define itkFunctorSetGetMacro(name, type)   \
   itkFunctorSetMacro(name, type);           \
   itkFunctorGetMacro(name, type);
+
+
+#define itkTypedefMaskedImageToImageMacro(Superclass)                                    \
+  typedef typename Superclass::InputImageType           InputImageType;                  \
+  typedef typename Superclass::InputImagePointer        InputImagePointer;               \
+  typedef typename Superclass::InputImageConstPointer   InputImageConstPointer;          \
+  typedef typename Superclass::InputImageIndexType      InputImageIndexType;             \
+  typedef typename Superclass::InputImageSizeType       InputImageSizeType;              \
+  typedef typename Superclass::InputImageSpacingType    InputImageSpacingType;           \
+  typedef typename Superclass::InputImagePixelType      InputImagePixelType;             \
+  typedef typename Superclass::InputImageRegionType     InputImageRegionType;            \
+                                                                                         \
+  typedef typename Superclass::OutputImageType          OutputImageType;                 \
+  typedef typename Superclass::OutputImagePointer       OutputImagePointer;              \
+  typedef typename Superclass::OutputImageIndexType     OutputImageIndexType;            \
+  typedef typename Superclass::OutputImageSizeType      OutputImageSizeType;             \
+  typedef typename Superclass::OutputImageSpacingType   OutputImageSpacingType;          \
+  typedef typename Superclass::OutputImagePixelType     OutputImagePixelType;            \
+  typedef typename Superclass::OutputImageRegionType    OutputImageRegionType;           \
+                                                                                         \
+  typedef typename Superclass::MaskImageType            MaskImageType;                   \
+  typedef typename MaskImageType::Pointer               MaskImagePointer;                \
+                                                                                         \
+  typedef typename itk::Image<double,3>                 ScalarImageType;                 \
+  typedef typename ScalarImageType::Pointer             ScalarImagePointer;              
+
 
 
 /** Show Position when debug and muti-thread are used. It is only used for filters derived from MaskedImageToImageFilter  */
