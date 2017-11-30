@@ -12,6 +12,9 @@
 #include "itkMultiplyByConstantMatrixVectorImageFilter.h"
 #include "SHCoefficientsToSphericalFunctionSamplesCLP.h"
 
+#include "itkFunctors.h"
+#include "itkUnaryFunctorVectorImageFilter.h"
+
 /**
  * \brief  calculate samples of a spherical function from its SH coefficients
  */
@@ -44,7 +47,18 @@ main (int argc, char const* argv[])
   filter->SetConstantMatrix(*basisMatrix);
   filter->Update();
 
-  ImageType::Pointer outputImage = filter->GetOutput();
+  ImageType::Pointer outputImage, sfImage;
+  sfImage = filter->GetOutput();
+  if (std::fabs(_Power-1.0)>1e-10)
+    {
+    itk::Functor::RPOWER<double, double> p0;
+    p0.SetArgument(_Power);
+    utl::Functor::ScalarFunctorWrapper<itk::Functor::RPOWER<double,double>> pp(p0);
+    itk::UnaryVectorOPImage<ImageType, ImageType>(sfImage, outputImage, pp);
+    }
+  else
+    outputImage = sfImage;
+
   itk::SaveImage(outputImage, _OutputFile);
 
   return 0;

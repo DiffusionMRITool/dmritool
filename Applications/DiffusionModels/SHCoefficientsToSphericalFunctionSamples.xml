@@ -7,32 +7,42 @@
   <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
   
   <parameters>
+
     <image type="vector">
       <name>_InputSHFile</name>
       <description>Input image file where each voxel contains a vector of SH coefficients.</description>
       <index>0</index>
       <channel>input</channel>
     </image>
+
     <image type="vector">
       <name>_OutputFile</name>
       <description>Output image file where each voxel contains a vector of spherical function samples.</description>
       <index>1</index>
       <channel>input</channel>
     </image>
+
     <file>
-    <name>_dataOrientationsFile</name>
-    <label>Data Orientations File</label>
-    <description>Text file that contains the gradient orientations of the data</description>
-    <index>2</index>
-    <channel>input</channel>
+      <name>_dataOrientationsFile</name>
+      <label>Data Orientations File</label>
+      <description>Text file that contains the gradient orientations of the data</description>
+      <index>2</index>
+      <channel>input</channel>
     </file>
+    
+    <double>
+      <name>_Power</name>
+      <description>Power argument. 1.0: original value on mesh, 2.0: pow 2, 0.5: sqrt.</description>
+      <longflag>pow</longflag>
+      <default>1.0</default>
+    </double>
 
     <boolean>
-    <name>_Debug</name>
-    <label>debug</label>
-    <description>debug</description>
-    <longflag>--debug</longflag>
-    <default>false</default>
+      <name>_Debug</name>
+      <label>debug</label>
+      <description>debug</description>
+      <longflag>--debug</longflag>
+      <default>false</default>
     </boolean>
                 
   </parameters>
