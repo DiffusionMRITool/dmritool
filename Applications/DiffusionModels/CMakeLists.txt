@@ -28,3 +28,5 @@ add_clp_application(SPFToODF SPFToODF ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_L
 add_clp_application(SPFToScalarMap SPFToScalarMap ${BLAS_LIBRARIES} ${ITK_LIBRARIES} ${GSL_LIBRARIES})
 
 add_clp_application(ComputeSHCoefficientsOfDWIFromSymmetricTensor ComputeSHCoefficientsOfDWIFromSymmetricTensor ${ITK_LIBRARIES} ${GSL_LIBRARIES})
+
+add_clp_application(TensorFormatConverter TensorFormatConverter ${BLAS_LIBRARIES} ${ITK_LIBRARIES})

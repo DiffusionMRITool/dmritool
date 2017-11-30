@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<executable>
+  <category>Converter</category>
+  <title>Tensor storage format converter.</title>
+  <description>Convert different tensor storage formats.</description>
+  
+  <contributor>Jian Cheng (jian.cheng.1983@gmail.com)</contributor>
+  
+  <parameters>
+  
+    <image>
+      <name>_InputFile</name>
+      <label>Input File</label>
+      <description>Input tensor image file (6D or 9D VectorImage).</description>
+      <index>0</index>
+      <channel>input</channel>
+    </image>
+    
+    <image>
+      <name>_OutputFile</name>
+      <label>Output File</label>
+      <description>Output tensor image file (6D or 9D VectorImage).</description>
+      <index>1</index>
+      <channel>output</channel>
+    </image>
+    
+    <string-enumeration>
+      <name>_InputFormat</name>
+      <label>Input format</label>
+      <description>Input image storage format.</description>
+      <longflag>inFormat</longflag>
+      <default>6D_UPPER</default>
+      <element>9D</element>
+      <element>6D_UPPER</element>
+      <element>6D_LOWER</element>
+      <element>6D_DIAGONAL_FIRST</element>
+      <element>6D_EMBED</element>
+      <channel>input</channel>
+    </string-enumeration>
+
+    <string-enumeration>
+      <name>_OutputFormat</name>
+      <label>Output format</label>
+      <description>Output image storage format.</description>
+      <longflag>outFormat</longflag>
+      <element>9D</element>
+      <element>6D_UPPER</element>
+      <element>6D_LOWER</element>
+      <element>6D_DIAGONAL_FIRST</element>
+      <element>6D_EMBED</element>
+      <channel>input</channel>
+    </string-enumeration>
+    
+    
+  </parameters>
+   
+</executable>
+
+
+
+
+
+
