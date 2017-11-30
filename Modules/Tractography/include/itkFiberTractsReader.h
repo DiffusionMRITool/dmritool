@@ -80,7 +80,7 @@ private:
 };
 
 inline bool 
-ReadFibers (const std::string& filename, SmartPointer<FiberTracts<double> >& fibers, const std::string printInfo="Reading fibers:") 
+ReadFibers (const std::string& filename, SmartPointer<FiberTracts<double> >& fibers, const std::string& printInfo="Reading fibers:") 
 {
   typename itk::FiberTractsReader::Pointer reader = itk::FiberTractsReader::New();
   reader->SetFileName(filename);

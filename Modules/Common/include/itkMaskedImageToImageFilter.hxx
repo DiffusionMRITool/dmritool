@@ -51,7 +51,7 @@ MaskedImageToImageFilter< TInputImage, TOutputImage, TMaskImage >
 template< class TInputImage, class TOutputImage, class TMaskImage >
 void
 MaskedImageToImageFilter< TInputImage, TOutputImage, TMaskImage >
-::SetMaskImage(const std::string file)
+::SetMaskImage(const std::string& file)
 {
   MaskImagePointer mask = MaskImageType::New();
   itk::ReadImage<MaskImageType>(file, mask);
@@ -117,7 +117,7 @@ MaskedImageToImageFilter< TInputImage, TOutputImage, TMaskImage >
 template< class TInputImage, class TOutputImage, class TMaskImage >
 void
 MaskedImageToImageFilter< TInputImage, TOutputImage, TMaskImage >
-::WriteLogger(const std::string str, const LoggerBase::PriorityLevelType level) const
+::WriteLogger(const std::string& str, const LoggerBase::PriorityLevelType level) const
 {
   if (m_ThreadID>=0 && this->GetDebug() && this->GetNumberOfThreads()>1)
     {

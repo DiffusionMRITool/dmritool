@@ -1,5 +1,5 @@
 /**
- *       @file  SPFToScalarMapConverter.cxx
+ *       @file  SPFToScalarMap.cxx
  *      @brief  calculate RTO map from SPF coefficients
  *     Created  "03-18-2014
  *

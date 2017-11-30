@@ -70,7 +70,7 @@ public:
   itkSetMacro(EigenValueISO, double);  
   itkGetMacro(EigenValueISO, double);  
   
-  void ComputeBasisMatrix();
+  void ComputeBasisMatrix() ITK_OVERRIDE;
 
   // [>* Generate basis in Q space for DWI<]
   // virtual MatrixPointer ComputeQBasisMatrixForDWI();
@@ -84,10 +84,10 @@ protected:
   virtual ~TensorBasisMatrixGenerator() 
     {}
   
-  virtual void VerifyInputParameters() const; 
+  virtual void VerifyInputParameters() const ITK_OVERRIDE; 
 
-  void PrintSelf(std::ostream& os, Indent indent) const;
-  typename LightObject::Pointer InternalClone() const;
+  void PrintSelf(std::ostream& os, Indent indent) const ITK_OVERRIDE;
+  typename LightObject::Pointer InternalClone() const ITK_OVERRIDE;
 
   double m_EigenValue1;
   double m_EigenValue2;

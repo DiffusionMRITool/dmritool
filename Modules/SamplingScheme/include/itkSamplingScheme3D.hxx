@@ -388,7 +388,7 @@ SamplingScheme3D<TPixelType>
 template <class TPixelType>
 void
 SamplingScheme3D<TPixelType>
-::ReadOrientationFile(const std::string gradFile, const int NoSymmetricDuple, 
+::ReadOrientationFile(const std::string& gradFile, const int NoSymmetricDuple, 
   const int flipx, const int flipy, const int flipz, const bool need_normalize)
 {
   Clear();

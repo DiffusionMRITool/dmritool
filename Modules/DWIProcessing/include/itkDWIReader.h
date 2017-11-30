@@ -161,11 +161,11 @@ public:
    * **************************************
    * b.txt and grad.txt should have the same dimension
    * */
-  void ReadFromConfigurationFile(const std::string file);
+  void ReadFromConfigurationFile(const std::string& file);
   
-  // void ReadBGradDWI(const std::string bFile, const std::string gradFile, const std::string imageFile, const std::string indexFile="");
+  // void ReadBGradDWI(const std::string& bFile, const std::string& gradFile, const std::string& imageFile, const std::string& indexFile="");
   
-  static bool DetermineIsInput4DImage(const std::string dataStr);
+  static bool DetermineIsInput4DImage(const std::string& dataStr);
   
   /** normalize DWI images using b0 image  */
   void NormalizeDWI();

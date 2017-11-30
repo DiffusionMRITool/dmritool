@@ -106,7 +106,7 @@ private:
  * */
 template <class ImageType, class ImageOutType, class MaskImageType=Image<double,4> >
 void
-FunctorFromStringOPImage(const std::vector<itk::SmartPointer<ImageType> >& images, itk::SmartPointer<ImageOutType>& outImage, const std::string funcStr, const itk::SmartPointer<MaskImageType>& mask=nullptr, int numberOfThreads=-1)
+FunctorFromStringOPImage(const std::vector<itk::SmartPointer<ImageType> >& images, itk::SmartPointer<ImageOutType>& outImage, const std::string& funcStr, const itk::SmartPointer<MaskImageType>& mask=nullptr, int numberOfThreads=-1)
 {
   typedef itk::FunctorFromStringImageFilter<ImageType, ImageOutType, MaskImageType> FunctorImageFilterType;
   typename FunctorImageFilterType::Pointer filter = FunctorImageFilterType::New();

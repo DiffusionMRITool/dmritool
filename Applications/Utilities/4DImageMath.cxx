@@ -139,7 +139,7 @@ ConvertImage<VectorImageType, NDImageType>( const itk::SmartPointer<VectorImageT
 
 // template <class ImageType>
 // void
-// PermuteImage ( const itk::SmartPointer<ImageType>& image, const std::string axis, itk::SmartPointer<NDImageType>& imageOut )
+// PermuteImage ( const itk::SmartPointer<ImageType>& image, const std::string& axis, itk::SmartPointer<NDImageType>& imageOut )
 // {
 //   imageOut = NDImageType::New();
 //   typedef itk::PermuteAxesImageFilter <NDImageType> PermuteAxesImageFilterType;

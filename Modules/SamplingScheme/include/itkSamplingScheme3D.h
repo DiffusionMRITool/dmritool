@@ -146,7 +146,7 @@ public:
   void GenerateFromRandomPoints(const std::vector<int>& numberOfPoints);
 
   /** Nx3 gradient file, each row is a point in S^2, catesian format  */
-  void ReadOrientationFile(const std::string gradFile, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, 
+  void ReadOrientationFile(const std::string& gradFile, const int NoSymmetricDuple=DIRECTION_NODUPLICATE, 
       const int flipx=DIRECTION_NOFLIP, const int flipy=DIRECTION_NOFLIP, const int flipz=DIRECTION_NOFLIP, const bool need_normalize=true);
   
   /** Read a list of gradient files. Each file contains gradients for a single shell.   */

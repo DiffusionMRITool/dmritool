@@ -1,5 +1,5 @@
 /**
- *       @file  SPFToProfileConverter.cxx
+ *       @file  SPFToProfile.cxx
  *      @brief  
  *
  *

@@ -63,7 +63,7 @@ DWIWriter<TPixelType, VImageDimension>
 template <class TPixelType, unsigned int VImageDimension>
 void
 DWIWriter<TPixelType, VImageDimension>
-::WriteToConfigurationFile(const std::string file)
+::WriteToConfigurationFile(const std::string& file)
 {
   std::ofstream  out;                                // create ofstream object
   

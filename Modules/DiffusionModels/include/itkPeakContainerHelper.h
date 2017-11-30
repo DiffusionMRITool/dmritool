@@ -64,7 +64,7 @@ public:
       return "";
       }
     }
-  static PeakType GetPeakType(const std::string str)
+  static PeakType GetPeakType(const std::string& str)
     {
     if (str=="XYZV") 
       return XYZV;

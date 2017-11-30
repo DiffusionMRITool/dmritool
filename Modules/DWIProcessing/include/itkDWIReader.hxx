@@ -47,7 +47,7 @@ DWIReader<TPixelType, VImageDimension>
 template <class TPixelType, unsigned int VImageDimension>
 bool
 DWIReader<TPixelType, VImageDimension>
-::DetermineIsInput4DImage(const std::string dataStr)
+::DetermineIsInput4DImage(const std::string& dataStr)
 {
   typedef Image<TPixelType,4> DWI4DImageType;
   typename DWI4DImageType::Pointer dwi4DTempImage;
@@ -71,7 +71,7 @@ DWIReader<TPixelType, VImageDimension>
 template <class TPixelType, unsigned int VImageDimension>
 void
 DWIReader<TPixelType, VImageDimension>
-::ReadFromConfigurationFile(const std::string file)
+::ReadFromConfigurationFile(const std::string& file)
 {
   utlShowPosition(this->GetDebug());
 

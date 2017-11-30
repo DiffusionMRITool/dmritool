@@ -83,7 +83,7 @@ public:
   itkSetObjectMacro(MaskImage, MaskImageType);
   itkGetObjectMacro(MaskImage, MaskImageType);
   itkGetConstObjectMacro(MaskImage, MaskImageType);
-  void SetMaskImage(const std::string file);
+  void SetMaskImage(const std::string& file);
   
   /** Set/Get the mask image. */
   itkSetObjectMacro(Logger, LoggerType);
@@ -120,7 +120,7 @@ protected:
   /** create m_LoggerVector only when m_Debug is true and multiple threads are used  */
   void CreateLoggerVector ();
   
-  void WriteLogger(const std::string str, const LoggerBase::PriorityLevelType level=LoggerBase::DEBUG) const;
+  void WriteLogger(const std::string& str, const LoggerBase::PriorityLevelType level=LoggerBase::DEBUG) const;
 
   std::string ThreadIDToString() const;
 

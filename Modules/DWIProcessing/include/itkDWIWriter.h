@@ -148,7 +148,7 @@ public:
    * ***********************
    * Each line is for a single shell data if it is set to store each shell. 
    * */
-  void WriteToConfigurationFile(const std::string file);
+  void WriteToConfigurationFile(const std::string& file);
   
   
 protected:
