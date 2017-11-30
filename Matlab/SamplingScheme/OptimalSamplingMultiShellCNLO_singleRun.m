@@ -1,6 +1,9 @@
 function [gradCell, xopt, fopt, retcode] = OptimalSamplingMultiShellCNLO_singleRun(gradCellInitial, param)
 % update gradients from an initial gradient set, such that the updated gradients are evenly distributed. 
 %
+% USAGE:
+%   [gradCell, xopt, fopt, retcode] = OptimalSamplingMultiShellCNLO_singleRun(gradCellInitial, param)
+%
 % INPUT (required)
 %   gradCellInitial      :  N_k x 3 gradient matrices, where each row is a point in sphere. k=1,2,...,K
 %   param.w              :  weight for single shell term. 0<w<1. 0.5 is the default value.

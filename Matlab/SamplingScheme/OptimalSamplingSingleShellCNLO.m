@@ -1,6 +1,9 @@
 function [grad, xopt, fopt, retcode] = OptimalSamplingSingleShellCNLO(gradInitial, param)
 % update gradients from an initial gradient set, such that the updated gradients are evenly distributed. 
 %
+% USAGE:
+%   [grad, xopt, fopt, retcode] = OptimalSamplingSingleShellCNLO(gradInitial, param)
+%
 % INPUT
 %   gradInitial       :  N x 3 gradient matrix, where each row is a point in sphere. 
 %   param.cartesian   :  true: use cartesian coordinate (with unit equality constraint);

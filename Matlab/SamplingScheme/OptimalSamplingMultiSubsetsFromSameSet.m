@@ -190,7 +190,7 @@ grb_result = gurobi(model, grbParam);
 indexMatrix = reshape(grb_result.x(numShellTotal+1:end), [N, numShell] );
 
 % grb_result.x
-gradCell = cell(numShell);
+gradCell = cell(numShell,1);
 for ss = 1 : numShell
     gradCell{ss} = gradAll(indexMatrix(:,ss)>1e-4,:);
 end
