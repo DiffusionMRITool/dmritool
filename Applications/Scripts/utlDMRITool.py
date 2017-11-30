@@ -3,7 +3,16 @@ import os
 import subprocess
 
 
-def getFileExtension(file):
+def app_doc(strIn):
+    '''add copyright information into doc'''
+
+    str_copy='''Copyright (c) 2015-2017 the dmritool contributors.
+For more information, see https://diffusionmritool.github.io'''
+
+    return '\n'.join([strIn, str_copy])
+
+
+def get_file_extension(file):
     """Get file path and extension.
     GetFileExtension("aa/bb.nii.gz") ->  ('aa/bb', '.nii.gz')
     GetFileExtension("aa/bb.nii") ->  ('aa/bb', '.nii')
@@ -23,7 +32,6 @@ def getFileExtension(file):
         return filePath, fileExt
     else:
         return filePath2, fileExt2 + fileExt
-
 
 
 def process(cmd, print_cmd=True, print_sto=True, print_ste=True):
@@ -46,9 +54,9 @@ def process(cmd, print_cmd=True, print_sto=True, print_ste=True):
     ste = p.stderr.readlines()
     outCode = p.wait()
     if print_sto and sto:
-        print(''.join(sto)) ,
+        print(''.join(sto))
     if print_ste and ste:
-        print(''.join(ste)) ,
+        print(''.join(ste))
     if outCode!=0:
         raise Exception("Fail: " + cmd + "!\n")
 
@@ -56,4 +64,5 @@ def process(cmd, print_cmd=True, print_sto=True, print_ste=True):
 def remove_empty_lines(strIn):
     '''Remove empty lines from a string'''
     return os.linesep.join([s for s in strIn.splitlines() if s.strip()])
+
 

@@ -154,8 +154,8 @@ def flipVTKImageData(image, image_flip):
     imageOut = vtk.vtkImageData()
     imageOut.DeepCopy(image)
 
-    for i in range(len(image_flip)):
-        if image_flip[i] == -1:
+    for i, ff in enumerate(image_flip):
+        if ff == -1:
             flipFilter = vtk.vtkImageFlip()
             flipFilter.SetInputData(imageOut)
             flipFilter.SetFilteredAxis(i)

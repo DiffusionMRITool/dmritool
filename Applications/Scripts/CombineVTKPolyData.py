@@ -22,11 +22,12 @@ import vtk
 from docopt import docopt
 
 import utlVTK
+import utlDMRITool as utl
 
 
 def main():
 
-    args = docopt(__doc__, version='1.0')
+    args = docopt(utl.app_doc(__doc__), version='1.0')
 
     if (args['--verbose']):
         print(args)

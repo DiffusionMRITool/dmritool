@@ -6,6 +6,7 @@ Description: GUI for VTKPolyData.py.
 
 import sys
 
+import utlDMRITool as utl
 import VTKPolyData
 
 from gooey import Gooey
@@ -16,6 +17,6 @@ def main():
 
 if __name__ == '__main__':
     if '-h' in sys.argv or '--help' in sys.argv:
-        print(__doc__)
+        print(utl.app_doc(__doc__))
     else:
         main()

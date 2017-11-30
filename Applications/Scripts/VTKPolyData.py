@@ -29,6 +29,7 @@ import sys
 import vtk
 import utlVTK
 
+import utlDMRITool as utl
 
 def arg_values(value, typefunc, numberOfValues):
     '''set arguments based using comma. If numberOfValues<0, it supports arbitrary number of inputs.'''
@@ -60,7 +61,7 @@ def main():
         if (arg[0] == '-') and arg[1].isdigit():
             sys.argv[i] = ' ' + arg
 
-    parser = argparse.ArgumentParser(description=__doc__,  formatter_class=argparse.RawTextHelpFormatter)
+    parser = argparse.ArgumentParser(description=utl.app_doc(__doc__),  formatter_class=argparse.RawTextHelpFormatter)
 
     # vtk data
     parser.add_argument('--vtk', help='VTK PolyData (.vtk, .vtp, etc) input, multiple inputs. Use HueRange=(0.6667,0)', nargs='*')
