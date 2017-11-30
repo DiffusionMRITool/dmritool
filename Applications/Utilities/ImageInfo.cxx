@@ -79,9 +79,30 @@ IntRangeCheck(int x, int LowerLimit, int UpperLimit)
 }
 
 int
+show_file(const std::string& file)
+{
+  std::string line;
+  std::ifstream myfile (file);
+  if (myfile.is_open())
+    {
+    while ( getline (myfile,line) )
+      {
+      std::cout << line << '\n';
+      }
+    myfile.close();
+    }
+  return 0;
+}
+
+int
 main(int argc, char *argv[])
 {
   PARSE_ARGS;
+
+  if (itk::GetImageType(_InputFile)==IMAGE_SPARSE)
+    return show_file(_InputFile);
+  else if (itk::GetImageType(_InputFile)==IMAGE_VARIABLELENGTH)
+    return show_file(_InputFile);
 
   int operation = OP_NULL;
 
@@ -143,16 +164,16 @@ main(int argc, char *argv[])
   itk::ImageIOBase::SizeType inputImageSizeInComponents =
       inputImageIOBase->GetImageSizeInComponents();
   itk::ImageIOBase::SizeType inputImageSizeInPixels =
-      inputImageIOBase->GetImageSizeInPixels();
+    inputImageIOBase->GetImageSizeInPixels();
 
-	itk::ImageIOBase::ByteOrder inputByteOrder = inputImageIOBase->GetByteOrder();
-//	bool useCompression = inputImageIOBase->GetUseCompression();
+  itk::ImageIOBase::ByteOrder inputByteOrder = inputImageIOBase->GetByteOrder();
+  //	bool useCompression = inputImageIOBase->GetUseCompression();
 
   std::string inputPixelTypeAsString(
-      inputImageIOBase->GetPixelTypeAsString(inputPixelType));
+    inputImageIOBase->GetPixelTypeAsString(inputPixelType));
   std::string inputComponentTypeAsString(
-      inputImageIOBase->GetComponentTypeAsString(inputComponentType));
-	std::string inputByteOrderAsString(inputImageIOBase->GetByteOrderAsString(inputByteOrder));
+    inputImageIOBase->GetComponentTypeAsString(inputComponentType));
+  std::string inputByteOrderAsString(inputImageIOBase->GetByteOrderAsString(inputByteOrder));
 
   unsigned int inputNumberOfComponentsPerPixel =
       inputImage->GetNumberOfComponentsPerPixel();

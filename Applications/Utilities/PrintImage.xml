@@ -81,10 +81,12 @@
         EMBED6D: [xx, yy, zz, sqrt(2)*xy, sqrt(2)*xz, sqrt(2)*yz], embed 3x3 matrix into 6x1 vector; 
       </description>
       <longflag>tensorformat</longflag>
-      <default>UPPER_TRIANGULAR</default>
-      <element>UPPER_TRIANGULAR</element>
-      <element>LOWER_TRIANGULAR</element>
-      <element>EMBED6D</element>
+      <default>6D_UPPER</default>
+      <element>9D</element>
+      <element>6D_UPPER</element>
+      <element>6D_LOWER</element>
+      <element>6D_DIAGONAL_FIRST</element>
+      <element>6D_EMBED</element>
     </string-enumeration>
 
     <boolean>

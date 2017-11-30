@@ -12,7 +12,45 @@
 #include "itkImageRegionIteratorWithIndex.h"
 #include "itkVectorImageRegionIterator.h"
 #include "itkVectorImageRegionIteratorWithIndex.h"
+#include "itkVectorImageRegionIteratorWithIndexSpecial.h"
+#include "itkSpatiallyDenseSparseVectorImage.h"
+#include "itkSpatiallyDenseSparseVectorImageFileReader.h"
+#include "itkSpatiallyDenseSparseVectorImageFileWriter.h"
+#include "itkVariableLengthVectorImageFileReader.h"
+#include "itkVariableLengthVectorImageFileWriter.h"
 #include "utl.h"
+
+#include "itkMultiVolumeImageToVectorImageFilter.h"
+#include "itkVectorImageToMultiVolumeImageFilter.h"
+
+typedef double  ScalarType; 
+typedef itk::VectorImage<ScalarType, 3> VectorImageType;
+typedef itk::Image<ScalarType, 4> NDImageType;
+typedef itk::SpatiallyDenseSparseVectorImage<ScalarType, 3> SparseImageType;
+typedef itk::Image<itk::VariableLengthVector<ScalarType>, 3> VariableLengthImageType;
+
+template <class ImageType, class Image2Type>
+void 
+ConvertImage ( const itk::SmartPointer<ImageType>& image, itk::SmartPointer<Image2Type>& imageOut )
+{
+  // if (itk::GetImageType(image)==itk::GetImageType(imageOut))
+  //   imageOut = image;
+}
+
+template<>
+void
+ConvertImage<NDImageType, VectorImageType>( const itk::SmartPointer<NDImageType>& image, itk::SmartPointer<VectorImageType>& imageOut )
+{
+  itk::MultiVolumeToVectorImage(image, imageOut);
+}
+
+template<>
+void
+ConvertImage<VectorImageType, NDImageType>( const itk::SmartPointer<VectorImageType>& image, itk::SmartPointer<NDImageType>& imageOut )
+{
+  itk::VectorToMultiVolumeImage(image, imageOut);
+}
+
   
 template <class IndexType>
 bool 
@@ -21,13 +59,13 @@ IsOutsideBox ( const IndexType& index, const std::vector<int>& box )
   return index[0]<box[0] || index[0]>box[1] || index[1]<box[2] || index[1]>box[3] || index[2]<box[4] || index[2]>box[5];
 }
 
-template <class ImageType, class Image0Type>
+template <class ImageType, class ReaderType, class Image0Type=ImageType, class Reader0Type=ReaderType>
 int
 PrintImage(int argc, char const* argv[])
 {
   PARSE_ARGS;
   typename ImageType::Pointer image = ImageType::New();
-  itk::ReadImage<ImageType>(_InputImageFile, image);
+  itk::ReadImage<ImageType, ReaderType>(_InputImageFile, image);
   
   itk::VectorImageRegionIteratorWithIndex<ImageType> it(image, image->GetLargestPossibleRegion());
   int vecSize = itk::GetVectorImageVectorSize(image);
@@ -99,7 +137,28 @@ PrintImage(int argc, char const* argv[])
     std::cout << "\nImage difference option:" << std::endl;
 
     typename Image0Type::Pointer image0 = Image0Type::New();
-    itk::ReadImage<Image0Type>(_BaseImageFile, image0);
+    int baseImageType = itk::GetImageType(_BaseImageFile);
+    if (itk::GetImageType(image0)==baseImageType)
+      {
+      itk::ReadImage<Image0Type, Reader0Type>(_BaseImageFile, image0);
+      }
+    else
+      {
+      if (baseImageType==IMAGE_ND)
+        {
+        typename NDImageType::Pointer imageTmp = NDImageType::New();
+        itk::ReadImage<NDImageType>(_BaseImageFile, imageTmp);
+        ConvertImage(imageTmp, image0);
+        }
+      else if (baseImageType==IMAGE_VECTOR)
+        {
+        typename VectorImageType::Pointer imageTmp = VectorImageType::New();
+        itk::ReadImage<VectorImageType>(_BaseImageFile, imageTmp);
+        ConvertImage(imageTmp, image0);
+        }
+      else
+        utlGlobalException(true, "wrong image type");
+      }
 
     std::vector<int> size0 = itk::GetVectorImage3DVolumeSize(image0);
     int vecSize0 = itk::GetVectorImageVectorSize(image0);
@@ -132,6 +191,8 @@ PrintImage(int argc, char const* argv[])
           }
         }
       diff = vec-vec0;
+      for ( int jj = 0; jj < diff.Size(); ++jj ) 
+        diff[jj] = std::fabs(diff[jj]);
 
       if (!_PrintAllVoxels && (diff.GetNorm()<1e-8 || vec0.GetNorm()<1e-8 || vec.GetNorm()<1e-8)) 
         continue;
@@ -173,6 +234,8 @@ PrintImage(int argc, char const* argv[])
             }
           }
         diff = vec-vec0;
+        for ( int jj = 0; jj < diff.Size(); ++jj ) 
+          diff[jj] = std::fabs(diff[jj]);
 
         if (!_PrintAllVoxels && (diff.GetNorm()<1e-8 || vec0.GetNorm()<1e-8 || vec.GetNorm()<1e-8)) 
           continue;
@@ -211,12 +274,17 @@ PrintImage(int argc, char const* argv[])
       if (!_PrintAllVoxels && vec.GetNorm()<1e-8) 
         continue;
 
-      std::ostringstream oss;
-      oss << "DTI " << index << " ";
-      if (_TensorStorageFormat=="UPPER_TRIANGULAR") utl::ConvertTensor6DTo9D(vec, dt, TENSOR_UPPER_TRIANGULAR);
-      if (_TensorStorageFormat=="LOWER_TRIANGULAR") utl::ConvertTensor6DTo9D(vec, dt, TENSOR_LOWER_TRIANGULAR);
-      if (_TensorStorageFormat=="EMBED6D") utl::ConvertTensor6DTo9D(vec, dt, TENSOR_EMBED6D);
-      utl::PrintVector(dt, dt.Size(), oss.str());
+      if (_DifferencePercent!=2)
+        {
+        std::ostringstream oss;
+        oss << "DTI " << index << " ";
+        if (_TensorStorageFormat=="6D_UPPER") utl::ConvertTensor6DTo9D(vec, dt, TENSOR_UPPER_TRIANGULAR);
+        if (_TensorStorageFormat=="6D_LOWER") utl::ConvertTensor6DTo9D(vec, dt, TENSOR_LOWER_TRIANGULAR);
+        if (_TensorStorageFormat=="6D_EMBED") utl::ConvertTensor6DTo9D(vec, dt, TENSOR_EMBED6D);
+        if (_TensorStorageFormat=="6D_DIAGONAL_FIRST") utl::ConvertTensor6DTo9D(vec, dt, TENSOR_DIAGONAL_FIRST);
+        if (_TensorStorageFormat=="9D") dt=vec;
+        utl::PrintVector(dt, dt.Size(), oss.str());
+        }
       }
     }
 
@@ -274,29 +342,37 @@ main (int argc, char const* argv[])
   // GenerateCLP
   PARSE_ARGS;
 
-  typedef double  ScalarType; 
-  typedef itk::VectorImage<ScalarType, 3> ImageType;
-  typedef itk::Image<ScalarType, 4> NDImageType;
 
+  int inputType = itk::GetImageType(_InputImageFile);
 
-  if (!_BaseImageFileArg.isSet())
-    {
-    if (itk::IsVectorImage(_InputImageFile))
-      return PrintImage<ImageType, ImageType>(argc, argv);
-    else 
-      return PrintImage<NDImageType, ImageType>(argc, argv);
-    }
-  else
-    {
-    if (itk::IsVectorImage(_InputImageFile) && itk::IsVectorImage(_BaseImageFile))
-      return PrintImage<ImageType, ImageType>(argc, argv);
-    else if (!itk::IsVectorImage(_InputImageFile) && itk::IsVectorImage(_BaseImageFile))
-      return PrintImage<NDImageType, ImageType>(argc, argv);
-    else if (itk::IsVectorImage(_InputImageFile) && !itk::IsVectorImage(_BaseImageFile))
-      return PrintImage<ImageType, NDImageType>(argc, argv);
-    else if (!itk::IsVectorImage(_InputImageFile) && !itk::IsVectorImage(_BaseImageFile))
-      return PrintImage<NDImageType, NDImageType>(argc, argv);
-    }
+  if (inputType==IMAGE_VECTOR)
+    return PrintImage<VectorImageType, itk::ImageFileReader<VectorImageType>>(argc, argv);
+  else if (inputType==IMAGE_ND)
+    return PrintImage<NDImageType, itk::ImageFileReader<NDImageType>>(argc, argv);
+  else if (inputType==IMAGE_SPARSE)
+    return PrintImage<SparseImageType, itk::SpatiallyDenseSparseVectorImageFileReader<SparseImageType>>(argc, argv);
+  else if (inputType==IMAGE_VARIABLELENGTH)
+    return PrintImage<VariableLengthImageType, itk::VariableLengthVectorImageFileReader<VariableLengthImageType>>(argc, argv);
+
+  // if (!_BaseImageFileArg.isSet())
+  //   {
+  //   if (isInputVectorImage)
+  //     return PrintImage<VectorImageType, VectorImageType>(argc, argv);
+  //   else 
+  //     return PrintImage<NDImageType, VectorImageType>(argc, argv);
+  //   }
+  // else
+  //   {
+  //   isBaseVectorImage = itk::IsVectorImage(_BaseImageFile);
+  //   if (isInputVectorImage && isBaseVectorImage)
+  //     return PrintImage<VectorImageType, VectorImageType>(argc, argv);
+  //   else if (!isInputVectorImage && isBaseVectorImage)
+  //     return PrintImage<NDImageType, VectorImageType>(argc, argv);
+  //   else if (isInputVectorImage && !isBaseVectorImage)
+  //     return PrintImage<VectorImageType, NDImageType>(argc, argv);
+  //   else if (!isInputVectorImage && !isBaseVectorImage)
+  //     return PrintImage<NDImageType, NDImageType>(argc, argv);
+  //   }
   
   return 0;
 }
