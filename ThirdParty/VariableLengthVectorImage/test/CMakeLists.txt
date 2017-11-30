@@ -1,0 +1,2 @@
+
+add_test_application(test_VariableLengthVectorImage test_VariableLengthVectorImage ${ITK_LIBRARIES})

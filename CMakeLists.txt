@@ -160,6 +160,7 @@ set(THIRDPARTY_DIRECTORIES
   gtest
   Spams
   exprtk
+  VariableLengthVectorImage
   )
 
 add_subdirectory(ThirdParty/exprtk)
