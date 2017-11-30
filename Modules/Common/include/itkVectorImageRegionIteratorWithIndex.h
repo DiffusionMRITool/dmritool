@@ -346,6 +346,7 @@ protected:
 };
 
 
+/** For Image<TPixel, 4>  */
 template <typename TPixel, unsigned int VImageDimension>
 class VectorImageRegionIteratorWithIndex<Image<TPixel, VImageDimension> > : public ImageRegionIteratorWithIndex<Image<TPixel, VImageDimension> >
 {
@@ -574,6 +575,48 @@ protected:
   int m_VectorSize;
   int m_VectorAxis;
 
+};
+
+/** For Image<VariableLengthVector<TPixel>, 3>, it works as ImageRegionIteratorWithIndex  */
+template <typename TPixel>
+class VectorImageRegionIteratorWithIndex<Image<VariableLengthVector<TPixel>, 3 > > : public ImageRegionIteratorWithIndex<Image<VariableLengthVector<TPixel>,3> >
+{
+public:
+  typedef VectorImageRegionIteratorWithIndex                Self;
+  typedef ImageRegionIteratorWithIndex< Image<VariableLengthVector<TPixel>, 3> > Superclass;
+
+  /** Types inherited from the Superclass */
+  typedef typename Superclass::IndexType             IndexType;
+  typedef typename Superclass::SizeType              SizeType;
+  typedef typename Superclass::OffsetType            OffsetType;
+  typedef typename Superclass::RegionType            RegionType;
+  typedef typename Superclass::ImageType             ImageType;
+  typedef typename Superclass::PixelContainer        PixelContainer;
+  typedef typename Superclass::PixelContainerPointer PixelContainerPointer;
+  typedef typename Superclass::InternalPixelType     InternalPixelType;
+  typedef typename Superclass::PixelType             PixelType;
+  typedef typename Superclass::AccessorType          AccessorType;
+
+  VectorImageRegionIteratorWithIndex() : Superclass()
+  {}
+
+  VectorImageRegionIteratorWithIndex(ImageType *ptr, const RegionType & region) : Superclass(ptr, region)
+  {
+  }
+
+  VectorImageRegionIteratorWithIndex(const ImageIteratorWithIndex< ImageType > & it) : Superclass(it)
+    {
+    }
+
+  void GetVector(PixelType& vec) const
+  { 
+  vec = Superclass::Get();
+  }
+  
+  void SetVector(const PixelType & value)
+  { 
+  Superclass::Set(value);
+  }
 };
 
 
