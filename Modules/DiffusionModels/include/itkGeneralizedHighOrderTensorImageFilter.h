@@ -48,6 +48,8 @@ public:
   /** Run-time type information (and related methods) */
   itkTypeMacro( GeneralizedHighOrderTensorImageFilter, SphericalPolarFourierEstimationImageFilter );
 
+  itkTypedefMaskedImageToImageMacro(Superclass);
+
   typedef typename Superclass::MatrixType       MatrixType;
   typedef typename Superclass::VectorType       VectorType;
   typedef typename Superclass::MatrixPointer    MatrixPointer;
@@ -57,26 +59,6 @@ public:
 
   typedef typename Superclass::L2SolverType     L2SolverType;
   typedef typename Superclass::EstimationType   EstimationType;
-
-  typedef TInputImage                             InputImageType;
-  typedef typename InputImageType::Pointer        InputImagePointer;
-  typedef typename InputImageType::ConstPointer   InputImageConstPointer;
-  typedef typename InputImageType::IndexType      InputImageIndexType;
-  typedef typename InputImageType::SizeType       InputImageSizeType;
-  typedef typename InputImageType::SpacingType    InputImageSpacingType;
-  typedef typename InputImageType::PixelType      InputImagePixelType;
-  typedef typename InputImageType::RegionType     InputImageRegionType;
-  
-  typedef TOutputImage OutputImageType;
-  typedef typename OutputImageType::Pointer       OutputImagePointer;
-  typedef typename OutputImageType::IndexType     OutputImageIndexType;
-  typedef typename OutputImageType::SizeType      OutputImageSizeType;
-  typedef typename OutputImageType::SpacingType   OutputImageSpacingType;
-  typedef typename OutputImageType::PixelType     OutputImagePixelType;
-  typedef typename OutputImageType::RegionType    OutputImageRegionType;
-
-  typedef typename Superclass::MaskImageType      MaskImageType;
-  typedef typename Superclass::ScalarImageType    ScalarImageType;
   
   void VerifyInputParameters() const ITK_OVERRIDE;
   

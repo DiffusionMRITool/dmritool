@@ -53,19 +53,14 @@ public:
   /** Run-time type information (and related methods) */
   itkTypeMacro( FeaturesFromSPFImageFilter, MaskedImageToImageFilter );
   
-  typedef TInputImage                                      InputImageType;
-  typedef typename InputImageType::Pointer                 InputImagePointer;
-  
-  typedef Image<typename TInputImage::InternalPixelType,3> ScalarImageType;
-  typedef typename ScalarImageType::Pointer                ScalarImagePointer;
+  itkTypedefMaskedImageToImageMacro(Superclass);
+
   typedef utl::NDArray<double,2>                           MatrixType;
   typedef utl_shared_ptr<MatrixType>                       MatrixPointer;
   typedef utl::NDArray<double,1>                           VectorType;
   typedef utl_shared_ptr<VectorType>                       VectorPointer;
   typedef std::vector<double>                              STDVectorType;
   typedef utl_shared_ptr<STDVectorType >                   STDVectorPointer;
-  
-  typedef typename Superclass::MaskImageType               MaskImageType;
     
   typedef SphericalPolarFourierEstimationImageFilter<TInputImage, TOutputImage> SPFIFilterBaseType;
   

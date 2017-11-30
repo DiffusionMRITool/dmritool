@@ -54,25 +54,7 @@ public:
   itkTypeMacro( SphericalPolarFourierEstimationImageFilter, DiffusionModelEstimationInSphericalCoordinateImageFilter );
   
   /** Convenient Typedefs. */
-  typedef typename Superclass::InputImageType           InputImageType;
-  typedef typename Superclass::InputImagePointer        InputImagePointer;
-  typedef typename Superclass::InputImageConstPointer   InputImageConstPointer;
-  typedef typename Superclass::InputImageIndexType      InputImageIndexType;
-  typedef typename Superclass::InputImageSizeType       InputImageSizeType;
-  typedef typename Superclass::InputImageSpacingType    InputImageSpacingType;
-  typedef typename Superclass::InputImagePixelType      InputImagePixelType;
-  typedef typename Superclass::InputImageRegionType     InputImageRegionType;
-  
-  typedef typename Superclass::OutputImageType          OutputImageType;
-  typedef typename Superclass::OutputImagePointer       OutputImagePointer;
-  typedef typename Superclass::OutputImageIndexType     OutputImageIndexType;
-  typedef typename Superclass::OutputImageSizeType      OutputImageSizeType;
-  typedef typename Superclass::OutputImageSpacingType   OutputImageSpacingType;
-  typedef typename Superclass::OutputImagePixelType     OutputImagePixelType;
-  typedef typename Superclass::OutputImageRegionType    OutputImageRegionType;
-  
-  typedef typename Superclass::MaskImageType            MaskImageType;
-  typedef Image<double, TInputImage::ImageDimension>    ScalarImageType;
+  itkTypedefMaskedImageToImageMacro(Superclass);
 
   typedef typename Superclass::MatrixType         MatrixType;
   typedef typename Superclass::VectorType         VectorType;

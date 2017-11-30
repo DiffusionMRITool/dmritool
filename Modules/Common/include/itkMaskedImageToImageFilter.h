@@ -66,13 +66,13 @@ public:
   typedef typename OutputImageType::SpacingType   OutputImageSpacingType;
   typedef typename OutputImageType::PixelType     OutputImagePixelType;
   typedef typename OutputImageType::RegionType    OutputImageRegionType;
+  
+  typedef TMaskImage                            MaskImageType;
+  typedef typename MaskImageType::Pointer       MaskImagePointer;
 
   /** ImageDimension constants */
   itkStaticConstMacro(InputImageDimension, unsigned int,  TInputImage::ImageDimension);
   itkStaticConstMacro(OutputImageDimension, unsigned int, TOutputImage::ImageDimension);
-  
-  typedef TMaskImage                            MaskImageType;
-  typedef typename MaskImageType::Pointer       MaskImagePointer;
 
   typedef ThreadLogger                          LoggerType;
   typedef typename LoggerType::Pointer          LoggerPointer;

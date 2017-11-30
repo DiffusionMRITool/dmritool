@@ -48,11 +48,8 @@ public:
   /** Run-time type information (and related methods) */
   itkTypeMacro( ProfileFromSPFImageFilter, FeaturesFromSPFImageFilter );
   
-  typedef TInputImage                                      InputImageType;
-  typedef typename InputImageType::Pointer                 InputImagePointer;
-  
-  typedef typename Superclass::ScalarImageType             ScalarImageType;
-  typedef typename Superclass::ScalarImagePointer          ScalarImagePointer;
+  itkTypedefMaskedImageToImageMacro(Superclass);
+
   typedef typename Superclass::MatrixType                  MatrixType;
   typedef typename Superclass::MatrixPointer               MatrixPointer;
   typedef typename Superclass::VectorType                  VectorType;
@@ -60,8 +57,7 @@ public:
   typedef typename Superclass::BasisType                   BasisType;
   typedef typename Superclass::STDVectorType               STDVectorType;
   typedef typename Superclass::STDVectorPointer            STDVectorPointer;
-  
-  typedef typename Superclass::MaskImageType               MaskImageType;
+
   
   itkSetMacro(Radius, double);
   itkGetMacro(Radius, double);
