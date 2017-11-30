@@ -63,6 +63,11 @@ void SpatiallyDenseSparseVectorImageFileReader<TOutputImage>
 {
   itkDebugMacro ( << "SpatiallyDenseSparseVectorImageFileReader::GenerateData() \n" );
 
+  if (m_FileName.length()<4 || m_FileName.compare(m_FileName.length() - 4, 4, ".spr")!=0)
+    {
+    itkExceptionMacro( << "the file " << m_FileName  << " should be a text file ending with '.spr'.");
+    }
+
   std::string keyFileName;
   std::string valueFileName;
   char tempLine[256];
@@ -118,13 +123,13 @@ void SpatiallyDenseSparseVectorImageFileReader<TOutputImage>
         pch = strtok (const_cast<char*>(extractedLine.c_str())," ");
         while (pch != NULL)
           {
-          if ( idx == 0 )
+          if ( idx == ImageDimension )
             {
             numberOfComponentsPerPixel = atoi(pch);
             }
           else
             {
-            outputSize[idx-1] = atoi(pch);
+            outputSize[idx] = atoi(pch);
             }
           idx++;
           pch = strtok (NULL, " ");
@@ -138,9 +143,9 @@ void SpatiallyDenseSparseVectorImageFileReader<TOutputImage>
         pch = strtok (const_cast<char*>(extractedLine.c_str())," ");
         while (pch != NULL)
           {
-          if ( idx > 0 )
+          if ( idx < ImageDimension )
             {
-            outputSpacing[idx-1] = atof(pch);
+            outputSpacing[idx] = atof(pch);
             }
           idx++;
           pch = strtok (NULL, " ");
@@ -154,9 +159,9 @@ void SpatiallyDenseSparseVectorImageFileReader<TOutputImage>
         pch = strtok (const_cast<char*>(extractedLine.c_str())," ");
         while (pch != NULL)
           {
-          if ( idx > 0 )
+          if ( idx < ImageDimension )
             {
-            outputOrigin[idx-1] = atof(pch);
+            outputOrigin[idx] = atof(pch);
             }
           idx++;
           pch = strtok (NULL, " ");
@@ -173,9 +178,9 @@ void SpatiallyDenseSparseVectorImageFileReader<TOutputImage>
           {
           unsigned int row = vcl_floor(static_cast<double>(idx)/static_cast<double>(ImageDimension + 1));
           unsigned int col = idx % (ImageDimension + 1);
-          if ( (row != 0) && (col != 0) )
+          if ( (row != ImageDimension) && (col != ImageDimension) )
             {
-            outputDirection(row - 1, col - 1) = atof(pch);
+            outputDirection(row, col ) = atof(pch);
             }
           idx++;
           pch = strtok (NULL, " ");

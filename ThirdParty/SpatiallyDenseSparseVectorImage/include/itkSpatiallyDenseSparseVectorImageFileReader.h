@@ -47,7 +47,7 @@ public:
   }
 
   /** Constructor. */
-  SpatiallyDenseSparseVectorImageFileReaderException(const std::string &file, unsigned int line,
+  SpatiallyDenseSparseVectorImageFileReaderException(const std::string& file, unsigned int line,
                            const char* message = "Error in IO",
                            const char* loc = "Unknown") :
     ExceptionObject(file, line, message, loc)

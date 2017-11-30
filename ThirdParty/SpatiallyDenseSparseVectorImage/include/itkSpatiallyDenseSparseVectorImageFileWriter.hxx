@@ -109,6 +109,11 @@ SpatiallyDenseSparseVectorImageFileWriter<TInputImage>
 {
   itkDebugMacro ( << "SpatiallyDenseSparseVectorImageFileWriter::GenerateData() \n" );
 
+  if (m_FileName.length()<4 || m_FileName.compare(m_FileName.length() - 4, 4, ".spr")!=0)
+    {
+    itkExceptionMacro( << "the file " << m_FileName  << " should be a text file ending with '.spr'.");
+    }
+
   // Setup - Input Image
   InputImageType * input = const_cast<InputImageType*>(this->GetInput());
   
@@ -272,51 +277,52 @@ SpatiallyDenseSparseVectorImageFileWriter<TInputImage>
   InputImagePointType outputOrigin = input->GetOrigin();
   InputImageDirectionType outputDirection = input->GetDirection();
 
-  outfile << "NDims = " << input->GetImageDimension() + 1 << std::endl;
+  unsigned int dim = input->GetImageDimension();
+  outfile << "NDims = " << dim + 1 << std::endl;
   outfile << "DimSize = ";
-  outfile << input->GetNumberOfComponentsPerPixel() << " ";
-  for (unsigned int d=0; d<input->GetImageDimension(); d++)
+  for (unsigned int d=0; d<dim; d++)
     {
     outfile << outputSize[d] << " ";
     }
+  outfile << input->GetNumberOfComponentsPerPixel() << " ";
   outfile << std::endl;
   
   outfile << "ElementSpacing = ";
-  outfile << "1" << " ";
-  for (unsigned int d=0; d<input->GetImageDimension(); d++)
+  for (unsigned int d=0; d<dim; d++)
     {
     outfile << outputSpacing[d] << " ";
     }
+  outfile << "1" << " ";
   outfile << std::endl;
   
   outfile << "Offset = ";
-  outfile << "0" << " ";
-  for (unsigned int d=0; d<input->GetImageDimension(); d++)
+  for (unsigned int d=0; d<dim; d++)
     {
     outfile << outputOrigin[d] << " ";
     }
+  outfile << "0" << " ";
   outfile << std::endl;
   
   outfile << "TransformMatrix = ";
-  for (unsigned int d1=0; d1 < input->GetImageDimension() + 1; d1++)
+  for (unsigned int d1=0; d1 < dim + 1; d1++)
     {
-    for (unsigned int d2=0; d2 < input->GetImageDimension() + 1; d2++)
+    for (unsigned int d2=0; d2 < dim + 1; d2++)
       {
-      if ((d1 == 0) && (d2 == 0))
+      if ((d1 == dim) && (d2 == dim))
         {
         outfile << "1" << " ";
         }
-      else if ((d1 == 0) && (d2 != 0))
+      else if ((d1 == dim) && (d2 != dim))
         {
         outfile << "0" << " ";
         }
-      else if ((d2 == 0) && (d1 != 0))
+      else if ((d2 == dim) && (d1 != dim))
         {
         outfile << "0" << " ";
         }
       else
         {
-        outfile << outputDirection(d1-1,d2-1) << " ";
+        outfile << outputDirection(d1,d2) << " ";
         }
       }
     }
