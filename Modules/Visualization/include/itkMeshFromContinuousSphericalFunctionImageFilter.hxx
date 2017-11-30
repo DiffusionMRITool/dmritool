@@ -289,7 +289,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
           if (m_Stretch)
             outputMeshPoint[d] = sf(k) * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
           else
-            outputMeshPoint[d] = (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
+            outputMeshPoint[d] = this->m_Scale * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
           RGB[d] = static_cast<VTK_TYPE_NAME_UNSIGNED_CHAR>(rgb[d]*255.0);
           }
         }
@@ -300,7 +300,7 @@ MeshFromContinuousSphericalFunctionImageFilter<TInputImage, TOutputMesh>
           if (m_Stretch)
             outputMeshPoint[d] = sf(k) * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
           else
-            outputMeshPoint[d] = (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
+            outputMeshPoint[d] = this->m_Scale * (*this->m_Orientations)(k,d) + inputPhysicalPoint[d];
           RGB[d] = static_cast<VTK_TYPE_NAME_UNSIGNED_CHAR>(std::fabs( (*this->m_Orientations)(k,d))*255.0);
           }
 
