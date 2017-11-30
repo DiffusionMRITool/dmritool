@@ -121,6 +121,13 @@
       <channel>input</channel>
     </image>
     
+    <image>
+      <name>_PowImageFile</name>
+      <description>Pow image file or a constant.</description>
+      <longflag>pow</longflag>
+      <channel>input</channel>
+    </image>
+    
   </parameters>
 
   <parameters>

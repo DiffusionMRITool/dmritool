@@ -48,6 +48,7 @@ enum
   OP_DIVIDE,
   OP_MAX,
   OP_MIN,
+  OP_POW,
   // unary op (scalar)
   OP_FUNC,
   OP_ABS,
@@ -533,6 +534,11 @@ ImageMath(int argc, char const* argv[])
     {
     _SetOperationWithChecking(_Operation, OP_MIN, imageVec.size()==1);
     BinaryOPImage<ImageType, ImageOutType>(image, outImage, _MaskImageFile, _MinImageFile, utl::Functor::Min<double>());
+    }
+  if (_PowImageFileArg.isSet())
+    {
+    _SetOperationWithChecking(_Operation, OP_POW, imageVec.size()==1);
+    BinaryOPImage<ImageType, ImageOutType>(image, outImage, _MaskImageFile, _PowImageFile, utl::Functor::Pow<double>());
     }
 
 
