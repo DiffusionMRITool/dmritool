@@ -67,14 +67,13 @@ public:
   itkTypeMacro(SamplingSchemeQSpaceIMOCEstimationFilter, SamplingSchemeQSpaceEstimationFilter);
   itkNewMacro(Self);
   
-  itkSetMacro(TessellationOrder, unsigned int);
-  itkGetMacro(TessellationOrder, unsigned int);
+  itkSetGetMacro(TessellationOrder, unsigned int);
   
-  itkSetMacro(FineOrientations, MatrixPointer);
-  itkGetMacro(FineOrientations, MatrixPointer);
+  itkSetGetMacro(FineOrientations, MatrixPointer);
 
-  itkSetMacro(AngleMinChange, double);
-  itkGetMacro(AngleMinChange, double);
+  itkSetGetMacro(AngleMinChange, double);
+
+  itkSetGetMacro(ChooseMinimalCoverageShell, bool);
 
   void GenerateData() ITK_OVERRIDE;
 
@@ -87,19 +86,26 @@ protected:
   bool IsSatisfiedSeparationAngles(const std::vector<double>& angles);
   
   /** the order of tessellation for the orignal fine mesh  */
-  unsigned int m_TessellationOrder;
+  unsigned int m_TessellationOrder=7;
   
   /** It is generated from m_TessellationOrder  */
   MatrixPointer m_FineOrientations;
-  SamplingPointer m_FineScheme;
+  SamplingPointer m_FineScheme = SamplingType::New();
   
-  double m_MinDistanceInFineScheme;
+  double m_MinDistanceInFineScheme=-1;
 
-  typename TreeGeneratorType::Pointer m_TreeGenerator;
-  typename TreeType::Pointer m_KDTree;
+  typename TreeGeneratorType::Pointer m_TreeGenerator=nullptr;
+  typename TreeType::Pointer m_KDTree= nullptr;
   typename SampleType::Pointer m_Sample;
 
-  double m_AngleMinChange;
+  double m_AngleMinChange=0.0001;
+
+  /** 
+   * If true, always choose the shell with the minimal total coverage in each step.  
+   * It is used only for multi-shell case where the number of samples are different in shells. 
+   * It is better to always set it as true.
+   * */
+  bool m_ChooseMinimalCoverageShell=true;
 
 private:
   SamplingSchemeQSpaceIMOCEstimationFilter(const Self &); //purposely not implemented

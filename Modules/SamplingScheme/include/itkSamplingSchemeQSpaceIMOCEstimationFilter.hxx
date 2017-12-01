@@ -32,11 +32,6 @@ SamplingSchemeQSpaceIMOCEstimationFilter< TSamplingType >
   : Superclass(),
   m_FineOrientations(new MatrixType()) 
 {
-  m_FineScheme = SamplingType::New();
-  m_TessellationOrder = 7; 
-  m_KDTree = NULL;
-  m_TreeGenerator = NULL;
-  m_MinDistanceInFineScheme = -1;
 }
 
 template< class TSamplingType >
@@ -96,6 +91,18 @@ SamplingSchemeQSpaceIMOCEstimationFilter< TSamplingType >
   int totalNumberOfSamples = std::accumulate(this->m_NumbersInShell.begin(), this->m_NumbersInShell.end(), 0);
   Index2DVectorType sumOverlapVec(angles.size(), IndexVectorType(numberOfSamples,-1));
 
+  std::vector<int> coverageInShells(numberOfShells,0);
+  bool isSameAngle = true;
+  for ( int j = 1; j < numberOfShells; ++j ) 
+    {
+    if (std::fabs(angles[0]-angles[j])>1e-4)
+      {
+      isSameAngle = false;
+      break;
+      }
+    }
+  bool needCoverageInshells = m_ChooseMinimalCoverageShell && !isSameAngle;
+
   MeasurementVectorType queryPoint, queryCandidate;
   typedef typename TreeType::InstanceIdentifierVectorType InstanceIdentifierVectorType;
   InstanceIdentifierVectorType neighbors, neighbors_1, candidates, candidates_1, neighbors_jj;
@@ -106,10 +113,10 @@ SamplingSchemeQSpaceIMOCEstimationFilter< TSamplingType >
     
   Index2DVectorType chosenIndices(numberOfShells);
 
-  typedef utl_unordered_map<long, InstanceIdentifierVectorType> NeighborMapType;
+  typedef utl_unordered_map<int, InstanceIdentifierVectorType> NeighborMapType;
   typedef typename NeighborMapType::const_iterator NeighborMapIterator;
   NeighborMapType neighborMap;
-  long indexDistPair;
+  int indexDistPair;
 
   if (numberOfShells==1)
     {
@@ -261,6 +268,9 @@ SamplingSchemeQSpaceIMOCEstimationFilter< TSamplingType >
         neighbors = mapIter->second;
       for ( int i = 0; i < neighbors.size(); ++i ) 
         hasChosen[neighbors[i]/2][s] = 0;
+      // update coverages
+      if (needCoverageInshells)
+        coverageInShells[s] += neighbors.size();
 
       indexDistPair=currentIndex + numberOfShells*numberOfSamples;
       mapIter = neighborMap.find(indexDistPair);
@@ -358,8 +368,9 @@ SamplingSchemeQSpaceIMOCEstimationFilter< TSamplingType >
     // for ( int i = 0; i < chosenIndices.size(); ++i ) 
     //   utl::PrintVector(chosenIndices[i], "chosenIndices[i]");
 
+    // all other samples 
     MeasurementVectorType queryPointLast(queryPoint);
-    int indexShellMaxOverlap=-1, indexShellMaxOverlapLast=-1;
+    int indexShellMaxOverlap=-1, indexShellMaxOverlapLast=-1, shellIndexMinCoverage=-1;
 
     for ( unsigned int n = numberOfShells; n < totalNumberOfSamples; ++n ) 
       {
@@ -369,8 +380,27 @@ SamplingSchemeQSpaceIMOCEstimationFilter< TSamplingType >
       int sumMaxOverlap=-1;
       int numberOfCandidates=0, numberSearch=0;
 
+      if (needCoverageInshells)
+        {
+        // set the coverage of the shell with requested number of samples as the largest value.
+        for ( int s = 0; s < numberOfShells; ++s ) 
+          {
+          if (chosenIndices[s].size() >= this->m_NumbersInShell[s])
+            coverageInShells[s] = numberOfSamples;
+          }
+        // find the shell with the minimal coverage and it has not been set requested number of samples.
+        shellIndexMinCoverage = utl::argmin(coverageInShells.begin(), coverageInShells.end());
+        }
+
       for ( int s = 0; s < numberOfShells; ++s ) 
         {
+
+        if (needCoverageInshells && shellIndexMinCoverage!=s)
+          {
+          // only set the current sample to the shell with minimal coverage.
+          continue;
+          }
+
         if (chosenIndices[s].size() < this->m_NumbersInShell[s])
           {
 
@@ -452,7 +482,15 @@ SamplingSchemeQSpaceIMOCEstimationFilter< TSamplingType >
       else
         neighbors = mapIter->second;
       for ( int i = 0; i < neighbors.size(); ++i ) 
+        {
+        // update coverages
+        if (needCoverageInshells)
+          {
+          if (hasChosen[neighbors[i]/2][indexShellMaxOverlap]==-1)
+            coverageInShells[indexShellMaxOverlap]++;
+          }
         hasChosen[neighbors[i]/2][indexShellMaxOverlap] = 0;
+        }
 
       indexDistPair=currentIndex+numberOfShells*numberOfSamples;
       mapIter = neighborMap.find(indexDistPair);

@@ -54,6 +54,7 @@ main (int argc, char const* argv[])
     }
   estimator->SetWeightForSingleShell(_Weight);
   estimator->SetAngleMinChange(_MinChange);
+  estimator->SetChooseMinimalCoverageShell(true);
 
   itk::TimeProbe clock;
   clock.Start();
